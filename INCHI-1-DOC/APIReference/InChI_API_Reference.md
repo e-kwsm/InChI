@@ -45,7 +45,7 @@ Last revision date: January 19, 2024
     - [GetINCHIKeyFromINCHI](#getinchikeyfrominchi)
     - [CheckINCHIKey](#checkinchikey)
     - [GetStdINCHIKeyFromStdINCHI](#getstdinchikeyfromstdinchi)
-  - [Test and utlity procedures](#test-and-utlity-procedures)
+  - [Test and utility procedures](#test-and-utility-procedures)
     - [GetINCHIfromINCHI](#getinchifrominchi)
     - [CheckINCHI](#checkinchi)
     - [GetStringLength](#getstringlength)
@@ -147,7 +147,7 @@ Last revision date: January 19, 2024
 
 The current version of InChI Identifier is 1; the current stable version of the InChI software is 1.07Beta which replaces the previous version 1.06.
 
-InChI Software v. 1.07Beta includes several additions and modifucations to previous versions; it is a combination of “bugfix release” and “feature release”.
+InChI Software v. 1.07Beta includes several additions and modifications to previous versions; it is a combination of “bugfix release” and “feature release”.
 
 The most important modifications are:
 \- added support of pseudoelement “Zz” atoms;
@@ -980,7 +980,7 @@ szINCHIKey - InChIKey string, null-terminated. The user-supplied buffer szINCHIK
 
 The same as for GetINCHIKeyFromINCHI.
 
-### Test and utlity procedures
+### Test and utility procedures
 
 #### GetINCHIfromINCHI
 
@@ -2938,7 +2938,7 @@ IXA InChI Builder Objects have Handles of type IXA_INCHIBUILDER_HANDLE. Most opt
 
 • IXA_INCHIBUILDER_OPTION_FoldCRU: If set to IXA_FALSE (default), no polymer CRU folding is attempted;  if set to IXA_TRUE, attempt is made to fold CRU in order to eliminate inner repeats (e.g., convert -(CH2CH2)n- to -(CH2)n- ).
 
-• IXA_INCHIBUILDER_OPTION_LooseTSACheck: If set to IXA_FALSE (default), usual strict criteria of ambiguous drawing for in-ring tetrahedral stereo are used;; if set to IXA_TRUE, relaxed critera are used (useful for large rings where in-ring bond angles are close to 180o).
+• IXA_INCHIBUILDER_OPTION_LooseTSACheck: If set to IXA_FALSE (default), usual strict criteria of ambiguous drawing for in-ring tetrahedral stereo are used;; if set to IXA_TRUE, relaxed criteria are used (useful for large rings where in-ring bond angles are close to 180o).
 
 • IXA_INCHIBUILDER_OPTION_OutErrInChI: If set to IXA_FALSE (default), no InChI  output occurs on error;if set to IXA_TRUE, empty InChI ("InChI=1//"  or "InChI=1S//" string is produced.
 
