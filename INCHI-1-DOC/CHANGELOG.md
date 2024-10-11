@@ -40,7 +40,7 @@
 
 ### Fixed
 
-- ["Issues with InChI I/O with /FixedH / Issue #27](https://github.com/IUPAC-InChI/InChI/issues/27) and ["Seqmentation fault in inchi-1.exe with /InChI2InChI validation / Issue #28](https://github.com/IUPAC-InChI/InChI/issues/28) have been fixed
+- ["Issues with InChI I/O with /FixedH / Issue #27](https://github.com/IUPAC-InChI/InChI/issues/27) and ["Segmentation fault in inchi-1.exe with /InChI2InChI validation / Issue #28](https://github.com/IUPAC-InChI/InChI/issues/28) have been fixed
 - Addressing Google oss-fuzz issues
 - Minor bugs fixes
 
@@ -156,7 +156,7 @@ Additionally, 29 potential security issues have been marked for further revision
 - API procedure for direct conversion of Molfile input to InChI, as well as demo program illustrating its use
 - New set of API procedures for both low and high-level operations (InChI extensible interface, IXA), as well as a demo program illustrating its use
 - Convience options added to inchi-1 executable
-- New optin `Large Molecules` instructs inchi-1 executable to accept molecules containing more than 1024 (but less than 32767) atoms
+- New option `Large Molecules` instructs inchi-1 executable to accept molecules containing more than 1024 (but less than 32767) atoms
 - A new option `Polymers` instructs inchi-1 executable to accept polymer data in input V2000 Molfiles
 - The new option "Output at Error an empty InChI", `OutErrInChI` (`/OutErrInChI` under Windows, `-OutErrInChI` under Linux) instructs inchi-1 executable to output empty InChI and corresponding InChIKey if error occurs (default behaviour is output nothing)
 - Option `Record:N` (`/Record:N` under Windows, `-Record:N` under Linux) instructs inchi-1 executable to process only the N-th record of the input file in SDF format
@@ -173,7 +173,7 @@ Additionally, 29 potential security issues have been marked for further revision
 ### Added
 
 - Support for chemical element numbers 105-112 (see release notes for detailed information)
-- Possibilty of processing mult iple input files at a single run added to inchi-executable (both on Windows and Linux versions); common file name wildcards are recognized
+- Possibility of processing multiple input files at a single run added to inchi-executable (both on Windows and Linux versions); common file name wildcards are recognized
 
 ### Changed
 
@@ -204,7 +204,7 @@ Additionally, 29 potential security issues have been marked for further revision
 - New InChI creation option `SUU` to always indicate unknown/undefined stereo
 - New InChI creation option `RecMet` to include reconnected metals in results
 - New InChI creation option `FixedH` to include "Fixed H layer"
-- New command line option `SaveOpt` allows to append non-standard InChI string wih saved InChI creation options
+- New command line option `SaveOpt` allows to append non-standard InChI string with saved InChI creation options
 - New command line option `XHash1` allows to output the res of 256-bit SHA-2 signature for 1<sup>st</sup> block
 - New command line option `XHash2` allows to output the res of 256-bit SHA-2 signature for 2<sup>nd</sup> block
 
@@ -229,7 +229,7 @@ Additionally, 29 potential security issues have been marked for further revision
 
 ### Fixed
 
-- Fixed missing "fixed-H" iso segement in case of single removed D(+)
+- Fixed missing "fixed-H" iso segment in case of single removed D(+)
 - Fixed bug at reading InChI
 - Fixed ["DALKE_BUGS"](https://sourceforge.net/p/inchi/mailman/inchi-discuss/thread/028b01c77cac%24c721f8e0%248801a8c0@xempc3/) (see <https://sourceforge.net/p/inchi/mailman/inchi-discuss/thread/028b01c77cac%24c721f8e0%248801a8c0@xempc3/> for detailed information) - Thanks to A. Dalke
 - Fixed bug that leads to missed charge in some cases when /o is present
@@ -237,20 +237,20 @@ Additionally, 29 potential security issues have been marked for further revision
 - Fixed bug of i2i conversion (missed empty /t)
 - Fixed bug of i2i conversion (missed repeating /s in FI after F for multi-component case)
 - Fixed bug that in some cases (dependent on ordering numbers), moving a charge from terminal H to heavy atom resulted in neutralizing H but not adjusting charge of heavy atom
-- Fixed bug which leads for different InChI on atomic permitations for systems containing radical at atom in aromatic ring
+- Fixed bug which leads for different InChI on atomic permutations for systems containing radical at atom in aromatic ring
 
 ## v1.01 release 2005-04
 
 ### Added
 
-- New command line option `InChI2InChI` checks input InChI string for significatn syntax errors, may remove layers, result is an InChI string (for detailed information see release notes)
+- New command line option `InChI2InChI` checks input InChI string for significant syntax errors, may remove layers, result is an InChI string (for detailed information see release notes)
 - New command line option `InChI2Struct` converts input InChI into a 0D structure (for detailed information see release notes)
 - New command line option `SPXYZ` treats Phosphines as stereogenic
 - New command line option `SAsXYZ` treats Arsines as stereogenic
-- New command line option `FixSp3bug` or `FB` activates fixes of two known bugs in stereochemical sp<sup>3</sup>(/t) segement
+- New command line option `FixSp3bug` or `FB` activates fixes of two known bugs in stereochemical sp<sup>3</sup>(/t) segment
 
 ### Fixed
 
 - Several bugs have been fixed, most of the bugs were discussed at [InChI-discuss](https://lists.sourceforge.net/lists/listinfo/inchi-discuss) (<https://lists.sourceforge.net/lists/listinfo/inchi-discuss>)
-- Fixed bug that a stereocenter connected by 3 bonds in a 2D structure could be undected if an average bind length is greater than 20
+- Fixed bug that a stereocenter connected by 3 bonds in a 2D structure could be undetected if an average bind length is greater than 20
 - Fixed bug that a parity of a stereocenter connected by 4 bonds in a 2D structure such that a stereobond exactly overlaps with another single bond may become “undefined” depending on the order of the atoms in the structure
