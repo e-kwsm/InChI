@@ -43,7 +43,7 @@ and Python 3.4.5 under Linux CentOS 7.7.
 It is assumed that under MS Windows the InChI library name is 'libinchi.dll' 
 while under Linux it is '/usr/lib/libinchi.so.1'.
 
-Note that this Python program is not indended to be a production InChI generator. 
+Note that this Python program is not intended to be a production InChI generator. 
 The example is provided for illustrative purposes only. 
 
 For usage instructions, type "mol2inchi.py" without parameters.
