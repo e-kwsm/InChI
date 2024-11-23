@@ -156,12 +156,12 @@ def open_files( inname, outname, logname ):
             f = gzip.open(inname)
         else:
             f = open(inname, "rb")
-    except:
+    except OSError:
         return ( None, 5 )            
     #
     try:
         fout = open(outname, 'w')
-    except:
+    except OSError:
         return ( None, 6 )                        
     if not fout:
         return ( None, 6 )                        
@@ -171,7 +171,7 @@ def open_files( inname, outname, logname ):
             flog = sys.stderr
         else:
             flog = open(logname, 'w')
-    except:
+    except OSError:
         return ( None, 7 )                                    
     if not flog:
         return ( None, 7 )                        
@@ -197,7 +197,7 @@ def clean_and_make_list_of_records(text):
         # Remove surplus empty record appearing after the last $4  (if any)
         if ( len(content[-1])<2 ):    # \n
             content = content[:-1]
-    except: 
+    except IndexError: 
         retire(97)    
     # Clean up segments: remove surplus head linefeed in records 1-n start
     # ( it appears as we split at '$$$$' not '$$$$\n' )
