@@ -46,7 +46,7 @@ def load_inchi_library(path):
         makeinchi = libinchi.MakeINCHIFromMolfileText
         freeinchi = libinchi.FreeINCHI
         getikey = libinchi.GetINCHIKeyFromINCHI
-    except:
+    except Exception:
         return None
     #
     if not makeinchi:
