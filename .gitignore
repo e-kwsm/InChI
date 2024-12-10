@@ -1,10 +1,10 @@
-INCHI-1-TEST/tests/test_library/data/**/*.html
-INCHI-1-TEST/tests/test_library/data/**/*.log
-INCHI-1-TEST/tests/test_library/data/pubchem/**
-!INCHI-1-TEST/tests/test_library/data/pubchem/*.py
-INCHI-1-SRC/INCHI_API/bin*
-INCHI-1-SRC/INCHI_EXE/bin*
-!INCHI-1-SRC/INCHI_EXE/bin/Linux/64bit/.keep
+/INCHI-1-TEST/tests/test_library/data/**/*.html
+/INCHI-1-TEST/tests/test_library/data/**/*.log
+/INCHI-1-TEST/tests/test_library/data/pubchem/**
+!/INCHI-1-TEST/tests/test_library/data/pubchem/*.py
+/INCHI-1-SRC/INCHI_API/bin*
+/INCHI-1-SRC/INCHI_EXE/bin*
+!/INCHI-1-SRC/INCHI_EXE/bin/Linux/64bit/.keep
 .aps
 .listing
 *.o
@@ -14,5 +14,4 @@ __pycache__
 *.egg-info/
 # Ignore core dump files
 core.*[0-9]
-CMake_build/
-INCHI-1-SRC/INCHI_API/libinchi/src/build/
+/CMake_build/
