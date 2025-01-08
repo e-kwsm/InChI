@@ -283,6 +283,74 @@ int ProcessOneStructure( INCHI_CLOCK            *ic,
         goto exit_function;
     }
 
+    /*(@nnuk : Nauman Ullah Khan)
+     *invoking Organometallics preprocessing (if flag is active) 
+     */
+    if (ip->bOrganometallics && nRet != _IS_FATAL && nRet != _IS_ERROR)
+    {
+        /* Call the OrgMetPreprocessing function to handle specific organometallic-related tasks */
+        ret1 = OrgMetPreprocessing(orig_inp_data, ip);
+
+        /* Check for errors during preprocessing */
+        if (ret1 < 0)
+        {
+            /* Log and handle fatal error in organometallic preprocessing */
+            fprintf(stderr, "Error during OrganoMetallic preprocessing\n");
+            AddErrorMessage(sd->pStrErrStruct, "OrganoMetallic preprocessing failed");
+            nRet = _IS_FATAL;
+            goto exit_function;
+        }
+
+        /*// Debugging: Print atom structure after disconnections
+        for (int i = 0; i < orig_inp_data->num_inp_atoms; i++)
+        {
+            printf("Atom %d: Element %s, Valence: %d, Charge: %d, Num of Implicit H: %d, Neighbors: ",
+                i + 1, orig_inp_data->at[i].elname, orig_inp_data->at[i].valence, orig_inp_data->at[i].charge, orig_inp_data->at[i].num_H);
+            for (int j = 0; j < orig_inp_data->at[i].valence; j++)
+            {
+                printf("%d ", orig_inp_data->at[i].neighbor[j] + 1);
+            }
+            printf("\n");
+        }*/
+
+        printf("OrganoMetallic preprocessing completed successfully.\n");
+        nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
+            pINChI, pINChI_Aux, INCHI_BAS,
+            inp_file, log_file, out_file, prb_file,
+            orig_inp_data, prep_inp_data,
+            composite_norm_data,
+            num_inp, strbuf, pncFlags);
+        nRet = inchi_max(nRet, nRet1);
+
+        /* If preprocessing indicates we need a reconnected InChI, create it here */
+        if (ip->bOrgMetReconnectedInChI && nRet != _IS_FATAL &&
+            nRet != _IS_ERROR &&
+            (sd->bTautFlagsDone[INCHI_BAS] & TG_FLAG_DISCONNECT_COORD_DONE) &&
+            (ip->bTautFlags & TG_FLAG_RECONNECT_COORD))
+        {
+            printf("Generating reconnected InChI due to retained bonds.\n");
+
+            nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
+                pINChI, pINChI_Aux, INCHI_REC,
+                inp_file, log_file, out_file, prb_file,
+                orig_inp_data, prep_inp_data,
+                composite_norm_data,
+                num_inp, strbuf, pncFlags);
+            nRet = inchi_max(nRet, nRet1);
+
+            if (nRet1 == _IS_FATAL || nRet1 == _IS_ERROR)
+            {
+                fprintf(stderr, "Error during reconnected InChI generation.\n");
+                goto exit_function;
+            }
+
+            if (nRet != _IS_FATAL && nRet != _IS_ERROR)
+            {
+                maxINChI = 2;  // Update to indicate reconnected InChI has been generated
+            }
+        }
+    }
+
 
     if (is_polymer)
     {

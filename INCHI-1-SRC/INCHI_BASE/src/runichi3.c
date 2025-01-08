@@ -532,9 +532,14 @@ int PreprocessOneStructure( struct tagINCHI_CLOCK *ic,
 
     /* Needs salt disconnection? */
 
-    if (ip->bTautFlags & TG_FLAG_DISCONNECT_SALTS)
+    /* (@nnuk -> Nauman Ullah Khan) :: In case of Metal Salts with OrgMet parameter we need to skip this pre-processing of Salts */
+    if (ip->bOrganometallics)
     {
-        prep_inp_data->bDisconnectSalts = ( 0 < DisconnectSalts( prep_inp_data, 0 ) );
+        ;
+    }
+    else if (ip->bTautFlags & TG_FLAG_DISCONNECT_SALTS)
+    {
+        prep_inp_data->bDisconnectSalts = (0 < DisconnectSalts(prep_inp_data, 0));
     }
     else
     {
@@ -638,7 +643,12 @@ int PreprocessOneStructure( struct tagINCHI_CLOCK *ic,
               -- copy prep_inp_data --> prep_inp_data+1
               -- disconnect metals in prep_inp_data            */
 
-    if (prep_inp_data->bDisconnectCoord)
+    /* (@nnuk -> Nauman Ullah Khan) :: In case of Metals with OrgMet parameter we need to skip this pre-processing of Metals */
+    if (ip->bOrganometallics)
+    {
+        return 0;             //Skipping over current functionality
+    }
+    else if (prep_inp_data->bDisconnectCoord)
     {
 
         prep_inp_data->num_components = MarkDisconnectedComponents( prep_inp_data, 0 );

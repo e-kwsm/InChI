@@ -59,6 +59,23 @@ extern "C" {
     struct tagTautomerGroupsInfo;
     struct tagCANON_GLOBALS;
 
+    /*(@nnuk : Nauman Ullah Khan) :: Structure to hold variables for the array of all chemical elements, further used by Organometallics function*/
+    typedef struct tagElementsOrg
+    {
+        int atomic_number;
+        char symbol[3];  // Fixed length for symbol, up to 2 characters + null terminator
+
+    } ElementsOrg;
+
+    //(@nnuk : Nauman Ullah Khan) :: Main function for Organometallics
+    int OrgMetPreprocessing(ORIG_ATOM_DATA* orig_at_data, INPUT_PARMS* ip);
+    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for getting the binary value of the electronegativity difference between any two elements
+    int getElnegBiVal(int atomicNumber1, int atomicNumber2);
+    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for updating the neighbour's list in the main organometallics function processing
+    void updateNeighborListOrgMet(inp_ATOM* at, int atom_idx, int neighbor_idx);
+    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, decides for the specific metal bonds to be kept or disconnected.
+    int OrgMetIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
+
     int ExtractConnectedComponent( inp_ATOM *at, int num_at,
                                   int component_number,
                                   inp_ATOM *component_at );

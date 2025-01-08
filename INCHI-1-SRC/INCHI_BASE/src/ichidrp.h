@@ -186,6 +186,8 @@ typedef struct tagInputParms {
     int             bMergeHash;             /* v. 1.06+ Combine InChIKey with extra hash(es) if present             */
     int             bNoWarnings;            /* v. 1.06+ suppress warning messages                                   */
     int             bHideInChI;             /* v. 1.06+ Do not print InChI itself                                   */
+    int             bOrganometallics;       /* (@nnuk : Nauman Ullah Khan) :: Varaible for Organometallics parameter */
+    int             bOrgMetReconnectedInChI;  /* (@nnuk : Nauman Ullah Khan) :: Custom flag to indicate reconnected InChI requirement */
 
 
     /* */
