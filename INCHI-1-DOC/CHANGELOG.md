@@ -1,8 +1,19 @@
 # Change log
 
+## v1.07.3 2025-02-25
+
+### Fixed
+
+- GHI #89: New feature -- introducing inchi_realloc (thanks to @knedwed)
+- GHI #87: Fixed InChI 1.07.2 leaking a relevant amount of memory (thanks to @ricrogz)
+- GHI #60: Valgrind + AFL++ fuzzer results (by @scorpion89)
+- GHI #43: Fixed MOBILE_H syntax error observed with v1.07 I/O validation (thanks to @baleland)
+- Fixed further Google Oss-Fuzz issues
+- Fixed null pointer dereferencing at several places in the code 
+
 ## v1.07.2 2025-01-16
 
-### Changed
+### Fixed
 
 - GHI #71: 32-bit InChI version requiring ibgcc_s_dw2-1.dll on Windows 32-bit platforms (thanks to Norwid Behrnd) a few bugs in the code have been detected and fixed libgcc_s_dw2-1.dll added to INCHI-1-BIN folders
 - GHI #70: Update license -- Copyright (c) 2024 IUPAC and InChI Trust instead of Copyright (c) 2024 InChI Project
