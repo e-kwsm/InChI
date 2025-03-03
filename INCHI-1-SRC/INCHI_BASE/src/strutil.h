@@ -55,7 +55,7 @@ extern "C" {
 #endif
 #endif
 
-/* forward declaration */
+    /* forward declaration */
     struct tagTautomerGroupsInfo;
     struct tagCANON_GLOBALS;
 
@@ -63,75 +63,75 @@ extern "C" {
     typedef struct tagElementsOrg
     {
         int atomic_number;
-        char symbol[3];  // Fixed length for symbol, up to 2 characters + null terminator
+        char symbol[3];  /* Fixed length for symbol, up to 2 characters + null terminator */
 
     } ElementsOrg;
 
-    //(@nnuk : Nauman Ullah Khan) :: Main function for Organometallics
+    /* (@nnuk : Nauman Ullah Khan) :: Main function for Organometallics */
     int OrgMetPreprocessing(ORIG_ATOM_DATA* orig_at_data, INPUT_PARMS* ip);
-    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for getting the binary value of the electronegativity difference between any two elements
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for getting the binary value of the electronegativity difference between any two elements */
     int getElnegBiVal(int atomicNumber1, int atomicNumber2);
-    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for updating the neighbour's list in the main organometallics function processing
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for updating the neighbour's list in the main organometallics function processing */
     void updateNeighborListOrgMet(inp_ATOM* at, int atom_idx, int neighbor_idx);
-    //(@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, decides for the specific metal bonds to be kept or disconnected.
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, decides for the specific metal bonds to be kept or disconnected. */
     int OrgMetIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
 
-    int ExtractConnectedComponent( inp_ATOM *at, int num_at,
-                                  int component_number,
-                                  inp_ATOM *component_at );
-    int SetConnectedComponentNumber( inp_ATOM *at, int num_at, int component_number );
+    int ExtractConnectedComponent(inp_ATOM* at, int num_at,
+        int component_number,
+        inp_ATOM* component_at);
+    int SetConnectedComponentNumber(inp_ATOM* at, int num_at, int component_number);
 
-    INChI *Alloc_INChI( inp_ATOM *at, int num_at, int *found_num_bonds,
-                       int *found_num_isotopic, int nAllocMode );
-    int Free_INChI( INChI **ppINChI );
-    int Free_INChI_Members( INChI *pINChI );
-    int Free_INChI_Stereo( INChI_Stereo *pINChI_Stereo );
-    INChI_Aux *Alloc_INChI_Aux( int num_at, int num_isotopic_atoms,
-                               int nAllocMode, int bOrigData );
-    int  Free_INChI_Aux( INChI_Aux **ppINChI_Aux );
+    INChI* Alloc_INChI(inp_ATOM* at, int num_at, int* found_num_bonds,
+        int* found_num_isotopic, int nAllocMode);
+    int Free_INChI(INChI** ppINChI);
+    int Free_INChI_Members(INChI* pINChI);
+    int Free_INChI_Stereo(INChI_Stereo* pINChI_Stereo);
+    INChI_Aux* Alloc_INChI_Aux(int num_at, int num_isotopic_atoms,
+        int nAllocMode, int bOrigData);
+    int  Free_INChI_Aux(INChI_Aux** ppINChI_Aux);
 
-    int  Create_INChI( struct tagCANON_GLOBALS *pCG,
-                       struct tagINCHI_CLOCK *ic,
-                       INPUT_PARMS *ip,
-                       INChI **ppINChI,
-                       INChI_Aux **ppINChI_Aux,
-                       ORIG_ATOM_DATA *orig_inp_data,
-                       inp_ATOM *inp_at,
-                       INP_ATOM_DATA *inp_norm_data[2],
-                       int num_inp_at,
-                       INCHI_MODE nUserMode,
-                       INCHI_MODE *pbTautFlags,
-                       INCHI_MODE *pbTautFlagsDone,
-                       struct tagInchiTime *ulMaxTime,
-                       struct tagTautomerGroupsInfo *ti_out,
-                       char *pStrErrStruct );
+    int  Create_INChI(struct tagCANON_GLOBALS* pCG,
+        struct tagINCHI_CLOCK* ic,
+        INPUT_PARMS* ip,
+        INChI** ppINChI,
+        INChI_Aux** ppINChI_Aux,
+        ORIG_ATOM_DATA* orig_inp_data,
+        inp_ATOM* inp_at,
+        INP_ATOM_DATA* inp_norm_data[2],
+        int num_inp_at,
+        INCHI_MODE nUserMode,
+        INCHI_MODE* pbTautFlags,
+        INCHI_MODE* pbTautFlagsDone,
+        struct tagInchiTime* ulMaxTime,
+        struct tagTautomerGroupsInfo* ti_out,
+        char* pStrErrStruct);
 
-    int FillOutInfAtom( struct tagCANON_GLOBALS *pCG,
-                        inp_ATOM *norm_at,
-                        INF_ATOM_DATA *inf_norm_at_data,
-                        int init_num_at,
-                        int num_removed_H,
-                        int bAdd_DT_to_num_H,
-                        int nNumRemovedProtons,
-                        NUM_H *nNumRemovedProtonsIsotopic,
-                        int bIsotopic,
-                        INChI *pINChI,
-                        INChI_Aux *pINChI_Aux,
-                        int bAbcNumbers,
-                        INCHI_MODE nMode );
+    int FillOutInfAtom(struct tagCANON_GLOBALS* pCG,
+        inp_ATOM* norm_at,
+        INF_ATOM_DATA* inf_norm_at_data,
+        int init_num_at,
+        int num_removed_H,
+        int bAdd_DT_to_num_H,
+        int nNumRemovedProtons,
+        NUM_H* nNumRemovedProtonsIsotopic,
+        int bIsotopic,
+        INChI* pINChI,
+        INChI_Aux* pINChI_Aux,
+        int bAbcNumbers,
+        INCHI_MODE nMode);
 
-    int FillOutCompositeCanonInfAtom( struct tagCANON_GLOBALS *pCG,
-                                      COMP_ATOM_DATA *composite_norm_data,
-                                      INF_ATOM_DATA *inf_norm_at_data,
-                                      int bIsotopic,
-                                      int bTautomeric,
-                                      PINChI2 *pINChI2,
-                                      PINChI_Aux2 *pINChI_Aux2,
-                                      int bAbcNumbers,
-                                      INCHI_MODE nMode );
+    int FillOutCompositeCanonInfAtom(struct tagCANON_GLOBALS* pCG,
+        COMP_ATOM_DATA* composite_norm_data,
+        INF_ATOM_DATA* inf_norm_at_data,
+        int bIsotopic,
+        int bTautomeric,
+        PINChI2* pINChI2,
+        PINChI_Aux2* pINChI_Aux2,
+        int bAbcNumbers,
+        INCHI_MODE nMode);
 
 #if ( FIX_DALKE_BUGS == 1 )
-    char *AllocateAndFillHillFormula( INChI *pINChI );
+    char* AllocateAndFillHillFormula(INChI* pINChI);
 #endif
 
     typedef enum tagInchiDiffBits
@@ -191,7 +191,7 @@ extern "C" {
                        IDIF_SB_EXTRA | IDIF_SB_MISS_UNDF | IDIF_SB_MISS)
 
 
-/*************************************************************************************/
+    /*************************************************************************************/
 #define ICR_MAX_ENDP_IN1_ONLY 32
 #define ICR_MAX_ENDP_IN2_ONLY 32
 #define ICR_MAX_DIFF_FIXED_H  32
@@ -256,40 +256,40 @@ extern "C" {
 
 
 
-    INCHI_MODE CompareReversedINChI2( INChI *i1 /* InChI from reversed struct */,
-                                     INChI *i2 /* input InChI */,
-                                     INChI_Aux *a1, INChI_Aux *a2,
-                                     ICR *picr, int *err );
-    int CompareIcr( ICR *picr1, ICR *picr2, INCHI_MODE *pin1, INCHI_MODE *pin2, INCHI_MODE mask );
+    INCHI_MODE CompareReversedINChI2(INChI* i1 /* InChI from reversed struct */,
+        INChI* i2 /* input InChI */,
+        INChI_Aux* a1, INChI_Aux* a2,
+        ICR* picr, int* err);
+    int CompareIcr(ICR* picr1, ICR* picr2, INCHI_MODE* pin1, INCHI_MODE* pin2, INCHI_MODE mask);
 
-    int CompareReversedINChI( INChI *i1, INChI *i2, INChI_Aux *a1, INChI_Aux *a2 );
-    const char *CompareReversedInchiMsg( int code );
+    int CompareReversedINChI(INChI* i1, INChI* i2, INChI_Aux* a1, INChI_Aux* a2);
+    const char* CompareReversedInchiMsg(int code);
 
 #define EQL_EXISTS   1
 #define EQL_SP3      2
 #define EQL_SP3_INV  4
 #define EQL_SP2      8
 
-    int Eql_INChI_Stereo( INChI_Stereo *s1, int eql1, INChI_Stereo *s2, int eql2, int bRelRac );
-    int Eql_INChI_Isotopic( INChI *i1, INChI *i2 );
+    int Eql_INChI_Stereo(INChI_Stereo* s1, int eql1, INChI_Stereo* s2, int eql2, int bRelRac);
+    int Eql_INChI_Isotopic(INChI* i1, INChI* i2);
 
 #define EQL_EQU     0
 #define EQL_EQU_TG  1
 #define EQL_EQU_ISO 2
 
-    int Eql_INChI_Aux_Equ( INChI_Aux *a1, int eql1, INChI_Aux *a2, int eql2 );
+    int Eql_INChI_Aux_Equ(INChI_Aux* a1, int eql1, INChI_Aux* a2, int eql2);
 
 #define EQL_NUM      0
 #define EQL_NUM_INV  1
 #define EQL_NUM_ISO  2
-    int Eql_INChI_Aux_Num( INChI_Aux *a1, int eql1, INChI_Aux *a2, int eql2 );
+    int Eql_INChI_Aux_Num(INChI_Aux* a1, int eql1, INChI_Aux* a2, int eql2);
 
-    int bHasEquString( AT_NUMB *LinearCT, int nLenCT );
+    int bHasEquString(AT_NUMB* LinearCT, int nLenCT);
 
-    int CompINChINonTaut2( const void *p1, const void *p2 );
-    int CompINChITaut2( const void *p1, const void *p2 );
-    int CompINChI2( const INCHI_SORT *p1, const INCHI_SORT *p2, int bTaut, int bCompareIsotopic );
-    int CompINChITautVsNonTaut( const INCHI_SORT *p1, const INCHI_SORT *p2, int bCompareIsotopic );
+    int CompINChINonTaut2(const void* p1, const void* p2);
+    int CompINChITaut2(const void* p1, const void* p2);
+    int CompINChI2(const INCHI_SORT* p1, const INCHI_SORT* p2, int bTaut, int bCompareIsotopic);
+    int CompINChITautVsNonTaut(const INCHI_SORT* p1, const INCHI_SORT* p2, int bCompareIsotopic);
 
     typedef enum tagDiffINChISegments
     {                    /* r = repetitive, n = non-repetitive */
@@ -305,8 +305,8 @@ extern "C" {
         DIFS_i_IATOMS,   /*  9 r: isotopic atoms: fixed-H <-> mobile-H * isotopic <-> non-isotopic */
         DIFS_o_TRANSP,   /* 10 n: Fixed-H transposition */
         DIFS_idf_LENGTH, /* 11    length of the array relevant to the INChI Identifier */
-                         /* later elements referring to AuxInfo may be added */
-                         DIFS_LENGTH = DIFS_idf_LENGTH /* length of the array */
+        /* later elements referring to AuxInfo may be added */
+        DIFS_LENGTH = DIFS_idf_LENGTH /* length of the array */
     } DIF_SEGMENTS;
 
     typedef enum tagDiffINChILayers
@@ -326,16 +326,16 @@ extern "C" {
         DIFV_NEQ2PRECED = 2, /* different from the component in the preceding namesake segment           */
         DIFV_IS_EMPTY = 4, /* is empty while the preceding namesake segment is not empty               */
         DIFV_FI_EQ_MI = 8, /* FI stereo component is equal to the component in the MI namesake segment */
-                             /* while M and F components are empty                                       */
-        /* decision_F = bitmask: bits that should not be present */
-        /* decision_T = bitmask: at least one of the bits should be present */
-        /* decision = true if( !( BITS & decision_F ) && ( BITS & decision_F ) ) */
-        DIFV_OUTPUT_EMPTY_T = ( DIFV_IS_EMPTY ), /* bits present for empty segment output */
-        DIFV_OUTPUT_EMPTY_F = ( DIFV_EQL2PRECED | DIFV_NEQ2PRECED | DIFV_FI_EQ_MI ), /* bits NOT present */
+        /* while M and F components are empty                                       */
+/* decision_F = bitmask: bits that should not be present */
+/* decision_T = bitmask: at least one of the bits should be present */
+/* decision = true if( !( BITS & decision_F ) && ( BITS & decision_F ) ) */
+DIFV_OUTPUT_EMPTY_T = (DIFV_IS_EMPTY), /* bits present for empty segment output */
+DIFV_OUTPUT_EMPTY_F = (DIFV_EQL2PRECED | DIFV_NEQ2PRECED | DIFV_FI_EQ_MI), /* bits NOT present */
 
-        DIFV_OUTPUT_OMIT_F = ( DIFV_NEQ2PRECED | DIFV_IS_EMPTY ), /* bits NOT present for omitting */
+DIFV_OUTPUT_OMIT_F = (DIFV_NEQ2PRECED | DIFV_IS_EMPTY), /* bits NOT present for omitting */
 
-        DIFV_OUTPUT_FILL_T = ( DIFV_EQL2PRECED | DIFV_NEQ2PRECED | DIFV_FI_EQ_MI )
+DIFV_OUTPUT_FILL_T = (DIFV_EQL2PRECED | DIFV_NEQ2PRECED | DIFV_FI_EQ_MI)
     } DIF_VALUES;
 
     typedef enum tagINChISegmAction
@@ -345,10 +345,10 @@ extern "C" {
         INCHI_SEGM_EMPTY = 2  /* the value is used in str_LineEnd() */
     } INCHI_SEGM_ACTION;
 
-    int CompINChILayers( const INCHI_SORT *p1, const INCHI_SORT *p2,
-                        char sDifSegs[][DIFS_LENGTH], int bFixTranspChargeBug );
-    int MarkUnusedAndEmptyLayers( char sDifSegs[][DIFS_LENGTH] );
-    int INChI_SegmentAction( char cDifSegs );
+    int CompINChILayers(const INCHI_SORT* p1, const INCHI_SORT* p2,
+        char sDifSegs[][DIFS_LENGTH], int bFixTranspChargeBug);
+    int MarkUnusedAndEmptyLayers(char sDifSegs[][DIFS_LENGTH]);
+    int INChI_SegmentAction(char cDifSegs);
 
 #define FLAG_SORT_PRINT_TRANSPOS_BAS   1 /* transposition in the main InChI layer */
 #define FLAG_SORT_PRINT_TRANSPOS_REC   2 /* transposition in the reconnected InChI layer */
@@ -361,68 +361,68 @@ extern "C" {
 
     struct tagCANON_GLOBALS;
 
-    int OutputINChI1( struct tagCANON_GLOBALS *pCG,
-                      INCHI_IOS_STRING *strbuf,
-                      INCHI_SORT *pINChISortTautAndNonTaut2[][TAUT_NUM],
-                      int iINChI,
-                      ORIG_ATOM_DATA *orig_inp_data,
-                      ORIG_STRUCT *pOrigStruct,
-                      INPUT_PARMS *ip,
-                      int bDisconnectedCoord,
-                      int bOutputType,
-                      int bINChIOutputOptions,
-                      int num_components2[],
-                      int num_non_taut2[],
-                      int num_taut2[],
-                      INCHI_IOSTREAM *out_file,
-                      INCHI_IOSTREAM *log_file,
-                      int num_input_struct,
-                      int *pSortPrintINChIFlags,
-                      unsigned char save_opt_bits );
+    int OutputINChI1(struct tagCANON_GLOBALS* pCG,
+        INCHI_IOS_STRING* strbuf,
+        INCHI_SORT* pINChISortTautAndNonTaut2[][TAUT_NUM],
+        int iINChI,
+        ORIG_ATOM_DATA* orig_inp_data,
+        ORIG_STRUCT* pOrigStruct,
+        INPUT_PARMS* ip,
+        int bDisconnectedCoord,
+        int bOutputType,
+        int bINChIOutputOptions,
+        int num_components2[],
+        int num_non_taut2[],
+        int num_taut2[],
+        INCHI_IOSTREAM* out_file,
+        INCHI_IOSTREAM* log_file,
+        int num_input_struct,
+        int* pSortPrintINChIFlags,
+        unsigned char save_opt_bits);
 
-    int OutputINChI2( struct tagCANON_GLOBALS *pCG,
-                      INCHI_IOS_STRING *strbuf,
-                      INCHI_SORT *pINChISortTautAndNonTaut2[][TAUT_NUM],
-                      int INCHI_basic_or_INCHI_reconnected,
-                      ORIG_ATOM_DATA *orig_inp_data,
-                      ORIG_STRUCT *pOrigStruct,
-                      INPUT_PARMS *ip,
-                      int bDisconnectedCoord,
-                      int bOutputType,
-                      int bINChIOutputOptions,
-                      int num_components2[],
-                      int num_non_taut2[],
-                      int num_taut2[],
-                      INCHI_IOSTREAM *out_file,
-                      INCHI_IOSTREAM *log_file,
-                      int num_input_struct,
-                      int *pSortPrintINChIFlags,
-                      unsigned char save_opt_bits );
+    int OutputINChI2(struct tagCANON_GLOBALS* pCG,
+        INCHI_IOS_STRING* strbuf,
+        INCHI_SORT* pINChISortTautAndNonTaut2[][TAUT_NUM],
+        int INCHI_basic_or_INCHI_reconnected,
+        ORIG_ATOM_DATA* orig_inp_data,
+        ORIG_STRUCT* pOrigStruct,
+        INPUT_PARMS* ip,
+        int bDisconnectedCoord,
+        int bOutputType,
+        int bINChIOutputOptions,
+        int num_components2[],
+        int num_non_taut2[],
+        int num_taut2[],
+        INCHI_IOSTREAM* out_file,
+        INCHI_IOSTREAM* log_file,
+        int num_input_struct,
+        int* pSortPrintINChIFlags,
+        unsigned char save_opt_bits);
 
-    int SaveEquComponentsInfoAndSortOrder( int iINChI,
-                                           INCHI_SORT *pINChISort[TAUT_NUM],
-                                           int *num_components,
-                                           ORIG_ATOM_DATA *orig_inp_data,
-                                           ORIG_ATOM_DATA *prep_inp_data,
-                                           COMP_ATOM_DATA composite_norm_data[TAUT_NUM+1],
-                                           int bCompareComponents ); /* djb-rwth: matching composite_norm_data bounds */
+    int SaveEquComponentsInfoAndSortOrder(int iINChI,
+        INCHI_SORT* pINChISort[TAUT_NUM],
+        int* num_components,
+        ORIG_ATOM_DATA* orig_inp_data,
+        ORIG_ATOM_DATA* prep_inp_data,
+        COMP_ATOM_DATA composite_norm_data[TAUT_NUM + 1],
+        int bCompareComponents); /* djb-rwth: matching composite_norm_data bounds */
 
-    int OutputINChIPlainError( INCHI_IOSTREAM *out_file,
-                               char *pErrorText,
-                               int bError );
-    int GetInpStructErrorType( INPUT_PARMS *ip, int err, char *pStrErrStruct, int num_inp_atoms );
-    int ProcessStructError( INCHI_IOSTREAM *out_file,
-                            INCHI_IOSTREAM *log_file,
-                            char *pStrErrStruct,
-                            int nErrorType,
-                            long num_inp,
-                            INPUT_PARMS *ip );
+    int OutputINChIPlainError(INCHI_IOSTREAM* out_file,
+        char* pErrorText,
+        int bError);
+    int GetInpStructErrorType(INPUT_PARMS* ip, int err, char* pStrErrStruct, int num_inp_atoms);
+    int ProcessStructError(INCHI_IOSTREAM* out_file,
+        INCHI_IOSTREAM* log_file,
+        char* pStrErrStruct,
+        int nErrorType,
+        long num_inp,
+        INPUT_PARMS* ip);
 
-    int bNumHeterAtomHasIsotopicH( inp_ATOM *atom, int num_atoms );
+    int bNumHeterAtomHasIsotopicH(inp_ATOM* atom, int num_atoms);
 
-    int WriteToSDfile( const INP_ATOM_DATA *inp_at_data, INCHI_IOSTREAM* fcb, const char* name, const char* comment,
-                       const char *szLabel, const char *szValue );
-    int bIsMetalSalt( inp_ATOM *at, int i );
+    int WriteToSDfile(const INP_ATOM_DATA* inp_at_data, INCHI_IOSTREAM* fcb, const char* name, const char* comment,
+        const char* szLabel, const char* szValue);
+    int bIsMetalSalt(inp_ATOM* at, int i);
 
     int bIsSameBond(int a1, int a2, int b1, int b2);
 
@@ -435,18 +435,18 @@ extern "C" {
 
 
     /* Handle integer matrix [mxn] */
-    int  imat_new(int m, int n, int ***a);
-    void imat_free(int m, int **a);
+    int  imat_new(int m, int n, int*** a);
+    void imat_free(int m, int** a);
 
 
-    /* Light-weight {nodes, connections} subgraph of molecule, subgraf 
-       refers to parent structure via orig atom numbers stored internally 
+    /* Light-weight {nodes, connections} subgraph of molecule, subgraf
+       refers to parent structure via orig atom numbers stored internally
             nodes and edges: are living in 0-based node numbers domain
             atoms and bonds: are living in 1-based orig atom numbers domain
     */
 
     /* subgraf_edge is node connections element */
-    typedef struct subgraf_edge	
+    typedef struct subgraf_edge
     {
         int nbr;			/* node neighbor									*/
         int etype;			/* edge type echoing corresponding bond type		*/
@@ -456,46 +456,46 @@ extern "C" {
     typedef struct subgraf
     {
         int nnodes;			/* number of nodes (atoms)							*/
-        int *nodes;			/* nodes[i]  is 1-based orig atom number of node #i	*/
-                            /* (i = 0 to nnodes)								*/
-        int *degrees;		/* degrees of nodes									*/
-        int *orig2node;		/* orig2node[k] is 0-based node number for orig #k	*/
-        subgraf_edge **adj;	/* node connections representing adjacency relation	*/
-                            /* adj[i] is vector[0-degree] of edges at node #i	*/
+        int* nodes;			/* nodes[i]  is 1-based orig atom number of node #i	*/
+        /* (i = 0 to nnodes)								*/
+        int* degrees;		/* degrees of nodes									*/
+        int* orig2node;		/* orig2node[k] is 0-based node number for orig #k	*/
+        subgraf_edge** adj;	/* node connections representing adjacency relation	*/
+        /* adj[i] is vector[0-degree] of edges at node #i	*/
     } subgraf;
     /* helper structure for finding paths in subgraf*/
     typedef struct subgraf_pathfinder
     {
-        subgraf *sg;		/* base subgraf										*/
+        subgraf* sg;		/* base subgraf										*/
         int start;			/* start node of path, 0-based						*/
         int end;			/* end node of path									*/
-        int maxbonds;		/* max number of bonds in path						*/			
-        int nbonds;			/* actual number of bonds in path					*/			
-        int nseen;			/* number of nodes of found path(s)					*/				
-        int *seen;			/* nodes of found path(s)							*/				
+        int maxbonds;		/* max number of bonds in path						*/
+        int nbonds;			/* actual number of bonds in path					*/
+        int nseen;			/* number of nodes of found path(s)					*/
+        int* seen;			/* nodes of found path(s)							*/
     } subgraf_pathfinder;
 
-    subgraf * subgraf_new( ORIG_ATOM_DATA *orig_inp_data,
-                           int nnodes, 
-                           int *nodes );
-    void subgraf_free( subgraf *sg );
-    void subgraf_debug_trace( subgraf *sg );
-    subgraf_pathfinder *subgraf_pathfinder_new( subgraf *sg, 
-                                                ORIG_ATOM_DATA *orig_inp_data, 
-                                                int start, 
-                                                int end );
-    void subgraf_pathfinder_free( subgraf_pathfinder *spf );
-    void subgraf_pathfinder_run(subgraf_pathfinder *spf,
-                                int nforbidden, 
-                                int *forbidden_orig,
-                                int *nbonds, int **bonds,
-                                int *natoms, int *atoms);
-    int subgraf_pathfinder_collect_all(subgraf_pathfinder *spf, 
-                                       int nforbidden,
-                                       int *forbidden,
-                                       int *atnums);
+    subgraf* subgraf_new(ORIG_ATOM_DATA* orig_inp_data,
+        int nnodes,
+        int* nodes);
+    void subgraf_free(subgraf* sg);
+    void subgraf_debug_trace(subgraf* sg);
+    subgraf_pathfinder* subgraf_pathfinder_new(subgraf* sg,
+        ORIG_ATOM_DATA* orig_inp_data,
+        int start,
+        int end);
+    void subgraf_pathfinder_free(subgraf_pathfinder* spf);
+    void subgraf_pathfinder_run(subgraf_pathfinder* spf,
+        int nforbidden,
+        int* forbidden_orig,
+        int* nbonds, int** bonds,
+        int* natoms, int* atoms);
+    int subgraf_pathfinder_collect_all(subgraf_pathfinder* spf,
+        int nforbidden,
+        int* forbidden,
+        int* atnums);
 
-    void CompAtomData_GetNumMapping( COMP_ATOM_DATA *adata, int *orig_num, int *curr_num );
+    void CompAtomData_GetNumMapping(COMP_ATOM_DATA* adata, int* orig_num, int* curr_num);
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
