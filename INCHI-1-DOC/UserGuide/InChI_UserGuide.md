@@ -172,7 +172,7 @@ For more details please refer to InChI v. 1.06 Release Notes and InChI Technical
 
 ## InChI Software Library (libinchi)
 
-For advanced users who may want to create the Identifier in their own software the InChI Software Library (InChI API) is provided in a separate package. The package contains ‘C’ source code for inchi‑1.exe, ‘C’ source code for the InChI Library that may be compiled into a Dynamic Link Library (DLL) libinchi.dll under Windows or Shared Object (SO) libinchi.so under Linux; also, there are ‘C’ and Python examples of simple applications that read input Molfile and use the InChI Library to produce Identifiers. 
+For advanced users who may want to create the Identifier in their own software the InChI Software Library (InChI API) is provided in a separate package. The package contains ‘C’ source code for inchi-1.exe, ‘C’ source code for the InChI Library that may be compiled into a Dynamic Link Library (DLL) libinchi.dll under Windows or Shared Object (SO) libinchi.so under Linux; also, there are ‘C’ and Python examples of simple applications that read input Molfile and use the InChI Library to produce Identifiers. 
 
 The InChI Library does not display structures and is not able to read chemical structural data from the input file. It uses specially formatted input binary data and produces three strings: InChI, the Auxiliary Information, and, if necessary, an error or warning message. Also, there are procedure to calculate InChIKey and other service routines. The source code is accompanied with makefiles tested with gcc under Windows and Linux. 
 
