@@ -48,6 +48,7 @@
 
 #include "inpdef.h"
 #include "ichi.h"
+#include "util.h"            /* (@nnuk : Nauman Ullah Khan) :: utilizing defined macros */
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
@@ -55,9 +56,42 @@ extern "C" {
 #endif
 #endif
 
+    /*(@nnuk : Nauman Ullah Khan)
+    * Metal definitions for Organometallics (OrgMet)
+    */
+#define OrgMet1           1          /* definition of an element: lowest valence */
+#define OrgMet2           3          /* definition of an element: lowest and next to it valence */
+#define OrgMet3           7          /* definition of an element: lowest and two next to it valence */
+#define OrgMet4           15         /* definition of an element: lowest and three next to it valence */
+#define IS_METAL          15         /* metal bitmap  (@nnuk : Nauman Ullah Khan :: set to 15 to incorporate the use of all bits for OrgMet3 and OrgMet4) */
+
     /* forward declaration */
     struct tagTautomerGroupsInfo;
     struct tagCANON_GLOBALS;
+
+    /*(@nnuk : Nauman Ullah Khan)
+    * CHEMICAL ELEMENTS & ATOMIC VALENCE MODEL FOR VARIOUS OXIDATION STATES
+    */
+    typedef struct tagOrgMetArray
+    {
+        /*    Element chemical symbol */
+        const char* szElName;
+        /*    Average atomic mass from the Periodic Chart of the Elements
+        (Fisher cat. no. 05-702-10) */
+        int     nAtMass;
+        /*    (not used currently) Atomic mass of the most abundant isotope */
+        int     nNormAtMass;
+        /*    (not used currently) Exact mw of the most abundant isotope (not used)    */
+        double  dAtMass;
+        /*    OrgMet1, OrgMet2, OrgMet3 or OrgMet4 */
+        int     nType;
+        /*    (not used currently) Pauling electronegativity x 10; 0 means unknown    */
+        int     nElNegPauling10;
+        /*    InChI does not add implicit H to atoms that have non-zero bSkipAddingH */
+        /*    NB: was called bDoNotAddH, renamed to avoid confusion with other procedures */
+        int     bSkipAddingH;
+        S_CHAR  cValence[NUM_ATOM_CHARGES][MAX_NUM_VALENCES];
+    } OrgMetElData;
 
     /*(@nnuk : Nauman Ullah Khan) :: Structure to hold variables for the array of all chemical elements, further used by Organometallics function*/
     typedef struct tagElementsOrg
@@ -75,6 +109,10 @@ extern "C" {
     void updateNeighborListOrgMet(inp_ATOM* at, int atom_idx, int neighbor_idx);
     /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, decides for the specific metal bonds to be kept or disconnected. */
     int OrgMetIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
+    /* Function retrieves valence values for organometallics functionality*/
+    int getElValenceforOrgMet(int nPeriodicNum, int charge, int val_num);
+    /* Function retrieves element type value for organometallics functionality*/
+    int getElTypeforOrgMet(int nPeriodicNum);
 
     int ExtractConnectedComponent(inp_ATOM* at, int num_at,
         int component_number,
