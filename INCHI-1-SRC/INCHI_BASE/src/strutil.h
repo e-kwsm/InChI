@@ -49,6 +49,7 @@
 #include "inpdef.h"
 #include "ichi.h"
 #include "util.h"            /* (@nnuk : Nauman Ullah Khan) :: utilizing defined macros */
+#include "incomdef.h"
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
@@ -63,7 +64,6 @@ extern "C" {
 #define OrgMet2           3          /* definition of an element: lowest and next to it valence */
 #define OrgMet3           7          /* definition of an element: lowest and two next to it valence */
 #define OrgMet4           15         /* definition of an element: lowest and three next to it valence */
-#define IS_METAL          15         /* metal bitmap  (@nnuk : Nauman Ullah Khan :: set to 15 to incorporate the use of all bits for OrgMet3 and OrgMet4) */
 
     /* forward declaration */
     struct tagTautomerGroupsInfo;
