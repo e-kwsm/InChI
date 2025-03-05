@@ -71,7 +71,9 @@ Should you have any questions, comments, or suggestions, please feel free to pos
 
 If you encounter a bug, we kindly request you to [create an issue](https://github.com/IUPAC-InChI/InChI/issues).
 
-You are welcome to contribute to this project. To do so, you may [create a pull request](https://github.com/IUPAC-InChI/InChI/pulls).
+You are welcome to contribute to this project. To do so, you may [submit a pull request](https://github.com/IUPAC-InChI/InChI/pulls):
+
+![git-flow](./INCHI-1-DOC/assets/git_flow.svg)
 
 ## Contents of this repository
 
