@@ -30,7 +30,7 @@
     - [INCHI-1-BIN](#inchi-1-bin)
     - [INCHI-1-DOC](#inchi-1-doc)
     - [INCHI-1-SRC](#inchi-1-src)
-    - [INCHI-1-SRC](#inchi-1-src-1)
+    - [INCHI-1-TEST](#inchi-1-test)
     - [INCHI-1-DOC/assets](#images)
   - [Using precompiled binaries](#using-precompiled-binaries)
   - [Compiling from source](#compiling-from-source)
@@ -89,7 +89,7 @@ The [INCHI-1-SRC](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-SRC) su
 (`inchi_main`, `mol2inchi`, `test_ixa`), as well as the InChI API library source code and
 related projects/makefiles.
 
-### INCHI-1-SRC
+### INCHI-1-TEST
 
 The [INCHI-1-TEST](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-TEST) subfolder contains the test scripts and resources.
 
