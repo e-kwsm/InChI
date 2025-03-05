@@ -2,8 +2,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://github.com/IUPAC-InChI/InChI/graphs/commit-activity)
 [![GitHub issues](https://img.shields.io/github/issues/IUPAC-InChI/InChI.svg)](https://github.com/IUPAC-InChI/InChI/issues/)
 ![GitHub Discussions](https://img.shields.io/github/discussions/IUPAC-InChI/InChI)
-[![build](https://github.com/IUPAC-InChI/InChI/actions/workflows/ci.yml/badge.svg)](https://github.com/IUPAC-InChI/InChI/actions/workflows/ci.yml) 
-[![build](https://github.com/IUPAC-InChI/InChI/actions/workflows/release.yml/badge.svg)](https://github.com/IUPAC-InChI/InChI/actions/workflows/release.yml) 
+[![build](https://github.com/IUPAC-InChI/InChI/actions/workflows/ci.yml/badge.svg)](https://github.com/IUPAC-InChI/InChI/actions/workflows/ci.yml)
+[![build](https://github.com/IUPAC-InChI/InChI/actions/workflows/release.yml/badge.svg)](https://github.com/IUPAC-InChI/InChI/actions/workflows/release.yml)
 [![GitHub contributors](https://img.shields.io/github/contributors/IUPAC-InChI/InChI.svg)](https://GitHub.com/IUPAC-InChI/InChI/graphs/contributors/)
 [![GitHub release](https://img.shields.io/github/release/IUPAC-InChI/InChI.svg)](https://github.com/IUPAC-InChI/InChI/releases/)
 [![Changelog - v1.07.2](https://img.shields.io/badge/Changelog-v1.07.2-2ea44f)](https://github.com/IUPAC-InChI/InChI/blob/v1.07.2/INCHI-1-DOC/CHANGELOG.md)
@@ -11,7 +11,7 @@
 [![Good reads](https://img.shields.io/badge/Goodreads-372213?style=flat&logo=goodreads&logoColor=white)](https://www.inchi-trust.org/inchi-overview-papers-presentations/?wpv_aux_current_post_id=4309&wpv_aux_parent_post_id=4309&wpv_view_count=4473)
 [![InChI - Web Demo](https://img.shields.io/badge/InChI-Web_Demo-2ea44f)](https://iupac-inchi.github.io/InChI-Web-Demo/)
 
-<img src="./Images/inchi-wheel.png" width="300" height="300" />
+<img src="./INCHI-1-DOC/assets/inchi-wheel.png" width="300" height="300" />
 
 # **InChI** - The IUPAC International Chemical Identifier
 
@@ -31,7 +31,7 @@
     - [INCHI-1-DOC](#inchi-1-doc)
     - [INCHI-1-SRC](#inchi-1-src)
     - [INCHI-1-SRC](#inchi-1-src-1)
-    - [Images](#images)
+    - [INCHI-1-DOC/assets](#images)
   - [Using precompiled binaries](#using-precompiled-binaries)
   - [Compiling from source](#compiling-from-source)
       - [Known issues](#known-issues)
@@ -44,8 +44,8 @@
 
 **InChI** identifiers describe chemical substances in terms of layers of information – the atoms and their bond connectivity, tautomeric information, isotope information, stereochemistry, and electronic charge.
 
-![inchi-structure](./Images/inchi_example.jpg)
-![inchi-example](./Images/inchi_example2.png)
+![inchi-structure](./INCHI-1-DOC/assets/inchi_example.jpg)
+![inchi-example](./INCHI-1-DOC/assets/inchi_example2.png)
 
 With its fixed length of 27 characters the **InChIKey** — the hashed version of the **InChI** — allows for a compact representation and usage in databases or search engines.
 
@@ -57,13 +57,13 @@ With its fixed length of 27 characters the **InChIKey** — the hashed version o
 
 The [InChI Trust](https://www.inchi-trust.org/) is a charity that supports the development and promotion of the InChI standard. It works in partnership with [IUPAC](https://iupac.org/) to update and release new extensions to and applications of InChI. The Trust is a membership organisation, governed by its Board of Trustees which includes representation from [IUPAC](https://iupac.org/).
 
-![InChI-Members](./Images/inchi-members-30-08.jpg)
+![InChI-Members](./INCHI-1-DOC/assets/inchi-members-30-08.jpg)
 
 The scientific design of the various tools and capabilities that comprise the InChI code are defined by the InChI Working Groups which are made up of volunteers from the InChI community with [IUPAC](https://iupac.org/) oversight. These voluntary groups are each focused on specific areas of chemistry or tools within the InChI code. See [Working Groups](https://www.inchi-trust.org/inchi-working-groups/) for details on each group and their membership.
 
 The development of the code is coordinated by the Technical Director of the InChI Trust, together with the working groups, [IUPAC](https://iupac.org/) and our development partners. Our development partners currently include [RWTH Aachen](https://www.rwth-aachen.de) (as part of [NFDI4Chem](https://www.nfdi4chem.de/), acknowledging funding from [Volkswagen Stiftung](https://www.volkswagenstiftung.de/de) and the [Data Literacy Alliance – DALIA](https://dalia.education/)), and the [Beilstein Institut](https://www.beilstein-institut.de/en/).
 
-![Dev-Partners](./Images/development-partner-logos-2.jpg)
+![Dev-Partners](./INCHI-1-DOC/assets/development-partner-logos-2.jpg)
 
 ## How to contribute
 
@@ -92,10 +92,6 @@ related projects/makefiles.
 ### INCHI-1-SRC
 
 The [INCHI-1-TEST](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-TEST) subfolder contains the test scripts and resources.
-
-### Images
-
-The [Images](https://github.com/IUPAC-InChI/InChI/tree/main/Images) subfolder contains the images used in this readme.
 
 ## Using precompiled binaries
 
@@ -211,7 +207,7 @@ The [Images](https://github.com/IUPAC-InChI/InChI/tree/main/Images) subfolder co
   </tr>
 </table>
 <br />
-    
+
 <a id="libgcc_32"></a>
 <sup><strong>(1)</strong></sup> <ins>IMPORTANT NOTE</ins>: Since 32-bit binaries for <code>Microsoft<sup>&reg;</sup> Windows</code> operating system have been compiled using <code>MinGW-w64</code>, it <a href="https://github.com/IUPAC-InChI/InChI/issues/71">has been reported</a> that in certain environments a dynamic link library <code>libgcc_s_dw2-1.dll</code> has to be included in the same folder with the executables. Therefore, <code>libgcc_s_dw2-1.dll</code> has been added to <code>INCHI-1-BIN/windows/32bit</code> and <code>INCHI-1-BIN/windows/32bit/dll</code> folders (we would like to thank <a href="https://github.com/nbehrnd">nbehrnd</a> for his assistance with this matter).
 <br />
@@ -242,10 +238,10 @@ For `GCC` and `Clang/LLVM` compilers, `InChI v.1.07` can be compiled from the so
 New features in `makefile/makefile32`:
 - `makefile/makefile32` files are configured to detect OSs automatically, so it is no longer needed to specify OS explicitly or run batch/bash script(s) before compiling.
 - `GCC` and `Clang/LLVM` compilers are also automatically detected by `makefile/makefile32` files with:
-  - `GCC` set as a default compiler on 64-bit platforms 
+  - `GCC` set as a default compiler on 64-bit platforms
   - `Clang/LLVM` set as a default compiler on 32-bit platforms (please refer to <a href="#libgcc_32">these notes</a> for more details).
 - If both `GCC` and `Clang/LLVM` compilers are installed, setting a default compiler can be done simply by changing `CCN` parameter in `makefile/makefile32` where:
-  - `CCN = 1` corresponds to `GCC` 
+  - `CCN = 1` corresponds to `GCC`
   - `CCN = 2` corresponds to `Clang/LLVM`.
 
 Support for native/default MacOS<sup>&reg;</sup> `Clang` compiler is now provided with 64-bit versions of `makefile` files (we would like to thank <a href="https://github.com/johnmay/">John Mayfield</a> for his assistance with this matter).
@@ -268,7 +264,7 @@ It might be worth trying to change the value of `LINKER_CWD_PATH` to `-Wl,-R,"",
 More reliably, `LD_LIBRARY_PATH` can be set in several ways:
 
 - Temporarily:
-  
+
   - by running a shell script `ldlp_fix.sh` (located in `/INCHI_API/bin/Linux`) with either of these two commands:
     - `. ldlp_fix.sh`
     - `source ldlp_fix.sh`;
@@ -292,7 +288,7 @@ More reliably, `LD_LIBRARY_PATH` can be set in several ways:
     and then running <code>sudo ldconfig</code>.
 
   - Open-source utility [patchelf](https://github.com/NixOS/patchelf) can also be of use.
-  
+
 If a similar issue occurs on MacOS<sup>&reg;</sup>, one of the above solutions should be applied for setting `DYLD_LIBRARY_PATH` and/or `DYLD_FALLBACK_LIBRARY_PATH` (which behave like `LD_LIBRARY_PATH`).
 
 ## Optional features
