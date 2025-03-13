@@ -6474,12 +6474,12 @@ int OrgMetPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *ip)
         {
             if (disconnectDecision == 0 || disconnectDecision == 1)
             {
-                printf("No disconnection for metal atom %s (Index: %d) as valence is greater or is isolated.\n", at[i].elname, i + 1);
+                /*printf("No disconnection for metal atom %s (Index: %d) as valence is greater or is isolated.\n", at[i].elname, i + 1);*/
                 ip->bOrgMetReconnectedInChI = 1;
             }
             else
             {
-                printf("Error : Invalid state for disconnection of metal atom %s (Index: %d).\n", at[i].elname, i + 1);
+                fprintf(stderr, "Error : Invalid state for disconnection of metal atom %s (Index: %d).\n", at[i].elname, i + 1);
             }
             continue;
         }
@@ -6491,10 +6491,10 @@ int OrgMetPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *ip)
             int neighbor_atomic_number = at[neighbor_idx].el_number;
 
             /* Check if the neighbor has more than 1 bond */
-            if (at[neighbor_idx].chem_bonds_valence > 1 || is_el_a_metal(neighbor_atomic_number))
+            if (at[i].bond_type[n] > 1 || is_el_a_metal(neighbor_atomic_number))
             {
-                printf("Keeping bond between %s (Index: %d) and %s (Index: %d) because either the bond type is greater than single bond or it is a metal-metal bond.\n",
-                       at[i].elname, i + 1, at[neighbor_idx].elname, neighbor_idx + 1);
+                /*printf("Keeping bond between %s (Index: %d) and %s (Index: %d) because either the bond type is greater than single bond or it is a metal-metal bond.\n",
+                    at[i].elname, i + 1, at[neighbor_idx].elname, neighbor_idx + 1);*/
                 ip->bOrgMetReconnectedInChI = 1;
                 continue; /* Skip disconnection for this bond */
             }
@@ -6509,12 +6509,12 @@ int OrgMetPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *ip)
             {
                 if (binaryValue == 0)
                 {
-                    printf("Keep bond between %s and %s\n\n", at[i].elname, at[neighbor_idx].elname);
+                    /*printf("Keep bond between %s and %s\n\n", at[i].elname, at[neighbor_idx].elname);*/
                     ip->bOrgMetReconnectedInChI = 1;
                 }
                 else
                 {
-                    printf("Error: Invalid binary value for electronegativity difference between %s and %s\n", at[i].elname, at[neighbor_idx].elname);
+                    fprintf(stderr, "Error: Invalid binary value for electronegativity difference between %s and %s\n", at[i].elname, at[neighbor_idx].elname);
                 }
                 continue;
             }
@@ -6557,7 +6557,7 @@ int OrgMetPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *ip)
 
                 if (bIsAmmoniumSalt(at, j, &piO, &pk, num_explicit_H))
                 {
-                    printf("Ammonium salt detected at atom %d, disconnecting...\n", j + 1);
+                    /*printf("Ammonium salt detected at atom %d, disconnecting...\n", j + 1);*/
                     DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
                 }
             }

@@ -347,7 +347,7 @@ int set_common_options_by_parg(const char* pArg,
     */
     else if ( !inchi_stricmp(pArg, "OrgMet") )
     {
-        printf("\n\nOrganoMetallics Parameter Activated\n\n");
+        /*printf("\n\nOrganoMetallics Parameter Activated\n\n");*/
 
         ip->bOrganometallics = 1;
         *pbStdFormat = 0;

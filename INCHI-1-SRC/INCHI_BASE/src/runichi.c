@@ -313,7 +313,7 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             printf("\n");
         }*/
 
-        printf("OrganoMetallic preprocessing completed successfully.\n");
+        /*printf("OrganoMetallic preprocessing completed successfully.\n");*/
         nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
             pINChI, pINChI_Aux, INCHI_BAS,
             inp_file, log_file, out_file, prb_file,
@@ -328,7 +328,7 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             (sd->bTautFlagsDone[INCHI_BAS] & TG_FLAG_DISCONNECT_COORD_DONE) &&
             (ip->bTautFlags & TG_FLAG_RECONNECT_COORD) )
         {
-            printf("Generating reconnected InChI due to retained bonds.\n");
+            /*printf("Generating reconnected InChI due to retained bonds.\n");*/
 
             nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
                 pINChI, pINChI_Aux, INCHI_REC,
