@@ -16,3 +16,5 @@ __pycache__
 *.egg-info/
 # Ignore core dump files
 core.*[0-9]
+CMake_build/
+INCHI-1-SRC/INCHI_API/libinchi/src/build/
