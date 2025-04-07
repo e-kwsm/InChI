@@ -2708,6 +2708,7 @@ int e_half_stereo_bond_parity( inchi_Atom *at,
                 num_either_single++; /*  bond in "Either" direction. */
                 break;
             case ZTYPE_UP:
+                __attribute__((fallthrough)); /* fallthrough */
             case ZTYPE_DOWN:
                 z = e_len2( at_coord[nNumExplictAttachments] );
                 /*
@@ -2716,7 +2717,8 @@ int e_half_stereo_bond_parity( inchi_Atom *at,
                 */
                 if (nType == ZTYPE_DOWN)
                     z = -z;
-                /*  no break; here */
+                __attribute__((fallthrough));
+                /* fallthrough */
             case ZTYPE_3D:
                 ; /* djb-rwth: removing redundant code */
         }
@@ -3373,10 +3375,11 @@ int e_set_stereo_atom_parity( Stereo0D *pStereo,
             case ZTYPE_EITHER:
                 parity = INCHI_PARITY_UNKNOWN; /*  unknown parity: bond in "Either" direction. */
                 goto exit_function;
-            case ZTYPE_UP: // fall through
+            case ZTYPE_UP:
+                __attribute__((fallthrough)); // fall through
             case ZTYPE_DOWN:
                 b2D++;
-                // fallthrough
+                __attribute__((fallthrough)); // fallthrough
             case ZTYPE_3D:
                 num_z++;
         }

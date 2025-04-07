@@ -3995,7 +3995,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
                     case 1:
                         pInChI_From = pInChI; /* djb-rwth: ignoring LLVM warning: value used */
                         bIso_From = 0; /* djb-rwth: ignoring LLVM warning: value used */
-                        // fallthrough
+                        __attribute__((fallthrough)); // fallthrough
                     default:
                         ret = RI_ERR_PROGR;
                         goto exit_function;
@@ -9282,11 +9282,11 @@ int ParseSegmentConnections(const char* str,
                         p = q;
                         switch (state)
                         {
-                        case '(': // fallthrough
-                        case ')': // fallthrough
-                        case ',': // fallthrough
-                        case '-': // fallthrough
-                            nNumBonds++; // fallthrough
+                        case '(': __attribute__((fallthrough)); // fallthrough
+                        case ')': __attribute__((fallthrough)); // fallthrough
+                        case ',': __attribute__((fallthrough)); // fallthrough
+                        case '-':
+                            nNumBonds++; __attribute__((fallthrough)); // fallthrough
                         case '\0':
                             if (maxAtom < curAtom)
                                 maxAtom = curAtom;

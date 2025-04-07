@@ -598,7 +598,7 @@ int SetAtomBondType( BNS_EDGE *edge,
                                 new_bond_type = BOND_ALT12NS;
                                 break;
                             }
-                            // fallthrough
+                            __attribute__((fallthrough)); // fallthrough
                         case BOND_MARK_ALT12NS:
                             if (flow1 == 2 || flow2 == 2)
                             {
@@ -2782,7 +2782,7 @@ int is_Z_atom( U_CHAR el_number )
 {
     switch ( el_number ) 
     {
-        case EL_NUMBER_C: /* fallthrough */
+        case EL_NUMBER_C: __attribute__((fallthrough)); /* fallthrough */
         case EL_NUMBER_N:
         case EL_NUMBER_P:
         case EL_NUMBER_AS:
@@ -8535,6 +8535,7 @@ int bExistsAltPath( CANON_GLOBALS *pCG,
             break;
 
         case ALT_PATH_MODE_4_SALT:
+            __attribute__((fallthrough)); // fallthrough
         case ALT_PATH_MODE_4_SALT2:
             /* Find alt paths allowing to move (-) and H between "acidic oxygen atoms".
             Purpose: mark alt bonds due to this "long range" tautomerism. */
@@ -8554,7 +8555,8 @@ int bExistsAltPath( CANON_GLOBALS *pCG,
             break;
 
         case ALT_PATH_MODE_REM2H_CHG:
-            bChangeFlow |= BNS_EF_ALTR_BONDS; /* fall through */
+            bChangeFlow |= BNS_EF_ALTR_BONDS;
+            __attribute__((fallthrough)); /* fall through */
         case ALT_PATH_MODE_REM2H_TST:
             bChangeFlow |= BNS_EF_CHNG_RSTR;
             type = BNS_VERT_TYPE_ENDPOINT;
@@ -8573,7 +8575,8 @@ int bExistsAltPath( CANON_GLOBALS *pCG,
             break;
 
         case ALT_PATH_MODE_ADD2H_CHG:
-            bChangeFlow |= BNS_EF_ALTR_BONDS; /* fall through */
+            bChangeFlow |= BNS_EF_ALTR_BONDS;
+            __attribute__((fallthrough)); /* fall through */
         case ALT_PATH_MODE_ADD2H_TST:
             bChangeFlow |= BNS_EF_CHNG_RSTR;
             type = BNS_VERT_TYPE_ENDPOINT;
