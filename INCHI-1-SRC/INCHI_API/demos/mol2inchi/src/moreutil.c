@@ -508,7 +508,6 @@ int GetMaxPrintfLength( const char *lpszFormat, va_list argList )
             else if (*lpsz == '-' || *lpsz == '+' || *lpsz == '0'
                      || *lpsz == ' ')
             {
-                ;
             }
             else /* hit non-flag character */
             {

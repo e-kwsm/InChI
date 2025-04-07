@@ -2675,7 +2675,6 @@ exit_function:
             pRankStack1[1] = NULL; /* deallocated separately */
         for (; i < nRankStackLen && pRankStack1[i]; i++)
         {
-            ;
         }
     }
     if (pRankStack1 && pRankStack2)
