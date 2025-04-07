@@ -579,13 +579,15 @@ int SetAtomBondType( BNS_EDGE *edge,
                         bond_mark = BOND_MARK_ALT12NS;
                     }
                     else
+                    {
                         if (flow1 == 1 && flow2 == 2) {
                             bond_mark = BOND_MARK_ALT23;
                         }
                         else {
                             return BNS_BOND_ERR; /* error */
                         }
-                        break;
+                    }
+                    break;
                 default:
                     new_bond_type = bond_type;
                     bond_mark = ( *bond_type12 & BOND_MARK_MASK );
