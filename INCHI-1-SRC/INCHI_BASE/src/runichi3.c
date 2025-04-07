@@ -1536,7 +1536,7 @@ int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA* orig_at_data,
 
     /* Assign polymer type and subunits type and check polymer data for consistency */
     /* djb-rwth: addressing coverity ID #499497 -- TREAT_ERR properly used in all cases */
-    
+
     orig_at_data->valid_polymer = 0;
     if ( treat_polymers && pd )
     {
@@ -2570,12 +2570,6 @@ int  OrigAtData_RemoveHalfBond(int      this_atom,
 /****************************************************************************/
 int  OrigAtData_RemoveAtom(ORIG_ATOM_DATA* orig_at_data, int iatom)
 {
-
-    if ( 0 )
-    {
-        return 1;
-    }
-
     return 0;
 }
 
@@ -4428,7 +4422,7 @@ void OAD_ValidateAndSortOutPseudoElementAtoms(ORIG_ATOM_DATA* orig_at_data,
                 TREAT_ERR(*err, (70 + 5), "Invalid element(s):");
             TREAT_ERR(*err, (70 + 5), orig_at_data->at[k].elname);
             continue;
-#endif 
+#endif
         }
         is_star = !strcmp(orig_at_data->at[k].elname, "*");
         if ( !is_star )
