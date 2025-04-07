@@ -2242,7 +2242,8 @@ int half_stereo_bond_parity( inp_ATOM *at,
                         case ZTYPE_EITHER:
                             num_either_single++; /*  bond in "Either" direction. */
                             break;
-                        case ZTYPE_UP: /* fallthrough */
+                        case ZTYPE_UP:
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_DOWN:
                             nType = -nType; /*  at_removed_H[] contains bonds TO the center, not from */
                             z = len2( at_coord[nNumExplictAttachments] );
@@ -2254,7 +2255,7 @@ int half_stereo_bond_parity( inp_ATOM *at,
                             {
                                 z = -z;
                             }
-                            /* fallthrough */
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_3D:
                             num_z++;
                     }
@@ -2275,7 +2276,8 @@ int half_stereo_bond_parity( inp_ATOM *at,
                         case ZTYPE_EITHER:
                             num_either_single++; /*  bond in "Either" direction. */
                             break;
-                        case ZTYPE_UP: /* fallthrough */
+                        case ZTYPE_UP:
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_DOWN:
                             z = len2( at_coord[nNumExplictAttachments] );
                             /*
@@ -2286,7 +2288,7 @@ int half_stereo_bond_parity( inp_ATOM *at,
                             {
                                 z = -z;
                             }
-                            /* fallthrough */
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_3D:
                             num_z++;
                     }
@@ -3894,11 +3896,12 @@ int set_stereo_atom_parity( CANON_GLOBALS *pCG,
                         case ZTYPE_EITHER:
                             parity = vABParityUnknown /*AB_PARITY_UNKN*/; /*  no parity: bond in "Either" direction. */
                             goto exit_function;
-                        case ZTYPE_UP: /* fallthrough */
+                        case ZTYPE_UP:
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_DOWN:
                             nType = -nType; /*  at_removed_H[] contains bonds TO the center, not from */
                             b2D++;
-                            /* fallthrough */
+                            __attribute__((fallthrough)); /* fallthrough */
                         case ZTYPE_3D:
                             num_z++;
                     }
@@ -3931,9 +3934,11 @@ int set_stereo_atom_parity( CANON_GLOBALS *pCG,
                         case ZTYPE_EITHER:
                             parity = vABParityUnknown /*AB_PARITY_UNKN*/; /*  unknown parity: bond in "Either" direction. */
                             goto exit_function;
-                        case ZTYPE_UP: // fallthrough
+                        case ZTYPE_UP:
+                            __attribute__((fallthrough)); // fallthrough
                         case ZTYPE_DOWN:
-                            b2D++; // fallthrough
+                            b2D++;
+                            __attribute__((fallthrough)); // fallthrough
                         case ZTYPE_3D:
                             num_z++;
                     }
