@@ -2550,11 +2550,9 @@ int save_a_stereo_bond( int z_prod,
 
     for (i1 = 0; i1 < MAX_NUM_STEREO_BONDS && stereo_bond_neighbor1[i1]; i1++)
     {
-        ;
     }
     for (i2 = 0; i2 < MAX_NUM_STEREO_BONDS && stereo_bond_neighbor2[i2]; i2++)
     {
-        ;
     }
 
     if (i1 == MAX_NUM_STEREO_BONDS || i2 == MAX_NUM_STEREO_BONDS)
@@ -2819,7 +2817,7 @@ int can_be_a_stereo_bond_with_isotopic_H( inp_ATOM *at,
                         {
                             if (2 == at[next_at].valence)
                             {
-                                ; /* only one double bond permitted except cumulenes */
+                                /* only one double bond permitted except cumulenes */
 #if ( N_V_STEREOBONDS == 1 )
                             }
                             else
@@ -2830,7 +2828,7 @@ int can_be_a_stereo_bond_with_isotopic_H( inp_ATOM *at,
                                         3 == get_endpoint_valence( at[next_at].el_number ) &&
                                         ( !type_N || bIsOxide( at, next_at ) ))
                                 {
-                                    ; /*
+                                      /*
                                        *   found:
                                        *
                                        *    \      /    \      /    \      /
@@ -2874,7 +2872,6 @@ int can_be_a_stereo_bond_with_isotopic_H( inp_ATOM *at,
              5 == at[cur_at].chem_bonds_valence + at[cur_at].num_H &&
              3 == get_endpoint_valence( at[cur_at].el_number ))
         {
-            ;
         }
         else
         {
@@ -3292,7 +3289,6 @@ int set_stereo_bonds_parity( sp_ATOM *out_at,
                                      *      |           |           |
                                      *      at[at_2]    at[at_2]    at[at_2]
                                      */
-                                    ;
                                 }
                                 else
                                 {
@@ -3364,7 +3360,6 @@ int set_stereo_bonds_parity( sp_ATOM *out_at,
              5 == at[at_1].chem_bonds_valence + at[at_1].num_H &&
              3 == get_endpoint_valence( at[at_1].el_number ))
         {
-            ;
         }
         else
         {
@@ -3749,7 +3744,6 @@ int GetStereocenter0DParity( CANON_GLOBALS *pCG,
 
         if (j1 == MAX_NUM_STEREO_ATOM_NEIGH - 1)
         {
-            ;
             /*num_trans_neigh += j1;*/
             /* the lone pair or implicit H is implicitly at the top of the list */
         }
@@ -4344,7 +4338,7 @@ exit_function:
     /*  Non-isotopic parity */
     if (at[cur_at].num_H > 1 || parity <= 0)
     {
-        ; /*  no non-isotopic parity */
+        /*  no non-isotopic parity */
     }
     else
     {

@@ -311,7 +311,7 @@ int SDFileSkipExtraData( INCHI_IOSTREAM *inp_file,
 
     if (!err && SD_FMT_END_OF_DATA_BLOCK != current_state && NULL == p)
     {
-        ; /* err = 4; */ /* unexpected end of file: missing $$$$ */
+        /* err = 4; */ /* unexpected end of file: missing $$$$ */
     }
 
     else  if (err && ( n_blank_lines == n_lines && *line == '\0' ))
@@ -326,7 +326,6 @@ int SDFileSkipExtraData( INCHI_IOSTREAM *inp_file,
         while (( p = inchi_fgetsLf( line, line_len, inp_file ) ) &&
                  memcmp( line, SD_FMT_END_OF_DATA, 4 ))
         {
-            ;
         }
         if (p)
         {
@@ -604,7 +603,7 @@ void IntArray_DebugPrint( INT_ARRAY *items )
         }
         else
         {
-            ; /*ITRACE_( "[None]\n");*/
+            /*ITRACE_( "[None]\n");*/
         }
     }
 }

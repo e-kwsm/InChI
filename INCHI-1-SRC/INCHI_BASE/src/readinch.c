@@ -317,11 +317,9 @@ int Extract0DParities( inp_ATOM *at,
                 case INCHI_StereoType_Allene:
                     for (j1 = 0; j1 < MAX_NUM_STEREO_BONDS && at[i1].sb_parity[j1]; j1++)
                     {
-                        ;
                     }
                     for (j2 = 0; j2 < MAX_NUM_STEREO_BONDS && at[i2].sb_parity[j2]; j2++)
                     {
-                        ;
                     }
                     if (j1 < MAX_NUM_STEREO_BONDS && j2 < MAX_NUM_STEREO_BONDS &&
                          sb_ord_from_i1 >= 0 && sb_ord_from_i2 >= 0 &&
@@ -1705,7 +1703,6 @@ bypass_end_of_INChI_plain:
     while (ir.bTooLongLine &&
         0 < inchi_ios_getsTab1(szLine_i2i, sizeof(szLine_i2i) - 1, inp_file, &ir.bTooLongLine))
     {
-        ;
     }
 
     return num_atoms;

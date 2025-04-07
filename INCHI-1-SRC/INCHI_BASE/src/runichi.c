@@ -891,7 +891,6 @@ int CreateOneStructureINChI( CANON_GLOBALS          *pCG,
 
     if (ip->bAllowEmptyStructure && !orig_inp_data->at && !orig_inp_data->num_inp_atoms)
     {
-        ;
     }
     else if (!orig_inp_data->at || !orig_inp_data->num_inp_atoms)
     {
@@ -2208,7 +2207,6 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                             if (!ip->bNoWarnings)
                             {
                                 /* AddErrorMessage(sd->pStrErrStruct, "CRU fold analysis failed");*/
-                                ;
                             }
                             goto frame_shift; 
                         }
@@ -2219,7 +2217,6 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                             if (!ip->bNoWarnings)
                             {
                                 /*AddErrorMessage(sd->pStrErrStruct, "CRU fold analysis failed");*/
-                                ;
                             }
                             goto frame_shift;
                         }
@@ -2227,7 +2224,6 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                         {
                            /* inchi_ios_eprint(log_file, "Warning (CRU fold analysis failed) structure #%ld.%s%s%s%s\n",
                                 num_inp, SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));*/                            
-                            ;
                         }
                         /* else */
                         {
@@ -2723,7 +2719,6 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
         /* Correct V300 data */
         if (orig_at_data->v3000)
         {
-            ;
         }
 
 
