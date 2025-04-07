@@ -104,7 +104,6 @@ int el_number_in_internal_ref_table( const char* elname )
 
     for (i = 0; ( p = ElData[i].szElName )[0] && strcmp( p, elname ); i++)
     {
-        ;
     }
 
     return p[0] ? i : ERR_ELEM;
@@ -696,7 +695,6 @@ int get_num_H( const char* elname,
                  val < chem_bonds_valence;
                  i++)
             {
-                ;
             }
 
             /* special case: do not add H to N(IV), S(III), S+(II), S-(II) */ /* S ions added 2004-05-10 */
@@ -826,7 +824,6 @@ AT_NUMB *is_in_the_list( AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen )
 {
     for ( ; nPathLen && *pathAtom != nNextAtom; nPathLen--, pathAtom++ )
     {
-        ;
     }
     return nPathLen ? pathAtom : NULL;
 }
@@ -838,7 +835,6 @@ int *is_in_the_ilist( int *pathAtom, int nNextAtom, int nPathLen )
 {
     for ( ; nPathLen && *pathAtom != nNextAtom; nPathLen--, pathAtom++ )
     {
-        ;
     }
     return nPathLen ? pathAtom : NULL;
 }
@@ -1433,7 +1429,6 @@ int read_upto_delim( char **pstring, char *field, int maxlen, char* delims )
     /* skip leading spaces */
     for (i = 0; p[i] && isspace( UCINT p[i] ); i++)
     {
-        ;
     }
     p += i;
 
@@ -1495,7 +1490,6 @@ void remove_trailing_spaces( char* p )
     int   len;
     for (len = (int) strlen( p ) - 1; len >= 0 && isspace( UCINT p[len] ); len--)
     {
-        ;
     }
     p[++len] = '\0';
 }
@@ -1574,7 +1568,6 @@ char* lrtrim( char *p, int* nLen )
     {
         for (i = 0; i < len && is_ascii( p[i] ) && isspace( p[i] ); i++)
         {
-            ;
         }
         if ( i )
         {
@@ -1584,7 +1577,6 @@ char* lrtrim( char *p, int* nLen )
 
         for (; 0 < len && is_ascii( p[len - 1] ) && isspace( p[len - 1] ); len--)
         {
-            ;
         }
         p[len] = '\0';
     }
