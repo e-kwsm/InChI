@@ -78,6 +78,7 @@ static int CheckStatus( IXA_STATUS_HANDLE hStatus, long nrecord )
             case IXA_STATUS_WARNING:
                 fprintf( stderr, "\nWARNING: %s : structure %-ld", IXA_STATUS_GetMessage( hStatus, index ), nrecord );
                 break;
+            default: ;
         }
     }
 
