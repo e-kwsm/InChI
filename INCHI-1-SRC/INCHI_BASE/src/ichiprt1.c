@@ -1383,7 +1383,7 @@ int OutputINChI1( CANON_GLOBALS *pCG,
                              j == TAUT_NON && 0 <= ( jj = GET_II( OUT_T1, is ) ) &&
                              !is->pINChI[jj]->bDeleted && !is->pINChI[jj]->lenTautomer)
                         {
-                            ; /* the requested non-tautomeric component is in tautomeric position   */
+                              /* the requested non-tautomeric component is in tautomeric position   */
                               /*   (is->pINChI[TAUT_YES]);                                          */
                               /*   process it also as non-tautomeric if Fixed-H layer was requested */
                         }
@@ -2285,7 +2285,8 @@ int CleanOrigCoord( MOL_COORD szCoord, int delim )
             last -= 1; /* last mantissa digit position */
             /* remove trailing zeroes in the range dec_pnt+1..last-1 */
             for (i = last; dec_pnt < i && '0' == szVal[i]; i--)
-                ;
+            {
+            }
             if (i == dec_pnt)
             {
                 i--; /* remove decimal point, too */
@@ -2298,7 +2299,6 @@ int CleanOrigCoord( MOL_COORD szCoord, int delim )
             /* remove leading zeroes */
             for (i = fst; i < len && '0' == szVal[i]; i++)
             {
-                ;
             }
             if (i > fst)
             {
@@ -2473,13 +2473,13 @@ int WriteOrigAtoms( CANON_GLOBALS *pCG,
                     }
                     else
                     {
-                        ; /* invalid atom parity */
+                        /* invalid atom parity */
                     }
                 }
             }
             else
             {
-                ;/* add error message here */
+                /* add error message here */
             }
         }
 
@@ -2986,7 +2986,7 @@ int OrigStruct_FillOut( CANON_GLOBALS *pCG,
              orig_inp_data->at, &i, pOrigStruct->szAtoms, len_atoms + 1, sd ) &&
          i == orig_inp_data->num_inp_atoms)
     {
-        ; /* success */
+        /* success */
     }
     else
     {
@@ -3018,7 +3018,7 @@ int OrigStruct_FillOut( CANON_GLOBALS *pCG,
              orig_inp_data->at, &i, pOrigStruct->szBonds, len_bonds + 2, sd ) &&
          i == orig_inp_data->num_inp_atoms)
     {
-        ; /* success */
+        /* success */
     }
     else
     {
@@ -5248,7 +5248,6 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
                 if (i + 3 < out->s.nUsedLength && s[i + 3] == ':')
                 {
                     /* ra: rB; rC: in AuxInfo */
-                    ;
                 }
                 else
                 {
