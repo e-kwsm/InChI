@@ -37,18 +37,18 @@
  */
 #ifndef GET_UINT32_BE
 #define GET_UINT32_BE(n, b, i)                                                                                                                            \
-    {                                                                                                                                                     \
+    do {                                                                                                                                                     \
         (n) = ((unsigned long)(b)[(i)] << 24) | ((unsigned long)(b)[(i) + 1] << 16) | ((unsigned long)(b)[(i) + 2] << 8) | ((unsigned long)(b)[(i) + 3]); \
-    }
+    } while (0)
 #endif
 #ifndef PUT_UINT32_BE
 #define PUT_UINT32_BE(n, b, i)                     \
-    {                                              \
+    do {                                              \
         (b)[(i)] = (unsigned char)((n) >> 24);     \
         (b)[(i) + 1] = (unsigned char)((n) >> 16); \
         (b)[(i) + 2] = (unsigned char)((n) >> 8);  \
         (b)[(i) + 3] = (unsigned char)((n));       \
-    }
+    } while (0)
 #endif
 
 /*
@@ -109,12 +109,12 @@ static void sha2_process(sha2_context *ctx, unsigned char data[64])
                S0(W[t - 15]) + W[t - 16])
 
 #define P(a, b, c, d, e, f, g, h, x, K)          \
-    {                                            \
+    do {                                            \
         temp1 = h + S3(e) + F1(e, f, g) + K + x; \
         temp2 = S2(a) + F0(a, b, c);             \
         d += temp1;                              \
         h = temp1 + temp2;                       \
-    }
+    } while (0)
 
     A = ctx->state[0];
     B = ctx->state[1];
