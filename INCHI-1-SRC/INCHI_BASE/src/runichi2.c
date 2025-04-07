@@ -322,8 +322,11 @@ int GetOneStructure( INCHI_CLOCK    *ic,
     {
         case _IS_EOF:
             *num_inp -= 1;
+             __attribute__((fallthrough)); // fallthrough
         case _IS_FATAL:
+             __attribute__((fallthrough)); // fallthrough
         case _IS_ERROR:
+             __attribute__((fallthrough)); // fallthrough
         case _IS_SKIP:
             goto exit_function;
     }
