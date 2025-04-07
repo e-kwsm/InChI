@@ -3998,8 +3998,8 @@ int MergeSaltTautGroups( CANON_GLOBALS *pCG,
                  /* >C-SH, >C-S(-); S=S,Se,Te */
 
                  /* other proton donor or acceptor */
-                bHasAcidicHydrogen(at, i) && ((s_type = 3), (s_subtype = SALT_p_DONOR)) || /* djb-rwth: ui_rr */
-                bHasAcidicMinus(at, i) && ((s_type = 3), (s_subtype = SALT_p_ACCEPTOR)) /* djb-rwth: ui_rr */
+                (bHasAcidicHydrogen(at, i) && ((s_type = 3), (s_subtype = SALT_p_DONOR))) || /* djb-rwth: ui_rr */
+                (bHasAcidicMinus(at, i) && ((s_type = 3), (s_subtype = SALT_p_ACCEPTOR))) /* djb-rwth: ui_rr */
                 )
             {
 
@@ -4214,9 +4214,9 @@ int MakeIsotopicHGroup( inp_ATOM *at,
                    /* >C-SH, >C-S(-); S=S,Se,Te */
 
                    /* other proton donor or acceptor */
-                     bHasAcidicHydrogen(at, i) && ((s_type = 3), (s_subtype = SALT_p_DONOR)) || /* djb-rwth: ui_rr */
-                     bHasAcidicMinus(at, i) && ((s_type = 3), (s_subtype = SALT_p_ACCEPTOR)) || /* djb-rwth: ui_rr */
-                     bHasOtherExchangableH(at, i) && ((s_type = 3), (s_subtype = SALT_DONOR_H)))) /* djb-rwth: ui_rr */
+                     (bHasAcidicHydrogen(at, i) && ((s_type = 3), (s_subtype = SALT_p_DONOR))) || /* djb-rwth: ui_rr */
+                     (bHasAcidicMinus(at, i) && ((s_type = 3), (s_subtype = SALT_p_ACCEPTOR))) || /* djb-rwth: ui_rr */
+                     (bHasOtherExchangableH(at, i) && ((s_type = 3), (s_subtype = SALT_DONOR_H))))) /* djb-rwth: ui_rr */
 
                      )
             {
