@@ -1009,7 +1009,6 @@ char* inchi_fgetsLf(char* line, int line_len, INCHI_IOSTREAM* inp_stream)
             /* bypass up to '\n' or up to end of file whichever comes first */
             while (NULL != fgets(temp, sizeof(temp), finp) && NULL == strchr(temp, '\n'))
             {
-                ;
             }
         }
     }
@@ -1024,13 +1023,11 @@ char* inchi_fgetsLf(char* line, int line_len, INCHI_IOSTREAM* inp_stream)
             /* bypass up to '\n' or up to end of file whichever comes first */
             while (NULL != inchi_sgets(temp, sizeof(temp), inp_stream) && NULL == strchr(temp, '\n'))
             {
-                ;
             }
         }
     }
     else
     {
-        ;
     }
 
     if (p)
@@ -1103,7 +1100,6 @@ int GetMaxPrintfLength(const char* lpszFormat, va_list argList)
             else if (*lpsz == '-' || *lpsz == '+' || *lpsz == '0'
                 || *lpsz == ' ')
             {
-                ;
             }
             else /* hit non-flag character */
             {
@@ -1117,7 +1113,6 @@ int GetMaxPrintfLength(const char* lpszFormat, va_list argList)
             nWidth = atoi(lpsz);
             for (; *lpsz && isdigit(*lpsz); lpsz++)
             {
-                ;
             }
         }
         /*ASSERT(nWidth >= 0);*/
@@ -1143,7 +1138,6 @@ int GetMaxPrintfLength(const char* lpszFormat, va_list argList)
                 nPrecision = atoi(lpsz);
                 for (; *lpsz && isdigit(*lpsz); lpsz++)
                 {
-                    ;
                 }
             }
             if (nPrecision < 0)

@@ -544,7 +544,6 @@ void getInchiStateReadErr(int stat, char* szMsg)
     }
     for (i = 0; 0 <= irErrMsg[i].stat && stat != irErrMsg[i].stat; i++)
     {
-        ;
     }
     sprintf(szMsg,
 #if ( FIX_DALKE_BUGS == 1 )
@@ -1063,7 +1062,6 @@ int ReadWriteInChI(INCHI_CLOCK* ic,
                 result_string = pRealOut->s.pStr;
                 if (ret == 0)        /* no problems */
                 {
-                    ;
                 }
                 else if (ret > 0)
                 {
@@ -1096,7 +1094,7 @@ int ReadWriteInChI(INCHI_CLOCK* ic,
                             /* concider mismatch an error */
                             if (!output_error_inchi)
                             {
-                                ;    /* print nothing for now*/
+                                /* print nothing for now*/
                             }
                             else
                             {
@@ -1949,7 +1947,7 @@ int DetectInpInchiCreationOptions(InpInChI* pOneInput,
 
     if (!num_known_SB && num_unk_und_SB)
     {
-        ; /* full SUU option or SB part of it */
+        /* full SUU option or SB part of it */
     }
     else
     {
@@ -1958,7 +1956,7 @@ int DetectInpInchiCreationOptions(InpInChI* pOneInput,
 
     if (!num_known_SC && num_unk_und_SC)
     {
-        ; /* full SUU option or SB part of it */
+        /* full SUU option or SB part of it */
     }
     else
     {
@@ -3980,7 +3978,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
                         break;
 
                     case 1:
-                        pInChI_From = bAltInChIExists ? pAltInChI : NULL;;
+                        pInChI_From = bAltInChIExists ? pAltInChI : NULL;
                         bIso_From = 1;
                         break;
                     default:
@@ -4010,7 +4008,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
                         ret = RI_ERR_SYNTAX;
                         goto exit_function;
                     case 1:
-                        pInChI_From = bAltInChIExists ? pAltInChI : NULL;;
+                        pInChI_From = bAltInChIExists ? pAltInChI : NULL;
                         bIso_From = 1;
                         break;
                     default:
@@ -4633,7 +4631,7 @@ int AddAuxSegmentCoord(int         nRet,
                         pInChI->szHillFormula && !strcmp(pInChI->szHillFormula, "H") &&
                         (int)pInChI->nPossibleLocationsOfIsotopicH[0] - 1 >= nLenXYZ)
                     {
-                        ; /* a single atom H disconnected from a metal atom has no coordinates */
+                        /* a single atom H disconnected from a metal atom has no coordinates */
                     }
                     else
                     {
@@ -6708,7 +6706,7 @@ int ParseSegmentSp3(const char* str,			/* input; string of segment starting with
                     (atomParity = (int)inchi_strtol(p, &p, 10),
                         AB_MIN_KNOWN_PARITY <= atomParity && atomParity <= AB_MAX_KNOWN_PARITY))
                 {
-                    ; /* okay */
+                    /* okay */
                 }
                 else
                 {
@@ -7156,7 +7154,7 @@ int ParseSegmentSp2(const char* str,
                     (bondParity = (int)inchi_strtol(p, &p, 10),
                         AB_MIN_KNOWN_PARITY <= bondParity && bondParity <= AB_MAX_KNOWN_PARITY))
                 {
-                    ; /* okay */
+                    /* okay */
                 }
                 else
                 {
@@ -7286,7 +7284,7 @@ int ParseSegmentSp2(const char* str,
                     (bondParity = (int)inchi_strtol(p, &p, 10),
                         AB_MIN_KNOWN_PARITY <= bondParity && bondParity <= AB_MAX_KNOWN_PARITY))
                 {
-                    ; /* okay */
+                    /* okay */
                 }
                 else
                 {
@@ -10643,7 +10641,6 @@ int nGetInChISegment(INCHI_IOSTREAM* pInp,
     Line->len = 0;
     while (0 < (c = AddInChIChar(pInp, Line, pszToken)))
     {
-        ;
     }
     if (c < -2)
     {
@@ -10878,7 +10875,7 @@ void TreatErrorsInReadInChIString(int            nReadStatus,
     if (nReadStatus == RI_ERR_EOF && nErr == 0 && pState == 0) /* && !(*pstrHdr) )  */
     {
         /*if ( !(*pstrHdr) ) */
-        ;/*inchi_ios_eprint( pLog, "\nEnd of file detected after structure %ld.    \n", *num_inp );*/
+        /*inchi_ios_eprint( pLog, "\nEnd of file detected after structure %ld.    \n", *num_inp );*/
     }
     else
     {
@@ -12087,7 +12084,7 @@ static int SegmentSp3StoreStereoCenters(int* pbAbc,
                 (atomParity = (int)inchi_strtol(p, &p, 10),
                     AB_MIN_KNOWN_PARITY <= atomParity && atomParity <= AB_MAX_KNOWN_PARITY))
             {
-                ; /* okay */
+                /* okay */
             }
             else
             {

@@ -438,7 +438,6 @@ M2I_THREADFUNC m2i_Worker_run( void *arg ) /* djb-rwth: ignoring LLVM warning */
         }
         else if (res == mol2inchi_Ret_WARNING)
         {
-            ;
             /* sprintf( errstr, "Warning " ); */
             /* GrowStr_printf( errstr, "Warning " ); */
         }
