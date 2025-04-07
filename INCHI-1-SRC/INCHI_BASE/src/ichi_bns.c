@@ -598,6 +598,7 @@ int SetAtomBondType( BNS_EDGE *edge,
                                 new_bond_type = BOND_ALT12NS;
                                 break;
                             }
+                            // fallthrough
                         case BOND_MARK_ALT12NS:
                             if (flow1 == 2 || flow2 == 2)
                             {
