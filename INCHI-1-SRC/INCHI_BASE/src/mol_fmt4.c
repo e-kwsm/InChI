@@ -814,7 +814,7 @@ int OrigAtData_WriteToSDfile( const ORIG_ATOM_DATA *inp_at_data,
         nNumRadicalLines = 0, nNumAliasLines = 0, ret = 0;
     INT_ARRAY written_bond_ends;
 
-    OrigAtData_WriteToSDfileHeaderAndCountThings( (ORIG_ATOM_DATA *) inp_at_data,
+    OrigAtData_WriteToSDfileHeaderAndCountThings( (const ORIG_ATOM_DATA *) inp_at_data,
                                                   fcb, name, comment,
                                                   bChiralFlag, bAtomsDT,
                                                   szLabel, szValue,
