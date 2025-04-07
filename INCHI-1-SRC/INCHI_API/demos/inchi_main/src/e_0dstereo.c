@@ -203,7 +203,7 @@ int ee_extract_ChargeRadical( char *elname, int *pnRadical, int *pnCharge )
     {
         switch (*q)
         {
-            case '+':
+            case '+': // fallthrough
             case '-':
                 for (k = 0, nVal = 0; ( nSign = ( '+' == q[k] ) ) || ( nSign = -( '-' == q[k] ) ); k++)
                 {
@@ -3373,9 +3373,10 @@ int e_set_stereo_atom_parity( Stereo0D *pStereo,
             case ZTYPE_EITHER:
                 parity = INCHI_PARITY_UNKNOWN; /*  unknown parity: bond in "Either" direction. */
                 goto exit_function;
-            case ZTYPE_UP:
+            case ZTYPE_UP: // fall through
             case ZTYPE_DOWN:
                 b2D++;
+                // fallthrough
             case ZTYPE_3D:
                 num_z++;
         }
