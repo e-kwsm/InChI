@@ -202,7 +202,7 @@ char* fgets_lf( char* line, int line_len, FILE *f )
     /*  fix CR CR LF line terminator. */
     if (p)
     {
-        if (q = strchr( line, '\r' ))
+        if ((q = strchr( line, '\r' )))
         {
             q[0] = '\n';
             q[1] = '\0';
@@ -223,7 +223,7 @@ int get_next_molfile_as_text( FILE *f, char *buf, size_t buflen )
     size_t pos = 0l, bufsize = 0;
     int empty = 1;
 
-    while (p = fgets_lf( line, MOLMAXLINELEN, f ))
+    while ((p = fgets_lf( line, MOLMAXLINELEN, f )))
     {
         size_t n = strlen( line );
         if (n)
