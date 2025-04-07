@@ -389,7 +389,7 @@ static int ReadOptions( int argc,
 /****************************************************************************
 Main program.
 ****************************************************************************/
-void main( int argc, const char *argv[] )
+int main( int argc, const char *argv[] )
 {
     FILE*       sdfile = NULL;
     FILE*       outfile = NULL;
@@ -448,7 +448,7 @@ void main( int argc, const char *argv[] )
         /* Not enough command line arguments have been provided. Output some help
         information, then exit. */
         print_help( );
-        return;
+        return 0;
     }
 
 #if ( defined(_WIN32) && defined(_MSC_VER) )
@@ -773,6 +773,7 @@ cleanup:
     IXA_INCHIBUILDER_Destroy( NULL, inchi_builder );
     IXA_MOL_Destroy( NULL, molecule );
     IXA_STATUS_Destroy( status );
+    return 0;
 }
 
 
