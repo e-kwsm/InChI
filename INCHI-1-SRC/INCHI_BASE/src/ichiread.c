@@ -4000,7 +4000,6 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
                         ret = RI_ERR_PROGR;
                         goto exit_function;
                     }
-                    break;
                 case 'M':  /* same as isotopic Mobile-H */
                     switch (bIso)
                     {
