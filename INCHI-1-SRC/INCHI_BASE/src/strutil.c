@@ -3668,8 +3668,10 @@ done:
         /* connect H to at[iat] */
         val = at[iat].valence;
         
+#ifdef _WIN32
 #pragma warning (push)
 #pragma warning (disable: 6386)
+#endif
         if (val < MAXVAL)
         {
             at[iat].neighbor[val] = iat_H;
@@ -3678,7 +3680,9 @@ done:
             at[iat].chem_bonds_valence += at[iat_H].bond_type[0];
             at[iat].valence = val + 1;
         };
+#ifdef _WIN32
 #pragma warning (pop)
+#endif
 
         at[iat_H].component = at[iat].component;
         at[iat_H].neighbor[0] = iat;
