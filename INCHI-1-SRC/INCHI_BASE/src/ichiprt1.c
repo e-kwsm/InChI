@@ -2308,10 +2308,14 @@ int CleanOrigCoord( MOL_COORD szCoord, int delim )
         }
         if (len_buf && (len_buf < (int)sizeof(MOL_COORD)))
         {
+#ifdef _WIN32
 #pragma warning (push)
 #pragma warning (disable: 6386)
+#endif
             szBuf[len_buf++] = delim;
+#ifdef _WIN32
 #pragma warning (pop)
+#endif
         }
         memcpy(szBuf + len_buf, szVal, len); /* does not copy zero termination*/
         len_buf += len;
