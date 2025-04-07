@@ -1738,7 +1738,6 @@ int GetHalfStereobond0DParity( inp_ATOM *at,
         icur2nxt = icur2neigh = -1; /* ordering number of neighbors in nSbNeighOrigAtNumb[] */
         cur_parity = 0;             /* parity for mth stereobond incident to the cur_at */
         if (0 <= at[cur_at].sb_ord[m] && at[cur_at].sb_ord[m] < at[cur_at].valence &&
-             0 <= ( nxt_at = at[cur_at].neighbor[(int) at[cur_at].sb_ord[m]] ) &&
              at[nxt_at].valence <= MAX_NUM_STEREO_BONDS && /* make sure it is a valid stereobond */
              ( nNextSbAtOrigNumb = at[nxt_at].orig_at_number ))
         {
