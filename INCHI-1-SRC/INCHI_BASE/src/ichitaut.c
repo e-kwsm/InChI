@@ -903,7 +903,6 @@ int nGetEndpointInfo_PT_18_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
 #endif
         return nEndpointValence;
     }
-    return 0;
 }
 #endif
 
