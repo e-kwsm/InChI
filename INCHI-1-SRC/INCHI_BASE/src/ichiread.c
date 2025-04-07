@@ -5870,7 +5870,7 @@ int ParseSegmentIsoAtoms(const char* str,
                 if_cnd = 1;
             }
 
-            if (if_cnd && (t = strchr((char*)mult_type, *q)) && q + 1 == pEnd) /* djb-rwth: if_cnd applied; ignoring LLVM warning: variable used to store function return value */
+            if (if_cnd && (t = strchr((const char*)mult_type, *q)) && q + 1 == pEnd) /* djb-rwth: if_cnd applied; ignoring LLVM warning: variable used to store function return value */
             {
                 /* process the abbreviation */
                 ret = 0;
