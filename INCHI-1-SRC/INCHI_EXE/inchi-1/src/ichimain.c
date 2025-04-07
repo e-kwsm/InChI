@@ -628,8 +628,8 @@ int ProcessSingleInputFile(int argc, char* argv[])
     inchi_ios_init(pprb, inchi_ios_type, NULL);
     memset(strbuf, 0, sizeof(*strbuf)); /* djb-rwth: memset_s C11/Annex K variant?; dereferencing strbuf */
 
-    if (argc == 1 || (argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX)) &&
-        (!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help"))) /* djb-rwth: addressing LLVM warning */
+    if (argc == 1 || ((argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX)) &&
+        (!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help")))) /* djb-rwth: addressing LLVM warning */
     {
         HelpCommandLineParms(plog);
         inchi_ios_flush(plog);
