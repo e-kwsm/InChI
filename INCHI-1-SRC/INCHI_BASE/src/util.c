@@ -366,15 +366,15 @@ int get_periodic_table_number( const char* elname )
     /* the single letter (common) elements */
     if (!elname[1]) {
         switch (elname[0]) {
-            case 'H': return EL_NUMBER_H; break;
-            case 'B': return EL_NUMBER_B; break;
-            case 'C': return EL_NUMBER_C; break;
-            case 'N': return EL_NUMBER_N; break;
-            case 'O': return EL_NUMBER_O; break;
-            case 'P': return EL_NUMBER_P; break;
-            case 'S': return EL_NUMBER_S; break;
-            case 'F': return EL_NUMBER_F; break;
-            case 'I': return EL_NUMBER_I; break;
+            case 'H': return EL_NUMBER_H;
+            case 'B': return EL_NUMBER_B;
+            case 'C': return EL_NUMBER_C;
+            case 'N': return EL_NUMBER_N;
+            case 'O': return EL_NUMBER_O;
+            case 'P': return EL_NUMBER_P;
+            case 'S': return EL_NUMBER_S;
+            case 'F': return EL_NUMBER_F;
+            case 'I': return EL_NUMBER_I;
         }
     }
 
