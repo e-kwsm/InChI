@@ -333,11 +333,11 @@ int main( int argc, char *argv[] )
 
     /* Final printouts */
     tick_stop = get_msec_timer();
-    fprintf( stderr, "\nProcessed %lu structure(s) with %-ld error(s).\n", wd.nmol, wd.n_inchi_err );
+    fprintf( stderr, "\nProcessed %ld structure(s) with %-ld error(s).\n", wd.nmol, wd.n_inchi_err );
     fprintf(stderr, "Conversion speed %.1f mols/sec, structure %-ld\n", (double)wd.nmol *1000.0 / (tick_stop - tick_start), wd.nmol);   
     fprintf( stderr, "Finished at " );
     print_time( );
-    fprintf( stderr, "Elapsed wall time: %d msec (", tick_stop - tick_start );
+    fprintf( stderr, "Elapsed wall time: %u msec (", tick_stop - tick_start );
 
     if (wd.n_workers == 1)
     {
