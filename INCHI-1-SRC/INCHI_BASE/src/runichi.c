@@ -284,19 +284,19 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
     }
 
     /*(@nnuk : Nauman Ullah Khan)
-     *invoking Organometallics preprocessing (if flag is active)
+     *invoking Molecular Inorganics preprocessing (if flag is active)
      */
-    if ( ip->bOrganometallics && nRet != _IS_FATAL && nRet != _IS_ERROR )
+    if ( ip->bMolecularInorganics && nRet != _IS_FATAL && nRet != _IS_ERROR )
     {
-        /* Call the OrgMetPreprocessing function to handle specific organometallic-related tasks */
-        ret1 = OrgMetPreprocessing(orig_inp_data, ip);
+        /* Call the MolecularInorganicsPreprocessing function to handle specific inorganics-related tasks */
+        ret1 = MolecularInorganicsPreprocessing(orig_inp_data, ip);
 
         /* Check for errors during preprocessing */
         if ( ret1 < 0 )
         {
-            /* Log and handle fatal error in organometallic preprocessing */
-            fprintf(stderr, "Error during OrganoMetallic preprocessing\n");
-            AddErrorMessage(sd->pStrErrStruct, "OrganoMetallic preprocessing failed");
+            /* Log and handle fatal error in molecular inorganics preprocessing */
+            fprintf(stderr, "Error during Molecular Inorganics preprocessing\n");
+            AddErrorMessage(sd->pStrErrStruct, "Molecular Inorganics preprocessing failed");
             nRet = _IS_FATAL;
             goto exit_function;
         }
@@ -313,7 +313,7 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             printf("\n");
         }*/
 
-        /*printf("OrganoMetallic preprocessing completed successfully.\n");*/
+        /*printf("Molecular inorganics preprocessing completed successfully.\n");*/
         nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
             pINChI, pINChI_Aux, INCHI_BAS,
             inp_file, log_file, out_file, prb_file,
@@ -323,7 +323,7 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
         nRet = inchi_max(nRet, nRet1);
 
         /* If preprocessing indicates we need a reconnected InChI, create it here */
-        if ( ip->bOrgMetReconnectedInChI && nRet != _IS_FATAL &&
+        if ( ip->bMolecularInorganicsReconnectedInChI && nRet != _IS_FATAL &&
             nRet != _IS_ERROR &&
             (sd->bTautFlagsDone[INCHI_BAS] & TG_FLAG_DISCONNECT_COORD_DONE) &&
             (ip->bTautFlags & TG_FLAG_RECONNECT_COORD) )

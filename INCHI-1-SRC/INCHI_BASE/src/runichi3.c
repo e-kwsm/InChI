@@ -532,8 +532,8 @@ int PreprocessOneStructure(struct tagINCHI_CLOCK* ic,
 
     /* Needs salt disconnection? */
 
-    /* (@nnuk -> Nauman Ullah Khan) :: In case of Metal Salts with OrgMet parameter we need to skip this pre-processing of Salts */
-    if ( ip->bOrganometallics )
+    /* (@nnuk -> Nauman Ullah Khan) :: In case of Metal Salts with MolecularInorganics parameter we need to skip this pre-processing of Salts */
+    if ( ip->bMolecularInorganics )
     {
         ;
     }
@@ -643,8 +643,8 @@ int PreprocessOneStructure(struct tagINCHI_CLOCK* ic,
               -- copy prep_inp_data --> prep_inp_data+1
               -- disconnect metals in prep_inp_data            */
 
-              /* (@nnuk -> Nauman Ullah Khan) :: In case of Metals with OrgMet parameter we need to skip this pre-processing of Metals */
-    if ( ip->bOrganometallics )
+              /* (@nnuk -> Nauman Ullah Khan) :: In case of Metals with MolecularInorganics parameter we need to skip this pre-processing of Metals */
+    if ( ip->bMolecularInorganics )
     {
         return 0;             /* Skipping over current functionality */
     }

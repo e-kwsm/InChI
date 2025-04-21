@@ -58,12 +58,12 @@ extern "C" {
 #endif
 
     /*(@nnuk : Nauman Ullah Khan)
-    * Metal definitions for Organometallics (OrgMet)
+    * Metal definitions for molecular inorganics (MolInOrg)
     */
-#define OrgMet1           1          /* definition of an element: lowest valence */
-#define OrgMet2           3          /* definition of an element: lowest and next to it valence */
-#define OrgMet3           7          /* definition of an element: lowest and two next to it valence */
-#define OrgMet4           15         /* definition of an element: lowest and three next to it valence */
+#define MolInOrg1           1          /* definition of an element: lowest valence */
+#define MolInOrg2           3          /* definition of an element: lowest and next to it valence */
+#define MolInOrg3           7          /* definition of an element: lowest and two next to it valence */
+#define MolInOrg4           15         /* definition of an element: lowest and three next to it valence */
 
     /* forward declaration */
     struct tagTautomerGroupsInfo;
@@ -72,7 +72,7 @@ extern "C" {
     /*(@nnuk : Nauman Ullah Khan)
     * CHEMICAL ELEMENTS & ATOMIC VALENCE MODEL FOR VARIOUS OXIDATION STATES
     */
-    typedef struct tagOrgMetArray
+    typedef struct tagMolecularInorganicsArray
     {
         /*    Element chemical symbol */
         const char* szElName;
@@ -83,7 +83,7 @@ extern "C" {
         int     nNormAtMass;
         /*    (not used currently) Exact mw of the most abundant isotope (not used)    */
         double  dAtMass;
-        /*    OrgMet1, OrgMet2, OrgMet3 or OrgMet4 */
+        /*    MolInOrg1, MolInOrg2, MolInOrg3 or MolInOrg4 */
         int     nType;
         /*    (not used currently) Pauling electronegativity x 10; 0 means unknown    */
         int     nElNegPauling10;
@@ -91,28 +91,28 @@ extern "C" {
         /*    NB: was called bDoNotAddH, renamed to avoid confusion with other procedures */
         int     bSkipAddingH;
         S_CHAR  cValence[NUM_ATOM_CHARGES][MAX_NUM_VALENCES];
-    } OrgMetElData;
+    } MolecularInorganicsElData;
 
-    /*(@nnuk : Nauman Ullah Khan) :: Structure to hold variables for the array of all chemical elements, further used by Organometallics function*/
-    typedef struct tagElementsOrg
+    /*(@nnuk : Nauman Ullah Khan) :: Structure to hold variables for the array of all chemical elements, further used by MolecularInorganics function*/
+    typedef struct tagElementsMolecularInorganics
     {
         int atomic_number;
         char symbol[3];  /* Fixed length for symbol, up to 2 characters + null terminator */
 
-    } ElementsOrg;
+    } ElementsMolecularInorganics;
 
-    /* (@nnuk : Nauman Ullah Khan) :: Main function for Organometallics */
-    int OrgMetPreprocessing(ORIG_ATOM_DATA* orig_at_data, INPUT_PARMS* ip);
-    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for getting the binary value of the electronegativity difference between any two elements */
+    /* (@nnuk : Nauman Ullah Khan) :: Main function for molecular inorganics */
+    int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA* orig_at_data, INPUT_PARMS* ip);
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, for getting the binary value of the electronegativity difference between any two elements */
     int getElnegBiVal(int atomicNumber1, int atomicNumber2);
-    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, for updating the neighbour's list in the main organometallics function processing */
-    void updateNeighborListOrgMet(inp_ATOM* at, int atom_idx, int neighbor_idx);
-    /* (@nnuk : Nauman Ullah Khan) :: Function related to Organometallics, decides for the specific metal bonds to be kept or disconnected. */
-    int OrgMetIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
-    /* Function retrieves valence values for organometallics functionality*/
-    int getElValenceforOrgMet(int nPeriodicNum, int charge, int val_num);
-    /* Function retrieves element type value for organometallics functionality*/
-    int getElTypeforOrgMet(int nPeriodicNum);
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, for updating the neighbour's list in the main molecular inorganics function processing */
+    void updateNeighborListMolecularInorganics(inp_ATOM* at, int atom_idx, int neighbor_idx);
+    /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, decides for the specific metal bonds to be kept or disconnected. */
+    int MolecularInorganicsIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
+    /* Function retrieves valence values for molecular inorganics functionality*/
+    int getElValenceforMolecularInorganics(int nPeriodicNum, int charge, int val_num);
+    /* Function retrieves element type value for molecular inorganics functionality*/
+    int getElTypeforMolecularInorganics(int nPeriodicNum);
 
     int ExtractConnectedComponent(inp_ATOM* at, int num_at,
         int component_number,

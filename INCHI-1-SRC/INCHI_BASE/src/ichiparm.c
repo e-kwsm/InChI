@@ -123,7 +123,7 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNoWarnings,
     int* pbMergeHash,
     int* pbHideInChI,
-    int* pbOrganometallics);             /* (@nnuk: Nauman Ullah Khan) :: variable added for Organometallics */
+    int* pbMolecularInorganics);             /* (@nnuk: Nauman Ullah Khan) :: variable added for Molecular Inorganics */
 
 
 /****************************************************************************
@@ -167,7 +167,7 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNoWarnings,
     int* pbMergeHash,
     int* pbHideInChI,
-    int* pbOrganometallics                /* (@nnuk: Nauman Ullah Khan) :: variable added for Organometallics */
+    int* pbMolecularInorganics                /* (@nnuk: Nauman Ullah Khan) :: variable added for Molecular Inorganics */
 )
 {
     int got = 0;
@@ -343,13 +343,13 @@ int set_common_options_by_parg(const char* pArg,
         got = 1;
     }
     /* (@nnuk :: NaumanUllahKhan)
-    * Parameter option that deals with Organometallics
+    * Parameter option that deals with Molecular Inorganics
     */
-    else if ( !inchi_stricmp(pArg, "OrgMet") )
+    else if ( !inchi_stricmp(pArg, "MolecularInorganics") )
     {
-        /*printf("\n\nOrganoMetallics Parameter Activated\n\n");*/
+        /*printf("\n\nMolecular Inorganics Parameter Activated\n\n");*/
 
-        ip->bOrganometallics = 1;
+        ip->bMolecularInorganics = 1;
         *pbStdFormat = 0;
         got = 1;
     }
@@ -649,7 +649,7 @@ int ReadCommandLineParms(int argc,
     int bRecognizedOption;
     int bTgFlagVariableProtons = 1;
     int bTgFlagHardAddRenProtons = 1;
-    int bOrganometallics = 0;                        /* (@nnuk : Nauman Ullah Khan) :: variable initialization for the Organometallics parameter */
+    int bMolecularInorganics = 0;                        /* (@nnuk : Nauman Ullah Khan) :: variable initialization for the Molecular Inorganics parameter */
     int bReconnectCoord = (RECONNECT_METALS == 1);
     int bDisconnectCoord = (DISCONNECT_METALS == 1);
     int bDisconnectCoordChkVal = (CHECK_METAL_VALENCE == 1);
@@ -809,7 +809,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI, &bOrganometallics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after organometallics introduction*/
+                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after molecular inorganics introduction*/
             if ( got )
             {
                 ;
@@ -1257,7 +1257,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI, &bOrganometallics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after organometallics introduction*/;
+                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after molecular inorganics introduction*/;
 
             if ( got )
             {
@@ -2781,7 +2781,7 @@ void HelpCommandLineParms(INCHI_IOSTREAM* f)
 #endif
 
     inchi_ios_print_nodisplay(f, "Structure perception\n");
-    inchi_ios_print_nodisplay(f, "  OrgMet      OrganoMetallics\n");              /*(@nnuk : Nauman Ullah Khan) :: Parameter for Organometallics added*/
+    inchi_ios_print_nodisplay(f, "  MolecularInorganics      Parameter deals with Molecular Inorganics (initial testing phase)\n");              /*(@nnuk : Nauman Ullah Khan) :: Parameter for Molecular Inorganics added*/
     inchi_ios_print_nodisplay(f, "  SNon        Exclude stereo (default: include absolute stereo)\n");
     inchi_ios_print_nodisplay(f, "  NEWPSOFF    Both ends of wedge point to stereocenters (default: a narrow end)\n");
     inchi_ios_print_nodisplay(f, "  LooseTSACheck   Relax criteria of ambiguous drawing for in-ring tetrahedral stereo\n");
