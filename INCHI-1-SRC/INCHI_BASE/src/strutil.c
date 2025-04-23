@@ -6164,13 +6164,17 @@ int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int i, int bCheckMetalV
     int type = getElTypeforMolecularInorganics(at[i].el_number);
     int j;
 
-    /* Calculate the actual valence of the atom */
+    /* Calculate the actual valence of the atom
+     * It means that the total bounding capacity
+     * of the atom has to be taken into account
+     * which will further get equated within the
+     * elements array to a metal atom(neutral or an ion) */
     num_H = NUMH(at, i);
     at_valence = num_H + at[i].chem_bonds_valence;
 
     if (!at_valence)
     {
-        return 0; /* Isolated metal atom, nothing to disconnect */
+        return 0; /* Isolated metal atom */
     }
 
     if (bCheckMetalValence)
@@ -6191,7 +6195,7 @@ int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int i, int bCheckMetalV
         }
     }
 
-    /* Default: Valence greater than usual so no disconnection */
+    /* Default: Valence greater than usual or the atom is isolated hence no disconnection */
     return 0;
 }
 
@@ -6345,7 +6349,7 @@ int getElnegBiVal(int atomicNumber1, int atomicNumber2)
     /* Ensure the atomic numbers are within the valid range */
     if (atomicNumber1 < 1 || atomicNumber1 > NUM_ELEMENTS || atomicNumber2 < 1 || atomicNumber2 > NUM_ELEMENTS)
     {
-        printf("Invalid atomic number(s)\n");
+        fprintf(stderr, "Invalid atomic number(s) for an element\n");
         return -1; /* Error case */
     }
 
@@ -6441,19 +6445,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     /* variables initialized */
     int i, j, n;
 
-    /*// Print atom structure before processing
-    printf("Atom Structure Before Processing:\n");
-    for (i = 0; i < num_at; i++)
-    {
-        printf("Atom %d: Element %s, Charge: %d, Valence: %d, Neighbors: ",
-            i + 1, at[i].elname, at[i].charge, at[i].valence);
-        for (j = 0; j < at[i].valence; j++)
-        {
-            printf("%d ", at[i].neighbor[j] + 1);  // Print the neighboring atom indices
-        }
-        printf("\n");
-    }*/
-
     for (i = 0; i < num_at; i++)
     {
         if (!is_el_a_metal(at[i].el_number))
@@ -6470,9 +6461,9 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         /* Call the MolecularInorganicsIsMetalToDisconnect function */
         int disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i, 1); /* 1 for bCheckMetalValence */
 
-        if (disconnectDecision != 2)
+        if (disconnectDecision != 2) /* If disconnectDecision = 2, then disconnection procedure will be followed if applicable */
         {
-            if (disconnectDecision == 0 || disconnectDecision == 1)
+            if (disconnectDecision == 0 || disconnectDecision == 1) /* 0 means : atom is isolated ; 1 means : not a normal valence as compared inside MolecularInorganicsArray */
             {
                 /*printf("No disconnection for metal atom %s (Index: %d) as valence is greater or is isolated.\n", at[i].elname, i + 1);*/
                 ip->bMolecularInorganicsReconnectedInChI = 1;
@@ -6490,7 +6481,8 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             int neighbor_idx = at[i].neighbor[n];
             int neighbor_atomic_number = at[neighbor_idx].el_number;
 
-            /* Check if the neighbor has more than 1 bond */
+            /* Check if the neighboring atom has more than 1 bond connected to the metal atom or
+             * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
             if (at[i].bond_type[n] > 1 || is_el_a_metal(neighbor_atomic_number))
             {
                 /*printf("Keeping bond between %s (Index: %d) and %s (Index: %d) because either the bond type is greater than single bond or it is a metal-metal bond.\n",

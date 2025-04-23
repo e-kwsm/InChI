@@ -60,10 +60,10 @@ extern "C" {
     /*(@nnuk : Nauman Ullah Khan)
     * Metal definitions for molecular inorganics (MolInOrg)
     */
-#define MolInOrg1           1          /* definition of an element: lowest valence */
-#define MolInOrg2           3          /* definition of an element: lowest and next to it valence */
-#define MolInOrg3           7          /* definition of an element: lowest and two next to it valence */
-#define MolInOrg4           15         /* definition of an element: lowest and three next to it valence */
+#define MolInOrg1           1          /* takes the lowest valence of an element */
+#define MolInOrg2           3          /* takes the two lowest valences of an element */
+#define MolInOrg3           7          /* takes the three lowest valences of an element */
+#define MolInOrg4           15         /* takes the four lowest valences of an element */
 
     /* forward declaration */
     struct tagTautomerGroupsInfo;
