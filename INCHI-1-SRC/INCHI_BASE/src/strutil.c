@@ -42,6 +42,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "mode.h"
 
@@ -6186,9 +6187,12 @@ int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int i, int bCheckMetalV
         }
 
         /* Check if the valence matches a known normal valence */
-        for (j = 0; j < 4 && (1 << j) & type; j++)
+        for (j = 0; j < 4; j++)
         {
-            if (at_valence == getElValenceforMolecularInorganics(at[i].el_number, at[i].charge, j))
+            const int bitmask = (1 << j);                              /* Create bitmask for the j-th bit */
+            const bool is_valence_state_valid = (bitmask & type) != 0; /* Check if the j-th valence state is allowed */
+
+            if (is_valence_state_valid && at_valence == getElValenceforMolecularInorganics(at[i].el_number, at[i].charge, j))
             {
                 return 2; /* Atom has normal valence follows disconnection logic if applicable */
             }
@@ -6463,15 +6467,10 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
         if (disconnectDecision != 2) /* If disconnectDecision = 2, then disconnection procedure will be followed if applicable */
         {
-            if (disconnectDecision == 0 || disconnectDecision == 1) /* 0 means : atom is isolated ; 1 means : not a normal valence as compared inside MolecularInorganicsArray */
-            {
-                /*printf("No disconnection for metal atom %s (Index: %d) as valence is greater or is isolated.\n", at[i].elname, i + 1);*/
-                ip->bMolecularInorganicsReconnectedInChI = 1;
-            }
-            else
-            {
-                fprintf(stderr, "Error : Invalid state for disconnection of metal atom %s (Index: %d).\n", at[i].elname, i + 1);
-            }
+            /* (@nnuk) : No disconnection if the metal atom bounding capacity is greater than
+             * the limit set inside Molecular Inorganics elements array or if the metal atom is
+             * isolated. */
+            ip->bMolecularInorganicsReconnectedInChI = 1;
             continue;
         }
 
@@ -6499,19 +6498,12 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
             if (binaryValue != 1)
             {
-                if (binaryValue == 0)
-                {
-                    /*printf("Keep bond between %s and %s\n\n", at[i].elname, at[neighbor_idx].elname);*/
-                    ip->bMolecularInorganicsReconnectedInChI = 1;
-                }
-                else
-                {
-                    fprintf(stderr, "Error: Invalid binary value for electronegativity difference between %s and %s\n", at[i].elname, at[neighbor_idx].elname);
-                }
+                /* (@nnuk : Keep the bonds, no disconnection) */
+                ip->bMolecularInorganicsReconnectedInChI = 1;
                 continue;
             }
 
-            printf("Disconnection: Electronegativity difference greater than threshold value between %s and %s\n", at[i].elname, at[neighbor_idx].elname);
+            /*printf("Disconnection: Electronegativity difference greater than threshold value between %s and %s\n", at[i].elname, at[neighbor_idx].elname);*/
             DisconnectInpAtBond(at, nOldCompNumber, i, n);
 
             /* Updating the metal as well as neighbor list */
@@ -6522,22 +6514,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             at[neighbor_idx].charge -= 1; /* Neighbor atom gains an electron -> -1 charge */
 
             /* printf("Atom %d: Element %s, Charge: %d, Valence: %d, Num_H: %d\n", i + 1, at[i].elname, at[i].charge, at[i].valence, at[i].num_H); */
-
-            /*// Debugging: Print the updated neighbor list for the metal atom after disconnection
-            printf("\nUpdated Neighbor List of Metal Atom %s (Index: %d) after disconnection: ", at[i].elname, i + 1);
-            for (int im = 0; im < at[i].valence; im++)
-            {
-                printf("%d ", at[i].neighbor[im] + 1); // Adding 1 to index for 1-based indexing in output
-            }
-            printf("\n");
-
-            /* //Debugging: Print the updated neighbor list for the neighbor atom after disconnection
-            printf("Updated Neighbor List of Neighbor Atom %s (Index: %d) after disconnection: ", at[neighbor_idx].elname, neighbor_idx + 1);
-            for (int in = 0; in < at[neighbor_idx].valence; in++)
-            {
-                printf("%d ", at[neighbor_idx].neighbor[in] + 1);  Adding 1 to index for 1-based indexing in output
-            }
-            printf("\n\n"); */
 
             num_disconnected++;
 
