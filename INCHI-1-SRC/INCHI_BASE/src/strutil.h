@@ -104,7 +104,7 @@ extern "C" {
     /* (@nnuk : Nauman Ullah Khan) :: Main function for molecular inorganics */
     int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA* orig_at_data, INPUT_PARMS* ip);
     /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, for getting the binary value of the electronegativity difference between any two elements */
-    int getElnegBiVal(int atomicNumber1, int atomicNumber2);
+    int getDeltaEN(int atom1, int atom2);
     /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, for updating the neighbour's list in the main molecular inorganics function processing */
     void updateNeighborListMolecularInorganics(inp_ATOM* at, int atom_idx, int neighbor_idx);
     /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, decides for the specific metal bonds to be kept or disconnected. */

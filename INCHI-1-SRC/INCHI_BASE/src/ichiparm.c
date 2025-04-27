@@ -122,8 +122,7 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI,
-    int* pbMolecularInorganics);             /* (@nnuk: Nauman Ullah Khan) :: variable added for Molecular Inorganics */
+    int* pbHideInChI);
 
 
 /****************************************************************************
@@ -166,8 +165,7 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI,
-    int* pbMolecularInorganics                /* (@nnuk: Nauman Ullah Khan) :: variable added for Molecular Inorganics */
+    int* pbHideInChI
 )
 {
     int got = 0;
@@ -649,7 +647,6 @@ int ReadCommandLineParms(int argc,
     int bRecognizedOption;
     int bTgFlagVariableProtons = 1;
     int bTgFlagHardAddRenProtons = 1;
-    int bMolecularInorganics = 0;                        /* (@nnuk : Nauman Ullah Khan) :: variable initialization for the Molecular Inorganics parameter */
     int bReconnectCoord = (RECONNECT_METALS == 1);
     int bDisconnectCoord = (DISCONNECT_METALS == 1);
     int bDisconnectCoordChkVal = (CHECK_METAL_VALENCE == 1);
@@ -809,7 +806,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after molecular inorganics introduction*/
+                &bNoWarnings, &bMergeHash, &bHideInChI);
             if ( got )
             {
                 ;
@@ -1257,7 +1254,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);  /*(@nnuk : Nauman Ullah Khan) :: Function parameters updated after molecular inorganics introduction*/;
+                &bNoWarnings, &bMergeHash, &bHideInChI);
 
             if ( got )
             {

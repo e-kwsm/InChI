@@ -6347,22 +6347,23 @@ const int binaryArrayMolecularInorganics[NUM_ELEMENTS][NUM_ELEMENTS] = {
  * disconnected whereas, "0" means the bond has to be kept.
  ******************************************************************************/
 
-int getElnegBiVal(int atomicNumber1, int atomicNumber2)
+int getDeltaEN(int atom1, int atom2)
 {
+    int index1, index2, binaryValue;
 
-    /* Ensure the atomic numbers are within the valid range */
-    if (atomicNumber1 < 1 || atomicNumber1 > NUM_ELEMENTS || atomicNumber2 < 1 || atomicNumber2 > NUM_ELEMENTS)
+    /* Ensure the elememt numbers are within the valid range */
+    if (atom1 < 1 || atom1 > NUM_ELEMENTS || atom2 < 1 || atom2 > NUM_ELEMENTS)
     {
-        fprintf(stderr, "Invalid atomic number(s) for an element\n");
+        fprintf(stderr, "Invalid element number for atom1 : %d or atom2 : %d\n", atom1, atom2);
         return -1; /* Error case */
     }
 
     /* Get the indices corresponding to the atomic numbers */
-    int index1 = atomicNumber1 - 1;
-    int index2 = atomicNumber2 - 1;
+    index1 = atom1 - 1;
+    index2 = atom2 - 1;
 
     /* Retrieve the binary value from the binary array */
-    int binaryValue = binaryArrayMolecularInorganics[index1][index2];
+    binaryValue = binaryArrayMolecularInorganics[index1][index2];
 
     /* Output for debugging purposes */
     /*printf("Electronegativity binary value between the atom and it's neighbour is: %d\n", binaryValue); */
@@ -6432,7 +6433,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
     /* Allocate memory to store indices of metal atoms for further processing. */
     /* The size of the array equals the total number of atoms to ensure sufficient capacity */
-    int *metal_atoms = (int *)malloc(num_at * sizeof(int));
+    int *metal_atoms = (int *)inchi_malloc(num_at * sizeof(int));
 
     /* Check if memory allocation for the metal_atoms array failed. */
     /* If allocation fails, print an error message and return with an error code */
@@ -6446,8 +6447,10 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     int num_metals = 0;
     /* Track number of disconnections */
     int num_disconnected = 0;
-    /* variables initialized */
-    int i, j, n;
+    /* variables declared */
+    int i, j, n, binaryValue;
+    int disconnectDecision;
+    int neighbor_idx;
 
     for (i = 0; i < num_at; i++)
     {
@@ -6463,7 +6466,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         metal_atoms[num_metals++] = i;
 
         /* Call the MolecularInorganicsIsMetalToDisconnect function */
-        int disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i, 1); /* 1 for bCheckMetalValence */
+        disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i, 1); /* 1 for bCheckMetalValence */
 
         if (disconnectDecision != 2) /* If disconnectDecision = 2, then disconnection procedure will be followed if applicable */
         {
@@ -6477,12 +6480,11 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         /* Proceed with electronegativity and disconnection logic */
         for (n = at[i].valence - 1; n >= 0; n--)
         {
-            int neighbor_idx = at[i].neighbor[n];
-            int neighbor_atomic_number = at[neighbor_idx].el_number;
+            neighbor_idx = at[i].neighbor[n];
 
             /* Check if the neighboring atom has more than 1 bond connected to the metal atom or
              * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
-            if (at[i].bond_type[n] > 1 || is_el_a_metal(neighbor_atomic_number))
+            if (at[i].bond_type[n] > 1 || is_el_a_metal(at[neighbor_idx].el_number))
             {
                 /*printf("Keeping bond between %s (Index: %d) and %s (Index: %d) because either the bond type is greater than single bond or it is a metal-metal bond.\n",
                     at[i].elname, i + 1, at[neighbor_idx].elname, neighbor_idx + 1);*/
@@ -6492,9 +6494,9 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
             /* Proceed with processing the neighbor */
             /* printf("\nProcessing Metal Atom: %s (atomic number: %d & Index: %d)\n\n", at[i].elname, at[i].el_number, at[i].orig_at_number); */
-            /* printf("Neighbor Atom: %s (atomic number: %d & Index: %d)\n", at[neighbor_idx].elname, neighbor_atomic_number, at[neighbor_idx].orig_at_number); */
+            /* printf("Neighbor Atom: %s (atomic number: %d & Index: %d)\n", at[neighbor_idx].elname, at[neighbor_idx].el_number, at[neighbor_idx].orig_at_number); */
 
-            int binaryValue = getElnegBiVal(at[i].el_number, neighbor_atomic_number);
+            binaryValue = getDeltaEN(at[i].el_number, at[neighbor_idx].el_number);
 
             if (binaryValue != 1)
             {
