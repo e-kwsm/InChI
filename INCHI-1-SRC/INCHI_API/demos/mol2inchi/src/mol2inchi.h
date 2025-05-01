@@ -25,8 +25,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * The InChI library and programs are free software developed under the
+*
+* The InChI library and programs are free software developed under the
  * auspices of the International Union of Pure and Applied Chemistry (IUPAC).
  * Originally developed at NIST.
  * Modifications and additions by IUPAC and the InChI Trust.
@@ -36,10 +36,12 @@
  *
  * info@inchi-trust.org
  *
- */
+*/
 
 #ifndef _MOL2INCHI_H_
 #define _MOL2INCHI_H_
+
+#include "../../../../INCHI_BASE/src/bcf_s.h"
 
 /*#define BUILD_WITH_ENG_OPTIONS 1*/
 
@@ -53,7 +55,7 @@
 #ifdef APP_DESCRIPTION
 #undef APP_DESCRIPTION
 #endif
-#define APP_DESCRIPTION "InChI version 1, Software v. 1.06 (mol2inchi - Library call example, API v. 1.06)"
+#define APP_DESCRIPTION "InChI version 1, Software v." CURRENT_VER " (mol2inchi - Library call example, API v." CURRENT_VER ")"
 
 /*#define RELEASE_IS_FINAL  0*/ /* 1=> pre-release version; comment out to disable */
 #ifndef RELEASE_IS_FINAL
