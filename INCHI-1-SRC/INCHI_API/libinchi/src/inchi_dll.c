@@ -48,6 +48,7 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
+#include <locale.h>
 
 #include "../../../INCHI_BASE/src/mode.h"
 
@@ -388,6 +389,10 @@ static int GetINCHI1( inchi_InputEx *extended_input,
 
     inchi_Input prev_versions_input;
     inchi_Input *pvinp = &prev_versions_input;
+
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 
     pvinp->atom = extended_input->atom;
     pvinp->num_atoms = extended_input->num_atoms;

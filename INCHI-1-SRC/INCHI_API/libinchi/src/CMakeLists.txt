@@ -124,6 +124,7 @@ target_sources(libinchi PRIVATE
 	${P_BASE}/runichi4.c
 	${P_BASE}/sha2.c
 	${P_BASE}/sha2.h
+	${P_BASE}/stb_sprintf.h
 	${P_BASE}/strutil.c
 	${P_BASE}/strutil.h
 	${P_BASE}/util.c
@@ -141,7 +142,7 @@ if(MATH_LIBRARY)
     target_link_libraries(libinchi PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(libinchi PRIVATE
+target_compile_definitions(libinchi PRIVATE 
 	fPIC
 	COMPILE_ANSI_ONLY
 	TARGET_API_LIB
