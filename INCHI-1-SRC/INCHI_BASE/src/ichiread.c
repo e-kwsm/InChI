@@ -41,6 +41,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+#include <locale.h>
 
 /* #define CHECK_WIN32_VC_HEAP */
 
@@ -700,6 +701,10 @@ int ReadWriteInChI(INCHI_CLOCK* ic,
         if (pTmpOut->s.pStr)
             pRealOut = pTmpOut;
     }
+
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 
     memset(szMessage, 0, sizeof(szMessage)); /* djb-rwth: memset_s C11/Annex K variant? */
     memset(&OneInput, 0, sizeof(OneInput)); /* djb-rwth: memset_s C11/Annex K variant? */
@@ -7079,7 +7084,7 @@ int ParseSegmentSp2(const char* str,
                     ret = RI_ERR_SYNTAX; /* syntax error */
                     goto exit_function;
                 }
-                if (NULL == pInChIFrom || NULL == pInChIFrom + iComponent + i)
+                if (NULL == pInChIFrom || NULL == pInChIFrom + iComponent + i) /* djb-rwth: ignoring GCC warning */
                 {
                     ret = RI_ERR_SYNTAX; /* syntax error */
                     goto exit_function;
@@ -11837,7 +11842,7 @@ int DetectAndExposePolymerInternals(INCHI_IOSTREAM* is)
 
     /* Edits */
     nc = 0;
-    nc_max = slen * 100 + 32 * 10 * ninsert;
+    nc_max = slen * 100 + 32 * 10 * ninsert; /* djb-rwth: fixing oss-fuzz issue #384549256 */
     kinsert = 0;
     star0 = nheavy + 1;
     for (i = 0; i < slen; i++)
@@ -11858,12 +11863,15 @@ int DetectAndExposePolymerInternals(INCHI_IOSTREAM* is)
             kinsert++;
             for (j = 0; j < (int)strlen(tmpstr); j++)
             {
-                edited_s[nc] = tmpstr[j];
-                nc++;
+                if (nc < nc_max)
+                {
+                    edited_s[nc] = tmpstr[j];
+                    nc++;
+                }
             }
         }
 
-        if (i == i_last_sym)
+        if ((i == i_last_sym) && (nc < nc_max))
         {
             edited_s[nc++] = s[i];
         }
@@ -11885,7 +11893,6 @@ int DetectAndExposePolymerInternals(INCHI_IOSTREAM* is)
                 }
                 for (j = 0; j < nstars; j++)
                 {
-                    /* djb-rwth: fixing oss-fuzz issue #384549256 */
                     if (nc < nc_max)
                     {
                         edited_s[nc++] = addon;
@@ -11899,8 +11906,11 @@ int DetectAndExposePolymerInternals(INCHI_IOSTREAM* is)
                     sprintf(tmpstr, ".%dZz", nstars);
                     for (j = 0; j < (int)strlen(tmpstr); j++)
                     {
-                        edited_s[nc] = tmpstr[j];
-                        nc++;
+                        if (nc < nc_max)
+                        {
+                            edited_s[nc] = tmpstr[j];
+                            nc++;
+                        }
                     }
                 }
             }
@@ -11914,10 +11924,16 @@ int DetectAndExposePolymerInternals(INCHI_IOSTREAM* is)
                 break;
             }
         }
-        edited_s[nc] = s[i];
-        nc++;
+        if (nc < nc_max)
+        {
+            edited_s[nc] = s[i];
+            nc++;
+        }
     }
-    edited_s[nc] = '\0';
+    if (nc < nc_max)
+    {
+        edited_s[nc] = '\0';
+    }
     inchi_strbuf_close(&is->s);
     inchi_ios_print(is, "%-s%-s\n", edited_s, s2 ? s2 : "");
 

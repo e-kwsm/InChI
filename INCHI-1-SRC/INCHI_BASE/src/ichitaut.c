@@ -6339,7 +6339,7 @@ int free_t_group_info( T_GROUP_INFO *t_group_info )
     {
         if (t_group_info->t_group)
         {
-            inchi_free( t_group_info->t_group ); /* djb-rwth: false positive oss-fuzz issue #42534728/68286? */
+            inchi_free( t_group_info->t_group );
         }
         if (t_group_info->nEndpointAtomNumber)
         {

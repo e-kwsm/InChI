@@ -46,6 +46,7 @@
 #include "ichi_io.h"
 
 #include "bcf_s.h"
+#include "stb_sprintf.h"
 
 #include "logging.h"                   /*(@nnuk : Nauman Ullah Khan) :: Needed for logging functionality*/
 
@@ -889,47 +890,95 @@ void WriteCoord( char *str, double x )
 {
     if (x < -9999999.9)
     {
-        sprintf( str, "%10.2e", x );
+#if (SPRINTF_FLAG == 2)
+        dbl2int(str, 10, 2, 'e', x);
+#elif (SPRINTF_FLAG == 1)
+        stbsp_sprintf(str, "%10.2e", x);
+#else
+        sprintf(str, "%10.2e", x);
+#endif
     }
     else
     {
         if (x < -999999.99)
         {
+#if (SPRINTF_FLAG == 2)
+            dbl2int(str, 10, 2, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+            stbsp_sprintf(str, "%10.2f", x);
+#else
             sprintf( str, "%10.2f", x );
+#endif
         }
         else
         {
             if (x < -99999.999)
             {
+#if (SPRINTF_FLAG == 2)
+                dbl2int(str, 10, 3, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+                stbsp_sprintf(str, "%10.3f", x);
+#else
                 sprintf( str, "%10.3f", x );
+#endif
             }
             else
             {
                 if (x < 99999.9999)
                 {
+#if (SPRINTF_FLAG == 2)
+                    dbl2int(str, 10, 4, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+                    stbsp_sprintf(str, "%10.4f", x);
+#else
                     sprintf( str, "%10.4f", x );
+#endif
                 }
                 else
                 {
                     if (x < 999999.999)
                     {
+#if (SPRINTF_FLAG == 2)
+                        dbl2int(str, 10, 3, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+                        stbsp_sprintf(str, "%10.3f", x);
+#else
                         sprintf( str, "%10.3f", x );
+#endif
                     }
                     else
                     {
                         if (x < 9999999.99)
                         {
+#if (SPRINTF_FLAG == 2)
+                            dbl2int(str, 10, 2, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+                            stbsp_sprintf(str, "%10.2f", x);
+#else
                             sprintf( str, "%10.2f", x );
+#endif
                         }
                         else
                         {
                             if (x < 99999999.9)
                             {
+#if (SPRINTF_FLAG == 2)
+                                dbl2int(str, 10, 1, 'f', x);
+#elif (SPRINTF_FLAG == 1)
+                                stbsp_sprintf(str, "%10.1f", x);
+#else
                                 sprintf( str, "%10.1f", x );
+#endif
                             }
                             else
                             {
+#if (SPRINTF_FLAG == 2)
+                                dbl2int(str, 10, 3, 'e', x);
+#elif (SPRINTF_FLAG == 1)
+                                stbsp_sprintf(str, "%10.3e", x);
+#else
                                 sprintf( str, "%10.3e", x );
+#endif
                             }
                         }
                     }

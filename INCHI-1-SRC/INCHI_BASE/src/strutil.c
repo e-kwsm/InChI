@@ -2063,14 +2063,14 @@ int RemoveInpAtBond( inp_ATOM *atom, int iat, int k )
             if (at->p_parity /* at->valence == MAX_NUM_STEREO_ATOM_NEIGH*/)
             {
                 /* p_orig_at_num is a fixed size array of MAX_NUM_STEREO_ATOM_NEIGH (4) elements */
-                for (m = 0; m < at->valence && m < MAX_NUM_STEREO_ATOM_NEIGH; m++)
+                for (m = 0; m < at->valence && m < MAX_NUM_STEREO_ATOM_NEIGH; m++) /* djb-rwth: fixing GH PR #72 */
                 {
                     if (atom[(int) at->neighbor[k]].orig_at_number == at->p_orig_at_num[m])
                     {
                         break;
                     }
                 }
-                if (m < at->valence && m < MAX_NUM_STEREO_ATOM_NEIGH)
+                if (m < at->valence && m < MAX_NUM_STEREO_ATOM_NEIGH) /* djb-rwth: fixing GH PR #72 */
                 {
                     at->p_orig_at_num[m] = at->orig_at_number;
                 }
@@ -2416,7 +2416,7 @@ int DisconnectAmmoniumSalt( inp_ATOM *at,
     /* move 1 H from NH4 to O- or Cl */
 
     /* find non-isotopic or the lightest isotopic H to move from N to O */
-    for (iso_diff = 0; iso_diff <= NUM_H_ISOTOPES; iso_diff++)
+    for (iso_diff = 0; iso_diff <= NUM_H_ISOTOPES; iso_diff++) /* djb-rwth: fixing GH PR #72 -- ui_rr */
     {
         if (!iso_diff)
         {
@@ -2437,7 +2437,7 @@ int DisconnectAmmoniumSalt( inp_ATOM *at,
         {
             /* find isotopic H */
             /* num_iso_H has length NUM_H_ISOTOPES; do not access out-of-bounds */
-            if (iso_diff < NUM_H_ISOTOPES && at[iN].num_iso_H[iso_diff])
+            if ((iso_diff < NUM_H_ISOTOPES) && at[iN].num_iso_H[iso_diff]) /* djb-rwth: fixing GH PR #72 */
             {
                 at[iN].num_iso_H[iso_diff] --; /* move implicit isotopic H, atw = 1 */
                 at[iO].num_iso_H[iso_diff] ++;

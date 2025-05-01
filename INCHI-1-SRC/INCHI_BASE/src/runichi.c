@@ -51,6 +51,7 @@
 #include <limits.h>
 #include <math.h>
 #include <ctype.h>
+#include <locale.h>
 
 #include "mode.h"
 #include "ichitime.h"
@@ -246,6 +247,9 @@ int ProcessOneStructure( INCHI_CLOCK            *ic,
     int err, ret1 = 0;
 
     /* djb-rwth: removing redundant code */
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 
     /*    1. Preliminary work */
 
@@ -816,6 +820,10 @@ int CreateOneStructureINChI( CANON_GLOBALS          *pCG,
     int i, j, k, nRet = 0, n = 0l;
 #if defined (TARGET_EXE_STANDALONE) && defined(_WIN32)
     int err_display;
+#endif
+
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
 #endif
 
     PINChI2     *pINChI = NULL;
@@ -1751,6 +1759,10 @@ int CreateOneComponentINChI( CANON_GLOBALS      *pCG,
     long          lElapsedTime;
 
     int nAllocMode = 0;  /* moved from below 2024-09-01 DT */
+
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 
     InchiTimeGet( &ulTStart );
     bOrigCoord =

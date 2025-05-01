@@ -53,6 +53,7 @@
 #include "ichi_io.h"
 
 #include "bcf_s.h"
+#include "stb_sprintf.h"
 
 /*
     Molfile V3000 related procedures
@@ -598,8 +599,7 @@ int MolfileV3000ReadSGroup( MOL_FMT_CTAB* ctab,
         remove_one_lf( line );
         if (p && !strcmp( p, "END SGROUP" ))
         {
-            inchi_ios_close( &tmpin );
-
+            inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
             return 0;
         }
     }
@@ -611,8 +611,7 @@ int MolfileV3000ReadSGroup( MOL_FMT_CTAB* ctab,
 
 err_fin:
 
-    inchi_ios_close( &tmpin );
-
+    inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
     return err;
 }
 
@@ -652,8 +651,7 @@ int MolfileV3000Read3DBlock( MOL_FMT_CTAB* ctab,
 
 err_fin:
 
-    inchi_ios_close( &tmpin );
-
+    inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
     return err;
 }
 
@@ -862,8 +860,7 @@ int MolfileV3000ReadCollections( MOL_FMT_CTAB* ctab,
 
 err_fin:
 
-    inchi_ios_close( &tmpin );
-
+    inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
     return err;
 }
 
@@ -948,7 +945,19 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
             int len;
             char symbol[6]; /* TODO: treat possibly long V3000 atom names */
             double fx = 0.0, fy = 0.0, fz = 0.0;
+#if (SPRINTF_FLAG == 2)
+            char* fxs, * fys, * fzs;
+            int rfxs, rfys, rfzs;
 
+            fxs = (char*)inchi_malloc((10 + 3) * sizeof(double));
+            fys = (char*)inchi_malloc((10 + 3) * sizeof(double));
+            fzs = (char*)inchi_malloc((10 + 3) * sizeof(double));
+
+            if (fxs || fys || fzs)
+            {
+                failed = 1;
+            }
+#endif
             symbol[0] = '\0'; /* djb-rwth: adding zero termination */
 
             /* Read positional parameters */
@@ -999,7 +1008,35 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
             if (ctab->coords)
             {
                 char szcoords[40];
+#if (SPRINTF_FLAG == 2)
+                if (fxs)
+                {
+                    rfxs = dbl2int(fxs, 10, -1, 'g', fx);
+                }                
+                if (fys)
+                {
+                    rfys = dbl2int(fys, 10, -1, 'g', fy);
+                }                
+                if (fzs)
+                {
+                    rfzs = dbl2int(fzs, 10, -1, 'g', fz);
+                }
+                if ((rfxs >= 0) && (rfys >= 0) && (rfzs >= 0))
+                {
+                    sprintf(szcoords, "%s%s%s", fxs, fys, fzs);
+                }
+                else
+                {
+                    failed = 1;
+                }
+                inchi_free(fxs);
+                inchi_free(fys);
+                inchi_free(fzs);
+#elif (SPRINTF_FLAG == 1)
+                stbsp_sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);
+#else
                 sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);
+#endif
                 strcpy(ctab->coords[i], szcoords);
             }
 
@@ -1542,8 +1579,7 @@ int MolfileV3000ReadBondsBlock( MOL_FMT_CTAB* ctab,
 
 err_fin:
 
-    inchi_ios_close( &tmpin );
-
+    inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
     return err;
 }
 
@@ -1878,12 +1914,12 @@ int get_V3000_input_line_to_strbuf( INCHI_IOS_STRING *buf,
         {
             return -1;
         }
-        if (strncmp( buf->pStr + old_used, "M  V30 ", prefix_len ))
+        if (strncmp( buf->pStr + old_used, "M  V30 ", prefix_len))
         {
             return -1;
         }
 
-        memmove((void*)(buf->pStr + old_used), (void*)(buf->pStr + old_used + prefix_len), (long long)buf->nUsedLength - (long long)old_used - prefix_len + 1); /* djb-rwth: cast operators added */
+        memmove((void*)(buf->pStr + old_used), (void*)(buf->pStr + old_used + prefix_len), (long long)buf->nUsedLength - (long long)old_used - (long long)prefix_len + 1); /* djb-rwth: cast operators added */ /* ricrogz: fixing memory overflow error */
         buf->nUsedLength -= prefix_len;
 
         if (buf->pStr[buf->nUsedLength - 1] != '-')
