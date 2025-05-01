@@ -105,6 +105,7 @@ target_sources(inchi-1 PRIVATE
 	${P_BASE}/runichi4.c
 	${P_BASE}/sha2.c
 	${P_BASE}/sha2.h
+	${P_BASE}/stb_sprintf.h
 	${P_BASE}/strutil.c
 	${P_BASE}/strutil.h
 	${P_BASE}/util.c
@@ -122,8 +123,8 @@ if(MATH_LIBRARY)
     target_link_libraries(inchi-1 PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(inchi-1 PRIVATE
-	COMPILE_ANSI_ONLY
+target_compile_definitions(inchi-1 PRIVATE 
+	COMPILE_ANSI_ONLY 
 	TARGET_EXE_STANDALONE
 	ADD_AMI_MODE
 )
