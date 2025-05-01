@@ -75,7 +75,7 @@ if(MATH_LIBRARY)
     target_link_libraries(inchi_main PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(inchi_main PRIVATE
+target_compile_definitions(inchi_main PRIVATE 
 	BUILD_LINK_AS_DLL
 	TARGET_EXE_USING_API
 )

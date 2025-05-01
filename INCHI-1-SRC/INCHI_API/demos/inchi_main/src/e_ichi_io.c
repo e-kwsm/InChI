@@ -78,7 +78,7 @@ char e_gsEqual[] = "=";
 /*******************************************************************/
 void e_PrintFileName( const char *fmt, FILE *output_file, const char *szFname )
 {
-    fprintf( output_file, fmt, szFname );
+    fprintf( output_file, fmt, szFname ); /* djb-rwth: ignoring GCC warning */
 }
 
 
