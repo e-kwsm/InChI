@@ -164,10 +164,10 @@ e_util.o	\
 e_ichimain_a.o
 else
 API_CALLER_SRCS = $(P_MAIN)mol2inchi.c	\
-$(P_MAIN)getcputime.c	\
+#$(P_MAIN)getcputime.c
 $(P_MAIN)moreutil.c
 API_CALLER_OBJS = mol2inchi.o	\
-getcputime.o	\
+# getcputime.o
 moreutil.o
 endif
 # === InChI Main Link rule ================
