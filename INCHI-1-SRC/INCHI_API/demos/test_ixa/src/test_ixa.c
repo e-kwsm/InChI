@@ -47,6 +47,7 @@
 #ifdef _WIN32
 #include "windows.h"
 #endif
+#include <locale.h>
 
 #include "../../../../INCHI_BASE/src/inchi_api.h"
 #include "../../../../INCHI_BASE/src/util.h"
@@ -64,12 +65,14 @@
 static int CheckStatus( IXA_STATUS_HANDLE hStatus, long nrecord )
 {
     int result = 1;
+    IXA_STATUS temp;
 
     int count = IXA_STATUS_GetCount( hStatus );
     int index;
     for (index = 0; index < count; index++)
     {
-        switch (IXA_STATUS_GetSeverity( hStatus, index ))
+        temp = IXA_STATUS_GetSeverity(hStatus, index);
+        switch (temp)
         {
             case IXA_STATUS_ERROR:
                 result = 0;
@@ -77,6 +80,8 @@ static int CheckStatus( IXA_STATUS_HANDLE hStatus, long nrecord )
                 break;
             case IXA_STATUS_WARNING:
                 fprintf( stderr, "\nWARNING: %s : structure %-ld", IXA_STATUS_GetMessage( hStatus, index ), nrecord );
+                break;
+            case IXA_STATUS_SUCCESS:
                 break;
         }
     }
@@ -389,7 +394,7 @@ static int ReadOptions( int argc,
 /****************************************************************************
 Main program.
 ****************************************************************************/
-void main( int argc, const char *argv[] )
+int main( int argc, const char *argv[] ) /* djb-rwth: main function needs to be int as LLVM/Clang otherwise reports error */
 {
     FILE*       sdfile = NULL;
     FILE*       outfile = NULL;
@@ -405,6 +410,8 @@ void main( int argc, const char *argv[] )
     char        options[256];
     char        *saved_inchi = NULL;
     char        *new_inchi = NULL;
+    char* saved_inchi1 = NULL;
+    char* new_inchi1 = NULL;
 #if ( defined(_WIN32) && defined(_MSC_VER) )
 #if WINVER >= 0x0501 /* XP or newer */ /* 0x0600 Vista or newer */
     DWORD tick_ixa_start, tick_ixa_stop;
@@ -431,6 +438,10 @@ void main( int argc, const char *argv[] )
 #endif
     char banner[255];
 
+#if (SPRINTF_FLAG == 0)
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
+
     sprintf( banner, "%s %-s\n%-s Build (%-s%-s) of %s %s %-s",
         APP_DESCRIPTION, INCHI_SRC_REV,
         INCHI_BUILD_PLATFORM, INCHI_BUILD_COMPILER, INCHI_BUILD_DEBUG, __DATE__, __TIME__,
@@ -448,7 +459,7 @@ void main( int argc, const char *argv[] )
         /* Not enough command line arguments have been provided. Output some help
         information, then exit. */
         print_help( );
-        return;
+        return -1;
     }
 
 #if ( defined(_WIN32) && defined(_MSC_VER) )
@@ -638,11 +649,16 @@ void main( int argc, const char *argv[] )
                 generated into a molecule and use that molecule as the basis for a new
                 InChI. The two InChIs should be identical. */
 
-            saved_inchi = (char *) realloc( saved_inchi, strlen( inchi ) + 1 );
-            strcpy( saved_inchi, inchi );
+            /* djb-rwth: a pointer should not be assigned a reallocated value of itself */
+            saved_inchi1 = (char*)inchi_realloc(saved_inchi, strlen(inchi) + 1);
+            if (saved_inchi1)
+            {
+                strcpy(saved_inchi1, inchi);
+            }
+            saved_inchi = saved_inchi1;
             if (generate_auxinfo && auxinfo && RTRIP_COMPARE_AUX_ALSO==1)
             {
-                saved_inchi = (char *) realloc( saved_inchi, strlen( inchi ) + strlen( auxinfo ) + 2 );
+                saved_inchi = (char *)inchi_realloc( saved_inchi, strlen( inchi ) + strlen( auxinfo ) + 2 );
                 strcpy( saved_inchi, inchi );
                 strcat( saved_inchi, "\n" );
                 strcat( saved_inchi, auxinfo );
@@ -682,11 +698,16 @@ void main( int argc, const char *argv[] )
                 }
             }
 
-            new_inchi = (char *) realloc( new_inchi, strlen( inchi ) + 1 );
-            strcpy( new_inchi, inchi );
+            /* djb-rwth: a pointer should not be assigned a reallocated value of itself */
+            new_inchi1 = (char *)inchi_realloc( new_inchi, strlen( inchi ) + 1 );
+            if (new_inchi1)
+            {
+                strcpy(new_inchi1, inchi);
+            }
+            new_inchi = new_inchi1;
             if (generate_auxinfo && auxinfo && RTRIP_COMPARE_AUX_ALSO==1)
             {
-                new_inchi = (char *) realloc( new_inchi, strlen( inchi ) + strlen( auxinfo ) + 2 );
+                new_inchi = (char *)inchi_realloc( new_inchi, strlen( inchi ) + strlen( auxinfo ) + 2 );
                 strcpy( new_inchi, inchi );
                 strcat( new_inchi, "\n" );
                 strcat( new_inchi, auxinfo );
@@ -695,18 +716,21 @@ void main( int argc, const char *argv[] )
 
 
             /* Check saved vs. new */
-            if (strcmp( new_inchi, saved_inchi ) != 0)
+            if (new_inchi && saved_inchi) /* djb-rwth: pointers should not be NULL */
             {
-                fprintf( stderr, "\n!!! Round trip failed : structure %-ld\n", index + 1 );
-                fprintf( stderr, "   OLD: %s\n", saved_inchi );
-                fprintf( stderr, "   NEW: %s", new_inchi );
-                nmismatch_rtrip++;
-            }
-            else if (verbose)
-            {
-                fprintf( stderr, "\nRound trip OK : structure %-ld\n", index + 1 );
-                fprintf( stderr, "   OLD: %s\n", saved_inchi );
-                fprintf( stderr, "   NEW: %s", new_inchi );
+                if (strcmp(new_inchi, saved_inchi) != 0)
+                {
+                    fprintf(stderr, "\n!!! Round trip failed : structure %-ld\n", index + 1);
+                    fprintf(stderr, "   OLD: %s\n", saved_inchi);
+                    fprintf(stderr, "   NEW: %s", new_inchi);
+                    nmismatch_rtrip++;
+                }
+                else if (verbose)
+                {
+                    fprintf(stderr, "\nRound trip OK : structure %-ld\n", index + 1);
+                    fprintf(stderr, "   OLD: %s\n", saved_inchi);
+                    fprintf(stderr, "   NEW: %s", new_inchi);
+                }
             }
         } /* Round trip ends here */
 
@@ -773,6 +797,8 @@ cleanup:
     IXA_INCHIBUILDER_Destroy( NULL, inchi_builder );
     IXA_MOL_Destroy( NULL, molecule );
     IXA_STATUS_Destroy( status );
+
+    return 0;
 }
 
 
