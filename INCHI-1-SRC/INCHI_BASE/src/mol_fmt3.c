@@ -1032,7 +1032,7 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
                 inchi_free(fxs);
                 inchi_free(fys);
                 inchi_free(fzs);
-#elif (SPRINTF_FLAG == 1)
+#elif (SPRINTF_FLAG == 2)
                 stbsp_sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);
 #else
                 sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);

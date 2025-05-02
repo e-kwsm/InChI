@@ -69,7 +69,7 @@
 
 /* djb-rwth: control macros */
 #define RINCHI_TEST 0 /* djb-rwrh: RInChI testing */
-#define SPRINTF_FLAG 2 /* djb-rwth: 1 - stb_(v)s(n)pritnf, 2 - custom double to string; any other value (different from 1 or 2) - standard sprintf w/ setlocale */
+#define SPRINTF_FLAG 2 /* djb-rwth: 1 - stb_(v)s(n)pritnf, 2 - custom double to 2*int; any other value (different from 1 or 2) - standard sprintf w/ setlocale */
 
 /* djb-rwth: custom functions */
 int max_3(int a, int b, int c);
