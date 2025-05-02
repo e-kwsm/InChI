@@ -341,26 +341,29 @@ static int dbl2int_g(double dblinp, int fwidth, int ndecpl, char* str)
 			{
 				dec_part *= 10;
 				decpl = 10 * decpl + (long long int)dec_part;
-				dec_part = dec_part - trunc(dec_part);
+				dec_part -= trunc(dec_part);
 			}
 
 			decpl += (long long int)round(dec_part);
-			while (!(decpl % 10))
-			{
-				decpl /= 10;
-				fw_dec--;
-			}
 
-			decpl += (long long int)round(dec_part);
 			if (((int)log10((double)decpl > 0 ? (double)decpl : 1.0) + 1) > fw_dec)
 			{
 				intpl++;
 				decpl -= (int)pow(10, fw_dec);
 			}
 
+			if (decpl)
+			{
+				while (!(decpl % 10))
+				{
+					decpl /= 10;
+					fw_dec--;
+				}
+			}
+
 			if (intpl_str)
 			{
-				sprintf(intpl_str, "%s%lld", dblinp_signf, intpl);
+				sprintf(intpl_str, "%s%lld", intpl ? dblinp_signf : "", intpl);
 			}
 			else
 			{
@@ -373,7 +376,7 @@ static int dbl2int_g(double dblinp, int fwidth, int ndecpl, char* str)
 			}
 			else
 			{
-				return sprintf(str, "%*s", fw_int, intpl_str);
+				return sprintf(str,  "%*s", fw_int, intpl_str);
 			}
 		}
 		else
