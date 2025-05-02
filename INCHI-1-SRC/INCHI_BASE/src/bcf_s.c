@@ -323,7 +323,6 @@ static int dbl2int_g(double dblinp, int fwidth, int ndecpl, char* str)
 
 	if ((fw_dec > expnr) && (expnr >= -4))
 	{
-		// fw_dec += - (expnr + 1);
 		dblinp_signf = (dblinp >= 0.0) ? "" : "-";
 		dblinpabs = fabsl(dblinp);
 		intpl = (long long int)trunc(dblinpabs);
