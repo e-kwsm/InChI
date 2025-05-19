@@ -1,8 +1,4 @@
 import os
-import sys
-import importlib.util as importutil
-from importlib.machinery import ModuleSpec
-from pathlib import Path
 from typing import Callable, Literal
 from pydantic import BaseModel, FilePath, DirectoryPath
 
@@ -36,14 +32,3 @@ class DataConfig(BaseModel):
     # The failures will be logged, but won't cause the test run to fail.
     # E.g., {"regression": {"foo", "bar"}, "invariance": {"baz"}}.
     expected_failures: dict[str, set[str]] = dict()
-
-
-def load_config(config_name: str, config_path: Path) -> TestConfig | DataConfig:
-    spec: ModuleSpec | None = importutil.spec_from_file_location(
-        config_name, config_path
-    )
-    module = importutil.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    sys.modules[config_name] = module
-
-    return module.config

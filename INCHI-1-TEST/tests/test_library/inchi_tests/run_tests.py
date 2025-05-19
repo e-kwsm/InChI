@@ -1,30 +1,16 @@
 import logging
+import multiprocessing
+import sys
+import importlib
 from functools import partial
 from datetime import datetime
 from pathlib import Path
 from sdf_pipeline import drivers
-from typing import cast
 from inchi_tests.utils import get_current_time, get_progress, get_config_args
-from inchi_tests.config_models import load_config, TestConfig, DataConfig
 from inchi_tests.consumers import regression_consumer, invariance_consumer
 
 
-def main() -> None:
-
-    test_config_path, dataset_config_path = get_config_args()
-
-    test_config = load_config("test_config", Path(test_config_path))
-    data_config = load_config("data_config", Path(dataset_config_path))
-
-    if not isinstance(test_config, TestConfig):
-        raise TypeError(f"Expected TestConfig, got {type(test_config)}.")
-
-    if not isinstance(data_config, DataConfig):
-        raise TypeError(f"Expected DataConfig, got {type(data_config)}.")
-
-    test_config = cast(TestConfig, test_config)
-    data_config = cast(DataConfig, data_config)
-
+def main(test_config, data_config) -> None:
     test = test_config.name
     dataset = data_config.name
 
@@ -124,4 +110,20 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Note that this file must be run as a script, i.e., `python run_tests.py`.
+
+    # Initialize processes consistently across platforms.
+    # Otherwise, the default is "fork" on non-macOS-Unix and "spawn" on macOS and Windows.
+    # See https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods.
+    multiprocessing.set_start_method("spawn")
+
+    test_config_path, dataset_config_path = get_config_args()
+
+    # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+    sys.path.append(str(Path(test_config_path).parent))
+    test_config = importlib.import_module(str(Path(test_config_path).stem))
+
+    sys.path.append(str(Path(dataset_config_path).parent))
+    data_config = importlib.import_module(str(Path(dataset_config_path).stem))
+
+    main(test_config.config, data_config.config)

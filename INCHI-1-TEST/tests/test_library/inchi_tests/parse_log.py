@@ -1,12 +1,12 @@
 import json
 import sys
+import importlib
 from pathlib import Path
 from difflib import SequenceMatcher
 from collections import defaultdict
 from typing import Callable, Final, TextIO
 from sdf_pipeline.utils import select_records_from_gzipped_sdf
 from inchi_tests.utils import get_config_args
-from inchi_tests.config_models import load_config
 
 
 def _get_html_diff(current: str, reference: str) -> str:
@@ -170,12 +170,7 @@ def _write_html_log(
     return None
 
 
-def main() -> None:
-    test_config_path, dataset_config_path = get_config_args()
-
-    test_config = load_config("test_config", test_config_path)
-    data_config = load_config("data_config", dataset_config_path)
-
+def main(test_config, data_config) -> None:
     test = test_config.name
     dataset = data_config.name
 
@@ -213,4 +208,15 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Note that this file must be run as a script, i.e., `python parse_log.py`.
+
+    test_config_path, dataset_config_path = get_config_args()
+
+    # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
+    sys.path.append(str(Path(test_config_path).parent))
+    test_config = importlib.import_module(str(Path(test_config_path).stem))
+
+    sys.path.append(str(Path(dataset_config_path).parent))
+    data_config = importlib.import_module(str(Path(dataset_config_path).stem))
+
+    main(test_config.config, data_config.config)
