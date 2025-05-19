@@ -1,34 +1,30 @@
 [
     {
         "os": "ubuntu-22.04",
-        "slug": "ubuntu",
+        "slug": "linux",
         "name": "Ubuntu 22.04",
-        "prebuild": "sudo apt update && sudo apt install -y cmake ninja-build"
+        "pre_build": "sudo apt update && sudo apt install -y cmake && python3 -m pip install -e INCHI-1-TEST[invariance-tests]",
+        "build_exe": "cmake --build CMake_build/cli_build",
+        "build_lib": "cmake --build CMake_build/libinchi_build",
+        "exe_path": "CMake_build/cli_build/bin/inchi-1"
     },
     {
-        "os": "windows-2019",
+        "os": "windows-2022",
         "slug": "windows",
-        "name": "Windows Server 2019",
-        "prebuild": "choco install ninja"
+        "name": "Windows Server 2022",
+        "pre_build": "python -m pip install -e INCHI-1-TEST[invariance-tests]",
+        "build_exe": "cmake --build CMake_build/cli_build --config Release",
+        "build_lib": "cmake --build CMake_build/libinchi_build --config Release",
+        "exe_path": "CMake_build/cli_build/bin/Release/inchi-1.exe"
+
     },
     {
         "os": "macos-14",
         "slug": "macos",
         "name": "MacOS 14",
-        "prebuild": "brew install ninja"
-    },
-    {
-        "os": "ubuntu-22.04",
-        "slug": "alpine",
-        "name": "Alpine Linux",
-        "prebuild": "apk add bash git musl-dev gcc g++ make python3 py-pip cmake ninja",
-        "image": "python:3.12-alpine"
-    },
-    {
-        "os": "ubuntu-22.04",
-        "slug": "gcc_latest",
-        "name": "GCC latest",
-        "prebuild": "apt update && apt install -y cmake ninja-build",
-        "image": "gcc:latest"
+        "pre_build": "python -m pip install -e INCHI-1-TEST[invariance-tests]",
+        "build_exe": "cmake --build CMake_build/cli_build",
+        "build_lib": "cmake --build CMake_build/libinchi_build",
+        "exe_path": "CMake_build/cli_build/bin/inchi-1"
     }
 ]

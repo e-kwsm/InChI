@@ -1,39 +1,41 @@
 name: InChI build matrix
 
 on:
-  push:
   workflow_dispatch:
+  push:
+    branches: [ release-automation ]
 
 jobs:
-  define-matrix:
-    runs-on: ubuntu-latest
+  define_matrix:
+    runs-on: ubuntu-22.04
     outputs:
-      matrix: ${{ steps.define-matrix.outputs.matrix }}
+      matrix: ${{ steps.define_matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
       - name: Define build matrix
-        id: define-matrix
+        id: define_matrix
         run: |
           echo "matrix=$(cat .github/workflows/build_matrix.json| jq -c .)" >> $GITHUB_OUTPUT
 
-  build-inchi:
-    needs: define-matrix
+  build_inchi:
+    needs: define_matrix
     strategy:
-      fail-fast: false
       matrix:
         include:
-          ${{ fromJson(needs.define-matrix.outputs.matrix) }}
+          ${{ fromJson(needs.define_matrix.outputs.matrix) }}
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    container:
-      image: ${{ matrix.image || '' }}
 
     steps:
-      - name: Install build dependencies
-        run: ${{ matrix.prebuild }}
-
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: ${{ matrix.pre_build }}
 
       - name: Set up Visual Studio shell
         if: runner.os == 'Windows'
@@ -41,28 +43,31 @@ jobs:
         with:
           arch: x64
 
-      - name: Build InChI
+      - name: Build InChI executable
         run: |
-          cmake -B builddir -G Ninja
-          cmake --build builddir
+          cmake -B CMake_build/cli_build -S INCHI-1-SRC/INCHI_EXE/inchi-1/src
+          ${{ matrix.build_exe }}
 
-      - name: save artifacts
+      - name: Test InChI executable
+        run: pytest INCHI-1-TEST/tests/test_executable --exe-path ${{ matrix.exe_path }}
+
+      - name: Build InChI library
+        run: |
+          cmake -B CMake_build/libinchi_build -S INCHI-1-SRC/INCHI_API/demos/inchi_main/src
+          ${{ matrix.build_lib }}
+
+      - name: Test InChI library
+        uses: ./.github/actions/regression_tests
+        with:
+          artifact-name: regression-test-results-${{ matrix.slug }}-${{ github.sha }}
+          test-config: INCHI-1-TEST/tests/test_library/config/config_regression_${{ matrix.slug }}.py
+          shell: ${{ matrix.slug == 'windows' && 'pwsh' || 'bash' }}
+
+      - name: Save artifacts
+        id: upload-unsigned-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: inchi-${{ matrix.slug }}-${{ github.sha }}
-          path: builddir
-
-      - uses: actions/setup-python@v5
-        if: matrix.slug != 'alpine'
-        with:
-          python-version: '3.12'
-
-      - name: Install test dependencies
-        if: matrix.slug != 'alpine'
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e INCHI-1-TEST[invariance-tests]
-
-      - name: Run executable tests
-        if: matrix.slug != 'alpine'
-        run: cmake --build builddir --target run-tests
+          path: |
+            CMake_build/cli_build/bin/**
+            CMake_build/libinchi_build/bin/**

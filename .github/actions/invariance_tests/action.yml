@@ -10,12 +10,12 @@ runs:
   using: "composite"
   steps:
     - name: Run invariance tests
-      run: run-tests --test-config=INCHI-1-TEST/tests/test_library/config/config.invariance.py --data-config=INCHI-1-TEST/tests/test_library/config/config.ci.py
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py  --test-config=INCHI-1-TEST/tests/test_library/config/config_invariance.py --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
       shell: bash
 
     - name: Write invariance summary
       if: '!cancelled()'
-      run: parse-log --test-config=INCHI-1-TEST/tests/test_library/config/config.invariance.py --data-config=INCHI-1-TEST/tests/test_library/config/config.ci.py
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py  --test-config=INCHI-1-TEST/tests/test_library/config/config_invariance.py --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
       shell: bash
 
     - name: Upload invariance test results

@@ -5,18 +5,26 @@ inputs:
     description: 'Name of the uploaded artifact'
     required: false
     default: 'regression-test-results'
+  test-config:
+    description: 'Path to the test configuration file'
+    required: false
+    default: 'INCHI-1-TEST/tests/test_library/config/config_regression_linux.py'
+  shell:
+    description: 'Shell for running the tests'
+    required: false
+    default: 'bash'
 
 runs:
   using: "composite"
   steps:
     - name: Run regression tests
-      run: run-tests --test-config=INCHI-1-TEST/tests/test_library/config/config.regression.py --data-config=INCHI-1-TEST/tests/test_library/config/config.ci.py
-      shell: bash
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py  --test-config=${{ inputs.test-config}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
+      shell: ${{ inputs.shell }}
 
     - name: Write regression summary
       if: '!cancelled()'
-      run: parse-log --test-config=INCHI-1-TEST/tests/test_library/config/config.regression.py --data-config=INCHI-1-TEST/tests/test_library/config/config.ci.py
-      shell: bash
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py  --test-config=${{ inputs.test-config}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
+      shell: ${{ inputs.shell }}
 
     - name: Upload regression test results
       if: '!cancelled()'
