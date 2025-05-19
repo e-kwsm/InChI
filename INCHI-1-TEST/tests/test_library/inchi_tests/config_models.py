@@ -14,8 +14,7 @@ class TestConfig(BaseModel):
     # Permute each structure N times.
     n_invariance_runs: int = 10
     # Distribute the test over N separate processes.
-    # Default according to https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count.
-    n_processes: int = len(os.sched_getaffinity(0))
+    n_processes: int = os.cpu_count() or 8
 
 
 class DataConfig(BaseModel):
