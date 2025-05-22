@@ -6347,7 +6347,7 @@ const int binaryArrayMolecularInorganics[NUM_ELEMENTS][NUM_ELEMENTS] = {
  * disconnected whereas, "0" means the bond has to be kept.
  ******************************************************************************/
 
-int getDeltaEN(int atom1, int atom2)
+int shouldBondBeCut(int atom1, int atom2)
 {
     int index1, index2, binaryValue;
 
@@ -6496,7 +6496,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             /* printf("\nProcessing Metal Atom: %s (atomic number: %d & Index: %d)\n\n", at[i].elname, at[i].el_number, at[i].orig_at_number); */
             /* printf("Neighbor Atom: %s (atomic number: %d & Index: %d)\n", at[neighbor_idx].elname, at[neighbor_idx].el_number, at[neighbor_idx].orig_at_number); */
 
-            binaryValue = getDeltaEN(at[i].el_number, at[neighbor_idx].el_number);
+            binaryValue = shouldBondBeCut(at[i].el_number, at[neighbor_idx].el_number);
 
             if (binaryValue != 1)
             {
