@@ -945,6 +945,7 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
             int len;
             char symbol[6]; /* TODO: treat possibly long V3000 atom names */
             double fx = 0.0, fy = 0.0, fz = 0.0;
+#ifdef GHI100_FIX
 #if (SPRINTF_FLAG == 2)
             char* fxs, * fys, * fzs;
             int rfxs, rfys, rfzs;
@@ -957,6 +958,7 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
             {
                 failed = 1;
             }
+#endif
 #endif
             symbol[0] = '\0'; /* djb-rwth: adding zero termination */
 
@@ -1008,6 +1010,7 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
             if (ctab->coords)
             {
                 char szcoords[40];
+#ifdef GHI100_FIX
 #if (SPRINTF_FLAG == 2)
                 if (fxs)
                 {
@@ -1037,6 +1040,8 @@ int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB* ctab,
 #else
                 sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);
 #endif
+#endif
+                sprintf(szcoords, "%10g%10g%10g", fx, fy, fz);
                 strcpy(ctab->coords[i], szcoords);
             }
 

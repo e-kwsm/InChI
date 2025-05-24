@@ -247,8 +247,10 @@ int ProcessOneStructure( INCHI_CLOCK            *ic,
     int err, ret1 = 0;
 
     /* djb-rwth: removing redundant code */
+#ifdef GHI100_FIX
 #if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
     setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 #endif
 
     /*    1. Preliminary work */
@@ -822,8 +824,10 @@ int CreateOneStructureINChI( CANON_GLOBALS          *pCG,
     int err_display;
 #endif
 
+#ifdef GHI100_FIX
 #if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
     setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 #endif
 
     PINChI2     *pINChI = NULL;
@@ -1760,8 +1764,10 @@ int CreateOneComponentINChI( CANON_GLOBALS      *pCG,
 
     int nAllocMode = 0;  /* moved from below 2024-09-01 DT */
 
+#ifdef GHI100_FIX
 #if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
     setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 #endif
 
     InchiTimeGet( &ulTStart );

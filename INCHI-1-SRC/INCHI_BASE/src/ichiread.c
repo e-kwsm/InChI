@@ -702,8 +702,10 @@ int ReadWriteInChI(INCHI_CLOCK* ic,
             pRealOut = pTmpOut;
     }
 
+#ifdef GHI100_FIX
 #if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
     setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 #endif
 
     memset(szMessage, 0, sizeof(szMessage)); /* djb-rwth: memset_s C11/Annex K variant? */
