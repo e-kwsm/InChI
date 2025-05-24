@@ -153,8 +153,8 @@ target_include_directories(libinchi PUBLIC "${PROJECT_BINARY_DIR}")
 string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set_target_properties(libinchi PROPERTIES SOVERSION 1.07 PREFIX "")
-
+set_target_properties(libinchi PROPERTIES PREFIX "")
+# set_target_properties(libinchi PROPERTIES SOVERSION 1.07 PREFIX "")
 
 if(UNIX AND NOT APPLE)
 	# set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--version-script=${P_LIBINCHI_MAP}/libinchi.map,-z,relro")
