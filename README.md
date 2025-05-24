@@ -78,7 +78,7 @@ The [INCHI-1-TEST](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-TEST) 
 
 ## Using precompiled binaries/libraries
 
-_64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so` and ELF files) are located in the following folders:
+_64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so/.dylib` and ELF files) are located in the following folders:
 
 <table id="Win">
   <tr>
@@ -171,7 +171,7 @@ _64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so
   </tr>
   <tc>
 	<td rowspan="2">
-	  <code>libinchi.so</code><br /> + corresponding <code>inchi_main</code> (ELF file)
+	  <code>libinchi.so/libinchi.dylib</code><br /> + corresponding <code>inchi_main</code> (ELF file)
 	</td>
 	<td>
 	  <em>64-bit</em>: <code>INCHI-1-BIN/linux/64bit/so</code>
@@ -418,7 +418,7 @@ _32-bit_ `Microsoft Visual Studio C++ (MSVC) Win32` and `Microsoft LLVM/Clang` c
 - `AMILogStd`   Write log to stderr (in AMI mode)
 - `AMIPrbNone`  Suppress creation of problem files (in AMI mode)
 
-### API (`.dll`/`.so`)
+### API (`.dll`/`.so`/`.dylib`)
 
 - `KET`         Consider keto-enol tautomerism                      (experimental)
 - `15T`         Consider 1,5-tautomerism                            (experimental)
