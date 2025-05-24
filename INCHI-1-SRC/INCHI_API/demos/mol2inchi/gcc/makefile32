@@ -71,8 +71,8 @@ ifneq ($(OS_ID),0)
 	LINUX_FPIC  = -fPIC
 	LINUX_Z_RELRO = ,-z,relro
 # === version ===
-	MAIN_VERSION = .1
-	VERSION = $(MAIN_VERSION).07
+#	MAIN_VERSION = .1
+#	VERSION = $(MAIN_VERSION).07
 endif
 # === executable & library directory ===
 ifndef LIB_DIR

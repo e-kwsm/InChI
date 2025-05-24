@@ -86,8 +86,10 @@ int main( int argc, char *argv[] )
     m2i_WorkDetails wd;
     m2i_WorkPool    pool;
 
+#ifdef GHI100_FIX
 #if (SPRINTF_FLAG == 0)
     setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
 #endif
 
     fprintf( stderr, "%s %-s\n%-s Build (%-s%-s) of %s %s %-s\n\n",
