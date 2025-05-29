@@ -4249,10 +4249,9 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
     {
         goto L6;
     }
-    if (pzb_rho_fix && kLeast_rho_fix && 0 == qzb_rho_fix) /* djb-rwth: addressing of array kLeast_rho_fix will always evaluate to true? */
+    if (pzb_rho_fix && 0 == qzb_rho_fix)
     {
         /* check for the rejection condition: Lambda > zb_rho_fix */
-        if (kLeast_rho_fix) /* djb-rwth: addressing of array kLeast_rho_fix will always evaluate to true? */
         {
             int qzb_rho_fix_alt;
             qzb_rho_fix = CtFullCompareLayers( kLeast_rho_fix );
@@ -4266,10 +4265,6 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
                 qzb_rho_fix = qzb_rho_fix_alt;
             }
             /* end debug */
-        }
-        else
-        {
-            qzb_rho_fix = CtFullCompare( &Lambda, pzb_rho_fix, 1, bSplitTautCompare );
         }
         if (!pzb_rho_fix_reached)
         {
@@ -4301,7 +4296,6 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
     /* !!! we should never come here if G(nu) != G(rho): CtPartCompare must be enough !!! */
 
     /* if ( G(nu) > G(rho) ) goto L9; */
-    if (kLeast_rho) /* djb-rwth: addressing of array kLeast_rho will always evaluate to true? */
     {
         int cur_qzb_alt;
         qzb_rho = CtFullCompareLayers( kLeast_rho );
@@ -4315,10 +4309,6 @@ L8: /* here nu is discrete: check rho for being a bettere leaf or isomorphism */
             qzb_rho = cur_qzb_alt;
         }
         /* end debug */
-    }
-    else
-    {
-        qzb_rho = CtFullCompare( &Lambda, pzb_rho, 0, bSplitTautCompare );
     }
     /* qzb_rho difference can be due to layers 1..MAX_LAYERS-1 only */
     if (0 < qzb_rho)
