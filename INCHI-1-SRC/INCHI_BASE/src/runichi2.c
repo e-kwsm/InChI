@@ -1467,8 +1467,6 @@ int extract_nonstereo_eq_classes_from_auxinfo_string( char *saux,
                 c = UCINT *q;
                 if (c == '/')
                     break;
-                else
-                    ;
             }
             p = q;
         }
