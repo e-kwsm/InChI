@@ -4078,7 +4078,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
                 {
                     pNumb[k] = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                    if (pNumb[k] > MAX_ATOMS || pNumb[k] < 0)
+                    if (pNumb[k] > MAX_ATOMS)
                     {
                         ret = RI_ERR_SYNTAX;
                         goto exit_function;
@@ -6014,7 +6014,7 @@ int ParseSegmentIsoAtoms(const char* str,
             {
                 nAtom1 = (AT_NUMB)inchi_strtol(p, &p, base);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom1 > MAX_ATOMS || nAtom1 < 0)
+                if (nAtom1 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -6084,7 +6084,7 @@ int ParseSegmentIsoAtoms(const char* str,
             {
                 nAtom1 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom1 > MAX_ATOMS || nAtom1 < 0)
+                if (nAtom1 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -7199,7 +7199,7 @@ int ParseSegmentSp2(const char* str,
             {
                 nAtom1 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom1 > MAX_ATOMS || nAtom1 < 0)
+                if (nAtom1 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -7213,7 +7213,7 @@ int ParseSegmentSp2(const char* str,
                 p = q + 1;
                 nAtom2 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom2 > MAX_ATOMS || nAtom2 < 0)
+                if (nAtom2 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -7334,7 +7334,7 @@ int ParseSegmentSp2(const char* str,
             {
                 nAtom1 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom1 > MAX_ATOMS || nAtom1 < 0)
+                if (nAtom1 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -7348,7 +7348,7 @@ int ParseSegmentSp2(const char* str,
                 p = q + 1;
                 nAtom2 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                if (nAtom2 > MAX_ATOMS || nAtom2 < 0)
+                if (nAtom2 > MAX_ATOMS)
                 {
                     ret = RI_ERR_SYNTAX;
                     goto exit_function;
@@ -7639,7 +7639,7 @@ int ParseSegmentPolymer(const char* str,
         {
             num_atom = (AT_NUMB)inchi_strtol(p, &p, 10);
 #if ( ( CHECK_STRTOL_ATNUMB==1 ) || ( FIX_GAF_2019_2==1 ) )
-            if (num_atom > na_total || num_atom < 0)
+            if (num_atom > na_total)
             {
                 ret = RI_ERR_SYNTAX;
                 goto exit_function;
@@ -8497,7 +8497,7 @@ int ParseSegmentMobileH(const char* str,
                     {
                         nxtAtom = (int)inchi_strtol(p, &q, base);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                        if (nxtAtom > MAX_ATOMS || nxtAtom < 0)
+                        if (nxtAtom > MAX_ATOMS)
                         {
                             ret = RI_ERR_SYNTAX;
                             goto exit_function;
@@ -8612,7 +8612,7 @@ int ParseSegmentMobileH(const char* str,
                     {
                         nxtAtom = (int)inchi_strtol(q + 1, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-                        if (nxtAtom > MAX_ATOMS || nxtAtom < 0)
+                        if (nxtAtom > MAX_ATOMS)
                         {
                             ret = RI_ERR_SYNTAX;
                             goto exit_function;
@@ -10713,7 +10713,7 @@ int AddLinkedBond(AT_NUMB at1,
     AT_NUMB prev;
 #if ( FIX_GAF_2019_2==1 )
     {
-        if (at2 > num_at || at1 > num_at || at1 < 0 || at2<0 || num_at>MAX_ATOMS)
+        if (at2 > num_at || at1 > num_at || num_at>MAX_ATOMS)
         {
             return RI_ERR_SYNTAX;
         }
@@ -12187,7 +12187,7 @@ static int SegmentSp3StoreStereoCenters(int* pbAbc,
         {
             nAtom1 = (AT_NUMB)inchi_strtol(p, &q, 10);
 #if ( CHECK_STRTOL_ATNUMB==1 )
-            if (nAtom1 > MAX_ATOMS || nAtom1 < 0)
+            if (nAtom1 > MAX_ATOMS)
             {
                 return RI_ERR_SYNTAX;
             }
