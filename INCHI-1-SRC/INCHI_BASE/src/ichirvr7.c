@@ -2152,7 +2152,7 @@ int CompareAllDisconnectedOrigInchiToRevInChI(StrFromINChI* pStruct[INCHI_NUM][T
 
     if (!nNumNonTaut1 == !nNumNonTaut2)
     {
-        ; /* difference if(nNumNonTaut1 != nNumNonTaut2) will be caught in InChI comparison */
+        /* difference if(nNumNonTaut1 != nNumNonTaut2) will be caught in InChI comparison */
     }
     else
     {
@@ -2993,7 +2993,7 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
         }
         if (!num_in1_only && !num_in2_only && num_eq)
         {
-            ; /* same t-groups endpoints */
+            /* same t-groups endpoints */
         }
         else
         {

@@ -710,11 +710,9 @@ int NumberOfTies( AT_RANK **pRankStack1,
     /*  find i1 and i2 = numbers of ranks in nRank1[] and nRank2[] equal to r:  */
     for (i1 = 1; i1 <= iMax && r == nRank1[nAtomNumber1[iMax - i1]]; i1++)
     {
-        ;
     }
     for (i2 = 1; i2 <= iMax && r == nRank2[nAtomNumber2[iMax - i2]]; i2++)
     {
-        ;
     }
     if (i2 != i1)
         return CT_MAPCOUNT_ERR; /*  program error: must be identical number of equal ranks */ /*   <BRKPT> */
@@ -1590,7 +1588,6 @@ AT_RANK GetMinNewRank( AT_RANK *nAtomRank, AT_RANK *nAtomNumb, AT_RANK nRank1 )
     AT_RANK nRank2 = 0;
     for (i = (int) nRank1 - 1; 0 <= i && nRank1 == ( nRank2 = nAtomRank[(int) nAtomNumb[i]] ); i--)
     {
-        ;
     }
     if (i >= 0)
     {
@@ -1798,7 +1795,7 @@ int BreakNeighborsTie( CANON_GLOBALS *pCG,
             {
                 if (nRank10 == nRank1)
                 {
-                    ; /* atoms are already mapped */
+                    /* atoms are already mapped */
                 }
                 else
                 {
@@ -1894,7 +1891,7 @@ int BreakNeighborsTie( CANON_GLOBALS *pCG,
             {
                 if (nRank10 == nRank1)
                 {
-                    ;/* atoms are already mapped */
+                    /* atoms are already mapped */
                 }
                 else
                 {
@@ -1935,7 +1932,6 @@ int BreakNeighborsTie( CANON_GLOBALS *pCG,
         {
             for (i = (int) nRank1 - 1; 0 <= i && nRank1 == ( nRank2 = pRankStack1[0][(int) pRankStack1[1][i]] ); i--)
             {
-                ;
             }
             if (i >= 0)
             {
@@ -2108,20 +2104,20 @@ int CheckNextSymmNeighborsAndBonds( sp_ATOM *at,
         ( s1 = at[cur1].stereo_bond_neighbor[i1] ) &&
                          !( k1 = ( at[cur1].neighbor[(int) at[cur1].stereo_bond_ord[i1]] == n1 ) ); i1++)
     {
-        ;
     }
     for (i2 = 0, k2 = 0; i2 < MAX_NUM_STEREO_BONDS &&
         ( s2 = at[cur2].stereo_bond_neighbor[i2] ) &&
                          !( k2 = ( at[cur2].neighbor[(int) at[cur2].stereo_bond_ord[i2]] == n2 ) ); i2++)
     {
-        ;
     }
 
     /* -- this does not work in case of cumulenes --
     for ( i1 = 0, k1 = 0; i1 < MAX_NUM_STEREO_BONDS && (s1=at[cur1].stereo_bond_neighbor[i1]) && !(k1=(s1-1 == n1)); i1 ++ )
-        ;
+    {
+    }
     for ( i2 = 0, k2 = 0; i2 < MAX_NUM_STEREO_BONDS && (s2=at[cur2].stereo_bond_neighbor[i2]) && !(k2=(s2-1 == n2)); i2 ++ )
-        ;
+    {
+    }
     */
 
     if (k1 != k2)
@@ -2564,7 +2560,6 @@ int CalculatedPathsParitiesAreIdentical( CANON_GLOBALS *pCG,
                 ( neigh = at[prev_sb_neigh].stereo_bond_neighbor[i] ) && !( k = ( neigh - 1 == cur ) );
                 i++)
             {
-                ;
             }
             if (!k)
             {

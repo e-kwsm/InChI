@@ -936,11 +936,11 @@ int str_Sp2( INCHI_SORT       *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev sp2 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp2 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp2 info */
+                                /* pINChI_Taut_Prev exists and has not sp2 info */
                             }
                         }
                     }
@@ -1182,11 +1182,11 @@ int str_Sp3( INCHI_SORT       *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ; /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp3 info */
+                                /* pINChI_Taut_Prev exists and has not sp3 info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -1470,11 +1470,11 @@ int str_IsoAtoms( INCHI_SORT *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev isotopic info was output in the main isotopic section */
+                                /* pINChI_Taut_Prev isotopic info was output in the main isotopic section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not isotopic info */
+                                /* pINChI_Taut_Prev exists and has not isotopic info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -1764,11 +1764,11 @@ int str_IsoSp2( INCHI_SORT       *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev sp3 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp2 info */
+                                /* pINChI_Taut_Prev exists and has not sp2 info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -2054,11 +2054,11 @@ int str_IsoSp3( INCHI_SORT       *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev sp3 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp3 info */
+                                /* pINChI_Taut_Prev exists and has not sp3 info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -2200,7 +2200,7 @@ int str_AuxEqu( INCHI_SORT       *pINChISort,
                 }
                 else
                 {
-                    ; /* pINChI_Aux_Prev exists and has only trivial equivalence info */
+                    /* pINChI_Aux_Prev exists and has only trivial equivalence info */
                 }
             }
             else
@@ -2295,7 +2295,7 @@ int str_AuxEqu( INCHI_SORT       *pINChISort,
                         }
                         else
                         {
-                            ; /* pINChI_Aux_Prev exists and has only trivial equivalence info */
+                            /* pINChI_Aux_Prev exists and has only trivial equivalence info */
                         }
                     }
 
@@ -2313,7 +2313,7 @@ int str_AuxEqu( INCHI_SORT       *pINChISort,
                             }
                             else
                             {
-                                ; /* pINChI_Aux_Taut_Prev exists and has only trivial equivalence info */
+                                /* pINChI_Aux_Taut_Prev exists and has only trivial equivalence info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -2581,11 +2581,11 @@ int str_AuxInvSp3( INCHI_SORT       *pINChISort,
                                 /*
                                 MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev sp3 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp3 info */
+                                /* pINChI_Taut_Prev exists and has not sp3 info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -3100,7 +3100,7 @@ int str_AuxIsoEqu( INCHI_SORT       *pINChISort,
                 }
                 else
                 {
-                    ; /* pINChI_Aux_Prev exists and has only trivial equivalence info */
+                    /* pINChI_Aux_Prev exists and has only trivial equivalence info */
                 }
             }
             else
@@ -3196,7 +3196,7 @@ int str_AuxIsoEqu( INCHI_SORT       *pINChISort,
                         }
                         else
                         {
-                            ; /* pINChI_Aux_Prev exists and has only trivial equivalence info */
+                            /* pINChI_Aux_Prev exists and has only trivial equivalence info */
                         }
                     }
                     else
@@ -3213,7 +3213,7 @@ int str_AuxIsoEqu( INCHI_SORT       *pINChISort,
                             }
                             else
                             {
-                                ; /* pINChI_Aux_Taut_Prev exists and has only trivial equivalence info */
+                                /* pINChI_Aux_Taut_Prev exists and has only trivial equivalence info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -3570,11 +3570,11 @@ int str_AuxInvIsoSp3( INCHI_SORT       *pINChISort,
                                 /*
                                 tot_len += MakeDelim( sIdenticalValues, strbuf, bOverflow);
                                 */
-                                ;/* pINChI_Taut_Prev sp3 info was output in the main stereo section */
+                                /* pINChI_Taut_Prev sp3 info was output in the main stereo section */
                             }
                             else
                             {
-                                ; /* pINChI_Taut_Prev exists and has not sp3 info */
+                                /* pINChI_Taut_Prev exists and has not sp3 info */
                             }
                         }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -4094,7 +4094,7 @@ int str_AuxChargeRadVal( INCHI_SORT       *pINChISort,
                     }
                     else
                     {
-                        ; /* pINChI_Aux_Prev exists and has only trivial info */
+                        /* pINChI_Aux_Prev exists and has only trivial info */
                     }
                 }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )
@@ -4325,7 +4325,7 @@ int str_AuxIsoTgroupEqu( INCHI_SORT       *pINChISort,
                 }
                 else
                 {
-                    ; /* pINChI_Aux_Prev exists and does not have non-trivial t-group equivalence info */
+                    /* pINChI_Aux_Prev exists and does not have non-trivial t-group equivalence info */
                 }
             }
             /* we have found pINChI_Aux->pINChI_Aux->nConstitEquIsotopicTGroupNumbers same as in pINChI_Aux->nConstitEquTGroupNumbers */
@@ -4406,7 +4406,7 @@ int str_AuxIsoTgroupEqu( INCHI_SORT       *pINChISort,
                         }
                         else
                         {
-                            ; /* pINChI_Aux_Prev exists and has only trivial equivalence info */
+                            /* pINChI_Aux_Prev exists and has only trivial equivalence info */
                         }
                     }
 #if ( bRELEASE_VERSION != 1 && defined(_DEBUG) )

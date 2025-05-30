@@ -653,7 +653,6 @@ int PreprocessOneStructure(struct tagINCHI_CLOCK* ic,
 #if ( bRELEASE_VERSION == 0 )
         sd->bExtract |= EXTR_UNUSUAL_VALENCES;
 #else
-        ;
 #endif
     }
 
@@ -1512,7 +1511,8 @@ int  OAD_PolymerUnit_OrderBondAtomsAndBondsThemselves(OAD_PolymerUnit* u,
 
     /* for single or no bonds, do nothing
     else
-        ;
+    {
+    }
     */
 
     return 0;
@@ -1802,7 +1802,6 @@ int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA* orig_at_data,
             {
                 if ( u->type == POLYMER_STY_COP )
                 {
-                    ;
                 }
                 else if ( u->type == POLYMER_STY_SRU )
                 {
@@ -3384,7 +3383,6 @@ void OAD_Polymer_SetAtProps(OAD_Polymer* pd,
         else
         {
             /* deleted H's go here */
-            ;
         }
 
     }
@@ -4018,7 +4016,6 @@ int OAD_PolymerUnit_SetReopeningDetails(OAD_PolymerUnit* u, inp_ATOM* at)
     /* Caps are separated by one atom - that's not error but do nothing */
     if ( u->nbkbonds == 0 )
     {
-        ;
     }
     else if ( u->nbkbonds == 1 )
     {

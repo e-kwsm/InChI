@@ -1276,7 +1276,7 @@ int GetAtomRestoreInfo(struct tagCANON_GLOBALS* pCG,
              ChargeVal[i].nCharge &&
              ChargeVal[i].nCharge == -ChargeVal[i + 1].nCharge)
         {
-            ; /* add opposite charge to the same element of cn_bits_array[] */
+            /* add opposite charge to the same element of cn_bits_array[] */
         }
         else
         {
@@ -5489,7 +5489,6 @@ int ConnectDisconnectedH( inp_ATOM *at, int num_atoms, int num_deleted_H )
 
         for (j = i; j < tot_atoms && at[j].neighbor[0] == k; j++)
         {
-            ;
         }
 
         num_H = j - i; /* number of explicit H for at[k] */
@@ -5620,7 +5619,6 @@ int DisconnectedConnectedH( inp_ATOM *at, int num_atoms, int num_deleted_H )
         /* verify correct number of explicit H */
         for (n = 0; n < at[k].valence && at[k].neighbor[n] >= num_atoms; n++)
         {
-            ;
         }
         if (n != num_H)
         {

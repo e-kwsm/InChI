@@ -473,7 +473,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
              0 >= ret2C &&
              0 > ret2S)
         {
-            ; /* accept */
+            /* accept */
         }
         else
         {
@@ -1156,7 +1156,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
                              !at2[j].num_H && at2[j].valence == 3 &&
                              !( at2[j].endpoint || (pStruct->endpoint && pStruct->endpoint[j]) )) /* djb-rwth: addressing LLVM warning */
                         {
-                            ; /* do not fix -N< or =N(+)< */
+                            /* do not fix -N< or =N(+)< */
                         }
                         else
                         {
@@ -1385,7 +1385,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
                              !at2[j].num_H && at2[j].valence == 3 &&
                              !( at2[j].endpoint || (pStruct->endpoint && pStruct->endpoint[j]) )) /* djb-rwth: addressing LLVM warning */
                         {
-                            ; /* do not fix -N< or =N(+)< */
+                            /* do not fix -N< or =N(+)< */
                         }
                         else
                         {

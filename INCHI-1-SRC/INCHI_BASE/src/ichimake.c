@@ -1639,7 +1639,7 @@ int CompareInchiStereo(INChI_Stereo* Stereo1,
             1 == Stereo2->nNumberOfStereoCenters &&
             1 == Stereo1->nNumberOfStereoCenters)
         {
-            ; /*  do not compare single stereocenters in case of relative stereo */
+            /*  do not compare single stereocenters in case of relative stereo */
         }
         else
 #endif
@@ -2091,7 +2091,6 @@ void mystrrev(char* p)
     char c, * q = p;
     while (*q++)
     {
-        ;
     }
     q -= 2; /*  pointer to the last character */
     while (p < q)
@@ -2305,7 +2304,6 @@ AT_NUMB* GetDfsOrder4CT(CANON_GLOBALS* pCG,
         /* reduce number of neighbors to exclude deleted */
         for (k = 0; k < nl[i][0] && nl[i][k + 1] <= MAX_ATOMS; k++)
         {
-            ;
         }
         nl[i][0] = k;
     }
@@ -3170,7 +3168,6 @@ int CompareReversedINChI(INChI* i1 /* InChI from reversed struct */,
         0 == CompareReversedStereoINChI(i1->StereoIsotopic, i2->Stereo))
     {
         /* InChI from reversed structure does not contain fully duplicated isotopic stereo */
-        ;
     }
     else
     {
@@ -3617,7 +3614,7 @@ INCHI_MODE CompareReversedINChI2(INChI* i1 /* InChI from reversed struct */,
         }
         if (!num_in1_only && !num_in2_only && num_eq)
         {
-            ; /* same t-groups endpoints */
+            /* same t-groups endpoints */
         }
         else
         {
@@ -4870,7 +4867,7 @@ int FillOutCanonInfAtom(struct tagCANON_GLOBALS* pCG,
         {
             if (norm_at[i].at_type == ATT_PROTON)
             {
-                ; /* do not set isotopic mass of a tautomeric proton */
+                /* do not set isotopic mass of a tautomeric proton */
             }
             else
             {
@@ -4878,7 +4875,7 @@ int FillOutCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                     !norm_at[i].charge && !norm_at[i].radical && !norm_at[i].num_H &&
                     (inf_norm_at[j = (int)norm_at[i].neighbor[0]].nTautGroupCanonNbr || (inf_norm_at[j].cFlags & AT_FLAG_ISO_H_POINT)))
                 {
-                    ; /* do not set isotopic mass of an exchangeable proton */
+                    /* do not set isotopic mass of an exchangeable proton */
                 }
                 else
                 {
@@ -5161,7 +5158,8 @@ int FillOutCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                     }
                     /*  mark "forward" bond */
                     for (m = 0; m < MAX_STEREO_BONDS && inf_norm_at[j].cStereoBondParity[m]; m++)
-                        ;
+                    {
+                    }
                     if (m < MAX_STEREO_BONDS)
                     {
                         inf_norm_at[j].cStereoBondParity[m] = c;
@@ -5173,14 +5171,12 @@ int FillOutCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                     n = norm_at[j].neighbor[k];
                     for (k = 0; k < norm_at[n].valence && j != (int)norm_at[n].neighbor[k]; k++)
                     {
-                        ;
                     }
                     if (k < norm_at[n].valence)
                     {
                         j = n;
                         for (m = 0; m < MAX_STEREO_BONDS && inf_norm_at[j].cStereoBondParity[m]; m++)
                         {
-                            ;
                         }
                         if (m < MAX_STEREO_BONDS)
                         {
@@ -5499,7 +5495,7 @@ int FillOutOneCanonInfAtom(struct tagCANON_GLOBALS* pCG,
             {
                 if (cur_norm_at->at_type == ATT_PROTON)
                 {
-                    ; /* do not set isotopic mass of a tautomeric proton */
+                    /* do not set isotopic mass of a tautomeric proton */
                 }
                 else
                 {
@@ -5508,7 +5504,7 @@ int FillOutOneCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                         0 <= (j = (int)cur_norm_at->neighbor[0] - offset) && j < num_at &&
                         (inf_norm_at[j].nTautGroupCanonNbr || (inf_norm_at[j].cFlags & AT_FLAG_ISO_H_POINT)))
                     {
-                        ; /* do not set isotopic mass of an exchangeable proton */
+                        /* do not set isotopic mass of an exchangeable proton */
                     }
                     else
                     {
@@ -5783,7 +5779,8 @@ int FillOutOneCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                     }
                     /*  mark "forward" bond */
                     for (m = 0; m < MAX_STEREO_BONDS && inf_norm_at[j].cStereoBondParity[m]; m++)
-                        ;
+                    {
+                    }
                     if (m < MAX_STEREO_BONDS)
                     {
                         inf_norm_at[j].cStereoBondParity[m] = c;
@@ -5795,14 +5792,12 @@ int FillOutOneCanonInfAtom(struct tagCANON_GLOBALS* pCG,
                     n = norm_at[j].neighbor[k] - offset;
                     for (k = 0; k < norm_at[n].valence && j != (int)norm_at[n].neighbor[k] - offset; k++)
                     {
-                        ;
                     }
                     if (k < norm_at[n].valence)
                     {
                         j = n;
                         for (m = 0; m < MAX_STEREO_BONDS && inf_norm_at[j].cStereoBondParity[m]; m++)
                         {
-                            ;
                         }
                         if (m < MAX_STEREO_BONDS)
                         {

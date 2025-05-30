@@ -671,7 +671,7 @@ static int GetINCHI1( inchi_InputEx *extended_input,
                 /* num_err ++; */
                 goto exit_function;
             case _IS_ERROR:
-                ; /* num_err ++; */
+                /* num_err ++; */
 #ifndef TARGET_API_LIB
                 continue;
 #endif
@@ -1695,7 +1695,6 @@ int InpAtom0DToInchiAtom( inp_ATOM *at,
         {
             for (m = 0; m < MAX_NUM_STEREO_BONDS && at[i].sb_parity[m]; m++)
             {
-                ;
             }
             num_stereo_bonds += m;
         }
@@ -2668,7 +2667,6 @@ int INCHI_DECL GetStructFromINCHIEx( inchi_InputINCHI *inpInChI,
         nRet = CheckINCHI( inpInChI->szInChI, strict );
         if (nRet == INCHI_VALID_STANDARD || nRet == INCHI_VALID_NON_STANDARD || nRet == INCHI_VALID_BETA) /* djb-rwth: removing redundant code */
         {
-            ;
         }
         else
         {

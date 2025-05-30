@@ -819,7 +819,6 @@ int ReadCommandLineParms(int argc,
                 &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics, &bEnhancedStereochemistry);
             if (got)
             {
-                ;
             }
             else if ( INPUT_NONE == ip->nInputType &&
                 (!inchi_memicmp(pArg, "SDF", 3)) &&
@@ -1089,7 +1088,7 @@ int ReadCommandLineParms(int argc,
             }
             else if ( !inchi_memicmp(pArg, "UNCHARGEDACIDS:", 15) && developer_options )
             {
-                bUnchargedAcidTaut = (0 != strtol(pArg + 15, NULL, 16));;
+                bUnchargedAcidTaut = (0 != strtol(pArg + 15, NULL, 16));
             }
             else if ( !inchi_memicmp(pArg, "ACIDTAUT:", 9) && developer_options )
             {
@@ -1268,7 +1267,6 @@ int ReadCommandLineParms(int argc,
 
             if ( got )
             {
-                ;
             }
             /* Input */
             else if ( !inchi_stricmp(pArg, "STDIO") )
@@ -2647,7 +2645,6 @@ int PrintInputParms(INCHI_IOSTREAM* log_file,
 
         if ( ip->bPolymers == POLYMERS_MODERN )
         {
-            ;
         }
         else if ( ip->bPolymers == POLYMERS_LEGACY )
         {

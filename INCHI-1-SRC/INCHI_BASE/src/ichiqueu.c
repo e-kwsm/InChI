@@ -540,7 +540,7 @@ int DFS_FindTautInARing( struct tagCANON_GLOBALS *pCG,
             if (nxt_at == nDoNotTouchAtom1 ||
                 nxt_at == nDoNotTouchAtom2)
             {
-                ; /*  ignore */
+                /*  ignore */
             }
             else
             {
@@ -572,7 +572,7 @@ int DFS_FindTautInARing( struct tagCANON_GLOBALS *pCG,
                 {
                     if (!( *CheckCenterPoint )( atom, nxt_at ))
                     {
-                        ; /*  cannot advance to a non-centerpoint; ignore */
+                        /*  cannot advance to a non-centerpoint; ignore */
                     }
                     else
                     {
@@ -701,7 +701,7 @@ int DFS_FindTautAltPath( struct tagCANON_GLOBALS *pCG,
                 (nLenDfsPath && nxt_at == (int) DfsPath[nLenDfsPath - 1].at_no) /* step backwards */
                 ) /* djb-rwth: addressing LLVM warning */
             {
-                ; /* ignore nxt_at */
+                /* ignore nxt_at */
             }
             else
             {
@@ -733,7 +733,7 @@ int DFS_FindTautAltPath( struct tagCANON_GLOBALS *pCG,
                     if (!( *CheckCenterPointPath )( atom, DfsPath, nLenDfsPath, j,
                                                     pBNS, pBD, num_atoms ))
                     {
-                        ; /*  cannot advance to a non-centerpoint; ignore */
+                        /*  cannot advance to a non-centerpoint; ignore */
                     }
                     else
                     {

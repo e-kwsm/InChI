@@ -1597,7 +1597,8 @@ int extract_nonstereo_eq_classes_from_auxinfo_string( char *saux,
                 if (c == '/')
                     break;
                 else
-                    ;
+                {
+                }
             }
             p = q;
         }
@@ -1777,11 +1778,9 @@ void POSEContext_Free(POSEContext *context)
     FreeAllINChIArrays(context->pINChI2, context->pINChI_Aux2, context->sd.num_components);
     if (context->inp_file)
     {
-        ;
     }
     else
     {
-        ;
     }
     inchi_ios_close(context->out_file);
     inchi_ios_close(context->log_file);
@@ -1802,44 +1801,34 @@ void POSEContext_DebugPrint(POSEContext *context)
 {
     ITRACE_("\nDUMP OF POSEContext OBJECT");
     /* sd */
-    ;
     /* ip */
-    ;
     /* szTitle */
     ITRACE_("\n\tszTitle = %-s", context->szTitle);
     /* pINChI2, pINChI_Aux2 */
     /* inp_file, log_file, out_file, prb_file */
     if (context->inp_file)
     {
-        ;
     }
     else
     {
-        ;
     }
     if (context->log_file)
     {
-        ;
     }
     else
     {
-        ;
     }
     if (context->out_file)
     {
-        ;
     }
     else
     {
-        ;
     }
     if (context->prb_file)
     {
-        ;
     }
     else
     {
-        ;
     }
     /* orig_inp_data, prep_inp_data, */
     /* num_inp, strbuf, save_opt_bits */

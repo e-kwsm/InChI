@@ -137,7 +137,6 @@ int MolfileReadField(void *data,
              i < field_len && 0 != (c = p[i]) && isspace(UCINT c);
              i++)
         {
-            ;
         }
 
         len = MolfileStrnread((char *)data, &p[i], field_len - i, &q);
@@ -447,11 +446,9 @@ int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
     }
     else if (inp_file->type == INCHI_IOS_TYPE_STRING)
     {
-        ;
     }
     else
     {
-        ;
     }
 
     return ret;

@@ -3905,7 +3905,7 @@ int FixFixedHRestoredStructure( CANON_GLOBALS *pCG,
                                     (vPathEnd == v2n && vPathStart == v1n)) &&
                                     nDeltaCharge == 2) /* djb-rwth: addressing LLVM warning */
                                 {
-                                    ; /* success */
+                                    /* success */
                                 }
                                 else
                                 {

@@ -722,7 +722,6 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         }
         else
         {
-            ;
         }
 
         if (stereo_kind != MOL_FMT_V3000_STENON)
@@ -1145,63 +1144,58 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip query-related stuff */
+                        /* skip query-related stuff */
                     }
                 }
                 else if (!strcmp(field, "STBOX"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip for now */
+                        /* skip for now */
                     }
                 }
                 else if (!strcmp(field, "INVRET") || !strcmp(field, "EXACHG"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip reaction-related stuff */
+                        /* skip reaction-related stuff */
                     }
                 }
                 else if (!strcmp(field, "SUBST") || !strcmp(field, "UNSAT") || !strcmp(field, "RBCNT"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip query-related stuff */
+                        /* skip query-related stuff */
                     }
                 }
                 else if (!strcmp(field, "ATTCHPT"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ;
                     }
                 }
                 else if (!strcmp(field, "RGROUPS"))
                 {
                     if (0 > MolfileV3000ReadField(&stmp, MOL_FMT_STRING_DATA, &p))
                     {
-                        ;
                     }
                 }
                 else if (!strcmp(field, "ATTCHORD"))
                 {
                     if (0 > MolfileV3000ReadField(&stmp, MOL_FMT_STRING_DATA, &p))
                     {
-                        ;
                     }
                 }
                 else if (!strcmp(field, "CLASS"))
                 {
                     if (0 > MolfileV3000ReadField(&stmp, MOL_FMT_STRING_DATA, &p))
                     {
-                        ;
                     }
                 }
                 else if (!strcmp(field, "SEQID"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ;
                     }
                 }
 
@@ -1431,21 +1425,21 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip query-related stuff */
+                        /* skip query-related stuff */
                     }
                 }
                 else if (!strcmp(field, "RXCTR"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip reaction-related stuff */
+                        /* skip reaction-related stuff */
                     }
                 }
                 else if (!strcmp(field, "STBOX"))
                 {
                     if (0 > MolfileV3000ReadField(&itmp, MOL_FMT_INT_DATA, &p))
                     {
-                        ; /* skip for now */
+                        /* skip for now */
                     }
                 }
                 else if (!strcmp(field, "ENDPTS"))
@@ -1499,14 +1493,12 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                 {
                     if (0 > MolfileV3000ReadField(&stmp, MOL_FMT_STRING_DATA, &p))
                     {
-                        ;
                     }
                 }
                 else if (!strcmp(field, "ATTACH"))
                 {
                     if (0 > MolfileV3000ReadField(&stmp, MOL_FMT_STRING_DATA, &p))
                     {
-                        ;
                     }
                 }
 

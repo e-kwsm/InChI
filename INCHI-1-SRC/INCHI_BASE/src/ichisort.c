@@ -569,7 +569,7 @@ int CompareNeighListLex( NEIGH_LIST pp1, NEIGH_LIST pp2, const AT_RANK *nRank )
     {
         len--;
         diff = (int)nRank[*pp1++] - (int)nRank[*pp2++];
-    };
+    }
 
     ret = diff ? diff : (len1 - len2);
     return ret;
@@ -596,7 +596,6 @@ int CompareNeighListLexUpToMaxRank( NEIGH_LIST pp1, NEIGH_LIST pp2, const AT_RAN
     len = inchi_min( len1, len2 );
     while (len-- > 0 && !( diff = (int) nRank[*pp1++] - (int) nRank[*pp2++] ))
     {
-        ;
     }
 
     return diff ? diff : ( len1 - len2 );

@@ -415,7 +415,9 @@ int All_SB_Same( AT_RANK canon_rank1,
         for (k1 = 0, s2 = 0, bNotFound = 1;
               k1 < MAX_NUM_STEREO_BONDS && ( s2 = (int) at[s1].stereo_bond_neighbor[k1] ) &&
               ( bNotFound = ( r2 != pRankStack2[0][--s2] ) ); k1++)
-            ; /* continue until the 1st at[s2] (to which at[n2] may be mapped) have been found */
+        {
+            /* continue until the 1st at[s2] (to which at[n2] may be mapped) have been found */
+        }
         if (!bNotFound)
         {
             break; /* stop at 1st found */
@@ -426,7 +428,8 @@ int All_SB_Same( AT_RANK canon_rank1,
         return -1; /*  error: no mapping exists */
     }
     for (k2 = 0, m = 0; k2 < MAX_NUM_STEREO_BONDS && ( m = (int) at[s2].stereo_bond_neighbor[k2] ) && m - 1 != s1; k2++)
-        ;
+    {
+    }
     if (m - 1 != s1)
     {
         return -1; /*  program error: stereo bond in opposite direction not found */
@@ -484,14 +487,16 @@ int All_SB_Same( AT_RANK canon_rank1,
             /*  find if a stereogenic bond between at[i1]-at[i2] exists */
             for (k1 = 0; k1 < MAX_NUM_STEREO_BONDS &&
                 ( m = (int) at[i1].stereo_bond_neighbor[k1] ) && m - 1 != i2; k1++)
-                ;
+            {
+            }
             if (m - 1 != i2)
             {
                 return 0;
             }
             for (k2 = 0; k2 < MAX_NUM_STEREO_BONDS &&
                 ( m = (int) at[i2].stereo_bond_neighbor[k2] ) && m - 1 != i1; k2++)
-                ;
+            {
+            }
             if (m - 1 != i1)
             {
                 return 0;
@@ -611,7 +616,8 @@ int Next_SB_At_CanonRanks2( AT_RANK *canon_rank1,
                             else
                             {
                                 for (m = 0; m < at[n1].valence && n2 != (int) at[n1].neighbor[m]; m++)
-                                    ;
+                                {
+                                }
                             }
                             if (m < at[n1].valence &&
                                  nCanonRankFrom[n2] < cr2 &&
@@ -811,7 +817,6 @@ void SetUseAtomForStereo( S_CHAR *bAtomUsedForStereo, sp_ATOM *at, int num_atoms
         {
             for (k = 0; k < MAX_NUM_STEREO_BONDS && at[i].stereo_bond_neighbor[k]; k++)
             {
-                ;
             }
             bAtomUsedForStereo[i] = k ? k : STEREO_AT_MARK;
         }

@@ -3551,7 +3551,6 @@ int OneInChI2Atom(INCHI_CLOCK* ic,
 
         if (ret >= 0)
         {
-            ;
         }
 #if ( bRELEASE_VERSION == 0 )
 #ifndef TARGET_API_LIB
