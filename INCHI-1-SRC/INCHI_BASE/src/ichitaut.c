@@ -3975,7 +3975,6 @@ int MergeSaltTautGroups( CANON_GLOBALS *pCG,
 
     /* Collect tautomeric acidic O and previously non-tautomeric C-OH, C-SH, C-O(-), C-S(-)  */
     /* find whether previously found tautomeric atoms have both mobile H and (-) */
-    if (1 || ( s_group_info->num_candidates < 0 ))
     {
         /* Can be only -O(-)  and -OH */
         int          s_type, s_subtype;
@@ -4168,7 +4167,6 @@ int MakeIsotopicHGroup( inp_ATOM *at,
     nMaxNumCandidates = s_group_info->max_num_candidates;
     /* djb-rwth: removing redundant code */
     memset( t_group_info->num_iso_H, 0, sizeof( t_group_info->num_iso_H ) ); /* djb-rwth: memset_s C11/Annex K variant? */
-    if (1 || ( s_group_info->num_candidates < 0 ))
     {
         int s_type, s_subtype;
         S_CANDIDATE *s_candidate = s_group_info->s_candidate;
