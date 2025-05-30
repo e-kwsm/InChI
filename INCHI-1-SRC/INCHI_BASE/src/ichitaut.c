@@ -157,20 +157,20 @@ is_centerpoint... functions
 int is_centerpoint_elem( U_CHAR el_number )
 {
     switch (el_number) {
-        case EL_NUMBER_C: 
-        case EL_NUMBER_N: 
-        case EL_NUMBER_P: 
-        case EL_NUMBER_S: 
-        case EL_NUMBER_I: 
-        case EL_NUMBER_AS: 
-        case EL_NUMBER_SB: 
-        case EL_NUMBER_SE: 
-        case EL_NUMBER_TE: 
+        case EL_NUMBER_C:
+        case EL_NUMBER_N:
+        case EL_NUMBER_P:
+        case EL_NUMBER_S:
+        case EL_NUMBER_I:
+        case EL_NUMBER_AS:
+        case EL_NUMBER_SB:
+        case EL_NUMBER_SE:
+        case EL_NUMBER_TE:
         case EL_NUMBER_CL:
         case EL_NUMBER_BR:
             return 1;
         default:
-            return 0; 
+            return 0;
     }
 }
 
@@ -190,14 +190,14 @@ int is_centerpoint_elem_KET( U_CHAR el_number )
 int is_centerpoint_elem_strict( U_CHAR el_number )
 {
     switch (el_number) {
-        case EL_NUMBER_C: 
-        case EL_NUMBER_N: 
-        case EL_NUMBER_P: 
-        case EL_NUMBER_AS: 
-        case EL_NUMBER_SB: 
+        case EL_NUMBER_C:
+        case EL_NUMBER_N:
+        case EL_NUMBER_P:
+        case EL_NUMBER_AS:
+        case EL_NUMBER_SB:
             return 1;
         default:
-            return 0; 
+            return 0;
     }
 }
 
@@ -834,7 +834,7 @@ int nGetEndpointInfo_PT_18_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
     int  nEndpointValence;
     int  nMobile;
     S_CHAR cChargeSubtype;
-    /* int res; removed */ 
+    /* int res; removed */
     if (atom[iat].radical && atom[iat].radical != RADICAL_SINGLET)
         return 0; /* a radical */
     nEndpointValence = atom[iat].el_number == EL_NUMBER_O ? 2 :
@@ -1470,7 +1470,7 @@ int RegisterEndPoints( CANON_GLOBALS *pCG,
 #endif
 #if ( TAUT_PT_18_00 == 1 )
         tgi.bTautFlags |= (t_group_info->bTautFlags & TG_FLAG_PT_18_00); /* needed in AddTGroups2BnStruct() */
-#endif	
+#endif
                                                                          /* reinitialize BN Structure */
         ret_bns = ReInitBnStruct( pBNS, at, num_atoms, 0 );
         if (IS_BNS_ERROR( ret_bns ))
@@ -4903,7 +4903,7 @@ int MarkTautomerGroups( CANON_GLOBALS *pCG,
             }
         }
     }
-#endif /********** END PT_16_00 ************/     
+#endif /********** END PT_16_00 ************/
 
 #if ( TAUT_PT_06_00 == 1 ) /******* BEGIN PT_06_00 ********/
     if (t_group_info->bTautFlags & TG_FLAG_PT_06_00) {
@@ -5275,7 +5275,7 @@ int MarkTautomerGroups( CANON_GLOBALS *pCG,
                             bond_type = (int)at[centerpoint].bond_type[k] & ~BOND_MARK_ALL;
 #if ( FIX_BOND23_IN_TAUT == 1 )
                             bond_type = ACTUAL_ORDER(pBNS, centerpoint, k, bond_type);
-#endif		
+#endif
                             /* djb-rwth: removing redundant code */
                                 bNonTautBond =
                                 bAltBond = /* djb-rwth: ignoring LLVM warning: possible presence of global variables */
@@ -5585,7 +5585,7 @@ int MarkTautomerGroups( CANON_GLOBALS *pCG,
             }
         }
     }
-#endif /********** END PT_18_00 ************/    
+#endif /********** END PT_18_00 ************/
 
 
 #if ( KETO_ENOL_TAUT == 1 )  /***** post v.1 feature *****/
@@ -6543,7 +6543,7 @@ int CountTautomerGroups( sp_ATOM *at,
     /* djb-rwth: fixing oss-fuzz issue #70006 */
     if (t_group_info->nEndpointAtomNumber)
     {
-        /* free( t_group_info->nEndpointAtomNumber ); */ 
+        /* free( t_group_info->nEndpointAtomNumber ); */
         t_group_info->nEndpointAtomNumber = NULL;
     }
     if (t_group_info->tGroupNumber)
