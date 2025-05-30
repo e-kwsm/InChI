@@ -150,39 +150,6 @@ void InchiTimeGet( inchiTime *TickEnd )
 /******** returns difference TickEnd - TickStart in milliseconds **********/
 long InchiTimeMsecDiff( INCHI_CLOCK *ic, inchiTime *TickEnd, inchiTime *TickStart )
 {
-    if (FullMaxClock > 0)
-    {
-        clock_t delta;
-        if (!TickEnd || !TickStart)
-            return 0;
-        /* clock_t is unsigned */
-        if (TickEnd->clockTime > TickStart->clockTime)
-        {
-            if (TickEnd->clockTime > HalfMaxClock &&
-                 TickEnd->clockTime - TickStart->clockTime > HalfMaxClock)
-            {
-                /* overflow in TickStart->clockTime, actually TickStart->clockTime was later */
-                delta = ( FullMaxClock - TickEnd->clockTime ) + TickStart->clockTime;
-                return -INCHI_MSEC( delta );
-            }
-            delta = TickEnd->clockTime - TickStart->clockTime;
-            return INCHI_MSEC( delta );
-        }
-        else if (TickEnd->clockTime < TickStart->clockTime)
-        {
-            if (TickStart->clockTime > HalfMaxClock &&
-                 TickStart->clockTime - TickEnd->clockTime > HalfMaxClock)
-            {
-                /* overflow in TickEnd->clockTime, actually TickEnd->clockTime was later */
-                delta = ( FullMaxClock - TickStart->clockTime ) + TickEnd->clockTime;
-                return INCHI_MSEC( delta );
-            }
-            delta = TickStart->clockTime - TickEnd->clockTime;
-            return -INCHI_MSEC( delta );
-        }
-        return 0; /* TickEnd->clockTime == TickStart->clockTime */
-    }
-    else
     {
         /* may happen under Win32 only where clock_t is SIGNED long */
         clock_t delta;
@@ -236,13 +203,6 @@ void InchiTimeAddMsec( INCHI_CLOCK *ic, inchiTime *TickEnd, unsigned long nNumMs
     clock_t delta;
     if (!TickEnd)
         return;
-    if (FullMaxClock > 0)
-    {
-        /* clock_t is unsigned */
-        delta = INCHI_CLOCK_T( nNumMsec );
-        TickEnd->clockTime += delta;
-    }
-    else
     {
         /* may happen under Win32 only where clock_t is SIGNED long */
         /* clock_t is unsigned */
@@ -256,36 +216,6 @@ void InchiTimeAddMsec( INCHI_CLOCK *ic, inchiTime *TickEnd, unsigned long nNumMs
 /******************* check whether time has expired *********************/
 int bInchiTimeIsOver( INCHI_CLOCK *ic, inchiTime *TickStart )
 {
-    if (FullMaxClock > 0)
-    {
-        clock_t clockCurrTime;
-        if (!TickStart)
-            return 0;
-        clockCurrTime = InchiClock( );
-        /* clock_t is unsigned */
-        if (TickStart->clockTime > clockCurrTime)
-        {
-            if (TickStart->clockTime > HalfMaxClock &&
-                 TickStart->clockTime - clockCurrTime > HalfMaxClock)
-            {
-                /* overflow in clockCurrTime, actually clockCurrTime was later */
-                return 1;
-            }
-            return 0;
-        }
-        else if (TickStart->clockTime < clockCurrTime)
-        {
-            if (clockCurrTime > HalfMaxClock &&
-                 clockCurrTime - TickStart->clockTime > HalfMaxClock)
-            {
-                /* overflow in TickStart->clockTime, actually TickStart->clockTime was later */
-                return 0;
-            }
-            return 1;
-        }
-        return 0; /* TickStart->clockTime == clockCurrTime */
-    }
-    else
     {
         /* may happen under Win32 only where clock_t is SIGNED long */
         clock_t clockCurrTime;
