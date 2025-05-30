@@ -2966,8 +2966,9 @@ int GetAtomChargeType( inp_ATOM *atom,
 #if ( FIX_RENUM_BUG_FOR_CASE_OF_ACIDIC_OH_AT_P_PLUS == 1 )
                 goto count_mask_bits;
                 /*update_some_attype_totals(nAtTypeTotals, mask, delta, at->charge);*/
-#endif
+#else
                 goto exit_function; /* neighboring charge */
+#endif
             }
             type = ATT_NONE;
             mask = 0;
