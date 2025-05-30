@@ -2432,7 +2432,6 @@ int MarkChargeGroups( struct tagCANON_GLOBALS *pCG,
             /* the the first charged candidate of a new atom type */
             for (; i1 < nNumCandidates && ( c_candidate[i1].subtype & C_SUBTYPE_NEUTRAL ); i1++)
             {
-                ;
             }
             if (i1 == nNumCandidates)
             {
@@ -2445,7 +2444,6 @@ int MarkChargeGroups( struct tagCANON_GLOBALS *pCG,
                   !( c_candidate[i2].subtype & C_SUBTYPE_NEUTRAL );
                   i2++)
             {
-                ;
             }
             if (i2 == nNumCandidates)
             {
@@ -2457,7 +2455,6 @@ int MarkChargeGroups( struct tagCANON_GLOBALS *pCG,
                   c_candidate[i3].type == c_candidate[i1].type;
                   i3++)
             {
-                ;
             }
 
             if (i3 == i2)

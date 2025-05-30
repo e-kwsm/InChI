@@ -1025,7 +1025,6 @@ int PartitionGetFirstCell( Partition *p, Cell *baseW, int k, int n )
         /* bypass single vertex cells */
         for (r = (AT_RANK) ( i + 1 ); i < n && r == ( rank_mask_bit & p->Rank[(int) p->AtNumber[i]] ); i++, r++)
         {
-            ;
         }
     }
     if (i < n)
@@ -1035,7 +1034,6 @@ int PartitionGetFirstCell( Partition *p, Cell *baseW, int k, int n )
               i < n && r == ( rank_mask_bit & p->Rank[(int) p->AtNumber[i]] );
               i++)
         {
-            ;
         }
         W->next = i;
 
@@ -1529,7 +1527,6 @@ int PartitionColorVertex( CANON_GLOBALS *pCG,
     s = n_max + 1; /* always greater than sv; this initialization is needed only to keep the compiler happy */
     for (j = (int) rv - 1; 0 <= j && rv == ( p[1].Rank[(int) ( s = p[1].AtNumber[j] )] ) && s != sv; j--) /* djb-rwth: removing redundant code */
     {
-        ;
     }
 
     if (s != sv)
@@ -1993,7 +1990,7 @@ void CtPartFill( Graph *G,
             }
             else
             {
-                ;/* Ct->lenNumHfixed = 0; */
+                /* Ct->lenNumHfixed = 0; */
             }
 
         INCHI_HEAPCHK
@@ -2267,7 +2264,6 @@ int CtPartCompare( ConTable *Ct1,
     {
         for (i = 0; i <= k && !cmp[i]; i++)
         {
-            ;
         }
         if (i < k)
         {
@@ -2438,7 +2434,6 @@ int CtPartCompare( ConTable *Ct1,
     for (i = startCt1; i < midCt && Ct1->Ctbl[i] == Ct2->Ctbl[i]; i++)
     /*for ( i = startCt1; i < endCt && !(diff = (int)Ct1->Ctbl[i] - (int)Ct2->Ctbl[i]); i ++ )*/
     {
-        ;
     }
 
     if (i < midCt)
@@ -2484,7 +2479,6 @@ int CtPartCompare( ConTable *Ct1,
 
         for (i = startAt1; i < midNumH && Ct1->NumH[i] == Ct2->NumH[i]; i++)
         {
-            ;
         }
         if (i < midNumH)
         {
@@ -2500,7 +2494,7 @@ int CtPartCompare( ConTable *Ct1,
     nLayer++;
     for (i = midCt; i < endCt1 && Ct1->Ctbl[i] == Ct2->Ctbl[i]; i++)
     {
-        ; /* compare tautomeric groups part of CT */
+        /* compare tautomeric groups part of CT */
     }
     if (i < endCt1)
     {
@@ -2511,7 +2505,7 @@ int CtPartCompare( ConTable *Ct1,
     {
         for (i = midNumH; i < lenNumH && Ct1->NumH[i] == Ct2->NumH[i]; i++)
         {
-            ; /* compare tautomeric H */
+            /* compare tautomeric H */
         }
         if (i < lenNumH)
         {
@@ -2530,7 +2524,6 @@ int CtPartCompare( ConTable *Ct1,
     {
         for (i = startAt1; i < midAt && Ct1->NumHfixed[i] == Ct2->NumHfixed[i]; i++)
         {
-            ;
         }
         if (i < midAt)
         {
@@ -2558,7 +2551,6 @@ int CtPartCompare( ConTable *Ct1,
     {
         for (i = startAt1; i < endAt1 && Ct1->iso_exchg_atnos[i] == Ct2->iso_exchg_atnos[i]; i++)
         {
-            ;
         }
         if (i < endAt1)
         {
@@ -2730,7 +2722,6 @@ int CtFullCompare( ConTable *Ct1,
     /*************************************************************************/
     for (i = startCt1; i < midCt && Ct1->Ctbl[i] == Ct2->Ctbl[i]; i++)
     {
-        ;
     }
     if (i < midCt)
     {
@@ -2765,7 +2756,6 @@ int CtFullCompare( ConTable *Ct1,
 
         for (i = startAt1; i < midNumH && Ct1->NumH[i] == Ct2->NumH[i]; i++)
         {
-            ;
         }
         if (i < midNumH)
         {
@@ -2781,7 +2771,7 @@ int CtFullCompare( ConTable *Ct1,
     nLayer++;
     for (i = midCt; i < endCt1 && Ct1->Ctbl[i] == Ct2->Ctbl[i]; i++)
     {
-        ; /* compare tautomeric groups part of CT */
+        /* compare tautomeric groups part of CT */
     }
     if (i < endCt1)
     {
@@ -2792,7 +2782,7 @@ int CtFullCompare( ConTable *Ct1,
     {
         for (i = midNumH; i < lenNumH1 && Ct1->NumH[i] == Ct2->NumH[i]; i++)
         {
-            ; /* compare tautomeric H */
+            /* compare tautomeric H */
         }
         if (i < lenNumH1)
         {
@@ -2809,7 +2799,6 @@ int CtFullCompare( ConTable *Ct1,
     {
         for (i = startAt1; i < endAt1 && Ct1->NumHfixed[i] == Ct2->NumHfixed[i]; i++)
         {
-            ;
         }
         if (i < endAt1)
         {
@@ -2832,7 +2821,6 @@ int CtFullCompare( ConTable *Ct1,
         }
         for (i = startAt1; i < endAt1 && Ct1->iso_sort_key[i] == Ct2->iso_sort_key[i]; i++)
         {
-            ;
         }
         if (i < endAt1)
         {
@@ -3238,7 +3226,6 @@ int SetBitCreate( CANON_GLOBALS *pCG )
     pCG->m_num_bit = 1;
     for (b1 = 1, pCG->m_num_bit = 1; b1 < ( b2 = (bitWord) ( ( b1 << 1 )& BIT_WORD_MASK ) ); b1 = b2, pCG->m_num_bit++)
     {
-        ;
     }
     pCG->m_bBit = (bitWord*) inchi_calloc( pCG->m_num_bit, sizeof( bitWord ) );
     if (!pCG->m_bBit)
@@ -3253,7 +3240,6 @@ int SetBitCreate( CANON_GLOBALS *pCG )
 
     for (n1 = 1; n1 < ( n2 = (AT_RANK) ( ( n1 << 1 )& AT_RANK_MASK ) ); n1 = n2)
     {
-        ;
     }
     rank_mark_bit = n1;
     rank_mask_bit = ~n1;
@@ -4191,7 +4177,7 @@ L2:
         v[k - 1] = CellGetMinNode( &pi[k - 1], &W[k - 1], 0, pCD1 );
         if (!dig && PartitionSatisfiesLemma_2_25( &pi[k - 1], n ))
         {
-            ; /* found additional isomprphism */
+            /* found additional isomprphism */
         }
         else
         {

@@ -1526,7 +1526,6 @@ int is_PentaFluoroPhenyl( inp_ATOM *at,
                 neigh = at[iNext].neighbor[i];
                 if (neigh == iCur)
                 {
-                    ;
                 }
                 else
                     if (at[neigh].el_number == EL_NUMBER_F && at[neigh].chem_bonds_valence == 1 && !at[neigh].charge && !at[neigh].radical && !at[neigh].num_H)
@@ -1724,7 +1723,6 @@ int is_DERIV_RING_DMOX_DEOX_O( inp_ATOM *at,
                 ( from == ( next = at[curr].neighbor[i] ) ||
                   nRingSystem != at[next].nRingSystem ); i++)
             {
-                ;
             }
             if (i == at[curr].valence)
             {
@@ -1885,7 +1883,6 @@ int is_DERIV_RING_DMOX_DEOX_N( inp_ATOM *at,
                 ( from == ( next = at[curr].neighbor[i] ) ||
                   nRingSystem != at[next].nRingSystem ); i++)
             {
-                ;
             }
             if (i == at[curr].valence)
             {
@@ -2067,7 +2064,6 @@ int is_DERIV_RING2_PRRLDD_PPRDN( inp_ATOM *at,
             neigh = at[iat_from].neighbor[i];
             if (neigh == cur_atom)
             {
-                ;
             }
             else
             {
@@ -2193,7 +2189,6 @@ int is_Dansyl( inp_ATOM *at,
         {
             if (cur_atom == ( neigh = at[iS].neighbor[i] ))
             {
-                ;
             }
             else
             {
@@ -2542,7 +2537,6 @@ int get_traversed_deriv_type( inp_ATOM *at,
 
     for (m = 0; m < at[k].valence && !( at[(int) at[k].neighbor[m]].cFlags & cFlags ); m++)
     {
-        ;
     }
     if (m == at[k].valence)
     {
@@ -2772,7 +2766,7 @@ check_next_derivative:
                     /* the only suspected neighbor */
                     n2 = at[n1].neighbor[j]; /* X */
                     n0 = is_CF3_or_linC3F7a(at, n2, n1); /* djb-rwth: addressing LLVM warning */
-                    if (n0) 
+                    if (n0)
                     {
                         n0 = 2 + 3 * n0 + 1; /* (6,9,12 atoms) -C(=O)C[n]F[2n+1]; is_CF3_or_linC3F7a returns n */
                     }
@@ -2833,7 +2827,7 @@ check_next_derivative:
         if (is_A_Si_IV && has_B_CO)
         {
             /*                                             precursor | deriv.agent */
-            ; /* do not cut bond --- in A=>Si<, B(=O), B=C,S: Si(IV)-O---B(=O) */
+            /* do not cut bond --- in A=>Si<, B(=O), B=C,S: Si(IV)-O---B(=O) */
         }
         else
         {
@@ -2976,11 +2970,11 @@ check_next_derivative:
         nBackType1 = nBackType2 = 0;
         nOrdBack1 = nOrdBack2 = nOrdBack3 = -1;
         j = (int) at[k].neighbor[m];
-        ; /* X */
+        /* X */
         if (( at[j].el_number == EL_NUMBER_O || at[j].el_number == EL_NUMBER_S ) && at[j].valence == 2 &&
              at[j].chem_bonds_valence == at[j].valence &&
              at[j].nNumAtInRingSystem >= 5 &&
-             at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* X is C */ 
+             at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* X is C */
              !at[j].num_H && !at[j].charge && !at[j].radical) /* djb-rwth: ignoring LLVM warning: variable used */
         {
             nBackType1 = DERIV_RING_O_OUTSIDE_PRECURSOR;
@@ -2991,7 +2985,7 @@ check_next_derivative:
             if (at[j].el_number == EL_NUMBER_N && at[j].valence == 2 &&
                  at[j].chem_bonds_valence == at[j].valence &&
                  at[j].nNumAtInRingSystem >= 5 &&
-                 at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* X is C */ 
+                 at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* X is C */
                  1 == at[j].num_H && !at[j].charge && !at[j].radical) /* djb-rwth: ignoring LLVM warning: variable used */
             {
                 nBackType1 = DERIV_RING_NH_OUTSIDE_PRECURSOR;
@@ -3015,7 +3009,7 @@ check_next_derivative:
                     if (( at[j].el_number == EL_NUMBER_O || at[j].el_number == EL_NUMBER_S ) && at[j].valence == 2 &&
                          at[j].chem_bonds_valence == at[j].valence &&
                          at[j].nNumAtInRingSystem >= 5 &&
-                         at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* Y is C */ 
+                         at[n1 = at[j].neighbor[at[j].neighbor[0] == k]].el_number == EL_NUMBER_C && /* Y is C */
                          !at[j].num_H && !at[j].charge && !at[j].radical) /* djb-rwth: ignoring LLVM warning: variable used */
                     {
                         bFound = 1;
@@ -4001,7 +3995,6 @@ int is_DERIV_RING_O_or_NH_OUTSIDE_PRECURSOR( inp_ATOM *at,
     if (da1->typ[idrv] && ( da1->typ[idrv] & DERIV_RING_OUTSIDE_PRECURSOR ) == da1->typ[idrv] &&
          da1->typ[idrv + 1] && ( da1->typ[idrv + 1] & DERIV_RING_OUTSIDE_PRECURSOR ) == da1->typ[idrv + 1])
     {
-        ;
     }
     else
     {
@@ -4473,7 +4466,8 @@ int is_deriv_chain2( inp_ATOM *at,
             1 ==
 #endif
             n1)
-            ;
+        {
+        }
         else
             n1 = 0;
 #endif /* defined(UNDERIV_ACETATE_Et) || defined(UNDERIV_ACETATE_Me) */
@@ -4584,7 +4578,7 @@ int is_deriv_chain2( inp_ATOM *at,
 #elif ( !defined(UNDERIV_RNH_AcMe) && defined(DERIV_BRIDGE_NH) )
                 if (type == DERIV_BRIDGE_NH) n1 = 0;
 #endif
-                ; /* keep C-compiler happy */
+                /* keep C-compiler happy */
             }
             else
             {
@@ -4595,7 +4589,7 @@ int is_deriv_chain2( inp_ATOM *at,
 #elif ( !defined(UNDERIV_RNH_AcEt) && defined(DERIV_BRIDGE_NH) )
                     if (type == DERIV_BRIDGE_NH) n1 = 0;
 #endif
-                    ; /* keep C-compiler happy */
+                    /* keep C-compiler happy */
                 }
                 else
                 {
@@ -5154,7 +5148,7 @@ int sort_merge_underiv( char *pSdfValue,
         {
             for (j = i + 1; j < numUnderiv && !underiv_compare( pszUnderiv + i, pszUnderiv + j ); j++)
             {
-                ; /* find identical derivatives */
+                /* find identical derivatives */
             }
             k = strlen( pszUnderiv[i] );
             if (1 < ( num = j - i ))
@@ -5223,7 +5217,6 @@ int eliminate_deriv_not_in_list( inp_ATOM *at,
         /* count deriative attachments */
         for (num_da = 0; num_da < DERIV_AT_LEN && da[i].typ[num_da]; num_da++)
         {
-            ;
         }
         if (num_da > 2)
         {
@@ -5872,7 +5865,6 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
                 /*for ( len = 0; len < MAX_AT_DERIV && da[i].typ[len]; len ++ ) -- bug fixed 2013-11-07 DCh */
                 for (len = 0; len < DERIV_AT_LEN && da[i].typ[len]; len++)
                 {
-                    ;
                 }
                 switch (len)
                 {
@@ -6736,7 +6728,6 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
             /*for ( len = 0; len < MAX_AT_DERIV && da[i].typ[len]; len ++ ) -- bug fixed 2013-11-07 DCh */
             for (len = 0; len < DERIV_AT_LEN && da[i].typ[len]; len++)
             {
-                ;
             }
             switch (len)
             {

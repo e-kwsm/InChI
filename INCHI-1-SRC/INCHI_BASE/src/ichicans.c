@@ -807,7 +807,9 @@ int SetKnownStereoBondParities( CANON_GLOBALS *pCG,
                     n2 < MAX_NUM_STEREO_BONDS &&
                     ( m = (int) at[i2].stereo_bond_neighbor[n2] ) && m - 1 != i1;
                         n2++)
-                ; /* locate stereo bond (#n2) at the opposite atom at[i2] */
+            {
+                /* locate stereo bond (#n2) at the opposite atom at[i2] */
+            }
 
             if (m - 1 != i1 || at[i1].stereo_bond_parity[n1] != at[i2].stereo_bond_parity[n2])
             {
@@ -1124,7 +1126,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                  n2 < MAX_NUM_STEREO_BONDS && at[i2].stereo_bond_neighbor[n2];
                  n2++)
             {
-                ;
             }
 
             /*num_sb2 = n2;*/
@@ -1134,7 +1135,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                     m - 1 != i1;
                  n2++)
             {
-                ;
             }
 
             if (m - 1 != i1 || at[i1].stereo_bond_parity[n1] != at[i2].stereo_bond_parity[n2])
@@ -1171,7 +1171,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                 /* -- do not check number of stereo bonds, check bonds themselves --
                 for ( s1 = 0; s1 < MAX_NUM_STEREO_BONDS && at[k1].stereo_bond_neighbor[s1]; s1++ )
                 {
-                    ;
                 }
                 if ( num_sb1 != s1 )
                 {
@@ -1261,7 +1260,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                                     m - 1 != k2;
                          s1++)
                     {
-                        ;
                     }
                     if (m - 1 != k2)
                     {
@@ -1274,7 +1272,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                     /*  -- do not check number of stereo bonds, check bonds themselves --
                     for ( s2 = 0; s2 < MAX_NUM_STEREO_BONDS && at[k2].stereo_bond_neighbor[s2]; s2++ )
                      {
-                        ;
                      }
                     if ( num_sb2 != s2 )
                     {
@@ -1289,7 +1286,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                                     m - 1 != k1;
                          s2++)
                     {
-                        ;
                     }
 
                     if (m - 1 != k1)
@@ -1339,7 +1335,6 @@ int MarkKnownEqualStereoBondParities( sp_ATOM       *at,
                                     m - 1 != k1;
                                  s2++)
                             {
-                                ;
                             }
 
                             if (m - 1 != k1)
@@ -1452,7 +1447,6 @@ int GetAndCheckNextNeighbors( sp_ATOM       *at,
             !( k1 = ( at[cur1].neighbor[(int) at[cur1].stereo_bond_ord[i1]] == *n1 ) );
          i1++) /* djb-rwth: ignoring LLVM warning: variable used */
     {
-        ;
     }
 
     for (i2 = 0, k2 = 0;
@@ -1461,7 +1455,6 @@ int GetAndCheckNextNeighbors( sp_ATOM       *at,
             !( k2 = ( at[cur2].neighbor[(int) at[cur2].stereo_bond_ord[i2]] == *n2 ) );
          i2++) /* djb-rwth: ignoring LLVM warning: variable used */
     {
-        ;
     }
 
     if (k1 != k2)

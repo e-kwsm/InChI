@@ -1163,7 +1163,7 @@ int SetBondsFromBnStructFlow( BN_STRUCT *pBNS,
         if (( bChangeFlow & BNS_EF_CHNG_RSTR ) == BNS_EF_CHNG_RSTR)
         {
             /* Restore s-v1 edge flow to the BNS this pass input value */
-            ; /*pBNS->vert[v1].st_edge.flow -= delta;*/
+            /*pBNS->vert[v1].st_edge.flow -= delta;*/
         }
         else
         {
@@ -1263,7 +1263,7 @@ int SetBondsFromBnStructFlow( BN_STRUCT *pBNS,
             {
                 /* Restore v2-t edge flow to the BNS this pass input value */
                 /* "+=" instead of "-=" explanation: delta must have same sign as at the last edge */
-                ; /*pBNS->vert[v2].st_edge.flow += delta; */
+                /*pBNS->vert[v2].st_edge.flow += delta; */
             }
             else
             {
@@ -2432,7 +2432,7 @@ int fix_special_bonds( BN_STRUCT *pBNS,
                 }
                 if (bDoNotFixAnyBond)
                 {
-                    ; /* do nothing */
+                    /* do nothing */
                 }
                 else if (bFound)
                 {
@@ -3644,7 +3644,6 @@ int CreateCGroupInBnStruct( inp_ATOM *at,
 #endif
              )
         {
-            ;
         }
         else
         {
@@ -3849,7 +3848,6 @@ int CreateTGroupInBnStruct( inp_ATOM *at,
     {
         if (( nType & GetAtomChargeType( at, endpoint, NULL, &mask, 0 ) ) && ( mask & nMask ))
         {
-            ;
         }
         else
         {
@@ -4398,7 +4396,7 @@ int HardRemoveAcidicProtons( CANON_GLOBALS *pCG,
                 if (nDelta)
                 {
                     /* Radical pair has disappeared */
-                    ; /* goto quick_exit;*/
+                    /* goto quick_exit;*/
                 }
                 nNumMoved2AcidH++;
                 if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES] + 1)
@@ -4431,7 +4429,7 @@ int HardRemoveAcidicProtons( CANON_GLOBALS *pCG,
                     if (nDelta)
                     {
                         /* Radical pair has disappeared */
-                        ; /* goto quick_exit;*/
+                        /* goto quick_exit;*/
                     }
                     if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES])
                     {
@@ -4601,7 +4599,7 @@ int HardAddAcidicProtons( CANON_GLOBALS *pCG,
                 if (nDelta)
                 {
                     /* Radical pair has disappeared */
-                    ; /* goto quick_exit;*/
+                    /* goto quick_exit;*/
                 }
                 nNumMoved2AcidMinus++;
                 if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES] + 1)
@@ -4635,7 +4633,7 @@ int HardAddAcidicProtons( CANON_GLOBALS *pCG,
                     if (nDelta)
                     {
                         /* Radical pair has disappeared */
-                        ; /* goto quick_exit;*/
+                        /* goto quick_exit;*/
                     }
                     if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES])
                     {
@@ -4870,7 +4868,7 @@ int HardRemoveHplusNP( CANON_GLOBALS *pCG,
                 if (nDelta)
                 {
                     /* radical pair has disappeared */
-                    ; /* goto quick_exit;*/
+                    /* goto quick_exit;*/
                 }
                 nNumRemovedProtons++;
                 if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES] + 1)
@@ -4912,7 +4910,7 @@ int HardRemoveHplusNP( CANON_GLOBALS *pCG,
                     if (nDelta)
                     {
                         /* Radical pair has disappeared */
-                        ; /* goto quick_exit;*/
+                        /* goto quick_exit;*/
                     }
                     if (nPrevNumCharges > pAATG->nAtTypeTotals[ATTOT_NUM_CHARGES])
                     {
@@ -5585,7 +5583,6 @@ int mark_alt_bonds_and_taut_groups( struct tagINCHI_CLOCK   *ic,
                                                       pBNS, pBD ) );
                       taut_found++)
                 {
-                    ;
                 }
                 if (ret < 0)
                 {
@@ -6094,7 +6091,6 @@ int bSetBondsAfterCheckOneBond( BN_STRUCT *pBNS,
     {
         for (ifcd = 0; NO_VERTEX != ( iedge = fcd[ifcd].iedge ); ifcd++) /* djb-rwth: ignoring LLVM warning: variable used */
         {
-            ;
         }
     }
 
@@ -6151,7 +6147,6 @@ int bRestoreFlowAfterCheckOneBond( BN_STRUCT *pBNS, BNS_FLOW_CHANGES *fcd )
     /* Find the next to the last changed */
     for (ifcd = 0; NO_VERTEX != ( iedge = fcd[ifcd].iedge ); ifcd++) /* djb-rwth: ignoring LLVM warning: variable used */
     {
-        ;
     }
 
     /* Restore in reversed order to correctly handle vertex changed more than once */
@@ -12064,12 +12059,10 @@ int AddRemoveProtonsRestr( inp_ATOM *at,
     /* Size for SimpleAddAcidicProtons() */
     for (max_j_Aa = 0; AaTypMask[2 * max_j_Aa]; max_j_Aa++)
     {
-        ;
     }
     /* Size for SimpleRemoveAcidicProtons */
     for (max_j_Ar = 0; ArTypMask[2 * max_j_Ar]; max_j_Ar++)
     {
-        ;
     }
     if (num_prot < 0 && nAtTypeTotals[ATTOT_TOT_CHARGE] - nNumProtAddedByRestr <= 0)
     {
@@ -12156,11 +12149,9 @@ int AddRemoveProtonsRestr( inp_ATOM *at,
                 /* Find bonds in reciprocal ajacency lists */
                 for (i0 = 0; i0 < at[centp].valence && i != at[centp].neighbor[i0]; i0++)
                 {
-                    ;
                 }
                 for (k0 = 0; k0 < at[endp2].valence && centp != at[endp2].neighbor[k0]; k0++)
                 {
-                    ;
                 }
                 if (i0 == at[centp].valence || k0 == at[endp2].valence)
                 {

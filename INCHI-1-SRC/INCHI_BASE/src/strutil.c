@@ -570,7 +570,8 @@ int fix_non_uniform_drawn_amidiniums(int num_atoms,
             at[jj].charge = 1;
             at[i].bond_type[kk] = BOND_TYPE_DOUBLE;
             for (k1 = 0; k1 < at[jj].valence && i != at[jj].neighbor[k1]; k1++)
-                ;
+            {
+            }
             at[jj].bond_type[k1] = BOND_TYPE_DOUBLE;
             at[i].chem_bonds_valence++;
             at[jj].chem_bonds_valence++;
@@ -804,7 +805,7 @@ int fix_odd_things(int num_atoms,
                 at[c].valence == at[c].chem_bonds_valence &&
                 !NUMH(at, c))
             {
-                ; /* accept */
+                /* accept */
             }
             else
             {
@@ -828,7 +829,6 @@ int fix_odd_things(int num_atoms,
                     /* found both X(-) and X(-); change bonds and remove charges */
                     for (k1 = 0; k1 < at[c].valence && i1 != at[c].neighbor[k1]; k1++)
                     {
-                        ;
                     }
                     for (i = 0; i < charge; i++)
                     {
@@ -2192,7 +2192,7 @@ int RemoveInpAtBond(inp_ATOM *atom, int iat, int k)
                     {
                         /*at->sb_parity[m] =  2 - ( at->sb_parity[m] + k ) % 2;*/
                         /*at->sb_parity[m] =  2 - ( at->sb_parity[m] + (at->sn_ord[m] > k) + (at->sb_ord[m] > k) ) % 2;*/
-                        ; /*==== Parity should remain UNCHANGED ===*/
+                        /*==== Parity should remain UNCHANGED ===*/
                     }
                     if (at->sb_ord[m] > k)
                     {
@@ -2501,7 +2501,7 @@ int bIsMetalSalt(inp_ATOM *at, int i)
             (at[i].charge > 0 &&
              (type & 1) && val == get_el_valence(at[i].el_number, at[i].charge, 0))) /* djb-rwth: addressing LLVM warnings */
         {
-            ; /* accept */
+            /* accept */
         }
         else
         {
@@ -2527,7 +2527,7 @@ int bIsMetalSalt(inp_ATOM *at, int i)
                 at[iO].valence == 1 && at[iO].chem_bonds_valence == 1 &&
                 !at[iO].charge && !(at[iO].radical && at[iO].radical != RADICAL_SINGLET) && !NUMH(at, iO))
             {
-                ; /* found */
+                /* found */
             }
             else
             {
@@ -2746,11 +2746,9 @@ int bMayDisconnectMetals(ORIG_ATOM_DATA *orig_inp_data,
 
         if (!bRadOrMultBonds && bIsAmmoniumSalt(at, i, &iO, &k, num_explicit_H))
         {
-            ;
         }
         else if (!bRadOrMultBonds && bIsMetalSalt(at, i))
         {
-            ;
         }
         else if (1 == (j = bIsMetalToDisconnect(at, i, bCheckMetalValence)))
         {
@@ -2889,11 +2887,9 @@ int DisconnectMetals(ORIG_ATOM_DATA *orig_inp_data,
 
         if (!bRadOrMultBonds && bIsAmmoniumSalt(at, i, &iO, &k, num_explicit_H))
         {
-            ;
         }
         else if (!bRadOrMultBonds && bIsMetalSalt(at, i))
         {
-            ;
         }
         else if (1 == (j = bIsMetalToDisconnect(at, i, bCheckMetalValence)))
         {
@@ -3176,7 +3172,7 @@ int DisconnectOneLigand(inp_ATOM *at,
                 4 == at[iLigand].chem_bonds_valence &&
                 at[iLigand].bond_type[0] == at[iLigand].bond_type[1])
             {
-                ; /* do not add +1 charge to disconnected =N=, etc. 2004-10-27 */
+                /* do not add +1 charge to disconnected =N=, etc. 2004-10-27 */
             }
             else
             {
@@ -3396,13 +3392,12 @@ double GetMinDistDistribution(inp_ATOM *at,
                         }
                         else
                         {
-                            ; /* error, should not happen */
+                            /* error, should not happen */
                         }
                     }
                     else if (ri <= MIN_BOND_LENGTH2 && rn <= MIN_BOND_LENGTH2)
                     {
                         /* a very short bond coincides with at[iat]; ignore */
-                        ;
                     }
                     else
                     {
@@ -3640,7 +3635,7 @@ done:
             at[iat].bond_stereo[val] = 0;
             at[iat].chem_bonds_valence += at[iat_H].bond_type[0];
             at[iat].valence = val + 1;
-        };
+        }
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -5531,7 +5526,6 @@ INChI_Stereo *Alloc_INChI_Stereo(int num_at, int num_bonds)
             (pINChI_Stereo->nNumberInv = (AT_NUMB *)inchi_calloc(num_at, sizeof(pINChI_Stereo->nNumberInv[0]))) &&
             (pINChI_Stereo->t_parityInv = (S_CHAR *)inchi_calloc(num_at, sizeof(pINChI_Stereo->t_parityInv[0]))))
         {
-            ;
         }
         else if (num_at)
         {
@@ -5543,7 +5537,6 @@ INChI_Stereo *Alloc_INChI_Stereo(int num_at, int num_bonds)
             (pINChI_Stereo->nBondAtom2 = (AT_NUMB *)inchi_calloc(num_bonds, sizeof(pINChI_Stereo->nBondAtom2[0]))) &&
             (pINChI_Stereo->b_parity = (S_CHAR *)inchi_calloc(num_bonds, sizeof(pINChI_Stereo->b_parity[0]))))
         {
-            ;
         }
         else if (num_bonds)
         {
@@ -5647,7 +5640,6 @@ INChI *Alloc_INChI(inp_ATOM *at,
         (pINChI->nNum_H = (S_CHAR *)inchi_calloc(num_at, sizeof(pINChI->nNum_H[0]))) &&
         (pINChI->nNum_H_fixed = (S_CHAR *)inchi_calloc(num_at, sizeof(pINChI->nNum_H_fixed[0]))))
     {
-        ;
         /* nTautomer length: max. number of tautomeric groups is num_at/2
 
         1 word                     -> number of t-groups
@@ -5679,7 +5671,6 @@ INChI *Alloc_INChI(inp_ATOM *at,
             (pINChI->IsotopicAtom = (INChI_IsotopicAtom *)inchi_calloc(num_isotopic_atoms, sizeof(INChI_IsotopicAtom))) &&
             (pINChI->IsotopicTGroup = (INChI_IsotopicTGroup *)inchi_calloc(num_isotopic_atoms, sizeof(INChI_IsotopicTGroup))))
         {
-            ;
         }
         else if (num_isotopic_atoms)
         {
@@ -5693,7 +5684,6 @@ INChI *Alloc_INChI(inp_ATOM *at,
 
     if ((pINChI->Stereo = Alloc_INChI_Stereo(num_at, num_bonds)))
     {
-        ;
     }
     else
     {
@@ -5704,7 +5694,6 @@ INChI *Alloc_INChI(inp_ATOM *at,
     {
         if ((pINChI->StereoIsotopic = Alloc_INChI_Stereo(num_at, num_bonds)))
         {
-            ;
         }
         else
         {
@@ -5790,7 +5779,6 @@ INChI_Aux *Alloc_INChI_Aux(int num_at,
         (pINChI_Aux->nConstitEquNumbers = (AT_NUMB *)
              inchi_calloc(num_at_tg, sizeof(pINChI_Aux->nConstitEquNumbers[0]))))
     {
-        ;
     }
     else
     {
@@ -5800,7 +5788,6 @@ INChI_Aux *Alloc_INChI_Aux(int num_at,
     if (num_at > 1 &&
         (pINChI_Aux->nConstitEquTGroupNumbers = (AT_NUMB *)inchi_calloc((long long)num_at / 2 + 1, sizeof(pINChI_Aux->nConstitEquTGroupNumbers[0])))) /* djb-rwth: cast operator added */
     {
-        ;
     }
     else
     {
@@ -5831,7 +5818,6 @@ INChI_Aux *Alloc_INChI_Aux(int num_at,
             (pINChI_Aux->nIsotopicOrigAtNosInCanonOrdInv = (AT_NUMB *)inchi_calloc(num_at_tg, sizeof(pINChI_Aux->nIsotopicOrigAtNosInCanonOrd[0]))) &&
             (pINChI_Aux->nConstitEquIsotopicNumbers = (AT_NUMB *)inchi_calloc(num_at_tg, sizeof(pINChI_Aux->nConstitEquIsotopicNumbers[0]))))
         {
-            ;
         }
         else if (num_isotopic_atoms)
         {
@@ -5841,7 +5827,6 @@ INChI_Aux *Alloc_INChI_Aux(int num_at,
         if (                                                                                                                                                              /*num_isotopic_atoms && num_at > 1 &&*/
             (pINChI_Aux->nConstitEquIsotopicTGroupNumbers = (AT_NUMB *)inchi_calloc((long long)num_at / 2 + 1, sizeof(pINChI_Aux->nConstitEquIsotopicTGroupNumbers[0])))) /* djb-rwth: cast operator added */
         {
-            ;
         }
         else if (num_isotopic_atoms && num_at > 1)
         {

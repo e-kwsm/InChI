@@ -2310,7 +2310,6 @@ int CleanOrigCoord(MOL_COORD szCoord, int delim)
             /* remove leading zeroes */
             for (i = fst; i < len && '0' == szVal[i]; i++)
             {
-                ;
             }
             if ((i > fst) && (len - fst <= LEN_COORD + 1 - i) && (len - fst <= LEN_COORD + 1 - fst)) /* djb-rwth: fixing GHI #138 */
             {
@@ -2488,13 +2487,13 @@ int WriteOrigAtoms(CANON_GLOBALS *pCG,
                     }
                     else
                     {
-                        ; /* invalid atom parity */
+                        /* invalid atom parity */
                     }
                 }
             }
             else
             {
-                ; /* add error message here */
+                /* add error message here */
             }
         }
 
@@ -2998,7 +2997,7 @@ int OrigStruct_FillOut(CANON_GLOBALS *pCG,
                                     orig_inp_data->at, &i, pOrigStruct->szAtoms, len_atoms + 1, sd) &&
         i == orig_inp_data->num_inp_atoms)
     {
-        ; /* success */
+        /* success */
     }
     else
     {
@@ -3030,7 +3029,7 @@ int OrigStruct_FillOut(CANON_GLOBALS *pCG,
                                     orig_inp_data->at, &i, pOrigStruct->szBonds, len_bonds + 2, sd) &&
         i == orig_inp_data->num_inp_atoms)
     {
-        ; /* success */
+        /* success */
     }
     else
     {
@@ -5452,7 +5451,6 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
                 if (i + 3 < out->s.nUsedLength && s[i + 3] == ':')
                 {
                     /* ra: rB; rC: in AuxInfo */
-                    ;
                 }
                 else
                 {

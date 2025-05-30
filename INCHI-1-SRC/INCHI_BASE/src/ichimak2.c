@@ -493,7 +493,6 @@ int Copy2StereoBondOrAllene( INChI_Stereo *Stereo,
             /* free room for the new stereocenter */
             for (j = 0; j < *nNumberOfStereoCenters && Stereo->nNumber[j] < at_num; j++)
             {
-                ;
             }
 
             if (j < *nNumberOfStereoCenters)
@@ -802,7 +801,6 @@ INCHI_MODE UnmarkAllUndefinedUnknownStereo( INChI_Stereo *Stereo,
 
         for (i = 0; i < n && !ATOM_PARITY_WELL_DEF( Stereo->t_parity[i] ); i++)
         {
-            ;
         }
 
         if (i == n)
@@ -827,7 +825,6 @@ INCHI_MODE UnmarkAllUndefinedUnknownStereo( INChI_Stereo *Stereo,
     {
         for (i = 0; i < n && !ATOM_PARITY_WELL_DEF( Stereo->b_parity[i] ); i++)
         {
-            ;
         }
 
         if (i == n)
