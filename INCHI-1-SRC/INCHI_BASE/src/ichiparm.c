@@ -1379,7 +1379,7 @@ int ReadCommandLineParms(int argc,
                 {
                     /* expect "Wnumber", seconds */
                     t = strtod(pArg + 1, (char**)&q);
-                    if ( t && q > pArg + 1 )
+                    if ( t != 0.0 && q > pArg + 1 )
                     {
                         if ( *q != '\0' )
                         {
