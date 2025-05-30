@@ -1572,8 +1572,8 @@ int OrigAtData_WriteToSDfilePolymerData( const ORIG_ATOM_DATA *inp_at_data,
         /* better than nothing */
         float xmin, xmax, ymin, ymax;
         char b1[LEN_COORD_STR], b2[LEN_COORD_STR], b3[LEN_COORD_STR], b4[LEN_COORD_STR];
-        xmin = ymin = -1.0 * ((float)j + 1.0); /* djb-rwth: cast operator added, 1->1.0 */
-        xmax = ymax = +1.0 * ((float)j + 1.0); /* djb-rwth: cast operator added, 1->1.0 */
+        xmin = ymin = -1.0f * ((float)j + 1.0f); /* djb-rwth: cast operator added, 1->1.0 */
+        xmax = ymax = +1.0f * ((float)j + 1.0f); /* djb-rwth: cast operator added, 1->1.0 */
         u = inp_at_data->polymer->units[j];
         /* u->xbr1[0], x1, y1, x2, y2 u->xbr1[1], u->xbr1[2], u->xbr1[3] */
         inchi_ios_print_nodisplay(fcb, "M  SDI %3d%3d%s%s%s%s\n", u->id, 4,
