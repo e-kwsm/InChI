@@ -2567,12 +2567,6 @@ int  OrigAtData_RemoveHalfBond(int      this_atom,
 /****************************************************************************/
 int  OrigAtData_RemoveAtom(ORIG_ATOM_DATA* orig_at_data, int iatom)
 {
-
-    if ( 0 )
-    {
-        return 1;
-    }
-
     return 0;
 }
 
