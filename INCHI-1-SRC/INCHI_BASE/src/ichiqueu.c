@@ -1508,7 +1508,7 @@ int Check15TautPath( struct tagCANON_GLOBALS *pCG,
     alt_bonds[0] = alt_bonds[1] = 0;
     for (i = 0; i < nLenDfsPath; i++)
     {
-        alt_bonds[i % 2] |= IS_ALT_OR_DBLBOND( DfsPath[i].bond_type );
+        alt_bonds[i % 2] |= IS_ALT_OR_DBLBOND( DfsPath[i].bond_type )
     }
     if (( alt_bonds[0] & alt_bonds[1] & ( BOND_SINGLE | BOND_DOUBLE ) ) ||
         ( alt_bonds[0] & BOND_WRONG ) || ( alt_bonds[1] & BOND_WRONG ))
