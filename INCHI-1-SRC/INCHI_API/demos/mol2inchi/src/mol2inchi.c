@@ -490,6 +490,7 @@ M2I_THREADFUNC m2i_Worker_run( void *arg ) /* djb-rwth: ignoring LLVM warning */
 
     return errs;
 #endif
+    return 0; // XXX
 }
 
 
