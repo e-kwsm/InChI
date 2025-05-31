@@ -4,7 +4,9 @@
  */
 
 
+#ifdef _WIN32
 #pragma warning( disable : 4996 )
+#endif
 
 #include <ctype.h>
 #include <stdlib.h>

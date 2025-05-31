@@ -3,7 +3,9 @@
  * Copyright (c) 2024 IUPAC and InChI Trust
  */
 
+#ifdef _WIN32
 #pragma warning( disable : 4706 4127 4514 4100 4786 4996 4244 4267 )
+#endif
 
 #include <string.h>
 
