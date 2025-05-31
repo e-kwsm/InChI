@@ -3,7 +3,9 @@
  * Copyright (c) 2024 IUPAC and InChI Trust
  */
 
+#ifdef _WIN32
 #pragma warning( disable : 4996 )
+#endif
 
 #include <stdlib.h>
 #include <stdarg.h>
