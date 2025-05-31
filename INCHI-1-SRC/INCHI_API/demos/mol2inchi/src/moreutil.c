@@ -38,7 +38,9 @@
  *
 */
 
+#ifdef _WIN32
 #pragma warning( disable : 4996 )
+#endif
 
 #include <stdlib.h>
 #include <stdarg.h>
