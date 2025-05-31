@@ -712,7 +712,7 @@ int NormOneComponentINChI( CANON_GLOBALS *pCG,
     /*  allocate memory for non-tautimeric (k=0) and tautomeric (k=1) results */
     for (k = 0; k < TAUT_NUM; k++)
     {
-        int nAllocMode = ( k == TAUT_YES ? REQ_MODE_TAUT : 0 ) || /* djb-rwth: bitwise operator | changed with logical operator ||*/
+        int nAllocMode = ( k == TAUT_YES && REQ_MODE_TAUT ) || /* djb-rwth: bitwise operator | changed with logical operator ||*/
             ( bTautFlagsDone & ( TG_FLAG_FOUND_ISOTOPIC_H_DONE |
                 TG_FLAG_FOUND_ISOTOPIC_ATOM_DONE ) ) ?
                 ( ip->nMode & REQ_MODE_ISO ) : 0;
