@@ -2303,10 +2303,14 @@ int CleanOrigCoord(MOL_COORD szCoord, int delim)
         }
         if (len_buf && (len_buf < (int)sizeof(MOL_COORD)))
         {
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 6386)
+#endif
             szBuf[len_buf++] = delim;
+#ifdef _WIN32
 #pragma warning(pop)
+#endif
         }
         if (len_buf >= (int)sizeof(MOL_COORD)) /* djb-rwth: fixing coverity ID #499520 */
         {
