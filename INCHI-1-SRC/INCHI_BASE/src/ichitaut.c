@@ -473,13 +473,13 @@ int nGetEndpointInfo_PT_22_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
                 else {
                     return 0;
                 }
-                eif->cMobile = atom[iat].num_H;
-                eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
-                eif->cMoveableCharge = atom[iat].charge;
+            eif->cMobile = atom[iat].num_H;
+            eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
+            eif->cMoveableCharge = atom[iat].charge;
 #if ( KETO_ENOL_TAUT == 1 )
-                eif->cKetoEnolCode = 0;
+            eif->cKetoEnolCode = 0;
 #endif
-                return nEndpointValence;
+            return nEndpointValence;
         }
     return 0;
 }
@@ -549,13 +549,13 @@ int nGetEndpointInfo_PT_16_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
                 else {
                     return 0;
                 }
-                eif->cMobile = atom[iat].num_H;
-                eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
-                eif->cMoveableCharge = atom[iat].charge;
+            eif->cMobile = atom[iat].num_H;
+            eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
+            eif->cMoveableCharge = atom[iat].charge;
 #if ( KETO_ENOL_TAUT == 1 )
-                eif->cKetoEnolCode = 0;
+            eif->cKetoEnolCode = 0;
 #endif
-                return nEndpointValence;
+            return nEndpointValence;
         }
     return 0;
 }
@@ -626,13 +626,13 @@ int nGetEndpointInfo_PT_06_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
                 else {
                     return 0;
                 }
-                eif->cMobile = atom[iat].num_H;
-                eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
-                eif->cMoveableCharge = atom[iat].charge;
+            eif->cMobile = atom[iat].num_H;
+            eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
+            eif->cMoveableCharge = atom[iat].charge;
 #if ( KETO_ENOL_TAUT == 1 )
-                eif->cKetoEnolCode = 0;
+            eif->cKetoEnolCode = 0;
 #endif
-                return nEndpointValence;
+            return nEndpointValence;
         }
     return 0;
 }
@@ -705,13 +705,13 @@ int nGetEndpointInfo_PT_39_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
                 else {
                     return 0;
                 }
-                eif->cMobile = atom[iat].num_H;
-                eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
-                eif->cMoveableCharge = atom[iat].charge;
+            eif->cMobile = atom[iat].num_H;
+            eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
+            eif->cMoveableCharge = atom[iat].charge;
 #if ( KETO_ENOL_TAUT == 1 )
-                eif->cKetoEnolCode = 0;
+            eif->cKetoEnolCode = 0;
 #endif
-                return nEndpointValence;
+            return nEndpointValence;
         }
     return 0;
 }
@@ -781,13 +781,13 @@ int nGetEndpointInfo_PT_13_00(inp_ATOM *atom, int iat, ENDPOINT_INFO *eif)
                 else {
                     return 0;
                 }
-                eif->cMobile = atom[iat].num_H;
-                eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
-                eif->cMoveableCharge = atom[iat].charge;
+            eif->cMobile = atom[iat].num_H;
+            eif->cNeutralBondsValence = nEndpointValence - atom[iat].num_H;
+            eif->cMoveableCharge = atom[iat].charge;
 #if ( KETO_ENOL_TAUT == 1 )
-                eif->cKetoEnolCode = 0;
+            eif->cKetoEnolCode = 0;
 #endif
-                return nEndpointValence;
+            return nEndpointValence;
         }
     return 0;
 }
