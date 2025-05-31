@@ -586,7 +586,7 @@ int SetAtomBondType( BNS_EDGE *edge,
                         else {
                             return BNS_BOND_ERR; /* error */
                         }
-                        break;
+                    break;
                 default:
                     new_bond_type = bond_type;
                     bond_mark = ( *bond_type12 & BOND_MARK_MASK );
