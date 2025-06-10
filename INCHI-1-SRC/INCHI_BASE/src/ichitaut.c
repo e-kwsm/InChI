@@ -6693,10 +6693,10 @@ int CountTautomerGroups( sp_ATOM *at,
         if ((j = (int) at[i].endpoint)) /* djb-rwth: addressing LLVM warning */
         {
             j = (int) ( at[i].endpoint = nTautomerGroupNumber[j] ) - 1; /*  new t_group number */
-            if (j >= 0)
+            if (j >= 0 && j < num_t) /* djb-rwth: fixing buffer overflow */
             {
                 /*  j=-1 in case of no mobile hydrogen atoms (charges only), group being removed */
-                if (nCurrEndpointAtNoPos[j] >=   /*  debug only */ /* djb-rwth: ui_rr */
+                if (nCurrEndpointAtNoPos[j] >=   /*  debug only */
                      t_group[j].nFirstEndpointAtNoPos + t_group[j].nNumEndpoints)
                 {
                     goto err_exit_function; /*  program error */ /*   <BRKPT> */

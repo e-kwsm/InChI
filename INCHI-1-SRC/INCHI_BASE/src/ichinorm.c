@@ -2261,7 +2261,7 @@ int is_DERIV_RING2_PRRLDD_PPRDN( inp_ATOM *at,
                 k = ( ord[1] < ord[0] );
                 da1->ord[0] = ord[k];  /* smaller */
                 da1->ord[1] = ord[!k]; /* greater */
-                /*da1->num[0] = */da1->num[0] = i - 1; /* djb-rwth: ui_rr / da1->num[1] = i-1? */
+                /*da1->num[0] = */da1->num[0] = i - 1; /* djb-rwth: ui_rr? / da1->num[1] = i-1? */
             }
             return i;
         }
@@ -6493,7 +6493,7 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
                         continue;
                     }
                     /*for ( k = 0; k < MAX_AT_DERIV && da[n].typ[k]; k ++ ) -- bug fixed 2013-11-07 DCh */
-                    for (k = 0; k < DERIV_AT_LEN && da[n].typ[k]; k++) /* djb-rwth: ui_rr */
+                    for (k = 0; k < DERIV_AT_LEN && n< num_atoms && da[n].typ[k]; k++)
                     {
                         if (da[n].typ[k] & DERIV_DUPLIC)
                         {
@@ -6877,7 +6877,7 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
                 for (j = n = 0; j < 2; j++)
                 {
                     int atj = (int) ap[i].at[j];
-                    if (da[atj].typ[0] && at[atj].neighbor[(int) da[atj].ord[0]] == ap[i].at[1 - j])
+                    if (atj < num_atoms && da[atj].typ[0] && at[atj].neighbor[(int) da[atj].ord[0]] == ap[i].at[1 - j])
                     {
                         k = j;      /* ap[i].at[k] is precursor atom */
                         n++;
@@ -6886,7 +6886,7 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
                     }
                     else
                     {
-                        if (da[atj].typ[1] && at[atj].neighbor[(int) da[atj].ord[1]] == ap[i].at[1 - j])
+                        if (atj < num_atoms && da[atj].typ[1] && at[atj].neighbor[(int) da[atj].ord[1]] == ap[i].at[1 - j])
                         {
                             k = j;
                             n++;

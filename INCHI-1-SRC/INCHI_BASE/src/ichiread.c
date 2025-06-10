@@ -7346,7 +7346,7 @@ int ParseSegmentSp2(const char* str,
                 }
                 p = q + 1;
                 bondParity = (int)(r - parity_type) + 1;
-                /* djb-rwth: ui_rr? */
+                /* djb-rwth: ui_rr */
                 pStereo[0]->b_parity[iBond] = bondParity;
                 pStereo[0]->nBondAtom1[iBond] = nAtom1;
                 pStereo[0]->nBondAtom2[iBond] = nAtom2;
@@ -10027,9 +10027,11 @@ int ParseSegmentFormula(const char* str,
                 inchi_free(pInChI[iComponent + i].szHillFormula);
             }
             pInChI[iComponent + i].szHillFormula = (char*)inchi_malloc(inchi_max((long long)len, 1) + 1); /* djb-rwth: cast operator added */
-            memcpy(pInChI[iComponent].szHillFormula, p, len);
             if (pInChI[iComponent + i].szHillFormula) /* djb-rwth: fixing a NULL pointer dereference */
+            {
+                memcpy(pInChI[iComponent].szHillFormula, p, len);
                 pInChI[iComponent + i].szHillFormula[len] = '\0';
+            }
             if (!i)
             {
                 /* Pass 2.1 Parse formula and count atoms except H */

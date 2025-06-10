@@ -1410,15 +1410,22 @@ int SetBondProperties( inp_ATOM *at,
 
     /* store the connection */
 
-    /* bond type */ /* djb-rwth: buffer overruns avoided implicitly */ /* djb-rwth: ui_rr? */
-    at[a1].bond_type[n1] =
-        at[a2].bond_type[n2] = cBondType;
+    /* bond type */ /* djb-rwth: fixing buffer overruns */
+    if ((n1 < MAXVAL) && (n2 < MAXVAL))
+    {
+        at[a1].bond_type[n1] =
+            at[a2].bond_type[n2] = cBondType;
         /* connection */
-    at[a1].neighbor[n1] = (AT_NUMB) a2;
-    at[a2].neighbor[n2] = (AT_NUMB) a1;
-    /* stereo */
-    at[a1].bond_stereo[n1] = cStereoType1; /*  >0: the wedge (pointed) end is at this atom */
-    at[a2].bond_stereo[n2] = cStereoType2; /*  <0: the wedge (pointed) end is at the opposite atom */
+        at[a1].neighbor[n1] = (AT_NUMB)a2;
+        at[a2].neighbor[n2] = (AT_NUMB)a1;
+        /* stereo */
+        at[a1].bond_stereo[n1] = cStereoType1; /*  >0: the wedge (pointed) end is at this atom */
+        at[a2].bond_stereo[n2] = cStereoType2; /*  <0: the wedge (pointed) end is at the opposite atom */
+    }
+    else
+    {
+        goto err_exit;
+    }
 
     return 0;
 

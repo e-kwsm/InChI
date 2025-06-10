@@ -1827,23 +1827,26 @@ int  Canonicalization_step( CANON_GLOBALS *pCG,
         /***************************************
            The last canonicalization step
          ***************************************/
-        if (pBCN)
+        if ((i >= 0) && (i < 2)) /* djb-rwth: fixing buffer overruns */
         {
-            /* USE_CANON2 == 1 */
-            pCS->NeighList = NULL;
-            pCS->pBCN = pBCN;
-            ret = Canon_INChI( ic, z->num_atoms,
-                               i ? z->num_at_tg : z->num_atoms,
-                               z->at[i], pCS, pCG, z->nMode, i ); /* djb-rwth: ui_rr */
-        }
-        else
-        {
-            /* old way */
-            pCS->NeighList = CreateNeighList( z->num_atoms, i ? z->num_at_tg : z->num_atoms, z->at[i], pCS->bDoubleBondSquare, pCS->t_group_info );
-            pCS->pBCN = NULL;
-            ret = Canon_INChI( ic, z->num_atoms,
-                               i ? z->num_at_tg : z->num_atoms,
-                               z->at[i], pCS, pCG, z->nMode, i );
+            if (pBCN)
+            {
+                /* USE_CANON2 == 1 */
+                pCS->NeighList = NULL;
+                pCS->pBCN = pBCN;
+                ret = Canon_INChI(ic, z->num_atoms,
+                    i ? z->num_at_tg : z->num_atoms,
+                    z->at[i], pCS, pCG, z->nMode, i);
+            }
+            else
+            {
+                /* old way */
+                pCS->NeighList = CreateNeighList(z->num_atoms, i ? z->num_at_tg : z->num_atoms, z->at[i], pCS->bDoubleBondSquare, pCS->t_group_info);
+                pCS->pBCN = NULL;
+                ret = Canon_INChI(ic, z->num_atoms,
+                    i ? z->num_at_tg : z->num_atoms,
+                    z->at[i], pCS, pCG, z->nMode, i);
+            }
         }
 
         pINChI = ppINChI[i];      /* pointers to already allocated still empty InChI */

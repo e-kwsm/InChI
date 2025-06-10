@@ -3200,9 +3200,9 @@ int mark_atoms_to_delete_or_renumber( ORIG_ATOM_DATA *orig_at_data,
             natnums = subgraf_pathfinder_collect_all(spf, 0, NULL, (int*)atnums);
             if (natnums)
             {
-                for (j = 0; j < natnums; j++)
+                for (j = 0; j < natnums && j < max_atoms; j++) /* djb-rwth: fixing buffer overruns */
                 {
-                    fail = IntArray_AppendIfAbsent(ed->del_atom, atnums[j]); /* djb-rwth: ui_rr? */
+                    fail = IntArray_AppendIfAbsent(ed->del_atom, atnums[j]);
                     if (fail)
                     {
                         ret = _IS_ERROR;

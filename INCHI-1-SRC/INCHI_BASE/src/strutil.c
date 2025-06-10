@@ -2416,7 +2416,7 @@ int DisconnectAmmoniumSalt( inp_ATOM *at,
     /* move 1 H from NH4 to O- or Cl */
 
     /* find non-isotopic or the lightest isotopic H to move from N to O */
-    for (iso_diff = 0; iso_diff <= NUM_H_ISOTOPES; iso_diff++) /* djb-rwth: fixing GH PR #72 -- ui_rr */
+    for (iso_diff = 0; iso_diff <= NUM_H_ISOTOPES; iso_diff++) /* djb-rwth: fixing GH PR #72 */
     {
         if (!iso_diff)
         {
@@ -3937,9 +3937,9 @@ int remove_terminal_HDT( int num_atoms, inp_ATOM *at, int bFixTermHChrg )
                     memmove(new_OtherNeigh_order + num_HydrogenAt, new_OtherNeigh_order, num_OtherNeigh * sizeof(new_OtherNeigh_order[0]));
                     for (k = 0, j = 1; k <= NUM_H_ISOTOPES; k++)
                     {
-                        if (new_HydrogenAt_order[k])
+                        if (new_HydrogenAt_order[k] && (num_HydrogenAt - j < MAXVAL) && (num_HydrogenAt - j >= 0)) /* djb-rwth: fixing buffer overruns */
                         {
-                            new_OtherNeigh_order[num_HydrogenAt - j] = new_HydrogenAt_order[k]; /* djb-rwth: buffer overrun avoided implicitly */
+                            new_OtherNeigh_order[num_HydrogenAt - j] = new_HydrogenAt_order[k];
                             for (m = 0; m < MAX_NUM_STEREO_BONDS && new_at[i].sb_parity[m]; m++)
                             {
                                 if ((int) new_at[i].sn_ord[m] == -( k + 1 ))
@@ -4407,7 +4407,7 @@ int MarkDisconnectedComponents( ORIG_ATOM_DATA *orig_at_data,
     stable sort
     */
 
-    qsort( (void*) component_nbr[0], num_components, sizeof( component_nbr[0] ), cmp_components ); /* djb-rwth: buffer overrun while writing component_nbr[0]? */ /* djb-rwth: ui_rr */
+    qsort( (void*) component_nbr[0], num_components, sizeof( component_nbr[0] ), cmp_components ); /* djb-rwth: buffer overrun while writing component_nbr[0]? */ /* djb-rwth: ui_rr? */
 
     /* Invert the transposition */
     for (i = 0; i < num_components; i++)

@@ -466,8 +466,12 @@ int ProcessMultipleInputFiles(int argc, char* argv[])
                 targv[++targc] = argv[i];
             }
         }
-
-        targv[++targc] = NULL; /* djb-rwth: ui_rr */
+        /* djb-rwth: fixing undefined index value / buffer overflow */
+        ++targc;
+        if (targc < argc + 3)
+        {
+            targv[targc] = NULL;
+        }
 
         ret = ProcessSingleInputFile(targc, targv); /* ProcessSingleInputFile() is a former main() */
 

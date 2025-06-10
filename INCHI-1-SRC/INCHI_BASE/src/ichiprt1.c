@@ -497,7 +497,7 @@ typedef enum tagAuxLblBit
     AL_REC_ = 1 << AL_REC__ORD
 } AUX_LBL_BIT;
 
-const int MAX_TAG_NUM = inchi_max( (int) IL_MAX_ORD, (int) AL_MAX_ORD );
+const int MAX_TAG_NUM = inchi_max( (short) IL_MAX_ORD, (short) AL_MAX_ORD ); /* djb-rwth: fixing MSVC warning C5287 */
 
 char *szGetTag( const INCHI_TAG *Tag, int nTag, int bTag, char *szTag, int *bAlways );
 
