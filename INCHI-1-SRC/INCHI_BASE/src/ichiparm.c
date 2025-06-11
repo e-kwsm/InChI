@@ -2617,7 +2617,6 @@ int PrintInputParms(INCHI_IOSTREAM* log_file,
         /*
         unsigned long seconds = ip->msec_MaxTime / 1000;
         unsigned long milliseconds = (ip->msec_MaxTime%1000);
-        inchi_ios_eprint( log_file, "Timeout per structure: %lu/*.%03lu sec\n", seconds, milliseconds); -- djb-rwth: ignoring LLVM warning
         inchi_ios_eprint( log_file, "Timeout per structure: %lu sec\n", seconds );
         */
     }
