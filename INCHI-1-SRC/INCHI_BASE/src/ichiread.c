@@ -7093,7 +7093,7 @@ int ParseSegmentSp2(const char* str,
                     ret = RI_ERR_SYNTAX; /* syntax error */
                     goto exit_function;
                 }
-                if (NULL == pInChIFrom || NULL == pInChIFrom + iComponent + i) /* djb-rwth: ignoring GCC warning */
+                if (NULL == pInChIFrom) /* djb-rwth: ignoring GCC warning */
                 {
                     ret = RI_ERR_SYNTAX; /* syntax error */
                     goto exit_function;

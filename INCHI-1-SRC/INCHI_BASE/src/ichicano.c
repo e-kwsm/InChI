@@ -1205,14 +1205,12 @@ int UpdateFullLinearCT( int num_atoms,
         if (t_group_info) 
             nEndpointAtomNumber = t_group_info->nEndpointAtomNumber + (int) t_group[i].nFirstEndpointAtNoPos; /* djb-rwth: fixing a NULL pointer dereference */
         pCG->m_pn_RankForSort = nRank;
-        if (t_group + i) /* djb-rwth: ignoring GCC warning */
             num_neigh = (int)t_group[i].nNumEndpoints;
         insertions_sort( pCG, nEndpointAtomNumber, (size_t) num_neigh, sizeof( nEndpointAtomNumber[0] ), CompRank );
 
         for (k = 0; k < num_neigh; k++)
         {
             /* rank = (new current atom Rank) */
-            if (nEndpointAtomNumber + k) /* djb-rwth: fixing a NULL pointer dereference; ignoring GCC warning */
             {
                 if ((int)(r_neigh = (AT_NUMB)nRank[(int)nEndpointAtomNumber[k]]) CT_NEIGH_SMALLER_THAN rank) 
                 {
