@@ -6,7 +6,9 @@
         "pre_build": "sudo apt update && sudo apt install -y cmake && python3 -m pip install -e INCHI-1-TEST[invariance-tests]",
         "build_exe": "cmake --build CMake_build/cli_build",
         "build_lib": "cmake --build CMake_build/libinchi_build",
-        "exe_path": "CMake_build/cli_build/bin/inchi-1"
+        "exe_path": "CMake_build/cli_build/bin/inchi-1",
+        "lib_path": "CMake_build/libinchi_build/bin/libinchi.so",
+        "main_path": "CMake_build/libinchi_build/bin/inchi_main"
     },
     {
         "os": "windows-2022",
@@ -15,7 +17,9 @@
         "pre_build": "python -m pip install -e INCHI-1-TEST[invariance-tests]",
         "build_exe": "cmake --build CMake_build/cli_build --config Release",
         "build_lib": "cmake --build CMake_build/libinchi_build --config Release",
-        "exe_path": "CMake_build/cli_build/bin/Release/inchi-1.exe"
+        "exe_path": "CMake_build/cli_build/bin/Release/inchi-1.exe",
+        "lib_path": "CMake_build/libinchi_build/bin/Release/libinchi.dll",
+        "main_path": "CMake_build/libinchi_build/bin/Release/inchi_main.exe"
 
     },
     {
@@ -25,6 +29,8 @@
         "pre_build": "python -m pip install -e INCHI-1-TEST[invariance-tests]",
         "build_exe": "cmake --build CMake_build/cli_build",
         "build_lib": "cmake --build CMake_build/libinchi_build",
-        "exe_path": "CMake_build/cli_build/bin/inchi-1"
+        "exe_path": "CMake_build/cli_build/bin/inchi-1",
+        "lib_path": "CMake_build/libinchi_build/bin/libinchi.dylib",
+        "main_path": "CMake_build/libinchi_build/bin/inchi_main"
     }
 ]
