@@ -997,17 +997,36 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                                          bDoNotAddH,
                                          bHasMetalNeighbor);
 
-                /* (@nnuk)
-                 * Add hydrogens for coordination bonds on non-metals
-                 *
-                 * (@Felix Bänsch)(@Gerd Blanke)(@nnuk)
-                 * An alternative approach to consider is to increase the valence of the mfdata (mfdata->ctab.atoms[a1].valence).
-                 * If the value is 0 (indicating a default value), it would be necessary to obtain the default value and increase it by 1.
-                 * This calculation of the implicit hydrogens should consequently yield the desired result.
-                 */
-                if (!is_el_a_metal(at[a1].el_number))
+                /* Special handling for non-metals with coordination bonds */
+                if (!is_el_a_metal(at[a1].el_number) && additional_H > 0)
                 {
-                    at[a1].num_H += additional_H;
+                    /* Count explicit hydrogens bonded to this atom */
+                    int explicit_H = 0;
+                    for (n1 = 0; n1 < at[a1].valence; n1++)
+                    {
+                        if (at[a1].bond_type[n1] == BOND_TYPE_SINGLE && at[at[a1].neighbor[n1]].el_number == EL_NUMBER_H)
+                        {
+                            explicit_H++;
+                        }
+                    }
+
+                    /* Get expected valence for this element */
+                    int expected_valence = get_el_valence(at[a1].el_number, at[a1].charge, 0) + 1; /* Default valence state */
+
+                    /* Calculate current bonding state */
+                    int current_bonding = at[a1].chem_bonds_valence;
+
+                    /* Check if we need additional hydrogens */
+                    if ((expected_valence - current_bonding) > 0)
+                    {
+                        at[a1].num_H += additional_H;
+                    }
+                    else if ((expected_valence - current_bonding) < 0)
+                    {
+                        /* Valence overflow - log error */
+                        *err |= 64;
+                        TREAT_ERR(*err, 0, "Valence overflow");
+                    }
                 }
             }
         }
