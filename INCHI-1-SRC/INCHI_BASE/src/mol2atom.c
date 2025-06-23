@@ -997,7 +997,7 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                                          bDoNotAddH,
                                          bHasMetalNeighbor);
 
-                /* Special handling for non-metals with coordination bonds */
+                /* @nnuk :: Special handling for non-metals with coordination bonds */
                 if (!is_el_a_metal(at[a1].el_number) && additional_H > 0)
                 {
                     /* Count explicit hydrogens bonded to this atom */
@@ -1017,15 +1017,9 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                     int current_bonding = at[a1].chem_bonds_valence;
 
                     /* Check if we need additional hydrogens */
-                    if ((expected_valence - current_bonding) > 0)
+                    if ((expected_valence - current_bonding - explicit_H) > 0)
                     {
                         at[a1].num_H += additional_H;
-                    }
-                    else if ((expected_valence - current_bonding) < 0)
-                    {
-                        /* Valence overflow - log error */
-                        *err |= 64;
-                        TREAT_ERR(*err, 0, "Valence overflow");
                     }
                 }
             }
