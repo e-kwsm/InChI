@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,6 +42,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <UseInteloneTBB>false</UseInteloneTBB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -70,36 +71,40 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>../../bin2/Windows/$(Platform)/$(Configuration)/</OutDir>
-    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)/$(TargetName).tmp\</IntDir>
+    <LinkIncremental>
+    </LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../../bin2/Windows/$(Platform)/$(Configuration)/</OutDir>
-    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)/$(TargetName).tmp\</IntDir>
+    <LinkIncremental>
+    </LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../bin2/Windows/$(Platform)/$(Configuration)/</OutDir>
-    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)/$(TargetName).tmp\</IntDir>
+    <LinkIncremental>
+    </LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../../bin2/Windows/$(Platform)/$(Configuration)/</OutDir>
-    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <IntDir>../../bin2/Windows/intermediate/$(Platform)/$(Configuration)/$(TargetName).tmp\</IntDir>
+    <LinkIncremental>
+    </LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;_USRDLL;BUILD_LINK_AS_DLL;TARGET_API_LIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -111,6 +116,7 @@
       <OmitFramePointers />
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <SuppressStartupBanner />
     </ClCompile>
     <Link>
       <OutputFile>../../bin2/Windows/$(Platform)/$(Configuration)/libinchi.dll</OutputFile>
@@ -123,7 +129,9 @@
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <ImageHasSafeExceptionHandlers />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,7 +139,7 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;_USRDLL;BUILD_LINK_AS_DLL;TARGET_API_LIB=1; COMPILE_ADD_NON_ANSI_FUNCTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -139,7 +147,8 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SuppressStartupBanner>
+      </SuppressStartupBanner>
       <OmitFramePointers>
       </OmitFramePointers>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,7 +165,8 @@
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -164,13 +174,14 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;_USRDLL;BUILD_LINK_AS_DLL;TARGET_API_LIB=1; COMPILE_ADD_NON_ANSI_FUNCTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <OmitFramePointers />
+      <SuppressStartupBanner />
     </ClCompile>
     <Link>
       <OutputFile>../../bin2/Windows/$(Platform)/$(Configuration)/libinchi.dll</OutputFile>
@@ -180,10 +191,12 @@
       <SubSystem>Windows</SubSystem>
       <StackReserveSize>16000000</StackReserveSize>
       <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,11 +207,12 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;_USRDLL;BUILD_LINK_AS_DLL;TARGET_API_LIB=1; COMPILE_ADD_NON_ANSI_FUNCTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SuppressStartupBanner />
     </ClCompile>
     <Link>
       <OutputFile>../../bin2/Windows/$(Platform)/$(Configuration)/libinchi.dll</OutputFile>
@@ -208,7 +222,8 @@
       <SubSystem>Windows</SubSystem>
       <StackReserveSize>16000000</StackReserveSize>
       <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>

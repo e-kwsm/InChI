@@ -65,6 +65,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <float.h>
+#include <locale.h>
 
 #include "e_mode.h"
 
@@ -285,6 +286,12 @@ int main( int argc, char *argv[] )
     /*^^^ Post-1.02b */
     INCHI_IOSTREAM outputstr, logstr, prbstr, instr;
     INCHI_IOSTREAM *out_stream = &outputstr, *log_stream = &logstr, *prb_stream = &prbstr, *inp_stream = &instr;
+
+#ifdef GHI100_FIX
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
+#endif
 
 #if (RINCHI_TEST)
     printf("\nv.1.07 - JHJ BLOCK:\n");

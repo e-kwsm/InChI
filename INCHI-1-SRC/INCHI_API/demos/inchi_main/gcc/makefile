@@ -66,8 +66,8 @@ endif
 ifneq ($(OS_ID),0)
 	LINUX_FPIC  = -fPIC
 # === version ===
-	MAIN_VERSION = .1
-	VERSION = $(MAIN_VERSION).07
+#	MAIN_VERSION = .1
+#	VERSION = $(MAIN_VERSION).07
 endif
 # === executable & library directory ===
 ifndef LIB_DIR
@@ -164,10 +164,10 @@ e_util.o	\
 e_ichimain_a.o
 else
 API_CALLER_SRCS = $(P_MAIN)mol2inchi.c	\
-$(P_MAIN)getcputime.c	\
+#$(P_MAIN)getcputime.c
 $(P_MAIN)moreutil.c
 API_CALLER_OBJS = mol2inchi.o	\
-getcputime.o	\
+# getcputime.o
 moreutil.o
 endif
 # === InChI Main Link rule ================

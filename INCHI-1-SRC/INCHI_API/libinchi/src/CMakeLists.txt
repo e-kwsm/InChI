@@ -124,6 +124,7 @@ target_sources(libinchi PRIVATE
 	${P_BASE}/runichi4.c
 	${P_BASE}/sha2.c
 	${P_BASE}/sha2.h
+	${P_BASE}/stb_sprintf.h
 	${P_BASE}/strutil.c
 	${P_BASE}/strutil.h
 	${P_BASE}/util.c
@@ -141,7 +142,7 @@ if(MATH_LIBRARY)
     target_link_libraries(libinchi PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(libinchi PRIVATE
+target_compile_definitions(libinchi PRIVATE 
 	fPIC
 	COMPILE_ANSI_ONLY
 	TARGET_API_LIB
@@ -152,10 +153,12 @@ target_include_directories(libinchi PUBLIC "${PROJECT_BINARY_DIR}")
 string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set_target_properties(libinchi PROPERTIES SOVERSION 1.07 PREFIX "")
+set_target_properties(libinchi PROPERTIES PREFIX "")
+# set_target_properties(libinchi PROPERTIES SOVERSION 1.07 PREFIX "")
 
-
-if(NOT WIN32)
+if(UNIX AND NOT APPLE)
 	# set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--version-script=${P_LIBINCHI_MAP}/libinchi.map,-z,relro")
 	target_link_options(libinchi PRIVATE "LINKER:--version-script=${P_LIBINCHI_MAP}/libinchi.map,-z,relro")
+elseif(WIN32 AND NOT MSVC)
+	target_link_options(libinchi PRIVATE "LINKER:--version-script=${P_LIBINCHI_MAP}/libinchi.map")
 endif()

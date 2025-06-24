@@ -71,25 +71,25 @@ ifneq ($(OS_ID),0)
 	LINUX_FPIC  = -fPIC
 	LINUX_Z_RELRO = ,-z,relro
 # === version ===
-	MAIN_VERSION = .1
-	VERSION = $(MAIN_VERSION).07
+#	MAIN_VERSION = .1
+#	VERSION = $(MAIN_VERSION).07
 endif
 # === executable & library directory ===
 ifndef LIB_DIR
-  LIB_DIR = ../../../bin/Linux/32bit
+	LIB_DIR = ../../../bin/Linux/32bit
 endif
 # === InChI Library name ===
 ifndef INCHI_LIB_NAME
-  INCHI_LIB_NAME = libinchi
+	INCHI_LIB_NAME = libinchi
 endif
 INCHI_LIB_PATHNAME = $(LIB_DIR)/$(INCHI_LIB_NAME)
 # === Main program name ====
 ifndef API_CALLER_NAME
-  ifndef CALLER_IS_MOL2INCHI 
-  API_CALLER_NAME = inchi_main
-  else
-  API_CALLER_NAME = mol2inchi
-  endif
+	ifndef CALLER_IS_MOL2INCHI 
+	API_CALLER_NAME = inchi_main
+	else
+	API_CALLER_NAME = mol2inchi
+	endif
 endif
 API_CALLER_PATHNAME = $(LIB_DIR)/$(API_CALLER_NAME)
 # === Linker to create (Shared) InChI library ====
@@ -112,14 +112,14 @@ ifndef P_LIBR_IXA
 	P_LIBR_IXA = ../../../libinchi/src/ixa/
 endif
 ifndef P_BASE
-  P_BASE = ../../../../INCHI_BASE/src/
+	P_BASE = ../../../../INCHI_BASE/src/
 endif
 ifndef P_MAIN
-  ifndef CALLER_IS_MOL2INCHI
-	P_MAIN = ../src/
-  else
-	P_MAIN = ../src/
-  endif
+	ifndef CALLER_IS_MOL2INCHI
+		P_MAIN = ../src/
+	else
+		P_MAIN = ../src/
+	endif
 endif
 # === C Compiler Options =======
 ifndef C_OPTIONS
@@ -167,10 +167,10 @@ e_util.o	\
 e_ichimain_a.o
 else
 API_CALLER_SRCS = $(P_MAIN)mol2inchi.c	\
-$(P_MAIN)getcputime.c	\
+# $(P_MAIN)getcputime.c
 $(P_MAIN)moreutil.c
 API_CALLER_OBJS = mol2inchi.o	\
-getcputime.o	\
+# getcputime.o
 moreutil.o
 endif
 # === InChI Main Link rule ================

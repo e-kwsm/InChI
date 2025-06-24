@@ -78,7 +78,7 @@ The [INCHI-1-TEST](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-TEST) 
 
 ## Using precompiled binaries/libraries
 
-_64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so` and ELF files) are located in the following folders:
+_64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so/.dylib` and ELF files) are located in the following folders:
 
 <table id="Win">
   <tr>
@@ -171,7 +171,7 @@ _64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so
   </tr>
   <tc>
 	<td rowspan="2">
-	  <code>libinchi.so.1.07</code><br /> + corresponding <code>inchi_main</code> (ELF file)
+	  <code>libinchi.so/libinchi.dylib</code><br /> + corresponding <code>inchi_main</code> (ELF file)
 	</td>
 	<td>
 	  <em>64-bit</em>: <code>INCHI-1-BIN/linux/64bit/so</code>
@@ -344,10 +344,10 @@ On Microsoft Windows, solution/project files for `Microsoft Visual C++ (MSVC)/Cl
 
 On UNIX-based OSs/Apple macOS/Microsoft Windows, `InChI` sub-projects can be compiled from the source using [Make](https://en.wikipedia.org/wiki/Make_(software)) software if `GCC` and `Clang/LLVM` compilers are installed. `makefile/makefile32` files are provided in the following directories:
 - `INCHI-1-SRC/INCHI_EXE/inchi-1/gcc` (command line/CLI/`inchi-1` version)
-- `INCHI-1-SRC/INCHI_API/libinchi/gcc` (API version consisting only of `libinchi.dll/libinchi.so.1.07/libinchi.1.07.dylib`)
-- `INCHI-1-SRC/INCHI_API/demos/inchi_main/gcc` (API version consisting of `libinchi.dll/libinchi.so.1.07/libinchi.1.07.dylib` and its corresponding executable/ELF `inchi_main.exe/inchi_main`)
-- `INCHI-1-SRC/INCHI_API/demos/mol2inchi/gcc` (API version consisting of `libinchi.dll/libinchi.so.1.07/libinchi.1.07.dylib` and its corresponding executable/ELF `mol2inchi.exe/mol2inchi`)
-- `INCHI-1-SRC/INCHI_API/demos/test_ixa/gcc` (API version consisting of `libinchi.dll/libinchi.so.1.07/libinchi.1.07.dylib` and its corresponding executable/ELF `test_ixa.exe/test_ixa`)
+- `INCHI-1-SRC/INCHI_API/libinchi/gcc` (API version consisting only of `libinchi.dll/libinchi.so/libinchi.dylib`)
+- `INCHI-1-SRC/INCHI_API/demos/inchi_main/gcc` (API version consisting of `libinchi.dll/libinchi.so/libinchi.dylib` and its corresponding executable/ELF `inchi_main.exe/inchi_main`)
+- `INCHI-1-SRC/INCHI_API/demos/mol2inchi/gcc` (API version consisting of `libinchi.dll/libinchi.so/libinchi.dylib` and its corresponding executable/ELF `mol2inchi.exe/mol2inchi`)
+- `INCHI-1-SRC/INCHI_API/demos/test_ixa/gcc` (API version consisting of `libinchi.dll/libinchi.so/libinchi.dylib` and its corresponding executable/ELF `test_ixa.exe/test_ixa`)
 
 
 <a id="MAKEFILE"></a>New features in `makefile/makefile32`:
@@ -362,7 +362,7 @@ On UNIX-based OSs/Apple macOS/Microsoft Windows, `InChI` sub-projects can be com
 
 Support for native/default Apple macOS `Clang` compiler is now provided with _64-bit_ versions of `makefile` files (thanks to [John Mayfield](https://github.com/johnmay/) for his assistance with this matter).
 
-If `makefile/makefile32` is used for compiling `libinchi` on Microsoft Windows, `libinchi.dll` is now generated instead of `libinchi.so.1.07`. Also. please make sure to read [the notes](#libgcc_32) regarding the required `libgcc_s_dw2-1.dll` for running _32-bit_ executables on Microsoft Windows operating system in certain environments.
+If `makefile/makefile32` is used for compiling `libinchi` on Microsoft Windows, `libinchi.dll` is now generated instead of `libinchi.so`. Also. please make sure to read [the notes](#libgcc_32) regarding the required `libgcc_s_dw2-1.dll` for running _32-bit_ executables on Microsoft Windows operating system in certain environments.
 
 #### Additional notes
 
@@ -370,21 +370,21 @@ If `makefile/makefile32` is used for compiling `libinchi` on Microsoft Windows, 
 
 ### Known issues
 
-If _main_ API sub-project (i.e. `libinchi.so.1.07` and `inchi_main` ELF file) is built using `Make` software and `Clang/LLVM` compiler on Linux OS, and `libinchi.so.1.07` cannot be found by `inchi_main`, `LD_LIBRARY_PATH` should be set either temporarily or permanently before `inchi_main` ELF file is used.
-It might be worth trying to change the value of `LINKER_CWD_PATH` to `-Wl,-R,"",-rpath,$(LIB_DIR)` (i.e. replacing `=` with `,`) in corresponding `makefile/makefile32`; however, please note that during our tests, this option failed to generate `libinchi.so.1.07` with `Clang/LLVM` on Linux.
+If _main_ API sub-project (i.e. `libinchi.so` and `inchi_main` ELF file) is built using `Make` software and `Clang/LLVM` compiler on Linux OS, and `libinchi.so` cannot be found by `inchi_main`, `LD_LIBRARY_PATH` should be set either temporarily or permanently before `inchi_main` ELF file is used.
+It might be worth trying to change the value of `LINKER_CWD_PATH` to `-Wl,-R,"",-rpath,$(LIB_DIR)` (i.e. replacing `=` with `,`) in corresponding `makefile/makefile32`; however, please note that during our tests, this option failed to generate `libinchi.so` with `Clang/LLVM` on Linux.
 More reliably, `LD_LIBRARY_PATH` can be set in several ways:
 
 - __Temporarily__
   - Run `ldlp_fix.sh` script (located in `/INCHI_API/bin/linux`) with either of the following CLI commands:
 	- `./ldlp_fix.sh`
 	- `source ldlp_fix.sh`.
-  - Please note tha the path to `libinchi.so.1.07` can be edited in `ldlp_fix.sh`.
-	Alternatively, run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libinchi.so.1.07`.
+  - Please note tha the path to `libinchi.so` can be edited in `ldlp_fix.sh`.
+	Alternatively, run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libinchi.so`.
 
 - __Permanently__
   - Add the following line in `~/.bashrc`:
-	- `LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/path/to/libinchi.so.1.07"`.
-  - Alternatively, add the `libinchi.so.1.07` path to `ld.so.conf`, which means adding a file `/etc/ld.so.conf.d/local.conf` containing `<path/to/>libinchi.so.1.07` and then running `sudo ldconfig`.
+	- `LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/path/to/libinchi.so"`.
+  - Alternatively, add the `libinchi.so` path to `ld.so.conf`, which means adding a file `/etc/ld.so.conf.d/local.conf` containing `<path/to/>libinchi.so` and then running `sudo ldconfig`.
   - Another alternative is to use the open-source utility [patchelf](https://github.com/NixOS/patchelf).
 
 If a similar issue occurs on Apple macOS, one of the above solutions should be applied for setting `DYLD_LIBRARY_PATH` and/or `DYLD_FALLBACK_LIBRARY_PATH` (which behave like `LD_LIBRARY_PATH`).
@@ -418,7 +418,7 @@ _32-bit_ `Microsoft Visual Studio C++ (MSVC) Win32` and `Microsoft LLVM/Clang` c
 - `AMILogStd`   Write log to stderr (in AMI mode)
 - `AMIPrbNone`  Suppress creation of problem files (in AMI mode)
 
-### API (`.dll`/`.so`)
+### API (`.dll`/`.so`/`.dylib`)
 
 - `KET`         Consider keto-enol tautomerism                      (experimental)
 - `15T`         Consider 1,5-tautomerism                            (experimental)

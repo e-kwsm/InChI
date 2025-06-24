@@ -2004,6 +2004,7 @@ long INCHI_DECL IXA_INCHIBUILDER_GetOption_Timeout_MilliSeconds( IXA_STATUS_HAND
 
 
 /****************************************************************************/
+/* djb-rwth: GH PR #118 -- thanks to Bob Hanson */
 EXPIMP_TEMPLATE INCHI_API const char* INCHI_DECL IXA_INCHIBUILDER_GetInChIVersion(IXA_BOOL vFullDescription)
 {
     if (vFullDescription) 

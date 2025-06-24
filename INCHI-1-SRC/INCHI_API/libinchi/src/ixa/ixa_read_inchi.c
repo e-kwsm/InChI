@@ -682,6 +682,7 @@ cleanup:
 }
 
 /****************************************************************************/
+/* djb-rwth: GH PR #118 -- thanks to Bob Hanson */
 void INCHI_DECL IXA_MOL_ReadAuxInfo(IXA_STATUS_HANDLE hStatus,
     IXA_MOL_HANDLE    hMolecule,
     char* pAuxInfo,

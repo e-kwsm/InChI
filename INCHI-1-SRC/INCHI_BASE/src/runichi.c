@@ -51,6 +51,7 @@
 #include <limits.h>
 #include <math.h>
 #include <ctype.h>
+#include <locale.h>
 
 #include "mode.h"
 #include "ichitime.h"
@@ -246,6 +247,11 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
     int err, ret1 = 0;
 
     /* djb-rwth: removing redundant code */
+#ifdef GHI100_FIX
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
+#endif
 
     /*    1. Preliminary work */
 
@@ -886,8 +892,14 @@ int CreateOneStructureINChI(CANON_GLOBALS* pCG,
     int err_display;
 #endif
 
-    PINChI2* pINChI = NULL;
-    PINChI_Aux2* pINChI_Aux = NULL;
+#ifdef GHI100_FIX
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
+#endif
+
+    PINChI2     *pINChI = NULL;
+    PINChI_Aux2 *pINChI_Aux = NULL;
 
     INP_ATOM_DATA InpCurAtData;
     INP_ATOM_DATA* inp_cur_data;
@@ -1820,7 +1832,14 @@ int CreateOneComponentINChI(CANON_GLOBALS* pCG,
 
     int nAllocMode = 0;  /* moved from below 2024-09-01 DT */
 
-    InchiTimeGet(&ulTStart);
+#ifdef GHI100_FIX
+#if ((SPRINTF_FLAG != 1) && (SPRINTF_FLAG != 2))
+    setlocale(LC_ALL, "en-US"); /* djb-rwth: setting all locales to "en-US" */
+#endif
+#endif
+
+    InchiTimeGet( &ulTStart );
+  
     bOrigCoord =
         !(ip->bINChIOutputOptions & (INCHI_OUT_NO_AUX_INFO | INCHI_OUT_SHORT_AUX_INFO));
 
@@ -3250,10 +3269,11 @@ int mark_atoms_to_delete_or_renumber(ORIG_ATOM_DATA* orig_at_data,
             natnums = subgraf_pathfinder_collect_all(spf, 0, NULL, (int*)atnums);
             if ( natnums )
             {
-                for ( j = 0; j < natnums; j++ )
+
+                for (j = 0; j < natnums && j < max_atoms; j++) /* djb-rwth: fixing buffer overruns */
                 {
-                    fail = IntArray_AppendIfAbsent(ed->del_atom, atnums[j]); /* djb-rwth: ui_rr? */
-                    if ( fail )
+                    fail = IntArray_AppendIfAbsent(ed->del_atom, atnums[j]);
+                    if (fail)
                     {
                         ret = _IS_ERROR;
                         goto exit_function;

@@ -51,7 +51,7 @@ if(MATH_LIBRARY)
     target_link_libraries(test_ixa PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(test_ixa PRIVATE
+target_compile_definitions(test_ixa PRIVATE 
 	BUILD_LINK_AS_DLL
 	TARGET_EXE_USING_API
 )

@@ -51,7 +51,7 @@ if(MATH_LIBRARY)
     target_link_libraries(mol2inchi PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(mol2inchi PRIVATE
+target_compile_definitions(mol2inchi PRIVATE 
 	BUILD_LINK_AS_DLL
 	TARGET_EXE_USING_API
 )
