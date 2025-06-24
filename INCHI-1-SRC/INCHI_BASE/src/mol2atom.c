@@ -1017,7 +1017,7 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                     int current_bonding = at[a1].chem_bonds_valence;
 
                     /* Check if we need additional hydrogens */
-                    if ((expected_valence - current_bonding - explicit_H) > 0)
+                    if ((expected_valence - current_bonding) > 0)
                     {
                         at[a1].num_H += additional_H;
                     }
@@ -1163,9 +1163,9 @@ int CreateCompAtomData(COMP_ATOM_DATA *inp_at_data,
 {
     FreeCompAtomData(inp_at_data);
 
-    if (( inp_at_data->at = CreateInpAtom( num_atoms ) ) &&
-        ( num_components <= 1 || bIntermediateTaut ||
-         ( inp_at_data->nOffsetAtAndH = (AT_NUMB*) inchi_calloc( 2 * ( (long long)num_components + 1 ), sizeof( inp_at_data->nOffsetAtAndH[0] ) ) ) )) /* djb-rwth: cast operator added */
+    if ((inp_at_data->at = CreateInpAtom(num_atoms)) &&
+        (num_components <= 1 || bIntermediateTaut ||
+         (inp_at_data->nOffsetAtAndH = (AT_NUMB *)inchi_calloc(2 * ((long long)num_components + 1), sizeof(inp_at_data->nOffsetAtAndH[0]))))) /* djb-rwth: cast operator added */
     {
         inp_at_data->num_at = num_atoms;
         inp_at_data->num_components = (num_components > 1) ? num_components : 0;
