@@ -987,41 +987,31 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
             {
                 int additional_H = coord_bonds_count[a1];
 
+                int newValence = -1;
+
+                if (!is_el_a_metal(at[a1].el_number) && additional_H)
+                {
+                    /*If the atom is a non - metal and has coordination bonds, adjust valence* /
+                    /* (@fbaensch) : Get new valence based on element number, charge, and valence defined in input file */
+                    newValence = get_el_valence(at[a1].el_number, at[a1].charge, mfdata->ctab.atoms[a1].valence);
+                    newValence += additional_H;
+                }
+                else
+                {
+                    /* If the atom is a metal or has no coordination bonds, use the valence defined in input file */
+                    newValence = mfdata->ctab.atoms[a1].valence;
+                }
+
                 at[a1].num_H = get_num_H(at[a1].elname,
                                          at[a1].num_H,
                                          at[a1].num_iso_H,
                                          at[a1].charge, at[a1].radical,
                                          at[a1].chem_bonds_valence,
-                                         mfdata->ctab.atoms[a1].valence, /* instead of valence */ /* (@Felix Bänsch)(@Gerd Blanke)(@nnuk) : The valence stated in the mol file is considerd here. A value of 0 means use default value for this element. */
-                                                                         mfdata->ctab.atoms[a1].atom_aliased_flag,
+                                         /*mfdata->ctab.atoms[a1].valence,*/
+                                         newValence, /* instead of valence */ /* (@Felix Bänsch)(@Gerd Blanke)(@nnuk) : The valence stated in the mol file is considerd here. A value of 0 means use default value for this element. */
+                                                     mfdata->ctab.atoms[a1].atom_aliased_flag,
                                          bDoNotAddH,
                                          bHasMetalNeighbor);
-
-                /* @nnuk :: Special handling for non-metals with coordination bonds */
-                if (!is_el_a_metal(at[a1].el_number) && additional_H > 0)
-                {
-                    /* Count explicit hydrogens bonded to this atom */
-                    int explicit_H = 0;
-                    for (n1 = 0; n1 < at[a1].valence; n1++)
-                    {
-                        if (at[a1].bond_type[n1] == BOND_TYPE_SINGLE && at[at[a1].neighbor[n1]].el_number == EL_NUMBER_H)
-                        {
-                            explicit_H++;
-                        }
-                    }
-
-                    /* Get expected valence for this element */
-                    int expected_valence = get_el_valence(at[a1].el_number, at[a1].charge, 0) + 1; /* Default valence state */
-
-                    /* Calculate current bonding state */
-                    int current_bonding = at[a1].chem_bonds_valence;
-
-                    /* Check if we need additional hydrogens */
-                    if ((expected_valence - current_bonding) > 0)
-                    {
-                        at[a1].num_H += additional_H;
-                    }
-                }
             }
         }
     } /* for ( bNonMetal = ... */
