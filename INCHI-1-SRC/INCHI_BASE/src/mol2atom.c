@@ -832,82 +832,82 @@ inp_ATOM *MakeInpAtomsFromMolfileData(MOL_FMT_DATA *mfdata,
                 at[endpoint].valence++;
             }
         }
-    }
 
-    /* (@nnuk) : Clean up bonds to Zz atoms */
-    for (i = 0; i < *num_atoms; i++)
-    {
-        if (!strcmp(at[i].elname, "Zz"))
-        {
-            int index_Zz = i;
-            int j;
-
-            for (j = 0; j < *num_atoms; j++)
-            {
-                if (j == index_Zz)
-                {
-                    continue;
-                }
-
-                int new_at_num = 0;
-                int k;
-
-                for (k = 0; k < at[j].valence; k++)
-                {
-                    if (at[j].neighbor[k] != index_Zz)
-                    {
-                        at[j].neighbor[new_at_num] = at[j].neighbor[k];
-                        at[j].bond_type[new_at_num] = at[j].bond_type[k];
-                        at[j].bond_stereo[new_at_num] = at[j].bond_stereo[k];
-                        new_at_num++;
-                    }
-                }
-                at[j].valence = new_at_num;
-            }
-        }
-    }
-
-    /* (@nnuk) : Remove Zz atoms and update neighbor indices */
-    int removed_atoms = 0;
-
-    for (i = 0; i < *num_atoms;)
-    {
-        if (strcmp(at[i].elname, "Zz") == 0)
-        {
-            int j;
-
-            for (j = 0; j < *num_atoms; j++)
-            {
-                int k;
-
-                for (k = 0; k < at[j].valence; k++)
-                {
-                    if (at[j].neighbor[k] > i)
-                    {
-                        at[j].neighbor[k]--;
-                    }
-                }
-            }
-
-            for (j = i + 1; j < *num_atoms; j++)
-            {
-                at[j - 1] = at[j];
-            }
-            (*num_atoms)--;
-            removed_atoms++;
-        }
-        else
-        {
-            i++;
-        }
-    }
-
-    if (removed_atoms > 0)
-    {
-        /* (@nnuk) : Renumber original atom numbers */
+        /* (@nnuk) : Clean up bonds to Zz atoms */
         for (i = 0; i < *num_atoms; i++)
         {
-            at[i].orig_at_number = i;
+            if (!strcmp(at[i].elname, "Zz"))
+            {
+                int index_Zz = i;
+                int j;
+
+                for (j = 0; j < *num_atoms; j++)
+                {
+                    if (j == index_Zz)
+                    {
+                        continue;
+                    }
+
+                    int new_at_num = 0;
+                    int k;
+
+                    for (k = 0; k < at[j].valence; k++)
+                    {
+                        if (at[j].neighbor[k] != index_Zz)
+                        {
+                            at[j].neighbor[new_at_num] = at[j].neighbor[k];
+                            at[j].bond_type[new_at_num] = at[j].bond_type[k];
+                            at[j].bond_stereo[new_at_num] = at[j].bond_stereo[k];
+                            new_at_num++;
+                        }
+                    }
+                    at[j].valence = new_at_num;
+                }
+            }
+        }
+
+        /* (@nnuk) : Remove Zz atoms and update neighbor indices */
+        int removed_atoms = 0;
+
+        for (i = 0; i < *num_atoms;)
+        {
+            if (strcmp(at[i].elname, "Zz") == 0)
+            {
+                int j;
+
+                for (j = 0; j < *num_atoms; j++)
+                {
+                    int k;
+
+                    for (k = 0; k < at[j].valence; k++)
+                    {
+                        if (at[j].neighbor[k] > i)
+                        {
+                            at[j].neighbor[k]--;
+                        }
+                    }
+                }
+
+                for (j = i + 1; j < *num_atoms; j++)
+                {
+                    at[j - 1] = at[j];
+                }
+                (*num_atoms)--;
+                removed_atoms++;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        if (removed_atoms > 0)
+        {
+            /* (@nnuk) : Renumber original atom numbers */
+            for (i = 0; i < *num_atoms; i++)
+            {
+                at[i].orig_at_number = i;
+            }
         }
     }
 
