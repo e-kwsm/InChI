@@ -11,6 +11,8 @@ INCHI-1-SRC/INCHI_EXE/bin*
 __pycache__
 .pytest_cache
 .vscode/
+doxygen_doc/
+.vs/
 *.egg-info/
 # Ignore core dump files
 core.*[0-9]

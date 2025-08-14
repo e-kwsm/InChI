@@ -25,8 +25,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*
-* The InChI library and programs are free software developed under the
+ *
+ * The InChI library and programs are free software developed under the
  * auspices of the International Union of Pure and Applied Chemistry (IUPAC).
  * Originally developed at NIST.
  * Modifications and additions by IUPAC and the InChI Trust.
@@ -36,8 +36,7 @@
  *
  * info@inchi-trust.org
  *
-*/
-
+ */
 
 #ifndef _MOL_FMT_H_
 #define _MOL_FMT_H_
@@ -51,17 +50,16 @@
     Data structures and constants
 */
 
-
 /*************************** read MOL file V2000.************************/
 /* ref: A.Dalby et al, "Description of Several Chemical Structure
  * File Formats Used by Computer Programs Developed at Molecular
  * Design Limited", J. Chem. Inf. Comput. Sci., 1992, 32, 244-255.
-*/
+ */
 
 /* ************************** read MOL file V3000.************************ */
 /* http://download.accelrys.com/freeware/ctfile-formats/CTFile-formats.zip
  * Last accessed 2013-06-11
-*/
+ */
 
 /*-----------*/
 /* CONSTANTS */
@@ -69,48 +67,47 @@
 
 #define SD_FMT_END_OF_DATA "$$$$"
 
-#define MOL_FMT_INPLINELEN   204  /* add cr, lf, double zero termination */
+#define MOL_FMT_INPLINELEN 204 /* add cr, lf, double zero termination */
 #ifndef MOL_FMT_MAXLINELEN
-#define MOL_FMT_MAXLINELEN   200
+#define MOL_FMT_MAXLINELEN 200
 #endif
 
 #define MOL_FMT_PRESENT 1
-#define MOL_FMT_ABSENT  0
+#define MOL_FMT_ABSENT 0
 
 /* configuration */
 #define MOL_FMT_QUERY MOL_FMT_ABSENT
-#define MOL_FMT_CPSS  MOL_FMT_ABSENT
+#define MOL_FMT_CPSS MOL_FMT_ABSENT
 #define MOL_FMT_REACT MOL_FMT_ABSENT
 
-#define MOL_FMT_STRING_DATA    'S'
-#define MOL_FMT_CHAR_INT_DATA  'C'
+#define MOL_FMT_STRING_DATA 'S'
+#define MOL_FMT_CHAR_INT_DATA 'C'
 #define MOL_FMT_SHORT_INT_DATA 'N'
-#define MOL_FMT_LONG_INT_DATA  'L'
-#define MOL_FMT_DOUBLE_DATA    'D'
-#define MOL_FMT_FLOAT_DATA     'F'
-#define MOL_FMT_JUMP_TO_RIGHT  'J'
-#define MOL_FMT_INT_DATA       'I'
+#define MOL_FMT_LONG_INT_DATA 'L'
+#define MOL_FMT_DOUBLE_DATA 'D'
+#define MOL_FMT_FLOAT_DATA 'F'
+#define MOL_FMT_JUMP_TO_RIGHT 'J'
+#define MOL_FMT_INT_DATA 'I'
 
-#define MOL_FMT_MAX_VALUE_LEN  32    /* max length of string containing a numerical value */
+#define MOL_FMT_MAX_VALUE_LEN 32 /* max length of string containing a numerical value */
 
-#define MOL_FMT_M_STY_NON 0
-#define MOL_FMT_M_STY_SRU 1
-#define MOL_FMT_M_STY_MON 2
-#define MOL_FMT_M_STY_COP 3
-#define MOL_FMT_M_STY_MOD 4
-#define MOL_FMT_M_STY_CRO 5
-#define MOL_FMT_M_STY_MER 6
+#define MOL_FMT_M_STY_NON 0 /**< None */
+#define MOL_FMT_M_STY_SRU 1 /**< Structure repeating unit */
+#define MOL_FMT_M_STY_MON 2 /**< Monomer */
+#define MOL_FMT_M_STY_COP 3 /**< Copolymer */
+#define MOL_FMT_M_STY_MOD 4 /**< Modification */
+#define MOL_FMT_M_STY_CRO 5 /**< Crosslink */
+#define MOL_FMT_M_STY_MER 6 /**< Mer type */
 
-#define MOL_FMT_M_SST_NON 0
-#define MOL_FMT_M_SST_ALT 1
-#define MOL_FMT_M_SST_RAN 2
-#define MOL_FMT_M_SST_BLK 3
+#define MOL_FMT_M_SST_NON 0 /**< None */
+#define MOL_FMT_M_SST_ALT 1 /**< Alternating */
+#define MOL_FMT_M_SST_RAN 2 /**< Random */
+#define MOL_FMT_M_SST_BLK 3 /**< Block */
 
 #define MOL_FMT_M_CONN_NON 0
-#define MOL_FMT_M_CONN_HT  1
-#define MOL_FMT_M_CONN_HH  2
-#define MOL_FMT_M_CONN_EU  3
-
+#define MOL_FMT_M_CONN_HT 1
+#define MOL_FMT_M_CONN_HH 2
+#define MOL_FMT_M_CONN_EU 3
 
 /* V3000 specific constants */
 #define MOL_FMT_V3000_STENON -1
@@ -119,15 +116,15 @@
 #define MOL_FMT_V3000_STERAC 3
 
 /* provisional limits for V3000 */
-#define MOL_FMT_V3000_INPLINELEN   32004  /* add cr, lf, double zero termination */
+#define MOL_FMT_V3000_INPLINELEN 32004 /* add cr, lf, double zero termination */
 #ifndef MOL_FMT_V3000_MAXLINELEN
-#define MOL_FMT_V3000_MAXLINELEN   32000
+#define MOL_FMT_V3000_MAXLINELEN 32000
 #endif
-#define MOL_FMT_V3000_MAXFIELDLEN  4096
+#define MOL_FMT_V3000_MAXFIELDLEN 4096
 
 /*#ifdef TARGET_EXE_USING_API*/
 #ifndef ISOTOPIC_SHIFT_FLAG
-#define ISOTOPIC_SHIFT_FLAG 10000   /* add to isotopic mass if isotopic_mass = */
+#define ISOTOPIC_SHIFT_FLAG 10000 /* add to isotopic mass if isotopic_mass = */
 #endif
 /*#endif*/
 
@@ -136,7 +133,7 @@
 /*-------------------*/
 
 #ifndef INCHI_US_CHAR_DEF
-typedef signed char   S_CHAR;
+typedef signed char S_CHAR;
 typedef unsigned char U_CHAR;
 #define INCHI_US_CHAR_DEF
 #endif
@@ -148,12 +145,16 @@ typedef unsigned char U_CHAR;
 #define NUM_COORD 3
 #endif
 
-
 /*-----------------*/
 /* DATA STRUCTURES */
 /*-----------------*/
 
-/* NUM_LISTS - dynamically growing array of numeric lists */
+/**
+ * @brief NUM_LISTS - Dynamically growing array of numeric lists
+ *
+ * TODO: Provide a brief description of the purpose of this structure.
+ *
+ */
 typedef struct A_NUM_LISTS
 {
     int **lists;
@@ -161,364 +162,542 @@ typedef struct A_NUM_LISTS
     int used;
     int increment;
 } NUM_LISTS;
-int  NumLists_Alloc( NUM_LISTS *num_lists, int nlists );
-int  NumLists_ReAlloc( NUM_LISTS *num_lists );
-int  NumLists_Append( NUM_LISTS *num_lists, int *list );
-void NumLists_Free( NUM_LISTS *num_lists );
 
-/* INT_ARRAY - dynamically growing array of int */
+/**
+ * @brief Allocates memory for a specified number of numeric lists.
+ * @param num_lists Pointer to the NUM_LISTS structure.
+ * @param nlists Number of lists to allocate.
+ * @return 0 on success, -1 on failure.
+ */
+int NumLists_Alloc(NUM_LISTS *num_lists, int nlists);
+
+/**
+ * @brief Reallocates memory for the numeric lists.
+ * @param num_lists Pointer to the NUM_LISTS structure.
+ * @return 0 on success, -1 on failure.
+ */
+int NumLists_ReAlloc(NUM_LISTS *num_lists);
+
+/**
+ * @brief Push new item to the end of array.
+ * @param num_lists Pointer to the NUM_LISTS structure.
+ * @param list Pointer to the list of integers to append.
+ * @return 0 on success, -1 on failure.
+ */
+int NumLists_Append(NUM_LISTS *num_lists, int *list);
+
+/**
+ * @brief Frees the memory allocated for the numeric list.
+ * @param num_lists Pointer to the NUM_LISTS structure.
+ */
+void NumLists_Free(NUM_LISTS *num_lists);
+
+/**
+ * @brief INT_ARRAY - Dynamically growing array of int
+ *
+ * TODO: Provide a brief description of the purpose of this structure.
+ *
+ */
 typedef struct tagINT_ARRAY
 {
-    int *item;
-    int allocated;
-    int used;
-    int increment;
+    int *item;     /**< Pointer to the array of integers. */
+    int allocated; /**< Amount of memory allocated. */
+    int used;      /**< Amount of memory used. */
+    int increment; /**< Amount to increment when expanding. */
 } INT_ARRAY;
-int  IntArray_Alloc( INT_ARRAY *items, int nitems );
-int  IntArray_ReAlloc( INT_ARRAY *items );
-int  IntArray_Append( INT_ARRAY *items, int new_item );
-int  IntArray_AppendIfAbsent(INT_ARRAY *items, int new_item);
-void IntArray_Reset( INT_ARRAY *items );
-void IntArray_Free( INT_ARRAY *items );
-void IntArray_DebugPrint( INT_ARRAY *items );
 
-/* MOL_FMT_SGROUP is a container for Sgroup data */
+/**
+ * @brief Initializes an INT_ARRAY structure.
+ *
+ * @param items Pointer to the INT_ARRAY structure to initialize.
+ * @param nitems Initial number of items to allocate.
+ * @return int 0 on success, -1 on failure.
+ */
+int IntArray_Alloc(INT_ARRAY *items, int nitems);
+
+/**
+ * @brief Reallocates memory for the INT_ARRAY structure.
+ *
+ * @param items Pointer to the INT_ARRAY structure to reallocate.
+ * @return int 0 on success, -1 on failure.
+ */
+int IntArray_ReAlloc(INT_ARRAY *items);
+
+/**
+ * @brief Appends a new item to the INT_ARRAY structure.
+ *
+ * @param items Pointer to the INT_ARRAY structure to modify.
+ * @param new_item The new item to append.
+ * @return int 0 on success, -1 on failure.
+ */
+int IntArray_Append(INT_ARRAY *items, int new_item);
+
+/**
+ * @brief Appends a new item to the INT_ARRAY structure if it is not already present.
+ *
+ * @param items Pointer to the INT_ARRAY structure to modify.
+ * @param new_item The new item to append.
+ * @return int 0 on success, -1 on failure.
+ */
+int IntArray_AppendIfAbsent(INT_ARRAY *items, int new_item);
+
+/**
+ * @brief Resets the INT_ARRAY structure to its initial state.
+ *
+ * @param items Pointer to the INT_ARRAY structure to reset.
+ */
+void IntArray_Reset(INT_ARRAY *items);
+
+/**
+ * @brief Frees the memory allocated for the INT_ARRAY structure.
+ *
+ * @param items Pointer to the INT_ARRAY structure to free.
+ */
+void IntArray_Free(INT_ARRAY *items);
+
+/**
+ * @brief Prints the contents of the INT_ARRAY structure for debugging purposes.
+ *
+ * @param items Pointer to the INT_ARRAY structure to print.
+ */
+void IntArray_DebugPrint(INT_ARRAY *items);
+
+/**
+ * @brief MOL_FMT_SGROUP is a container for Sgroup data (substance group data)
+ *
+ * TODO: Provide a brief description of the purpose of this structure.
+ * substance group!
+ * Sgroup type: SUP = superatom, MUL = multiple group, SRU = SRU
+    type, MON = monomer, MER = Mer type, COP = copolymer, CRO =
+    crosslink, MOD = modification, GRA = graft, COM = component, MIX
+    = mixture, FOR = formulation, DAT = data Sgroup, ANY = any
+    polymer, GEN = generic
+
+    SRU structure repeating unit -> CFU
+
+    SBL bond lists
+
+    SDI => Sgroup Display Information
+
+
+    Polymer Sgroup subtypes: ALT = alternating, RAN = random, BLO = block
+ * This structure holds information about a specific Sgroup, including its ID, type, coordinates, and associated lists.
+ */
 typedef struct A_MOL_FMT_SGROUP
 {
-    int       id;       /* it is what is called 'Sgroup number' in CTFile       */
-    int       type;     /* type (STY)                                           */
-    int       subtype;  /* (SST)                                                */
-    int       conn;     /* (SCN)                                                */
-    int       label;    /* what is called 'unique Sgroup identifier' in CTFile  */
-    double    xbr1[4];  /* bracket ends coordinates (SDI)                       */
-    double    xbr2[4];  /* bracket ends coordinates (SDI)                       */
-    char      smt[80];  /* Sgroup Subscript (SMT)                               */
-    INT_ARRAY alist;
-    INT_ARRAY blist;
+    int id;          /**< it is what is called 'Sgroup number' in CTFile       */
+    int type;        /**< type (STY) */
+    int subtype;     /**< (SST)                                                */
+    int conn;        /**< (SCN) Connectivity                                   */
+    int label;       /**< what is called 'unique Sgroup identifier' in CTFile (SLB)  */
+    double xbr1[4];  /**< bracket ends coordinates (SDI)                       */
+    double xbr2[4];  /**< bracket ends coordinates (SDI)                       */
+    char smt[80];    /**< Sgroup Subscript (SMT)                               */
+    INT_ARRAY alist; /**< list of atom indices (AL)                             */
+    INT_ARRAY blist; /**< list of bond indices (BL)                             */
 } MOL_FMT_SGROUP;
-int  MolFmtSgroup_Create( MOL_FMT_SGROUP **sgroup,
-                          int            id,
-                          int            type );
-void MolFmtSgroup_Free( MOL_FMT_SGROUP *sgroup );
 
-/* MOL_FMT_SGROUPS is a dynamically growing array of pointers to MOL_FMT_SGROUP objects */
+/**
+ * @brief  Allocate new array Sgroup.
+ * @param sgroup Pointer to the Sgroup structure to allocate.
+ * @param id Sgroup ID.
+ * @param type Sgroup type.
+ * @return 0 on success, -1 on failure.
+ */
+int MolFmtSgroup_Create(MOL_FMT_SGROUP **sgroup,
+                        int id,
+                        int type);
+
+/**
+ * @brief Frees the memory allocated for the Sgroup.
+ * @param sgroup Pointer to the Sgroup structure to free.
+ */
+void MolFmtSgroup_Free(MOL_FMT_SGROUP *sgroup);
+
+/**
+ * @brief MOL_FMT_SGROUPS is a dynamically growing array of pointers to MOL_FMT_SGROUP objects
+ *
+ * TODO: Provide a brief description of the purpose of this structure.
+ *
+ */
 typedef struct A_MOL_FMT_SGROUPS
 {
-    MOL_FMT_SGROUP **group;     /* growable array of pointers to MOL_FMT_SGROUPs*/
-    int            allocated;   /* allocated number of objects                  */
-    int            used;        /* current number of objects                    */
-    int            increment;   /* array expansion icrement                     */
+    MOL_FMT_SGROUP **group; /**< growable array of pointers to MOL_FMT_SGROUPs*/
+    int allocated;          /**< allocated number of objects                  */
+    int used;               /**< current number of objects                    */
+    int increment;          /**< array expansion increment                     */
 } MOL_FMT_SGROUPS;
-int  MolFmtSgroups_Alloc( MOL_FMT_SGROUPS *items, int nitems );
-int  MolFmtSgroups_ReAlloc( MOL_FMT_SGROUPS *items );
-int  MolFmtSgroups_Append( MOL_FMT_SGROUPS *items, int id, int type );
-void MolFmtSgroups_Free( MOL_FMT_SGROUPS *items );
-int  MolFmtSgroups_GetIndexBySgroupId( int id, MOL_FMT_SGROUPS *items );
 
+/**
+ * @brief Allocates memory for a specified number of Sgroup objects.
+ * @param items Pointer to the MOL_FMT_SGROUPS structure.
+ * @param nitems Number of Sgroup objects to allocate.
+ * @return 0 on success, -1 on failure.
+ */
+int MolFmtSgroups_Alloc(MOL_FMT_SGROUPS *items, int nitems);
+
+/**
+ * @brief Expand array of Sgroups.
+ * @param items Pointer to the MOL_FMT_SGROUPS structure.
+ * @return 0 on success, -1 on failure.
+ */
+int MolFmtSgroups_ReAlloc(MOL_FMT_SGROUPS *items);
+
+/**
+ * @brief Appends a new Sgroup to the array.
+ * @param items Pointer to the MOL_FMT_SGROUPS structure.
+ * @param id Sgroup ID.
+ * @param type Sgroup type.
+ * @return 0 on success, -1 on failure.
+ */
+int MolFmtSgroups_Append(MOL_FMT_SGROUPS *items, int id, int type);
+
+/**
+ * @brief Frees the memory allocated for the MOL_FMT_SGROUPS list.
+ * @param items Pointer to the MOL_FMT_SGROUPS structure.
+ */
+void MolFmtSgroups_Free(MOL_FMT_SGROUPS *items);
+
+/**
+ * @brief Gets the index of a Sgroup by its ID.
+ * @param id Sgroup ID.
+ * @param items Pointer to the MOL_FMT_SGROUPS structure.
+ * @return Index of the Sgroup on success, -1 on failure.
+ */
+int MolFmtSgroups_GetIndexBySgroupId(int id, MOL_FMT_SGROUPS *items);
+
+/**
+ * @brief TODO brief description
+ *
+ * TODO longer description.
+ */
 typedef struct A_MOL_FMT_HEADER_BLOCK
 {
-    char    molname[MOL_FMT_MAXLINELEN + 1];  /* up to 80 characters              */
-    char    line2[MOL_FMT_MAXLINELEN + 1];    /* the whole line2- up to 80 chars  */
-    char    user_initls[3];                 /* 2 bytes; char                    */
-    char    prog_name[9];                   /* 8 bytes; char                    */
-    char    month;                          /* 2 bytes; integral                */
-    char    day;                            /* 2 bytes; integral                */
-    char    year;                           /* 2 bytes; integral                */
-    char    hour;                           /* 2 bytes; integral                */
-    char    minute;                         /* 2 bytes; integral                */
-    char    dim_code[3];                    /* 2 bytes: dimensional code; char  */
-    short   scaling_factor1;                /* 2 bytes;  I2                     */
-    double  scaling_factor2;                /* 10 bytes, F10.5                  */
-    double  energy;                         /* 10 bytes, F10.5                  */
-    long    internal_regno;                 /* 6 bytes, integral                */
-    char    comment[81];                    /* Line #3: comment                 */
+    char molname[MOL_FMT_MAXLINELEN + 1]; /**< up to 80 characters              */
+    char line2[MOL_FMT_MAXLINELEN + 1];   /**< the whole line2- up to 80 chars  */
+    char user_initls[3];                  /**< 2 bytes; char                    */
+    char prog_name[9];                    /**< 8 bytes; char                    */
+    char month;                           /**< 2 bytes; integral                */
+    char day;                             /**< 2 bytes; integral                */
+    char year;                            /**< 2 bytes; integral                */
+    char hour;                            /**< 2 bytes; integral                */
+    char minute;                          /**< 2 bytes; integral                */
+    char dim_code[3];                     /**< 2 bytes: dimensional code; char  */
+    short scaling_factor1;                /**< 2 bytes;  I2                     */
+    double scaling_factor2;               /**< 10 bytes, F10.5                  */
+    double energy;                        /**< 10 bytes, F10.5                  */
+    long internal_regno;                  /**< 6 bytes, integral                */
+    char comment[81];                     /**< Line #3: comment                 */
 } MOL_FMT_HEADER_BLOCK;
 
-
+/**
+ * @brief Atom representation in the MOL format.
+ *
+ */
 typedef struct A_MOL_FMT_ATOM
 {
-    double   fx;                            /* F10.5;       Generic             */
-    double   fy;                            /* F10.5;       Generic             */
-    double   fz;                            /* F10.5;       Generic             */
-    char     symbol[6];                     /* aaa;         Generic             */
+    double fx;      /* F10.5;       Generic             */
+    double fy;      /* F10.5;       Generic             */
+    double fz;      /* F10.5;       Generic             */
+    char symbol[6]; /* aaa;         Generic             */
 
-    S_CHAR   mass_difference;               /* dd;  (M_ISO)                     */
-                                            /*   Generic: -3..+4 otherwise 0 or */
-                                            /*   127=most abund. isotope        */
-    S_CHAR   charge;                        /* ccc; (M CHG),                    */
-                                            /*  Generic: 1=+3, 2=+2,3=+1,       */
-                                            /*  4=doublet,5=-1,6=-2,7=-3        */
-    char     radical;                       /*      (M RAD)                     */
-    char     stereo_parity;                 /*   sss;         Generic           */
-#if ( MOL_FMT_QUERY == MOL_FMT_PRESENT )
-    char     H_count_plus_1;                /* hhh;         Query;              */
-                                            /*   Hn means >= n H;               */
-                                            /*   H0 means no H                  */
-    char     stereo_care;                   /* bbb;         Query: 0=ignore;    */
-                                            /*   1=must match                   */
+    S_CHAR mass_difference; /* dd;  (M_ISO)                     */
+                            /*   Generic: -3..+4 otherwise 0 or */
+                            /*   127=most abund. isotope        */
+    S_CHAR charge;          /* ccc; (M CHG),                    */
+                            /*  Generic: 1=+3, 2=+2,3=+1,       */
+                            /*  4=doublet,5=-1,6=-2,7=-3        */
+    char radical;           /*      (M RAD)                     */
+    char stereo_parity;     /*   sss;         Generic           */
+#if (MOL_FMT_QUERY == MOL_FMT_PRESENT)
+    char H_count_plus_1; /* hhh;         Query;              */
+                         /*   Hn means >= n H;               */
+                         /*   H0 means no H                  */
+    char stereo_care;    /* bbb;         Query: 0=ignore;    */
+                         /*   1=must match                   */
 #endif
-    char     valence;                       /* vvv:                             */
-                                            /*   0=no marking; (1..14)=(1..14); */
-                                            /*   15=zero valence.Number of bonds*/
-                                            /*   includes bonds to impl. H's    */
+    char valence; /* vvv:                             */
+                  /*   0=no marking; (1..14)=(1..14); */
+                  /*   15=zero valence.Number of bonds*/
+                  /*   includes bonds to impl. H's    */
 
-#if ( MOL_FMT_CPSS == MOL_FMT_PRESENT )
-    char     H0_designator;                 /* HHH:         CPSS                */
-    char     reaction_component_type;       /* rrr:                             */
-                                            /* CPSS: 1=reactant,                */
-                                            /*       2=product,                 */
-                                            /*       3=intermediate             */
-    char     reaction_component_num;        /* iii:         CPSS: 0 to (n-1)    */
+#if (MOL_FMT_CPSS == MOL_FMT_PRESENT)
+    char H0_designator;           /* HHH:         CPSS                */
+    char reaction_component_type; /* rrr:                             */
+                                  /* CPSS: 1=reactant,                */
+                                  /*       2=product,                 */
+                                  /*       3=intermediate             */
+    char reaction_component_num;  /* iii:         CPSS: 0 to (n-1)    */
 #endif
-#if ( MOL_FMT_REACT == MOL_FMT_PRESENT )
-    short    atom_atom_mapping_num;         /* mmm:        Reaction: 1..255     */
-    char     cInversionRetentionFlag;       /* nnn:                             */
-                                            /*   1=inverted, 2=retained config.;*/
-                                            /*   0=property not applied         */
+#if (MOL_FMT_REACT == MOL_FMT_PRESENT)
+    short atom_atom_mapping_num;  /* mmm:        Reaction: 1..255     */
+    char cInversionRetentionFlag; /* nnn:                             */
+                                  /*   1=inverted, 2=retained config.;*/
+                                  /*   0=property not applied         */
 #endif
-#if ( MOL_FMT_REACT == MOL_FMT_PRESENT || MOL_FMT_QUERY == MOL_FMT_PRESENT )
-    char     exact_change_flag;             /* eee                              */
+#if (MOL_FMT_REACT == MOL_FMT_PRESENT || MOL_FMT_QUERY == MOL_FMT_PRESENT)
+    char exact_change_flag; /* eee                              */
 #endif
-    char my_n_impH;                         /* number of implicit H calculated  */
-                                            /* for adding H to strings in STDATA*/
-    char display_tom;                       /* Do not hide element's name       */
-                                            /*   (applies to C 7-25-98 DCh      */
-    char atom_aliased_flag;                 /* Do not remove                    */
-                                            /* charge/radical/isotope if it     */
-                                            /*   is in the alias. 9-3-99 DCh    */
+    char my_n_impH;         /* number of implicit H calculated  */
+                            /* for adding H to strings in STDATA*/
+    char display_tom;       /* Do not hide element's name       */
+                            /*   (applies to C 7-25-98 DCh      */
+    char atom_aliased_flag; /* Do not remove                    */
+                            /* charge/radical/isotope if it     */
+                            /*   is in the alias. 9-3-99 DCh    */
 } MOL_FMT_ATOM;
 
-
+/**
+ * @brief Bond representation in the MOL format.
+ *
+ */
 typedef struct A_MOL_FMT_BOND
 {
-    short atnum1;                           /* 111: First atom number: Generic  */
-    short atnum2;                           /* 222: Second atom number:Generic  */
-    char  bond_type;                        /* ttt:                             */
-                                            /* 1,2,3=single, double, triple;    */
-                                            /* 4=aromatic;                      */
-                                            /* 5=single or double;              */
-                                            /* 6=single or aromatic;            */
-                                            /* 7=double or aromatic;            */
-                                            /* 8=any.                           */
-                                            /* Values 4-8 are for               */
-                                            /* SSS queries only                 */
-    char bond_stereo;                       /* sss:                             */
-                                            /* Single bonds:                    */
-                                            /*   0=not stereo, 1=up,            */
-                                            /*   4=either, 6=down               */
-                                            /* Double bonds:                    */
-                                            /*   0=use x,y,z to                 */
-                                            /*     determine cis/trans,         */
-                                            /*   3=cis or trans (either)        */
-                                            /*   xxx:     not used              */
+    short atnum1;     /* 111: First atom number: Generic  */
+    short atnum2;     /* 222: Second atom number:Generic  */
+    char bond_type;   /* ttt:                             */
+                      /* 1,2,3=single, double, triple;    */
+                      /* 4=aromatic;                      */
+                      /* 5=single or double;              */
+                      /* 6=single or aromatic;            */
+                      /* 7=double or aromatic;            */
+                      /* 8=any.                           */
+                      /* Values 4-8 are for               */
+                      /* SSS queries only                 */
+    char bond_stereo; /* sss:                             */
+                      /* Single bonds:                    */
+                      /*   0=not stereo, 1=up,            */
+                      /*   4=either, 6=down               */
+                      /* Double bonds:                    */
+                      /*   0=use x,y,z to                 */
+                      /*     determine cis/trans,         */
+                      /*   3=cis or trans (either)        */
+                      /*   xxx:     not used              */
 
-#if ( MOL_FMT_QUERY == MOL_FMT_PRESENT )
-    char bond_topology;                     /* rrr:                             */
-                                            /* 0=either, 1=ring, 2=chain:       */
-                                            /* SSS queries only                 */
+#if (MOL_FMT_QUERY == MOL_FMT_PRESENT)
+    char bond_topology; /* rrr:                             */
+                        /* 0=either, 1=ring, 2=chain:       */
+                        /* SSS queries only                 */
 #endif
-#if ( MOL_FMT_REACT == MOL_FMT_PRESENT )
-    char react_center_status;               /* ccc:                             */
-                                            /* 0 = unmarked,                    */
-                                            /* 1 = a center,                    */
-                                            /* -1 = not a center;               */
-                                            /* Additional:                      */
-                                            /* 2 = no charge,                   */
-                                            /* 4 = bond made/broken,            */
-                                            /* 8 = bond order changes           */
-                                            /*  12=4+8; 5=4+1, 9=8+1, 13=12+1   */
-                                            /*  12=4+8; 5=4+1, 9=8+1, 13=12+1   */
-                                            /*  are also possible               */
+#if (MOL_FMT_REACT == MOL_FMT_PRESENT)
+    char react_center_status; /* ccc:                             */
+                              /* 0 = unmarked,                    */
+                              /* 1 = a center,                    */
+                              /* -1 = not a center;               */
+                              /* Additional:                      */
+                              /* 2 = no charge,                   */
+                              /* 4 = bond made/broken,            */
+                              /* 8 = bond order changes           */
+                              /*  12=4+8; 5=4+1, 9=8+1, 13=12+1   */
+                              /*  12=4+8; 5=4+1, 9=8+1, 13=12+1   */
+                              /*  are also possible               */
 #endif
 } MOL_FMT_BOND;
-
 
 typedef struct A_MOL_FMT_v3000
 {
     int n_non_star_atoms;
     int n_star_atoms;
-    int * atom_index_orig;  /* index as supplied for atoms                      */
-    int * atom_index_fin;   /* = index or -1 for star atom                      */
-    int n_sgroups;          /* currently, we do not use this.                   */
-    int n_3d_constraints;   /* currently, we do not use this.                   */
+    int *atom_index_orig; /* index as supplied for atoms                      */
+    int *atom_index_fin;  /* = index or -1 for star atom                      */
+    int n_sgroups;        /* currently, we do not use this.                   */
+    int n_3d_constraints; /* currently, we do not use this.                   */
     int n_collections;
     int n_non_haptic_bonds;
     int n_haptic_bonds;
-    NUM_LISTS *haptic_bonds;/* haptic_bonds[i] is ptr to int* which contains    */
-                            /* bond_type, non-star atom number,                 */
-                            /* nendpts, then endpts themselves                  */
+    NUM_LISTS *haptic_bonds; /* haptic_bonds[i] is ptr to int* which contains    */
+                             /* bond_type, non-star atom number,                 */
+                             /* nendpts, then endpts themselves                  */
     /* Enhanced stereo */
     int n_steabs;
-    NUM_LISTS *steabs;      /* steabs[k][0] - not used                          */
-                            /* steabs[k][1] -  number of members in collection  */
-                            /* steabs[k][2..] - member atom numbers             */
+    NUM_LISTS *steabs; /* steabs[k][0] - not used                          */
+                       /* steabs[k][1] -  number of members in collection  */
+                       /* steabs[k][2..] - member atom numbers             */
     int n_sterel;
-    NUM_LISTS *sterel;      /* sterel[k][0] - n from "STERELn" tag              */
-                            /* sterel[k][1] -  number of members in collection  */
-                            /* sterel[k][2..] - member atom numbers             */
+    NUM_LISTS *sterel; /* sterel[k][0] - n from "STERELn" tag              */
+                       /* sterel[k][1] -  number of members in collection  */
+                       /* sterel[k][2..] - member atom numbers             */
     int n_sterac;
-    NUM_LISTS *sterac;      /* sterac[k][0] - n from "STERACn" tag              */
-                            /* sterac[k][1] -  number of members in collection  */
-                            /* sterac[k][0] - number from "STERACn" tag         */
+    NUM_LISTS *sterac; /* sterac[k][0] - n from "STERACn" tag              */
+                       /* sterac[k][1] -  number of members in collection  */
+                       /* sterac[k][0] - number from "STERACn" tag         */
 } MOL_FMT_v3000;
 
-
+/**
+ * @brief Connection table data structure
+ *
+ */
 typedef struct A_MOL_FMT_CTAB
 {
     /* Line #1: Counts line */
-    int n_atoms;            /* int accounts for possible V3000. Was: aaa; <= 255; Generic */
-    int n_bonds;            /* int accounts for possible V3000. Was: bbb; <= 255; Generic */
-#if ( MOL_FMT_QUERY == MOL_FMT_PRESENT )
-    short n_atom_lists;     /* lll; <=  30; Query                               */
+    int n_atoms; /* int accounts for possible V3000. Was: aaa; <= 255; Generic */
+    int n_bonds; /* int accounts for possible V3000. Was: bbb; <= 255; Generic */
+#if (MOL_FMT_QUERY == MOL_FMT_PRESENT)
+    short n_atom_lists; /* lll; <=  30; Query                               */
 #endif
 
-    char chiral_flag;       /* ccc; 0 or 1; Generic                             */
-    short n_stext_entries;  /* sss;         CPSS                                */
-#if ( MOL_FMT_CPSS == MOL_FMT_PRESENT )
+    char chiral_flag;      /* ccc; 0 or 1; Generic                             */
+    short n_stext_entries; /* sss;         CPSS                                */
+#if (MOL_FMT_CPSS == MOL_FMT_PRESENT)
     short n_reaction_components_plus_1; /* xxx;         CPSS                    */
-    short n_reactants;      /* rrr;         CPSS                                */
-    short n_products;       /* ppp;         CPSS                                */
-    short n_intermediates;  /* iii;         CPSS                                */
+    short n_reactants;                  /* rrr;         CPSS                                */
+    short n_products;                   /* ppp;         CPSS                                */
+    short n_intermediates;              /* iii;         CPSS                                */
 #endif
-    short           n_property_lines;                   /* mmm;         Generic                             */
-    short           follow_inchi_1_treating_iso_mass;
-    char            version_string[7];                  /* vvvvvv;      Generic; 'V2000'                    */
-    MOL_FMT_ATOM    *atoms;                             /* The Atom Block                                   */
-    MOL_FMT_BOND    *bonds;
-    MOL_COORD       *coords;
-    MOL_FMT_SGROUPS sgroups;                            /*    growable array of pointers to Sgroup objects  */
-    MOL_FMT_v3000   *v3000;
+    short n_property_lines; /* mmm;         Generic                             */
+    short follow_inchi_1_treating_iso_mass;
+    char version_string[7]; /* vvvvvv;      Generic; 'V2000'                    */
+    MOL_FMT_ATOM *atoms;    /* The Atom Block                                   */
+    MOL_FMT_BOND *bonds;
+    MOL_COORD *coords;
+    MOL_FMT_SGROUPS sgroups; /*    growable array of pointers to Sgroup objects  */
+    MOL_FMT_v3000 *v3000;
 } MOL_FMT_CTAB;
-
 
 typedef struct A_MOL_FMT_DATA
 {
     MOL_FMT_HEADER_BLOCK hdr;
-    MOL_FMT_CTAB         ctab;
+    MOL_FMT_CTAB ctab;
 } MOL_FMT_DATA;
-
-
 
 /*
     Functions
 */
 
-
-MOL_FMT_DATA* ReadMolfile( INCHI_IOSTREAM *inp_file,
-                           MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
-                           MOL_FMT_CTAB *OnlyCTab,
-                           int bGetOrigCoord,
-                           int treat_polymers,
-                           int pseudos_allowed,
-                           char *pname,
-                           int lname,
-                           unsigned long *Id,
-                           const char *pSdfLabel,
-                           char *pSdfValue,
-                           int *err,
-                           char *pStrErr,
-                           int bNoWarnings );
-int MolfileStrnread( char *dest,
-                     char *source,
-                     int  len,
-                     char **first_space );
-int MolfileReadField( void *data,
-                      int  field_len,
-                      int  data_type,
-                      char **line_ptr );
-long MolfileExtractStrucNum( MOL_FMT_HEADER_BLOCK *pHdr );
-int MolfileHasNoChemStruc( MOL_FMT_DATA* mfdata );
-int MolfileSaveCopy( INCHI_IOSTREAM *inp_file,
-                     long           fPtrStart,
-                     long           fPtrEnd,
-                     FILE           *outfile,
-                     long           num );
-int MolfileGetXYZDimAndNormFactors( MOL_FMT_DATA* mfdata,
-                                    int           find_norm_factors,
-                                    double        *x0,
-                                    double        *y0,
-                                    double        *z0,
-                                    double        *xmin,
-                                    double        *ymin,
-                                    double        *zmin,
-                                    double        *scaler,
-                                    int           *err,
-                                    char          *pStrErr );
-MOL_FMT_DATA* FreeMolfileData( MOL_FMT_DATA* mfdata );
+/**
+ * @brief
+ *
+ * @param inp_file
+ * @param OnlyHeaderBlock
+ * @param OnlyCTab
+ * @param bGetOrigCoord
+ * @param treat_polymers
+ * @param pseudos_allowed
+ * @param pname
+ * @param lname
+ * @param Id
+ * @param pSdfLabel
+ * @param pSdfValue
+ * @param err
+ * @param pStrErr
+ * @param bNoWarnings
+ * @return MOL_FMT_DATA*
+ */
+MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
+                          MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
+                          MOL_FMT_CTAB *OnlyCTab,
+                          int bGetOrigCoord,
+                          int treat_polymers,
+                          int pseudos_allowed,
+                          char *pname,
+                          int lname,
+                          unsigned long *Id,
+                          const char *pSdfLabel,
+                          char *pSdfValue,
+                          int *err,
+                          char *pStrErr,
+                          int bNoWarnings);
+int MolfileStrnread(char *dest,
+                    char *source,
+                    int len,
+                    char **first_space);
+int MolfileReadField(void *data,
+                     int field_len,
+                     int data_type,
+                     char **line_ptr);
+long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr);
+int MolfileHasNoChemStruc(MOL_FMT_DATA *mfdata);
+int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
+                    long fPtrStart,
+                    long fPtrEnd,
+                    FILE *outfile,
+                    long num);
+int MolfileGetXYZDimAndNormFactors(MOL_FMT_DATA *mfdata,
+                                   int find_norm_factors,
+                                   double *x0,
+                                   double *y0,
+                                   double *z0,
+                                   double *xmin,
+                                   double *ymin,
+                                   double *zmin,
+                                   double *scaler,
+                                   int *err,
+                                   char *pStrErr);
+MOL_FMT_DATA *FreeMolfileData(MOL_FMT_DATA *mfdata);
 
 /*
     V3000 Molfile
 */
 
-int MolfileV3000Init( MOL_FMT_CTAB *ctab,
-                      char         *pStrErr );
-int MolfileV3000ReadCTABBeginAndCountsLine( MOL_FMT_CTAB   *ctab,
-                                            INCHI_IOSTREAM *inp_file,
-                                            char           *pStrErr );
-int MolfileV3000ReadAtomsBlock( MOL_FMT_CTAB   *ctab,
-                                INCHI_IOSTREAM *inp_file,
-                                int            err,
-                                char           *pStrErr );
-int MolfileV3000ReadBondsBlock( MOL_FMT_CTAB   *ctab,
-                                INCHI_IOSTREAM *inp_file,
-                                int            err,
-                                char           *pStrErr );
-int MolfileV3000ReadTailOfCTAB( MOL_FMT_CTAB   *ctab,
-                                INCHI_IOSTREAM *inp_file,
-                                int            err,
-                                char           *pStrErr );
-int MolfileV3000ReadHapticBond( MOL_FMT_CTAB   *ctab,
-                                char           **line_ptr,
-                                int            **num_list,
-                                char           *pStrErr );
-int MolfileV3000ReadStereoCollection( MOL_FMT_CTAB *ctab,
-                                      char         **line_ptr,
-                                      int          **num_list,
-                                      char         *pStrErr );
-int MolfileV3000ReadSGroup( MOL_FMT_CTAB   *ctab,
+int MolfileV3000Init(MOL_FMT_CTAB *ctab,
+                     char *pStrErr);
+int MolfileV3000ReadCTABBeginAndCountsLine(MOL_FMT_CTAB *ctab,
+                                           INCHI_IOSTREAM *inp_file,
+                                           char *pStrErr);
+int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
+                               INCHI_IOSTREAM *inp_file,
+                               int err,
+                               char *pStrErr);
+int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
+                               INCHI_IOSTREAM *inp_file,
+                               int err,
+                               char *pStrErr);
+int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
+                               INCHI_IOSTREAM *inp_file,
+                               int err,
+                               char *pStrErr);
+int MolfileV3000ReadHapticBond(MOL_FMT_CTAB *ctab,
+                               char **line_ptr,
+                               int **num_list,
+                               char *pStrErr);
+int MolfileV3000ReadStereoCollection(MOL_FMT_CTAB *ctab,
+                                     char **line_ptr,
+                                     int **num_list,
+                                     char *pStrErr);
+int MolfileV3000ReadSGroup(MOL_FMT_CTAB *ctab,
+                           INCHI_IOSTREAM *inp_file,
+                           int err,
+                           char *pStrErr);
+int MolfileV3000Read3DBlock(MOL_FMT_CTAB *ctab,
                             INCHI_IOSTREAM *inp_file,
-                            int            err,
-                            char           *pStrErr );
-int MolfileV3000Read3DBlock( MOL_FMT_CTAB   *ctab,
-                             INCHI_IOSTREAM *inp_file,
-                             int            err,
-                             char           *pStrErr );
-int MolfileV3000ReadCollections( MOL_FMT_CTAB  *ctab,
+                            int err,
+                            char *pStrErr);
+int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
                                 INCHI_IOSTREAM *inp_file,
-                                int            err,
-                                char           *pStrErr );
+                                int err,
+                                char *pStrErr);
 /*    Clean V3000 stuff */
-int DeleteMolfileV3000Info( MOL_FMT_v3000* v3000 );
+int DeleteMolfileV3000Info(MOL_FMT_v3000 *v3000);
 
-char* inchi_fgetsLf_V3000( char           *line,
-                           INCHI_IOSTREAM *inp_stream );
-int get_V3000_input_line_to_strbuf( INCHI_IOS_STRING *buf,
-                                    INCHI_IOSTREAM   *inp_stream );
+char *inchi_fgetsLf_V3000(char *line,
+                          INCHI_IOSTREAM *inp_stream);
+int get_V3000_input_line_to_strbuf(INCHI_IOS_STRING *buf,
+                                   INCHI_IOSTREAM *inp_stream);
 
 /*    Extract the 'data' in specified mol file field at given text position 'line_ptr'  */
-int MolfileV3000ReadField( void   *data,
-                           int    data_type,
-                           char** line_ptr );
+int MolfileV3000ReadField(void *data,
+                          int data_type,
+                          char **line_ptr);
 /*    Read keyword */
-int MolfileV3000ReadKeyword( char *key,
-                            char **line_ptr );
+int MolfileV3000ReadKeyword(char *key,
+                            char **line_ptr);
 
 /*
     SDF
 */
 
-int SDFileSkipExtraData( INCHI_IOSTREAM *inp_file,
-                         unsigned long *CAS_num,
-                         char* comment,
-                         int lcomment,
-                         char *name,
-                         int lname,
-                         int prev_err,
-                         const char *pSdfLabel,
-                         char *pSdfValue,
-                         char *pStrErr,
-                         int bNoWarnings);
-int SDFileIdentifyLabel( char* inp_line, const char *pSdfLabel );
-unsigned long SDFileExtractCASNo( char *line );
+int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
+                        unsigned long *CAS_num,
+                        char *comment,
+                        int lcomment,
+                        char *name,
+                        int lname,
+                        int prev_err,
+                        const char *pSdfLabel,
+                        char *pSdfValue,
+                        char *pStrErr,
+                        int bNoWarnings);
+int SDFileIdentifyLabel(char *inp_line, const char *pSdfLabel);
+unsigned long SDFileExtractCASNo(char *line);
 
-#endif    /* _MOL_FMT_H_ */
+#endif /* _MOL_FMT_H_ */
