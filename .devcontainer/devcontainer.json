@@ -22,7 +22,8 @@
                 "editor.formatOnSave": true,
                 "python": {
                     "editor.defaultFormatter": "ms-python.black-formatter"
-                }
+                },
+                "sonarlint.pathToCompileCommands": "${workspaceFolder}/CMake_build/full_build/compile_commands.json"
             },
             "extensions": [
                 "ms-vscode.cpptools",
@@ -43,9 +44,10 @@
                 "qwtel.sqlite-viewer",
                 "ms-vscode.live-server",
                 "tamasfe.even-better-toml",
-                "DavidAnson.vscode-markdownlint"
+                "DavidAnson.vscode-markdownlint",
+                "SonarSource.sonarlint-vscode"
             ]
         }
     },
-    "postCreateCommand": "cd INCHI-1-TEST && ./install_build_dependencies.sh && ./install_test_dependencies.sh"
+    "postCreateCommand": "./.devcontainer/post_create_commands.sh"
 }
