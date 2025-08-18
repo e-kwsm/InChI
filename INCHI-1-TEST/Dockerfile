@@ -1,6 +1,5 @@
-FROM gcc:14-bookworm AS inchi_compilation
-# The GCC image includes the dependencies we need for building InChI (gcc, make, etc.)
-# and running the tests (Python 3.11).
+FROM python:3.12 AS inchi_compilation
+
 
 WORKDIR /inchi
 
@@ -47,7 +46,7 @@ RUN ./INCHI-1-TEST/build_with_makefile.sh v1.06 $exe_legacy_dir exe || exit 1;
 RUN mkdir -p $lib_legacy_dir
 RUN ./INCHI-1-TEST/build_with_makefile.sh v1.06 $lib_legacy_dir lib || exit 1;
 
-FROM gcc:14-bookworm AS inchi_test
+FROM python:3.12 AS inchi_test
 
 WORKDIR /inchi
 

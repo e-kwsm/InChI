@@ -2,7 +2,7 @@
 // https://hub.docker.com/_/python
 {
     "name": "InChI",
-    "image": "gcc:14-bookworm",
+    "image": "python:3.12",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
