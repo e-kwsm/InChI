@@ -12,6 +12,7 @@ COPY INCHI-1-SRC/INCHI_BASE /inchi/INCHI-1-SRC/INCHI_BASE
 COPY INCHI-1-SRC/INCHI_API /inchi/INCHI-1-SRC/INCHI_API
 COPY INCHI-1-SRC/INCHI_EXE /inchi/INCHI-1-SRC/INCHI_EXE
 COPY INCHI-1-TEST /inchi/INCHI-1-TEST
+COPY CMakeLists.txt /inchi/CMakeLists.txt
 
 # Ignore future changes, i.e., mounted custom files.
 RUN echo "*" > /inchi/.gitignore
@@ -27,22 +28,15 @@ RUN git config user.name "inchi" && \
 
 RUN cd INCHI-1-TEST && ./install_build_dependencies.sh
 
-ENV exe_dir='/inchi/CMake_build/cli_build'
-ENV exe_legacy_dir="${exe_dir}/bin/v1_6_0"
-ENV lib_dir='/inchi/CMake_build/libinchi_build'
-ENV lib_legacy_dir="${lib_dir}/lib/v1_6_0"
-
 # Compile current version (whatever commit is checked out).
-RUN cmake -B $exe_dir -S 'INCHI-1-SRC/INCHI_EXE/inchi-1/src'
-RUN cmake --build $exe_dir
-
-RUN cmake -B $lib_dir -S 'INCHI-1-SRC/INCHI_API/libinchi/src'
-RUN cmake --build $lib_dir
+RUN ./INCHI-1-TEST/build_with_cmake.sh all
 
 # Compile previous non-minor version.
+ENV exe_legacy_dir='/inchi/CMake_build/cli_build/bin/v1_6_0'
 RUN mkdir -p $exe_legacy_dir
 RUN ./INCHI-1-TEST/build_with_makefile.sh v1.06 $exe_legacy_dir exe || exit 1;
 
+ENV lib_legacy_dir='/inchi/CMake_build/libinchi_build/lib/v1_6_0'
 RUN mkdir -p $lib_legacy_dir
 RUN ./INCHI-1-TEST/build_with_makefile.sh v1.06 $lib_legacy_dir lib || exit 1;
 
