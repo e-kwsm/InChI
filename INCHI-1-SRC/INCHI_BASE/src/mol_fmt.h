@@ -567,20 +567,20 @@ typedef struct A_MOL_FMT_DATA
 /**
  * @brief
  *
- * @param inp_file
- * @param OnlyHeaderBlock
- * @param OnlyCTab
- * @param bGetOrigCoord
- * @param treat_polymers
- * @param pseudos_allowed
- * @param pname
- * @param lname
- * @param Id
- * @param pSdfLabel
- * @param pSdfValue
- * @param err
- * @param pStrErr
- * @param bNoWarnings
+ * @param inp_file Pointer to the input file stream.
+ * @param OnlyHeaderBlock Pointer to the header block to read.
+ * @param OnlyCTab Pointer to the connection table to read.
+ * @param bGetOrigCoord Flag indicating whether to get original coordinates.
+ * @param treat_polymers Flag indicating whether to treat polymers.
+ * @param pseudos_allowed Flag indicating whether pseudo atoms are allowed.
+ * @param pname Pointer to the name buffer.
+ * @param lname Length of the name buffer.
+ * @param Id Pointer to the ID buffer.
+ * @param pSdfLabel Pointer to the SDF label buffer.
+ * @param pSdfValue Pointer to the SDF value buffer.
+ * @param err Pointer to the error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @param bNoWarnings Flag indicating whether to suppress warnings.
  * @return MOL_FMT_DATA*
  */
 MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
@@ -597,14 +597,40 @@ MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
                           int *err,
                           char *pStrErr,
                           int bNoWarnings);
+
+/**
+ * @brief Read a string from a source buffer into a destination buffer.
+ *
+ * @param dest Pointer to the destination buffer.
+ * @param source Pointer to the source buffer.
+ * @param len Length of the string to read.
+ * @param first_space Pointer to a variable that will receive the address of the first space character in the source buffer.
+ * @return number of actually processed bytes excluding zero terminator.
+ */
 int MolfileStrnread(char *dest,
                     char *source,
                     int len,
                     char **first_space);
+/**
+ * @brief Read a field from a MOL file.
+ *
+ * @param data Pointer to the destination buffer.
+ * @param field_len Length of the field to read.
+ * @param data_type Type of the data to read.
+ * @param line_ptr Pointer to a variable that will receive the address of the next line.
+ * @return for MOL_FMT_STRING_DATA: number of bytes excluding trailing zero
+ *         for all others:  1=success; 0 = empty; -1= error
+ */
 int MolfileReadField(void *data,
                      int field_len,
                      int data_type,
                      char **line_ptr);
+/**
+ * @brief Extract molfile number from the header name line like "Structure #22"
+ *
+ * @param pHdr Pointer to the header block.
+ * @return The structure number.
+ */
 long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr);
 int MolfileHasNoChemStruc(MOL_FMT_DATA *mfdata);
 int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,

@@ -66,7 +66,8 @@ int MolfileStrnread(char *dest, char *source, int len, char **first_space)
 {
     /* required len >= 0; dest must have at least len+1 bytes */
 
-    int i, c;
+    int i;
+    int c;
 
     if (len > 0)
     {
@@ -105,8 +106,13 @@ int MolfileReadField(void *data,
                      int data_type,
                      char **line_ptr)
 {
-    char *p = *line_ptr, *q, *p_end;
-    int i, c, len, ret = 1;
+    char *p = *line_ptr;
+    char *q;
+    char *p_end;
+    int i;
+    int c;
+    int len;
+    int ret = 1;
     long ldata;
     double ddata;
 
@@ -333,7 +339,8 @@ long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr)
     static char sStruct[] = "Structure #";
     static char sINCHI[] = INCHI_NAME;
     long lMolfileNumber = 0;
-    char *p, *q = NULL;
+    char *p;
+    char *q = NULL;
 
     if (pHdr)
     {

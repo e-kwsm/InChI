@@ -77,7 +77,7 @@ static int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
 static int MolfileReadBondsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
-static int MolfileReadSTextBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
+static int MolfileReadSTextBlock(const MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
 static int MolfileReadPropBlock(MOL_FMT_CTAB *ctab, MOL_FMT_HEADER_BLOCK *pHdr,
                                 INCHI_IOSTREAM *inp_file,
@@ -167,7 +167,7 @@ MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
 }
 
 /****************************************************************************
- Read data lines completely ingnore STEXT block, queries, and 3D features
+ Read data lines completely ignore STEXT block, queries, and 3D features
 ****************************************************************************/
 MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
                                    MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
@@ -179,11 +179,14 @@ MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
                                    int bNoWarnings)
 {
     int n_alloc_atoms;
-    MOL_FMT_CTAB ctab, *pCtab = NULL;
+    MOL_FMT_CTAB ctab;
+    MOL_FMT_CTAB *pCtab = NULL;
     MOL_FMT_HEADER_BLOCK *pHdr = NULL;
     MOL_FMT_DATA *mfdata = NULL;
-    int retcode, prevcode;
-    int data_ended = 0, should_read_all = 0;
+    int retcode;
+    int prevcode;
+    int data_ended = 0;
+    int should_read_all = 0;
 
     if (!OnlyHeaderBlock)
     {
@@ -575,7 +578,8 @@ int MolfileReadCountsLine(MOL_FMT_CTAB *ctab,
     char *p;
     char line[MOL_FMT_INPLINELEN];
     const int line_len = sizeof(line);
-    int err = 0, len; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    int err = 0;
+    int len; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
     p = inchi_fgetsLf(line, line_len, inp_file);
 
@@ -657,11 +661,10 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
     char *p;
     char line[MOL_FMT_INPLINELEN];
     const int line_len = sizeof(line);
-    int i;
     S_SHORT chg;
     static const S_SHORT charge_val[] = {0, 3, 2, 1, 'R', -1, -2, -3};
 
-    for (i = 0; i < ctab->n_atoms; i++)
+    for (int i = 0; i < ctab->n_atoms; i++)
     {
         p = inchi_fgetsLf(line, line_len, inp_file);
 
@@ -882,7 +885,7 @@ int MolfileReadBondsBlock(MOL_FMT_CTAB *ctab,
 /****************************************************************************
  Read SText
 ****************************************************************************/
-int MolfileReadSTextBlock(MOL_FMT_CTAB *ctab,
+int MolfileReadSTextBlock(const MOL_FMT_CTAB *ctab,
                           INCHI_IOSTREAM *inp_file,
                           int err,
                           char *pStrErr)
@@ -891,9 +894,8 @@ int MolfileReadSTextBlock(MOL_FMT_CTAB *ctab,
     char *p;
     char line[MOL_FMT_INPLINELEN];
     const int line_len = sizeof(line);
-    S_SHORT i;
 
-    for (i = 0; i < 2 * ctab->n_stext_entries; i++)
+    for (S_SHORT i = 0; i < 2 * ctab->n_stext_entries; i++)
     {
         p = inchi_fgetsLf(line, line_len, inp_file);
         if (!p)
@@ -1424,7 +1426,9 @@ int MolfileReadSgroupOfPolymer(MOL_FMT_CTAB *ctab,
                 MOD = modifications,
                 CRO = crosslink
     */
-    if (!strcmp(szType, "STY") && 0 < MolfileReadField(&num_entries, 3, MOL_FMT_SHORT_INT_DATA, &p) && 1 <= num_entries && num_entries <= 8)
+    if (!strcmp(szType, "STY") &&
+        0 < MolfileReadField(&num_entries, 3, MOL_FMT_SHORT_INT_DATA, &p) &&
+        1 <= num_entries && num_entries <= 8)
     {
         for (j = 0; j < num_entries; j++)
         {
