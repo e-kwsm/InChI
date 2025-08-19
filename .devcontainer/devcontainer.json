@@ -45,7 +45,7 @@
                 "ms-vscode.live-server",
                 "tamasfe.even-better-toml",
                 "DavidAnson.vscode-markdownlint",
-                "SonarSource.sonarlint-vscode"
+                "SonarSource.sonarlint-vscode@4.28.0"
             ]
         }
     },
