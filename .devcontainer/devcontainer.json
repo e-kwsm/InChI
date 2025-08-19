@@ -19,9 +19,12 @@
         "vscode": {
             "settings": {
                 "terminal.integrated.scrollback": 5000,
-                "editor.formatOnSave": true,
-                "python": {
-                    "editor.defaultFormatter": "ms-python.black-formatter"
+                "[python]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[c]": {
+                    "editor.formatOnSave": false
                 },
                 "sonarlint.pathToCompileCommands": "${workspaceFolder}/CMake_build/full_build/compile_commands.json"
             },
@@ -31,12 +34,9 @@
                 "ms-vscode.cmake-tools",
                 "eamodio.gitlens",
                 "streetsidesoftware.code-spell-checker",
-                "ms-python.python",
-                "ms-python.vscode-pylance",
-                "ms-python.black-formatter",
                 "ms-python.mypy-type-checker",
-                "ms-python.flake8",
                 "KevinRose.vsc-python-indent",
+                "charliermarsh.ruff",
                 "ms-vscode.makefile-tools",
                 "GitHub.vscode-github-actions",
                 "ms-azuretools.vscode-docker",
