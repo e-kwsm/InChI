@@ -19,8 +19,5 @@ TEST(strutil_testing, test_SetConnectedComponentNumber)
     {
         EXPECT_EQ(new_mol[i].component, test_component_number);
     }
-
-    // EXPECT_STREQ(szElement, "??");
-
     FreeInpAtom(&new_mol);
 }

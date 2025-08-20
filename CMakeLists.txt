@@ -10,8 +10,24 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 enable_testing()
 
-add_subdirectory(googletest)
+# Fetch GoogleTest framework and build it
+# URL https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz
+include(FetchContent)
+FetchContent_Declare(
+        googletest        
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        DOWNLOAD_NO_PROGRESS TRUE
+      )
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
+# Tests
+include(CTest)
+include(GoogleTest)
+
+# add_subdirectory(googletest)
 
 set(Headers
     INCHI-1-SRC/INCHI_BASE/src/bcf_s.h
