@@ -129,7 +129,6 @@ target_compile_definitions(${This} PUBLIC
     TARGET_EXE_STANDALONE
 )
 
-add_subdirectory(INCHI-1-TEST/)
-
+add_subdirectory(INCHI-1-TEST/tests/test_unit)
 add_subdirectory(INCHI-1-SRC/INCHI_EXE/inchi-1/src)
 add_subdirectory(INCHI-1-SRC/INCHI_API/libinchi/src)
