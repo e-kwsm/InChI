@@ -47,6 +47,21 @@ Where possible, stick to the following principles:
 
 Have a look at the existing tests for examples on how to write a test.
 
+## Unit tests
+
+Our unit test are implemented with [googletest](https://google.github.io/googletest/) and live under `tests/test_unit`.
+Build the tests with
+
+```shell
+./INCHI-1-TEST/build_with_cmake.sh all
+```
+
+and subsequently run them with
+
+```shell
+cd CMake_build/full_build/INCHI-1-TEST/test/test_unit && ctest --output-on-failure
+```
+
 ## Meta tests
 
 The tests under `tests/test_meta` are testing the tests (e.g., does structure permutation work properly?)
