@@ -1,23 +1,17 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
 
-set(test_util test_util_c)
-set(test_strutil test_strutil_c)
-
-set(Sources_test_util test_util.cpp)
-
-set(Sources_test_strutil test_strutil.cpp)
-
-add_executable(${test_util} ${Sources_test_util})
-add_executable(${test_strutil} ${Sources_test_strutil})
-
-target_link_libraries(${test_util} PUBLIC 
-    gtest_main
-    InChI
+set(P_BASE "${CMAKE_SOURCE_DIR}/INCHI-1-SRC/INCHI_BASE/src")
+file(GLOB BASE_SOURCES CONFIGURE_DEPENDS
+     "${P_BASE}/*.c"
+     "${P_BASE}/*.h"
 )
-target_link_libraries(${test_strutil} PUBLIC 
-    gtest_main
-    InChI
-)
+add_library(test_dependencies STATIC ${BASE_SOURCES})
+target_compile_definitions(test_dependencies PUBLIC TARGET_EXE_STANDALONE)
 
-add_test(NAME ${test_util} COMMAND ${test_util} )
-add_test(NAME ${test_strutil} COMMAND ${test_strutil} )
+file(GLOB TEST_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp")
+foreach(test_src ${TEST_SOURCES})
+    get_filename_component(test_name "${test_src}" NAME_WE)
+    add_executable(${test_name} ${test_src})
+    target_link_libraries(${test_name} PRIVATE gtest_main test_dependencies)
+    add_test(NAME ${test_name} COMMAND $<TARGET_FILE:${test_name}>)
+endforeach()
