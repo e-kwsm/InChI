@@ -14,8 +14,10 @@ __pycache__
 doxygen_doc/
 .vs/
 build/
+Testing/
 googletest/
 *.egg-info/
+.clang-format
 # Ignore core dump files
 core.*[0-9]
 CMake_build/

@@ -58,6 +58,8 @@ TEST(util_testing, test_get_periodic_table_number)
 
     char szElement[4];
 
+    EXPECT_EQ(get_periodic_table_number(""), 255);
+    EXPECT_EQ(get_periodic_table_number(" "), 255);
     EXPECT_EQ(get_periodic_table_number("??"), 255);
     EXPECT_EQ(get_periodic_table_number("S"), 16);
     EXPECT_EQ(get_periodic_table_number("Ca"), 20);
@@ -207,15 +209,43 @@ TEST(util_testing, test_lrtrim)
 // ---------------------------
 
 // extract_H_atoms( char *elname, S_CHAR num_iso_H[] )
-TEST(util_testing, extract_H_atoms)
+TEST(util_testing, test_extract_H_atoms)
 {
     S_CHAR num_iso_H[NUM_H_ISOTOPES] = {0};
 
     char elname[4] = "C";
 
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
-    // printf("%s\n", num_iso_H);
-    // EXPECT_STREQ(num_iso_H, "B");
+    EXPECT_STREQ(elname, "C");
+
+    strcpy(elname, "H");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 1);
+    EXPECT_STREQ(elname, "");
+
+    EXPECT_EQ(num_iso_H[0], '\0'); // H
+
+    strcpy(elname, "Rh");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
+
+    strcpy(elname, "D");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
+    EXPECT_STREQ(elname, "");
+
+    EXPECT_EQ(num_iso_H[0], '\0'); // D
+
+    strcpy(elname, "???");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
+    
+    strcpy(elname, "T");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
+    EXPECT_STREQ(elname, "");
+
+    EXPECT_EQ(num_iso_H[0], '\0'); // T
+    EXPECT_EQ(num_iso_H[1], '\x1'); // T
+
+    strcpy(elname, "");    
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);    
+
 }
 
 TEST(util_testing, test_get_num_H)
@@ -247,4 +277,200 @@ TEST(util_testing, test_detect_unusual_el_valence)
     EXPECT_EQ(detect_unusual_el_valence(6, -1, 1, 3, 2, 2), 5);
     EXPECT_EQ(detect_unusual_el_valence(17, -1, 0, 7, 2, 2), 9);
     EXPECT_EQ(detect_unusual_el_valence(82, -2, 2, 6, 3, 3), 9);
+}
+
+TEST(util_testing, test_normalize_string)
+{
+    char test_string1[7] = " InChI";
+    EXPECT_EQ(normalize_string(test_string1), 5);
+    EXPECT_STREQ(test_string1, "InChI");
+
+    char test_string2[9] = " InChI  ";
+    EXPECT_EQ(normalize_string(test_string2), 5);
+    EXPECT_STREQ(test_string2, "InChI");
+
+    char test_string3[6] = "     ";
+    EXPECT_EQ(normalize_string(test_string3), 0);
+    EXPECT_STREQ(test_string3, "");
+
+    char test_string4[20] = "  sdfds   sfsfd ew ";
+    EXPECT_EQ(normalize_string(test_string4), 14);
+    EXPECT_STREQ(test_string4, "sdfds sfsfd ew");
+}
+
+TEST(util_testing, test_read_upto_delim)
+{
+    //read_upto_delim(char **pstring, char *field, int maxlen, char *delims)
+
+    char test_string1[] = "field1,field2,field3";
+    char *test_string1_inp = test_string1;
+    char field[15];
+    int maxlen = 10;
+    char delims[] = ",";
+
+    EXPECT_EQ(read_upto_delim(&test_string1_inp, field, maxlen, delims), 6);
+    EXPECT_STREQ(field, "field1");
+    EXPECT_STREQ(test_string1_inp, ",field2,field3");
+
+    char test_string2[] = "";
+    char *test_string2_inp = test_string2;
+
+    EXPECT_EQ(read_upto_delim(&test_string2_inp, field, maxlen, delims), 0);
+    EXPECT_STREQ(field, "");
+    EXPECT_STREQ(test_string2_inp, NULL);
+
+    char test_string3[] = "afdfs,fdsfff323sd";
+    char *test_string3_inp = test_string3;
+
+    EXPECT_EQ(read_upto_delim(&test_string3_inp, field, maxlen, delims), 5);
+    EXPECT_STREQ(field, "afdfs");
+    EXPECT_STREQ(test_string3_inp, ",fdsfff323sd");
+
+    char test_string4[] = "afdfsfdsfff323sd";
+    char *test_string4_inp = test_string4;
+
+    EXPECT_EQ(read_upto_delim(&test_string4_inp, field, maxlen, delims), -1);
+    // EXPECT_STREQ(field, "");
+    EXPECT_STREQ(test_string4_inp, "afdfsfdsfff323sd");
+
+    char test_string5[] = "afdfsfdsfff323sd";
+    maxlen = 50;
+    char *test_string5_inp = test_string5;
+
+    EXPECT_EQ(read_upto_delim(&test_string5_inp, field, maxlen, delims), 16);
+    EXPECT_STREQ(field, "afdfsfdsfff323sd");
+    EXPECT_STREQ(test_string5_inp, NULL);
+
+    char test_string6[] = "field1,field2,field3";
+    maxlen = 3;
+    char *test_string6_inp = test_string6;
+
+    EXPECT_EQ(read_upto_delim(&test_string6_inp, field, maxlen, delims), -1);
+    // EXPECT_STREQ(field, "fie");
+    EXPECT_STREQ(test_string6_inp, "field1,field2,field3");
+}
+
+TEST(util_testing, test_is_matching_any_delim)
+{
+    char delims1[] = "abc";
+
+    char delims2[] = "";
+
+    // is_matching_any_delim(char c, char *delims)
+    EXPECT_TRUE(is_matching_any_delim('a', delims1));
+    EXPECT_TRUE(is_matching_any_delim('b', delims1));
+    EXPECT_TRUE(is_matching_any_delim('c', delims1));
+    EXPECT_FALSE(is_matching_any_delim('d', delims1));
+    EXPECT_FALSE(is_matching_any_delim(' ', delims1));
+
+    EXPECT_FALSE(is_matching_any_delim(' ', delims2));
+    EXPECT_FALSE(is_matching_any_delim('a', delims2));
+
+}
+
+TEST(util_testing, test_dotify_non_printable_chars)
+{
+    //dotify_non_printable_chars(char *line)
+    char test_string1[] = "Hello\x01World";
+    EXPECT_EQ(dotify_non_printable_chars(test_string1), 1);
+    EXPECT_STREQ(test_string1, "Hello.World");
+
+    char test_string2[] = "\x02Test";
+    EXPECT_EQ(dotify_non_printable_chars(test_string2), 1);
+    EXPECT_STREQ(test_string2, ".Test");
+
+    char test_string3[] = "NoChange";
+    EXPECT_EQ(dotify_non_printable_chars(test_string3), 0);
+    EXPECT_STREQ(test_string3, "NoChange");
+}
+
+
+TEST(util_testing, test_remove_trailing_spaces)
+{
+    // remove_trailing_spaces(char *p)
+    char test_string1[] = "Hello World   ";
+    remove_trailing_spaces(test_string1);
+    EXPECT_STREQ(test_string1, "Hello World");
+
+    char test_string3[] = "NoTrailingSpaces";
+    remove_trailing_spaces(test_string3);
+    EXPECT_STREQ(test_string3, "NoTrailingSpaces");
+}
+
+TEST(util_testing, test_remove_one_lf)
+{
+    //remove_one_lf(char *p)
+    char test_string1[] = "Hello World\n";
+    remove_one_lf(test_string1);
+    EXPECT_STREQ(test_string1, "Hello World");
+
+    char test_string2[] = "Hello World\r\n";
+    remove_one_lf(test_string2);
+    EXPECT_STREQ(test_string2, "Hello World");
+    
+    char test_string3[] = "NoLineFeed";
+    remove_one_lf(test_string3);
+    EXPECT_STREQ(test_string3, "NoLineFeed");
+
+    char test_string4[] = "Hello World\r\n\n";
+    remove_one_lf(test_string4);
+    EXPECT_STREQ(test_string4, "Hello World\r\n");
+
+    char test_string5[] = "";
+    remove_one_lf(test_string5);
+    EXPECT_STREQ(test_string5, "");
+
+    char test_string6[] = "\r\n";
+    remove_one_lf(test_string6);
+    EXPECT_STREQ(test_string6, "");
+}
+
+TEST(util_testing, test_mystrncpy)
+{
+    // mystrncpy(char *target, const char *source, unsigned maxlen)
+    char target[20];
+    const char *source = "Hello World";
+
+    EXPECT_EQ(mystrncpy(target, source, 5), 1);
+    EXPECT_STREQ(target, "Hell");
+
+    EXPECT_EQ(mystrncpy(target, source, 20), 1);
+    EXPECT_STREQ(target, "Hello World");
+
+    EXPECT_EQ(mystrncpy(target, NULL, 10), 0);
+    EXPECT_STREQ(target, "Hello World"); // should not change
+
+    EXPECT_EQ(mystrncpy(NULL, source, 10), 0); // target is NULL
+}
+
+
+TEST(util_testing, test_inchi_memicmp) {
+
+    // inchi_memicmp(const void *p1, const void *p2, size_t length)
+
+    const char *str1 = "Hello";
+    const char *str2 = "hello";
+    EXPECT_EQ(inchi_memicmp(str1, str2, 5), 0);
+    EXPECT_EQ(inchi_memicmp(str1, str2, 4), 0);
+
+    const char *str7 = "a";
+    const char *str8 = "s";
+
+    EXPECT_TRUE(inchi_memicmp(str7, str8, 1) < 0);
+
+    const char *str3 = "Hello";
+    const char *str4 = "hellosdfds";  
+
+    EXPECT_TRUE(inchi_memicmp(str3, str4, 9) < 0);
+
+    const char *str5 = "131234";
+    const char *str6 = "hellosdfds";
+
+    EXPECT_TRUE(inchi_memicmp(str5, str6, 20) < 0);
+
+    const char *str9  = "XYZdqwdsa";
+    const char *str10 = "qwd";
+
+    EXPECT_TRUE(inchi_memicmp(str9, str10, 20) > 0);
+
 }
