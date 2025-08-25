@@ -474,3 +474,157 @@ TEST(util_testing, test_inchi_memicmp) {
     EXPECT_TRUE(inchi_memicmp(str9, str10, 20) > 0);
 
 }
+
+TEST(util_testing, test_inchi_stricmp) {
+
+    // inchi_stricmp(const char *s1, const char *s2)
+    EXPECT_EQ(inchi_stricmp("Hello", "hello"), 0);
+    EXPECT_TRUE(inchi_stricmp("Hello", "Hell") > 0);
+    EXPECT_TRUE(inchi_stricmp("Hello", "HelloWorld") < 0);
+    EXPECT_TRUE(inchi_stricmp("Hello", "Hello") == 0);
+    EXPECT_TRUE(inchi_stricmp("Hello", "HELLO") == 0);
+    EXPECT_TRUE(inchi_stricmp("", "") == 0);
+    EXPECT_TRUE(inchi_stricmp("123", "12") > 0);
+    EXPECT_TRUE(inchi_stricmp("123", "12455454") < 0);    
+}
+
+TEST(util_testing, test_inchi_strnset) {
+
+    // char *inchi__strnset(char *s, int val, size_t length)
+    char test_string1[] = "Hello";
+    EXPECT_STREQ(inchi__strnset(test_string1, 'X', 3), "XXXlo");
+
+    char test_string2[] = "World";
+    EXPECT_STREQ(inchi__strnset(test_string2, 'Y', 5), "YYYYY");
+
+    char test_string3[] = "NoChange";
+    EXPECT_STREQ(inchi__strnset(test_string3, 'Z', 0), "NoChange");
+}
+
+TEST(util_testing, test_inchi_strdup) {
+
+    // char *inchi__strdup(const char *string)
+    char *dup1 = inchi__strdup("Hello");
+    EXPECT_STREQ(dup1, "Hello");
+    free(dup1);
+
+    char *dup2 = inchi__strdup("");
+    EXPECT_STREQ(dup2, "");
+    free(dup2);
+}
+
+TEST(util_testing, test_inchi_strtol) {
+
+    // long inchi_strtol(const char *str, const char **p, int base)
+    // base is for numerical type: 10 -> decimal, 16 -> hexadecimal, 27 -> compressed inchi, 0 -> auto detect
+    long result1 = inchi_strtol("12345", NULL, 0);
+    EXPECT_EQ(result1, 12345);
+
+    //TODO: what is a compressed inchi? -> base 27
+    long result2 = inchi_strtol("12345", NULL, 27);
+    EXPECT_EQ(result2, 0);    
+}
+
+TEST(util_testing, test_inchi_strtod) {
+
+    // double inchi_strtod(const char *str, const char **p)
+    const char *endptr;
+    double result = inchi_strtod("123.45", &endptr);
+    EXPECT_EQ(result, 123.45);
+    EXPECT_EQ(*endptr, '\0');
+
+    result = inchi_strtod("abc", &endptr);
+    EXPECT_EQ(result, 0);
+    EXPECT_EQ(*endptr, 'a');
+}
+
+TEST(util_testing, test_is_in_the_list) {
+
+    // AT_NUMB *is_in_the_list(AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen)
+    AT_NUMB pathAtom1[] = {1, 2, 3, 4, 5};
+    AT_NUMB nNextAtom1 = 3;
+    int nPathLen1 = 5;
+    EXPECT_TRUE(is_in_the_list(pathAtom1, nNextAtom1, nPathLen1));
+
+    AT_NUMB pathAtom2[] = {1, 2, 3, 4, 5};
+    AT_NUMB nNextAtom2 = 6;
+    int nPathLen2 = 5;
+    EXPECT_FALSE(is_in_the_list(pathAtom2, nNextAtom2, nPathLen2));
+
+    AT_NUMB pathAtom3[] = {};
+    AT_NUMB nNextAtom3 = 6;
+    int nPathLen3 = 5;
+    EXPECT_FALSE(is_in_the_list(pathAtom3, nNextAtom3, nPathLen3));
+}
+
+TEST(util_testing, test_is_in_the_ilist) {
+
+    //int *is_in_the_ilist(int *pathAtom, int nNextAtom, int nPathLen)
+
+    int pathAtom1[] = {1, 2, 3, 4, 5};
+    int nNextAtom1 = 3;
+    int nPathLen1 = 5;
+    EXPECT_TRUE(is_in_the_ilist(pathAtom1, nNextAtom1, nPathLen1));
+
+    int pathAtom2[] = {1, 2, 3, 4, 5};
+    int nNextAtom2 = 6;
+    int nPathLen2 = 5;
+    EXPECT_FALSE(is_in_the_ilist(pathAtom2, nNextAtom2, nPathLen2));
+
+    int pathAtom3[] = {};
+    int nNextAtom3 = -6;
+    int nPathLen3 = 5;
+    EXPECT_FALSE(is_in_the_ilist(pathAtom3, nNextAtom3, nPathLen3));
+}
+
+TEST(util_testing, test_is_ilist_inside) {
+
+    // int is_ilist_inside(int *ilist, int nlist, int *ilist2, int nlist2)
+
+    int pathAtom1[] = {1, 2, 3, 4, 5};
+    int pathAtom2[] = {2, 3};
+    EXPECT_TRUE(is_ilist_inside(pathAtom2, 2, pathAtom1, 5));
+
+    int pathAtom3[] = {6, 7};
+    EXPECT_FALSE(is_ilist_inside(pathAtom3, 2, pathAtom1, 5));
+
+    EXPECT_FALSE(is_ilist_inside(pathAtom2, 2, pathAtom3, 2));    
+
+    int pathAtom4[] = {};
+    int pathAtom5[] = {};
+    EXPECT_TRUE(is_ilist_inside(pathAtom4, 0, pathAtom5, 0));
+}
+
+
+TEST(util_testing, test_nBondsValToMetal) {
+
+    // int nBondsValToMetal(inp_ATOM *at, int iat)
+
+    // EXPECT_EQ(nBondsValToMetal(NULL, 0), 0);  SEG FAULT
+
+    // Test with a valid atom
+    inp_ATOM *atoms = CreateInpAtom(2);
+    atoms[0].el_number = 6; // Carbon
+    // atoms[0].valence = 4;
+
+    atoms[0].valence = get_el_valence(atoms[0].el_number, atoms[0].charge, 0);
+
+    // bond_type
+    // valence
+    atoms[1].el_number = 26; // Iron
+    // atoms[1].valence = 8;
+    atoms[1].valence = get_el_valence(atoms[1].el_number, atoms[1].charge, 0);
+
+    EXPECT_EQ(nBondsValToMetal(atoms, 1), 0);
+    
+
+    atoms[0].neighbor[0] = 1;
+    atoms[1].neighbor[0] = 0;
+
+    atoms[0].bond_type[0] = 0;
+    atoms[1].bond_type[0] = 0;
+
+    EXPECT_EQ(nBondsValToMetal(atoms, 1), 0);
+
+    FreeInpAtom(&atoms);
+}
