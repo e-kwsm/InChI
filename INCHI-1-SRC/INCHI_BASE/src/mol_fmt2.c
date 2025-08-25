@@ -62,7 +62,10 @@
 /****************************************************************************
  Read n chars and find where they are terminated with space or trailing 0
 ****************************************************************************/
-int MolfileStrnread(char *dest, char *source, int len, char **first_space)
+int MolfileStrnread(char *dest, 
+                    char *source, 
+                    int len, 
+                    char **first_space)
 {
     /* required len >= 0; dest must have at least len+1 bytes */
 

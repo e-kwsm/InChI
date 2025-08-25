@@ -611,15 +611,22 @@ int MolfileStrnread(char *dest,
                     char *source,
                     int len,
                     char **first_space);
+
 /**
- * @brief Read a field from a MOL file.
+ * @brief Extract the 'data' in the mol file field at given text position 'line_ptr'.
  *
  * @param data Pointer to the destination buffer.
- * @param field_len Length of the field to read.
- * @param data_type Type of the data to read.
+ * @param field_len Length of the field to read. For MOL_FMT_STRING_DATA does not include 
+ *                  trailing zero, that is actual length of the string pointed by 'data'
+ *                  should be at least field_len+1 bytes.
+ *                  For numerical data 'field_len' is length of input data field
+ *                  For numerical integral data field_len <= 0 means read up to first
+ *                  non-numeric character as strtod() does ("free format")
+ * @param data_type Type of the data to read. E.g. MOL_FMT_STRING_DATA, MOL_FMT_CHAR_INT_DATA, etc.
  * @param line_ptr Pointer to a variable that will receive the address of the next line.
  * @return for MOL_FMT_STRING_DATA: number of bytes excluding trailing zero
- *         for all others:  1=success; 0 = empty; -1= error
+ *         for all others:  1=success; 0 = empty; -1 = error
+ * @details on exit *line_ptr points to the next byte after the last entered
  */
 int MolfileReadField(void *data,
                      int field_len,
