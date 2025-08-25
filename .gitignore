@@ -11,7 +11,7 @@ INCHI-1-SRC/INCHI_EXE/bin*
 __pycache__
 .pytest_cache
 .vscode/
-doxygen_doc/
+doxygen/
 .vs/
 build/
 Testing/
