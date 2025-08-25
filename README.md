@@ -56,6 +56,11 @@ You are welcome to contribute to this project. To do so, you may [submit a pull 
 
 ![git-flow](./INCHI-1-DOC/assets/git_flow.svg)
 
+## Source code documentation
+
+We've started documenting the source code with [Doxygen](https://www.doxygen.nl/index.html).
+The source documentation is [built on every push](.github/workflows/deploy_docs.yml) to the default branch of this repository and hosted at https://iupac-inchi.github.io/InChI/.
+
 ## Contents of this repository
 
 ### INCHI-1-BIN
