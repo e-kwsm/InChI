@@ -12,6 +12,7 @@ __pycache__
 .pytest_cache
 .vscode/
 doxygen/
+doxygen_doc/
 .vs/
 build/
 Testing/

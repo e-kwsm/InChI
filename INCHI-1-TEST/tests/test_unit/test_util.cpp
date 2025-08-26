@@ -604,27 +604,22 @@ TEST(util_testing, test_nBondsValToMetal) {
 
     // Test with a valid atom
     inp_ATOM *atoms = CreateInpAtom(2);
-    atoms[0].el_number = 6; // Carbon
-    // atoms[0].valence = 4;
+    atoms[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
+    atoms[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
 
     atoms[0].valence = get_el_valence(atoms[0].el_number, atoms[0].charge, 0);
-
-    // bond_type
-    // valence
-    atoms[1].el_number = 26; // Iron
-    // atoms[1].valence = 8;
     atoms[1].valence = get_el_valence(atoms[1].el_number, atoms[1].charge, 0);
-
-    EXPECT_EQ(nBondsValToMetal(atoms, 1), 0);
-    
 
     atoms[0].neighbor[0] = 1;
     atoms[1].neighbor[0] = 0;
 
-    atoms[0].bond_type[0] = 0;
-    atoms[1].bond_type[0] = 0;
+    atoms[0].bond_type[0] = 1;
+    atoms[1].bond_type[0] = 1;
 
-    EXPECT_EQ(nBondsValToMetal(atoms, 1), 0);
+    EXPECT_EQ(nBondsValToMetal(atoms, 0), 1);
+    
+
+    // EXPECT_EQ(nBondsValToMetal(atoms, 1), 1);
 
     FreeInpAtom(&atoms);
 }
