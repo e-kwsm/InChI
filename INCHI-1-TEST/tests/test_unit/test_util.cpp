@@ -384,7 +384,6 @@ TEST(util_testing, test_dotify_non_printable_chars)
     EXPECT_STREQ(test_string3, "NoChange");
 }
 
-
 TEST(util_testing, test_remove_trailing_spaces)
 {
     // remove_trailing_spaces(char *p)
@@ -442,7 +441,6 @@ TEST(util_testing, test_mystrncpy)
 
     EXPECT_EQ(mystrncpy(NULL, source, 10), 0); // target is NULL
 }
-
 
 TEST(util_testing, test_inchi_memicmp) {
 
@@ -595,31 +593,288 @@ TEST(util_testing, test_is_ilist_inside) {
     EXPECT_TRUE(is_ilist_inside(pathAtom4, 0, pathAtom5, 0));
 }
 
-
 TEST(util_testing, test_nBondsValToMetal) {
 
     // int nBondsValToMetal(inp_ATOM *at, int iat)
 
     // EXPECT_EQ(nBondsValToMetal(NULL, 0), 0);  SEG FAULT
+    
+    inp_ATOM *atoms1 = CreateInpAtom(2);
+    atoms1[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
+    atoms1[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
 
-    // Test with a valid atom
-    inp_ATOM *atoms = CreateInpAtom(2);
-    atoms[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
-    atoms[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
 
-    atoms[0].valence = get_el_valence(atoms[0].el_number, atoms[0].charge, 0);
-    atoms[1].valence = get_el_valence(atoms[1].el_number, atoms[1].charge, 0);
+    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
 
-    atoms[0].neighbor[0] = 1;
-    atoms[1].neighbor[0] = 0;
+    EXPECT_EQ(atoms1[0].valence, 4);
+    EXPECT_EQ(atoms1[1].valence, 2);
 
-    atoms[0].bond_type[0] = 1;
-    atoms[1].bond_type[0] = 1;
+    atoms1[0].neighbor[0] = 1;
+    atoms1[1].neighbor[0] = 0;
 
-    EXPECT_EQ(nBondsValToMetal(atoms, 0), 1);
+    atoms1[0].bond_type[0] = 1;
+    atoms1[1].bond_type[0] = 1;
+
+    EXPECT_EQ(nBondsValToMetal(atoms1, 0), 1);    
+    EXPECT_EQ(nBondsValToMetal(atoms1, 1), 0);
+
+    inp_ATOM *atoms2 = CreateInpAtom(3);
+    atoms2[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
+    atoms2[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
+    atoms2[2].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
+
+    atoms2[0].valence = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
+    atoms2[1].valence = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
+    atoms2[2].valence = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
+
+    EXPECT_EQ(atoms2[0].valence, 4);
+    EXPECT_EQ(atoms2[1].valence, 2);
+    EXPECT_EQ(atoms2[2].valence, 2);
+
+    atoms2[0].neighbor[0] = 1;
+    atoms2[0].neighbor[1] = 2;
+    atoms2[1].neighbor[0] = 0;
+    atoms2[2].neighbor[0] = 0;
+
+    atoms2[0].bond_type[0] = 1;
+    atoms2[0].bond_type[1] = 1; // dont forget to set bond types for each atom
+    atoms2[1].bond_type[0] = 1;
+    atoms2[2].bond_type[0] = 1;    
+
+    EXPECT_EQ(nBondsValToMetal(atoms2, 0), 2);    
+    EXPECT_EQ(nBondsValToMetal(atoms2, 1), 0);
+    EXPECT_EQ(nBondsValToMetal(atoms2, 2), 0);
+
+    FreeInpAtom(&atoms1);
+    FreeInpAtom(&atoms2);
+}
+
+TEST(util_testing, test_num_of_H) {
+
+    // int num_of_H(inp_ATOM *at, int iat)
+
+    
+    inp_ATOM *atoms1 = CreateInpAtom(5);
+    atoms1[0].el_number = get_periodic_table_number("C");
+    atoms1[1].el_number = get_periodic_table_number("H");
+    atoms1[2].el_number = get_periodic_table_number("H");
+    atoms1[3].el_number = get_periodic_table_number("H");
+    atoms1[4].el_number = get_periodic_table_number("H");
+
+    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
+    atoms1[2].valence = static_cast<S_CHAR>(get_el_valence(atoms1[2].el_number, atoms1[2].charge, 0));
+    atoms1[3].valence = static_cast<S_CHAR>(get_el_valence(atoms1[3].el_number, atoms1[3].charge, 0));
+    atoms1[4].valence = static_cast<S_CHAR>(get_el_valence(atoms1[4].el_number, atoms1[4].charge, 0));
+
+    atoms1[0].neighbor[0] = 1;
+    atoms1[0].neighbor[1] = 2;
+    atoms1[0].neighbor[2] = 3;
+    atoms1[0].neighbor[3] = 4;
+
+    atoms1[1].neighbor[0] = 0;
+    atoms1[2].neighbor[0] = 0;
+    atoms1[3].neighbor[0] = 0;
+    atoms1[4].neighbor[0] = 0;
+
+    EXPECT_EQ(num_of_H(atoms1, 0), 4);
+
+    FreeInpAtom(&atoms1);
+
+    inp_ATOM *atoms2 = CreateInpAtom(8);
+
+    atoms2[0].el_number = get_periodic_table_number("C");    
+    atoms2[1].el_number = get_periodic_table_number("H");
+    atoms2[2].el_number = get_periodic_table_number("H");
+    atoms2[3].el_number = get_periodic_table_number("H");
+    
+    atoms2[4].el_number = get_periodic_table_number("C");
+    atoms2[5].el_number = get_periodic_table_number("H");
+    atoms2[6].el_number = get_periodic_table_number("H");
+    atoms2[7].el_number = get_periodic_table_number("H");
+
+    atoms2[0].valence = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
+    atoms2[1].valence = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
+    atoms2[2].valence = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
+    atoms2[3].valence = static_cast<S_CHAR>(get_el_valence(atoms2[3].el_number, atoms2[3].charge, 0));
+    atoms2[4].valence = static_cast<S_CHAR>(get_el_valence(atoms2[4].el_number, atoms2[4].charge, 0));
+    atoms2[5].valence = static_cast<S_CHAR>(get_el_valence(atoms2[5].el_number, atoms2[5].charge, 0));
+    atoms2[6].valence = static_cast<S_CHAR>(get_el_valence(atoms2[6].el_number, atoms2[6].charge, 0));
+    atoms2[7].valence = static_cast<S_CHAR>(get_el_valence(atoms2[7].el_number, atoms2[7].charge, 0));
+
+    atoms2[0].neighbor[0] = 1;
+    atoms2[0].neighbor[1] = 2;
+    atoms2[0].neighbor[2] = 3;
+    atoms2[0].neighbor[3] = 4;
+
+    atoms2[1].neighbor[0] = 0;
+    atoms2[2].neighbor[0] = 0;
+    atoms2[3].neighbor[0] = 0;
+    
+    atoms2[4].neighbor[0] = 0;
+    atoms2[4].neighbor[1] = 5;
+    atoms2[4].neighbor[2] = 6;
+    atoms2[4].neighbor[3] = 7;
+
+    atoms2[5].neighbor[0] = 4;
+    atoms2[6].neighbor[0] = 4;
+    atoms2[7].neighbor[0] = 4;    
+
+    EXPECT_EQ(num_of_H(atoms2, 0), 3);
+
+    EXPECT_EQ(num_of_H(atoms2, 4), 3);
+
+    
+    FreeInpAtom(&atoms2);
+}
+
+TEST(util_testing, test_ion_el_group) {
+
+    // U_CHAR ion_el_group(int el)
+    EXPECT_EQ(ion_el_group(get_periodic_table_number("C")), EL_NUMBER_C);
+    EXPECT_EQ(ion_el_group(get_periodic_table_number("O")), EL_NUMBER_O);
+
+    EXPECT_EQ(ion_el_group(get_periodic_table_number("Mn")), 0);
+}
+
+TEST(util_testing, test_has_other_ion_neigh) {
+
+    // int has_other_ion_neigh(inp_ATOM *at, int iat, int iat_ion_neigh)
+    inp_ATOM *atoms1 = CreateInpAtom(2);
+
+    atoms1[0].el_number = get_periodic_table_number("C");    
+    atoms1[1].el_number = get_periodic_table_number("O");
+
+    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
+
+    atoms1[0].neighbor[0] = 1;
+    atoms1[1].neighbor[0] = 0;    
+
+    EXPECT_EQ(has_other_ion_neigh(atoms1, 0, 1), 1);
+    EXPECT_EQ(has_other_ion_neigh(atoms1, 1, 0), 0);  // ?? 
+
+    FreeInpAtom(&atoms1);
+
+}
+
+TEST(util_testing, test_extract_charges_and_radicals) {    
+
+    // int extract_charges_and_radicals(char *elname, int *pnRadical, int *pnCharge)
+
+    int nRadical = 0;
+    int nCharge = 0;
+
+    char el_name[10] = "";
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 0);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 0);
+
+    strcpy(el_name, "C");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 0);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 0);
+
+    strcpy(el_name, ":CH2");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 0);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 0);
+
+    strcpy(el_name, "Fe+2");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 2);
+
+    strcpy(el_name, "Cl+2");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 2);    
+    
+    strcpy(el_name, "Cl2+");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 1);   
+
+    strcpy(el_name, "Cl++");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 2);
+
+    strcpy(el_name, "Cl+");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 0);
+    EXPECT_EQ(nCharge, 1);
+
+    strcpy(el_name, "Cl+.");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 2);
+    EXPECT_EQ(nCharge, 1);
+
+    strcpy(el_name, "Cl:");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 1);
+    EXPECT_EQ(nCharge, 0);    
+
+    strcpy(el_name, "Cl::");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 1);
+    EXPECT_EQ(nCharge, 0);      
+
+    strcpy(el_name, "Cl^");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 2);
+    EXPECT_EQ(nCharge, 0);  
+
+    strcpy(el_name, "Cl.");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 2);
+    EXPECT_EQ(nCharge, 0);    
+
+    strcpy(el_name, "Cl^^");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 3);
+    EXPECT_EQ(nCharge, 0);   
+
+    strcpy(el_name, "C^^");
+    EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
+    EXPECT_EQ(nRadical, 3);
+    EXPECT_EQ(nCharge, 0); 
+        
+}
+
+
+TEST(util_testing, test_extract_inchi_substring) {
+
+    // void extract_inchi_substring(char **buf, const char *str, size_t slen)
+
+    //        For example:
+    //        "InChI=1/Ar%"
+    //        "InChI=1/Ar\n"
+    //        "InChI=1/Ar\r\t"
+    //    all will be trimmed to
+    //        "InChI=1/Ar"
+
+    char *buf1 = NULL;
+    const char *str_inchi1 = "InChI=1/Ar%";
+    size_t slen1 = strlen(str_inchi1);
+
+    extract_inchi_substring(&buf1, str_inchi1, slen1);
+
+    EXPECT_NE(buf1, nullptr);
+    EXPECT_STREQ(buf1, "InChI=1/Ar");    
+    free(buf1);
+
+    char *buf2 = NULL;
+    const char *str_inchi2 = "InChI=1/Ar\r\t";
+    size_t slen2 = strlen(str_inchi2);
+
+    extract_inchi_substring(&buf2, str_inchi2, slen2);
+
+    EXPECT_NE(buf2, nullptr);
+    EXPECT_STREQ(buf2, "InChI=1/Ar");    
+    free(buf2);
+
     
 
-    // EXPECT_EQ(nBondsValToMetal(atoms, 1), 1);
-
-    FreeInpAtom(&atoms);
 }

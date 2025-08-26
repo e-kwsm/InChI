@@ -1113,6 +1113,7 @@ int num_of_H(inp_ATOM *at, int iat)
     int i, n, num_explicit_H = 0;
     inp_ATOM *a = at + iat;
 
+    // TODO: remove this and add assignment instead?
     if (!el_number_H)
     {
         el_number_H = EL_NUMBER_H;
