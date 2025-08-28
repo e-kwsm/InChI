@@ -1,3 +1,4 @@
+import os
 import logging
 import multiprocessing
 import sys
@@ -10,8 +11,7 @@ from inchi_tests.utils import get_current_time, get_progress, get_config_args
 from inchi_tests.consumers import regression_consumer, invariance_consumer
 
 
-def main(test_config, data_config) -> None:
-    test = test_config.name
+def main(test, inchi_lib_path, data_config) -> None:
     dataset = data_config.name
 
     data_path = data_config.path
@@ -22,9 +22,7 @@ def main(test_config, data_config) -> None:
     log_path = data_path.joinpath(
         f"{datetime.now().strftime('%Y%m%dT%H%M%S')}_{test}_{dataset}.log"
     )
-    n_processes = test_config.n_processes
-    inchi_api_parameters = test_config.inchi_api_parameters
-    inchi_lib_path = test_config.inchi_library_path
+    n_processes = os.cpu_count() or 8
 
     logging.basicConfig(filename=log_path, encoding="utf-8", level=logging.INFO)
     logging.info(f"{get_current_time()}: Using '{inchi_lib_path}'.")
@@ -48,7 +46,7 @@ def main(test_config, data_config) -> None:
                             consumer_function=partial(
                                 regression_consumer,
                                 inchi_lib_path=inchi_lib_path,
-                                inchi_api_parameters=inchi_api_parameters,
+                                inchi_api_parameters="",
                             ),
                             get_molfile_id=get_molfile_id,
                             number_of_consumer_processes=n_processes,
@@ -73,7 +71,7 @@ def main(test_config, data_config) -> None:
                             consumer_function=partial(
                                 regression_consumer,
                                 inchi_lib_path=inchi_lib_path,
-                                inchi_api_parameters=inchi_api_parameters,
+                                inchi_api_parameters="",
                             ),
                             get_molfile_id=get_molfile_id,
                             number_of_consumer_processes=n_processes,
@@ -88,8 +86,8 @@ def main(test_config, data_config) -> None:
                             consumer_function=partial(
                                 invariance_consumer,
                                 inchi_lib_path=inchi_lib_path,
-                                inchi_api_parameters=inchi_api_parameters,
-                                n_invariance_runs=test_config.n_invariance_runs,
+                                inchi_api_parameters="",
+                                n_invariance_runs=10,
                             ),
                             get_molfile_id=get_molfile_id,
                             number_of_consumer_processes=n_processes,
@@ -117,13 +115,9 @@ if __name__ == "__main__":
     # See https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods.
     multiprocessing.set_start_method("spawn")
 
-    test_config_path, dataset_config_path = get_config_args()
-
+    test, inchi_lib_path, dataset_config_path = get_config_args()
     # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
-    sys.path.append(str(Path(test_config_path).parent))
-    test_config = importlib.import_module(str(Path(test_config_path).stem))
-
     sys.path.append(str(Path(dataset_config_path).parent))
     data_config = importlib.import_module(str(Path(dataset_config_path).stem))
 
-    main(test_config.config, data_config.config)
+    main(test, inchi_lib_path, data_config.config)

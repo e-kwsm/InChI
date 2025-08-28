@@ -5,10 +5,10 @@ inputs:
     description: 'Name of the uploaded artifact'
     required: false
     default: 'regression-test-results'
-  test-config:
-    description: 'Path to the test configuration file'
+  library-path:
+    description: 'Path to the InChI library under test'
     required: false
-    default: 'INCHI-1-TEST/tests/test_library/config/config_regression_linux.py'
+    default: 'CMake_build/full_build/INCHI-1-SRC/INCHI_API/libinchi/src/lib/libinchi.so'
   shell:
     description: 'Shell for running the tests'
     required: false
@@ -18,12 +18,12 @@ runs:
   using: "composite"
   steps:
     - name: Run regression tests
-      run: python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py  --test-config=${{ inputs.test-config}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=regression --lib-path=${{ inputs.library-path}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
       shell: ${{ inputs.shell }}
 
     - name: Write regression summary
       if: '!cancelled()'
-      run: python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py  --test-config=${{ inputs.test-config}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
+      run: python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py --test=regression --lib-path=${{ inputs.library-path}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
       shell: ${{ inputs.shell }}
 
     - name: Upload regression test results

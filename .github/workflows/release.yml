@@ -75,7 +75,7 @@ jobs:
         uses: ./.github/actions/regression_tests
         with:
           artifact-name: regression-test-results-${{ matrix.slug }}-${{ github.sha }}
-          test-config: INCHI-1-TEST/tests/test_library/config/config_regression_${{ matrix.slug }}.py
+          library-path: ${{ matrix.lib_path }}
           shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
 
       - name: Collect artifacts

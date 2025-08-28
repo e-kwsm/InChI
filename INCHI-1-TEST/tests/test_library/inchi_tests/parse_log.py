@@ -170,8 +170,7 @@ def _write_html_log(
     return None
 
 
-def main(test_config, data_config) -> None:
-    test = test_config.name
+def main(test, data_config) -> None:
     dataset = data_config.name
 
     data_path = data_config.path
@@ -210,13 +209,9 @@ def main(test_config, data_config) -> None:
 if __name__ == "__main__":
     # Note that this file must be run as a script, i.e., `python parse_log.py`.
 
-    test_config_path, dataset_config_path = get_config_args()
-
+    test, _, dataset_config_path = get_config_args()
     # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
-    sys.path.append(str(Path(test_config_path).parent))
-    test_config = importlib.import_module(str(Path(test_config_path).stem))
-
     sys.path.append(str(Path(dataset_config_path).parent))
     data_config = importlib.import_module(str(Path(dataset_config_path).stem))
 
-    main(test_config.config, data_config.config)
+    main(test, data_config.config)

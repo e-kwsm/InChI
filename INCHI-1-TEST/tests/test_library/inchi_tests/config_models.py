@@ -1,20 +1,5 @@
-import os
-from typing import Callable, Literal
+from typing import Callable
 from pydantic import BaseModel, FilePath, DirectoryPath
-
-
-class TestConfig(BaseModel):
-    # All paths are relative to the root of the repository.
-
-    name: Literal["regression", "regression-reference", "invariance"]
-    # Path to the InChI shared library.
-    inchi_library_path: FilePath
-    # Parameters to pass to the InChI API.
-    inchi_api_parameters: str = ""
-    # Permute each structure N times.
-    n_invariance_runs: int = 10
-    # Distribute the test over N separate processes.
-    n_processes: int = os.cpu_count() or 8
 
 
 class DataConfig(BaseModel):
