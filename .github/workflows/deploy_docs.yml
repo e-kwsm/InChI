@@ -3,6 +3,10 @@ name: Deploy Documentation to GitHub Pages
 on:
   push: 
     branches: [ dev ]
+    paths:
+      - 'INCHI-1-SRC/INCHI_BASE/src/**'
+      - 'INCHI-1-SRC/INCHI_EXE/inchi-1/src/**'
+      - 'INCHI-1-SRC/INCHI_API/libinchi/src/**'
   workflow_dispatch:
 
 permissions:
