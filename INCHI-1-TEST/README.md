@@ -59,7 +59,7 @@ Build the tests with
 and subsequently run them with
 
 ```shell
-cd CMake_build/full_build/INCHI-1-TEST/test/test_unit && ctest --output-on-failure
+cd CMake_build/full_build/INCHI-1-TEST/tests/test_unit && ctest --output-on-failure
 ```
 
 ## Meta tests
@@ -122,7 +122,7 @@ During an invariance test, the atom indices of a structure are permuted repeated
 <img src="tests/test_library/invariance.svg" alt="schematic" width="400"/>
 
 ```Shell
-python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=invariance --lib_path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
+python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=invariance --lib-path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
 ```
 
 uses `<path/to/inchi/library>` to compute the InChI output for multiple permutations of each molfile in each SDF under `<dataset>`.
@@ -143,7 +143,7 @@ The 2nd run results in a regression, since the output no longer matches the refe
 #### Compute references
 
 ```Shell
-python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=regression_reference --lib_path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
+python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=regression_reference --lib-path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
 ```
 
 uses `<path/to/inchi/library>` to generate an `<SDF>.regression_reference.sqlite` file for each SDF under `INCHI-1-TEST/tests/test_library/data/<dataset>`.
@@ -152,7 +152,7 @@ The `sqlite` file contains a table with the results for each molfile.
 #### Run tests against the references
 
 ```Shell
-python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=regression --lib_path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
+python INCHI-1-TEST/tests/test_library/inchi_tests/run_tests.py --test=regression --lib-path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
 ```
 
 uses `<path/to/inchi/library>` to compute the results (e.g., InChI strings and keys) for each molfile in each SDF under `INCHI-1-TEST/tests/test_library/data/<dataset>`.
@@ -168,7 +168,7 @@ The tests should now fail and indicate that the difference between the reference
 In addition to inspecting the raw logs, you can review the results by running
 
 ```Shell
-python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py --test=<test> --lib_path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
+python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py --test=<test> --lib-path=<path/to/inchi/library> --data-config=INCHI-1-TEST/tests/test_library/config/config_<dataset>.py
 ```
 
 where `<test>` can be `regression` or `invariance`.
