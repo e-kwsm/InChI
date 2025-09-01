@@ -106,7 +106,7 @@ static int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK *hdr, INCHI_IOSTREAM *inp
 static int MolfileReadCountsLine(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file, char *pStrErr);
 
 /**
- * @brief Reads atoms block from input MOL file (V2000), includes information about coordinates, atomic symbol, mass, charge, ...
+ * @brief Reads an atom block from input MOL file (V2000).
  * @param ctab Connection table data structure
  * @param inp_file Input file
  * @param err Error code
@@ -117,7 +117,7 @@ static int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
 
 /**
- * @brief Reads bonds block from input MOL file (V2000), includes information about the 2 connected atoms, the bond type, and any bond stereochemistry, ...
+ * @brief Reads a bond block from input MOL file (V2000)
  * 
  * @param ctab Connection table data structure
  * @param inp_file Input file
@@ -127,6 +127,16 @@ static int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
  */
 static int MolfileReadBondsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
+
+/**
+ * @brief Reads a substance text block
+ * 
+ * @param ctab Connection table data structure
+ * @param inp_file Input file
+ * @param err Error code
+ * @param pStrErr Error string
+ * @return int Error code
+ */
 static int MolfileReadSTextBlock(const MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
                                  int err, char *pStrErr);
 static int MolfileReadPropBlock(MOL_FMT_CTAB *ctab, MOL_FMT_HEADER_BLOCK *pHdr,
@@ -708,13 +718,14 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
                           int err,
                           char *pStrErr)
 {
+    int i;
     char *p;
     char line[MOL_FMT_INPLINELEN];
     const int line_len = sizeof(line);
     S_SHORT chg;
     static const S_SHORT charge_val[] = {0, 3, 2, 1, 'R', -1, -2, -3};
 
-    for (int i = 0; i < ctab->n_atoms; i++)
+    for (i = 0; i < ctab->n_atoms; i++)
     {
         p = inchi_fgetsLf(line, line_len, inp_file);
 

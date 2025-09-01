@@ -76,38 +76,38 @@
 #define MOL_FMT_ABSENT 0
 
 /* configuration */
-#define MOL_FMT_QUERY MOL_FMT_ABSENT
-#define MOL_FMT_CPSS MOL_FMT_ABSENT
-#define MOL_FMT_REACT MOL_FMT_ABSENT
+#define MOL_FMT_QUERY          MOL_FMT_ABSENT
+#define MOL_FMT_CPSS           MOL_FMT_ABSENT
+#define MOL_FMT_REACT          MOL_FMT_ABSENT
 
-#define MOL_FMT_STRING_DATA 'S'
-#define MOL_FMT_CHAR_INT_DATA 'C'
+#define MOL_FMT_STRING_DATA    'S'
+#define MOL_FMT_CHAR_INT_DATA  'C'
 #define MOL_FMT_SHORT_INT_DATA 'N'
-#define MOL_FMT_LONG_INT_DATA 'L'
-#define MOL_FMT_DOUBLE_DATA 'D'
-#define MOL_FMT_FLOAT_DATA 'F'
-#define MOL_FMT_JUMP_TO_RIGHT 'J'
-#define MOL_FMT_INT_DATA 'I'
+#define MOL_FMT_LONG_INT_DATA  'L'
+#define MOL_FMT_DOUBLE_DATA    'D'
+#define MOL_FMT_FLOAT_DATA     'F'
+#define MOL_FMT_JUMP_TO_RIGHT  'J'
+#define MOL_FMT_INT_DATA       'I'
 
-#define MOL_FMT_MAX_VALUE_LEN 32 /* max length of string containing a numerical value */
+#define MOL_FMT_MAX_VALUE_LEN  32 /* max length of string containing a numerical value */
 
-#define MOL_FMT_M_STY_NON 0 /**< None */
-#define MOL_FMT_M_STY_SRU 1 /**< Structure repeating unit */
-#define MOL_FMT_M_STY_MON 2 /**< Monomer */
-#define MOL_FMT_M_STY_COP 3 /**< Copolymer */
-#define MOL_FMT_M_STY_MOD 4 /**< Modification */
-#define MOL_FMT_M_STY_CRO 5 /**< Crosslink */
-#define MOL_FMT_M_STY_MER 6 /**< Mer type */
+#define MOL_FMT_M_STY_NON      0 /**< None */
+#define MOL_FMT_M_STY_SRU      1 /**< Structure repeating unit */
+#define MOL_FMT_M_STY_MON      2 /**< Monomer */
+#define MOL_FMT_M_STY_COP      3 /**< Copolymer */
+#define MOL_FMT_M_STY_MOD      4 /**< Modification */
+#define MOL_FMT_M_STY_CRO      5 /**< Crosslink */
+#define MOL_FMT_M_STY_MER      6 /**< Mer type */
 
-#define MOL_FMT_M_SST_NON 0 /**< None */
-#define MOL_FMT_M_SST_ALT 1 /**< Alternating */
-#define MOL_FMT_M_SST_RAN 2 /**< Random */
-#define MOL_FMT_M_SST_BLK 3 /**< Block */
+#define MOL_FMT_M_SST_NON      0 /**< None */
+#define MOL_FMT_M_SST_ALT      1 /**< Alternating */
+#define MOL_FMT_M_SST_RAN      2 /**< Random */
+#define MOL_FMT_M_SST_BLK      3 /**< Block */
 
-#define MOL_FMT_M_CONN_NON 0
-#define MOL_FMT_M_CONN_HT 1
-#define MOL_FMT_M_CONN_HH 2
-#define MOL_FMT_M_CONN_EU 3
+#define MOL_FMT_M_CONN_NON     0
+#define MOL_FMT_M_CONN_HT      1
+#define MOL_FMT_M_CONN_HH      2
+#define MOL_FMT_M_CONN_EU      3
 
 /* V3000 specific constants */
 #define MOL_FMT_V3000_STENON -1
@@ -151,9 +151,10 @@ typedef unsigned char U_CHAR;
 
 /**
  * @brief NUM_LISTS - Dynamically growing array of numeric lists
- *
- * TODO: Provide a brief description of the purpose of this structure.
- *
+ * @param lists Pointer to the array of integer lists.
+ * @param allocated Amount of memory allocated.
+ * @param used Amount of memory used.
+ * @param increment Amount to increment when expanding.
  */
 typedef struct A_NUM_LISTS
 {
@@ -167,14 +168,16 @@ typedef struct A_NUM_LISTS
  * @brief Allocates memory for a specified number of numeric lists.
  * @param num_lists Pointer to the NUM_LISTS structure.
  * @param nlists Number of lists to allocate.
- * @return 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int NumLists_Alloc(NUM_LISTS *num_lists, int nlists);
 
 /**
  * @brief Reallocates memory for the numeric lists.
  * @param num_lists Pointer to the NUM_LISTS structure.
- * @return 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int NumLists_ReAlloc(NUM_LISTS *num_lists);
 
@@ -182,7 +185,8 @@ int NumLists_ReAlloc(NUM_LISTS *num_lists);
  * @brief Push new item to the end of array.
  * @param num_lists Pointer to the NUM_LISTS structure.
  * @param list Pointer to the list of integers to append.
- * @return 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int NumLists_Append(NUM_LISTS *num_lists, int *list);
 
@@ -212,7 +216,8 @@ typedef struct tagINT_ARRAY
  *
  * @param items Pointer to the INT_ARRAY structure to initialize.
  * @param nitems Initial number of items to allocate.
- * @return int 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int IntArray_Alloc(INT_ARRAY *items, int nitems);
 
@@ -220,7 +225,8 @@ int IntArray_Alloc(INT_ARRAY *items, int nitems);
  * @brief Reallocates memory for the INT_ARRAY structure.
  *
  * @param items Pointer to the INT_ARRAY structure to reallocate.
- * @return int 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int IntArray_ReAlloc(INT_ARRAY *items);
 
@@ -229,7 +235,8 @@ int IntArray_ReAlloc(INT_ARRAY *items);
  *
  * @param items Pointer to the INT_ARRAY structure to modify.
  * @param new_item The new item to append.
- * @return int 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int IntArray_Append(INT_ARRAY *items, int new_item);
 
@@ -238,7 +245,8 @@ int IntArray_Append(INT_ARRAY *items, int new_item);
  *
  * @param items Pointer to the INT_ARRAY structure to modify.
  * @param new_item The new item to append.
- * @return int 0 on success, -1 on failure.
+ * @return 0 on success,
+ *         -1 on failure.
  */
 int IntArray_AppendIfAbsent(INT_ARRAY *items, int new_item);
 
@@ -264,7 +272,7 @@ void IntArray_Free(INT_ARRAY *items);
 void IntArray_DebugPrint(INT_ARRAY *items);
 
 /**
- * @brief 
+ * @brief Data structure for Sgroup data (substance group data).
  * 
  * @param id it is what is called 'Sgroup number' in CTFile 
  * @param type Sgroup type: SUP = superatom, MUL = multiple group, SRU = SRU type, MON = monomer, MER = Mer type, COP = copolymer, CRO = crosslink, MOD = modification, GRA = graft, COM = component, MIX = mixture, FOR = formulation, DAT = data Sgroup, ANY = any polymer, GEN = generic 
@@ -293,6 +301,7 @@ typedef struct A_MOL_FMT_SGROUP
 
 /**
  * @brief  Allocate new array Sgroup.
+ * 
  * @param sgroup Pointer to the Sgroup structure to allocate.
  * @param id Sgroup ID.
  * @param type Sgroup type.
@@ -304,12 +313,14 @@ int MolFmtSgroup_Create(MOL_FMT_SGROUP **sgroup,
 
 /**
  * @brief Frees the memory allocated for the Sgroup.
+ * 
  * @param sgroup Pointer to the Sgroup structure to free.
  */
 void MolFmtSgroup_Free(MOL_FMT_SGROUP *sgroup);
 
 /**
- * @brief MOL_FMT_SGROUPS is a dynamically growing array of pointers to MOL_FMT_SGROUP objects
+ * @brief MOL_FMT_SGROUPS is a dynamically growing array of pointers to MOL_FMT_SGROUP objects.
+ * 
  * @param group Pointer to the growable array of pointers to MOL_FMT_SGROUPs
  * @param allocated Number of allocated objects
  * @param used Number of used objects
@@ -325,6 +336,7 @@ typedef struct A_MOL_FMT_SGROUPS
 
 /**
  * @brief Allocates memory for a specified number of Sgroup objects.
+ * 
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @param nitems Number of Sgroup objects to allocate.
  * @return 0 on success, -1 on failure.
@@ -333,6 +345,7 @@ int MolFmtSgroups_Alloc(MOL_FMT_SGROUPS *items, int nitems);
 
 /**
  * @brief Expand array of Sgroups.
+ * 
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @return 0 on success, -1 on failure.
  */
@@ -340,6 +353,7 @@ int MolFmtSgroups_ReAlloc(MOL_FMT_SGROUPS *items);
 
 /**
  * @brief Appends a new Sgroup to the array.
+ * 
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @param id Sgroup ID.
  * @param type Sgroup type.
@@ -349,12 +363,14 @@ int MolFmtSgroups_Append(MOL_FMT_SGROUPS *items, int id, int type);
 
 /**
  * @brief Frees the memory allocated for the MOL_FMT_SGROUPS list.
+ * 
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  */
 void MolFmtSgroups_Free(MOL_FMT_SGROUPS *items);
 
 /**
  * @brief Gets the index of a Sgroup by its ID.
+ * 
  * @param id Sgroup ID.
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @return Index of the Sgroup on success, -1 on failure.
@@ -362,7 +378,8 @@ void MolFmtSgroups_Free(MOL_FMT_SGROUPS *items);
 int MolFmtSgroups_GetIndexBySgroupId(int id, MOL_FMT_SGROUPS *items);
 
 /**
- * @brief Data structure for MOL file header block (3 lines)
+ * @brief Data structure for MOL file header block (3 lines).
+ * 
  * @param molname Name of molecule (up to 80 characters) 
  * @param line2 Second line of the header (the whole line2, up to 80 chars)
  * @param user_initls User initials (2 bytes; char)
@@ -399,7 +416,8 @@ typedef struct A_MOL_FMT_HEADER_BLOCK
 } MOL_FMT_HEADER_BLOCK;
 
 /**
- * @brief Atom representation in the MOL format.
+ * @brief Data structure for atom representation in the MOL format.
+ * 
  * @param fx x coordinate: F10.5;       Generic 
  * @param fy y coordinate: F10.5;       Generic 
  * @param fz z coordinate: F10.5;       Generic 
@@ -475,8 +493,14 @@ typedef struct A_MOL_FMT_ATOM
 } MOL_FMT_ATOM;
 
 /**
- * @brief Bond representation in the MOL format.
+ * @brief Data structure for bond representation in the MOL format.
  *
+ * @param atnum1 First atom number.
+ * @param atnum2 Second atom number.
+ * @param bond_type Type of bond (single, double, triple, etc.).
+ * @param bond_stereo Stereo information for the bond.
+ * @param bond_topology Topology information for the bond.
+ * @param react_center_status Reaction center status information.
  */
 typedef struct A_MOL_FMT_BOND
 {
@@ -521,6 +545,27 @@ typedef struct A_MOL_FMT_BOND
 #endif
 } MOL_FMT_BOND;
 
+
+/**
+ * @brief Data structure for V3000 representation in the MOL format.
+ * 
+ * @param n_non_star_atoms Number of non-star atoms.
+ * @param n_star_atoms Number of star atoms.
+ * @param atom_index_orig Original atom indices as supplied.
+ * @param atom_index_fin Final atom indices, with -1 for star atoms.
+ * @param n_sgroups Number of S-groups.
+ * @param n_3d_constraints Number of 3D constraints.
+ * @param n_collections Number of collections.
+ * @param n_non_haptic_bonds Number of non-haptic bonds.
+ * @param n_haptic_bonds Number of haptic bonds.
+ * @param haptic_bonds Pointer to the list of haptic bonds.
+ * @param n_steabs Number of absolute stereo groups.
+ * @param steabs Pointer to the list of absolute stereo groups (e.g. R and S).
+ * @param n_sterel Number of relative stereo groups.
+ * @param sterel Pointer to the list of relative stereo groups (OR - describes the orientation of groups relative to each other, such as in cis- and trans-isomers).
+ * @param n_sterac Number of racemic stereo groups.
+ * @param sterac Pointer to the list of racemic stereo groups (AND - equal 50:50 mixture of two enantiomers of a chiral molecule).
+ */
 typedef struct A_MOL_FMT_v3000
 {
     int n_non_star_atoms;
@@ -551,8 +596,25 @@ typedef struct A_MOL_FMT_v3000
 } MOL_FMT_v3000;
 
 /**
- * @brief Connection table data structure
- *
+ * @brief Connection table data structure.
+ * 
+ * @param n_atoms Number of atoms in the molecule.
+ * @param n_bonds Number of bonds in the molecule.
+ * @param n_atom_lists Number of atom lists.
+ * @param chiral_flag Chiral flag indicating the presence of chiral centers.
+ * @param n_stext_entries Number of stereo text entries.
+ * @param n_reaction_components_plus_1 Number of reaction components.
+ * @param n_reactants Number of reactants.
+ * @param n_products Number of products.
+ * @param n_intermediates Number of intermediates.
+ * @param n_property_lines Number of property lines.
+ * @param follow_inchi_1_treating_iso_mass Flag indicating whether to follow InChI-1 treating isotopic mass.
+ * @param version_string Version string indicating the format version.
+ * @param atoms Pointer to the array of atom block data structure.
+ * @param bonds Pointer to the array of bond block data structure.
+ * @param coords Pointer to the array of coordinate data structure.
+ * @param sgroups Growable array of pointers to Sgroup objects.
+ * @param v3000 Pointer to the V3000 specific data structure.
  */
 typedef struct A_MOL_FMT_CTAB
 {
@@ -581,6 +643,12 @@ typedef struct A_MOL_FMT_CTAB
     MOL_FMT_v3000 *v3000;
 } MOL_FMT_CTAB;
 
+/**
+ * @brief Data structure for a MOL file
+ * 
+ * @param hdr Header block data structure.
+ * @param ctab Connection table data structure.
+ */
 typedef struct A_MOL_FMT_DATA
 {
     MOL_FMT_HEADER_BLOCK hdr;
@@ -592,8 +660,8 @@ typedef struct A_MOL_FMT_DATA
 */
 
 /**
- * @brief
- *
+ * @brief Read MOL file data in to data structures.
+ * 
  * @param inp_file Pointer to the input file stream.
  * @param OnlyHeaderBlock Pointer to the header block to read.
  * @param OnlyCTab Pointer to the connection table to read.
@@ -640,7 +708,7 @@ int MolfileStrnread(char *dest,
                     char **first_space);
 
 /**
- * @brief Extract the 'data' in the mol file field at given text position 'line_ptr'.
+ * @brief Extract the 'data' in the MOL file field at given text position 'line_ptr'.
  *
  * @param data Pointer to the destination buffer.
  * @param field_len Length of the field to read. For MOL_FMT_STRING_DATA does not include 
@@ -660,7 +728,7 @@ int MolfileReadField(void *data,
                      int data_type,
                      char **line_ptr);
 /**
- * @brief Extract molfile number from the header name line like "Structure #22"
+ * @brief Extract the MOL file number from the header name line like "Structure #22"
  *
  * @param pHdr Pointer to the header block.
  * @return The structure number.
