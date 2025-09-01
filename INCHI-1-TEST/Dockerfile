@@ -40,15 +40,4 @@ ENV lib_legacy_dir='/inchi/CMake_build/libinchi_build/lib/v1_6_0'
 RUN mkdir -p $lib_legacy_dir
 RUN ./INCHI-1-TEST/build_with_makefile.sh v1.06 $lib_legacy_dir lib || exit 1;
 
-FROM python:3.12 AS inchi_test
-
-WORKDIR /inchi
-
-# Include only what's necessary for running the tests.
-COPY --from=inchi_compilation /inchi/CMake_build /inchi/CMake_build
-COPY --from=inchi_compilation /inchi/INCHI-1-TEST/src /inchi/INCHI-1-TEST/src
-COPY --from=inchi_compilation /inchi/INCHI-1-TEST/tests /inchi/INCHI-1-TEST/tests
-COPY --from=inchi_compilation /inchi/INCHI-1-TEST/pyproject.toml /inchi/INCHI-1-TEST/pyproject.toml
-COPY --from=inchi_compilation /inchi/INCHI-1-TEST/install_test_dependencies.sh /inchi/INCHI-1-TEST/install_test_dependencies.sh
-
 RUN cd INCHI-1-TEST && ./install_test_dependencies.sh
