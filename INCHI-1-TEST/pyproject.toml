@@ -14,5 +14,5 @@ include = ["sdf_pipeline", "inchi_tests"]
 namespaces = false
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/test_executable", "tests/test_meta"]
 addopts = "-v"
