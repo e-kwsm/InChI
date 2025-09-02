@@ -89,10 +89,6 @@ That is, your comments will automatically be rendered to HTML and served as onli
 
 ## Contents of this repository
 
-### INCHI-1-BIN
-
-The [INCHI-1-BIN](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-BIN) subfolder contains binaries of the command line `InChI` executable (`inchi-1`) and the `InChI API` library (`libinchi`).
-
 ### INCHI-1-DOC
 
 The [INCHI-1-DOC](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-DOC) subfolder contains documentation related to the InChI Software.
@@ -107,126 +103,18 @@ related projects/makefiles.
 
 The [INCHI-1-TEST](https://github.com/IUPAC-InChI/InChI/tree/main/INCHI-1-TEST) subfolder contains the test scripts and resources.
 
-## Using precompiled binaries/libraries
+## Using compiled binaries/libraries
 
-_64-bit_ and _32-bit_ precompiled binaries/libraries (i.e. executable, `.dll/.so/.dylib` and ELF files) are located in the following folders:
+You can download compiled artifacts from <https://github.com/IUPAC-InChI/InChI/releases/latest>.
+The archive `release_artifacts.zip` contains 64-bit artifacts for Windows, Linux, and macOS.
+The artifact archive of each of those three platforms includes the following:
 
-<table id="Win">
-  <tr>
-	<td colspan="3" align="center"><strong>Microsoft Windows</strong></td>
-  </tr>
-  <tr>
-	<td>
-	  <strong>Files</strong> (given in compressed .zip format)
-	</td>
-	<td>
-	  <strong>Location(s)</strong>
-	</td>
-	<td>
-	  <strong>Compiler</strong>
-	</td>
-  </tr>
-  <tc>
-	<td rowspan="2">
-	  <code>inchi-1.exe</code>
-	</td>
-	<td>
-	  <em>64-bit</em>: <code>INCHI-1-BIN/windows/64bit</code>
-	</td>
-	<td>
-	  <code>Microsoft Visual Studio C++ (MSVC)</code>
-	</td>
-  </tr>
-  <tr>
-	<td>
-	  <em>32-bit</em>: <code>INCHI-1-BIN/windows/32bit</code>
-	</td>
-	<td>
-	  <code>MinGW-w64/Clang</code><sup><strong>(1)</strong></sup>
-	</td>
-  </tr>
-  <tc>
-	<td rowspan="2">
-	  <code>libinchi.dll</code><br /> + corresponding <code>inchi_main.exe</code>
-	</td>
-	<td>
-	  <em>64-bit</em>: <code>INCHI-1-BIN/windows/64bit/dll</code>
-	</td>
-	<td>
-	  <code>Microsoft Visual Studio C++ (MSVC)</code>
-	</td>
-  </tr>
-  <tr>
-	<td>
-	  <em>32-bit</em>: <code>INCHI-1-BIN/windows/32bit/dll</code>
-	</td>
-	<td>
-	  <code>MinGW-w64/Clang</code><sup><strong>(1)</strong></sup>
-	</td>
-  </tr>
-</table>
-<p style="font-size:smaller;"><em>Table pcb01</em>. Location of precompiled binaries/libraries for Microsoft Windows platforms.</p>
-<table id="OtherOS">
-  <tr>
-	<td colspan="3" align="center"><strong>UNIX-based OSs (except Apple macOS)</strong></td>
-  </tr>
-  <tr>
-	<td>
-	  <strong>Files</strong> (given in compressed .zip format)
-	</td>
-	<td>
-	  <strong>Location(s)</strong>
-	</td>
-	<td>
-	  <strong>Compiler</strong>
-	</td>
-  </tr>
-  <tc>
-	<td rowspan="2">
-	  <code>inchi-1</code> (ELF file)
-	</td>
-	<td>
-	  <em>64-bit</em>: <code>INCHI-1-BIN/linux/64bit</code>
-	</td>
-	<td>
-	  <code>GCC</code>
-	</td>
-  </tr>
-  <tr>
-	<td>
-	  <em>32-bit</em>: <code>INCHI-1-BIN/linux/32bit</code>
-	</td>
-	<td>
-	  <code>Clang/LLVM</code><sup><strong>(2)</strong></sup>
-	</td>
-  </tr>
-  <tc>
-	<td rowspan="2">
-	  <code>libinchi.so/libinchi.dylib</code><br /> + corresponding <code>inchi_main</code> (ELF file)
-	</td>
-	<td>
-	  <em>64-bit</em>: <code>INCHI-1-BIN/linux/64bit/so</code>
-	</td>
-	<td>
-	  <code>GCC</code>
-	</td>
-  </tr>
-  <tr>
-	<td>
-	  <em>32-bit</em>: <code>INCHI-1-BIN/linux/32bit/so</code>
-	</td>
-	<td>
-	  <code>Clang/LLVM</code><sup><strong>(2)</strong></sup>
-	</td>
-  </tr>
-</table>
-<p style="font-size:smaller;"><em>Table pcb02</em>. Location of precompiled binaries/libraries for Linux/Apple macOS platforms.</p>
-<a id="libgcc_32"></a>
-<sup><strong>(1)</strong></sup> <ins>IMPORTANT NOTE</ins>: Since <em>32-bit</em> binaries for Microsoft Windows operating system have been compiled using <code>MinGW-w64</code>, it <a href="https://github.com/IUPAC-InChI/InChI/issues/71">has been reported</a> that in certain environments a dynamic link library <code>libgcc_s_dw2-1.dll</code> has to be included in the same folder with the executables. Therefore, <code>libgcc_s_dw2-1.dll</code> has been added to <code>INCHI-1-BIN/windows/32bit</code> and <code>INCHI-1-BIN/windows/32bit/dll</code> folders (we would like to thank <a href="https://github.com/nbehrnd">nbehrnd</a> for his assistance with this matter).
+- InChI executable `inchi-1`
+- InChI library `libinchi` with corresponding `inchi_main` program
 
-<sup><strong>(2)</strong></sup> In order to make <code>makefile32s</code> more consistent on all operating systems (see preceding note <sup><strong><a href="#libgcc_32">(1)</a></strong></sup>), and for easier <a href="#MAKEFILE">change of the default compiler</a>, the default compiler on <em>32-bit</em> UNIX-based OSs has been set to <code>Clang/LLVM</code>.
-
-Precompiled binaries for Apple macOS (i.e. `.app` executables and `.dylib` libraries) will be provided soon. Until then, please note that `InChI` can now be [compiled from source](#building-from-source) on Apple macOS using native/default `Clang` or `GCC` (if installed).
+We're compiling these artifacts with GitHub Actions.
+If you're interested in details about the platforms and compilers, have a look at the following [configuration](.github/workflows/release.yml),
+as well as the files in the `cmake_configurations.zip` archive, which is included for each platform.
 
 ## Building from source
 
@@ -460,7 +348,7 @@ The use of bounds checking functions in `InChI` can be enabled/disabled in `bcf_
 
 #### Intel oneAPI Threading Building Blocks (oneTBB)
 
-If you wish to use [Intel oneAPI Threading Building Blocks (oneTBB)](https://github.com/oneapi-src/oneTBB), please follow the instructions given in header files `mode.h` and `tbbmalloc_proxy.h`. Please note that the [pre-compiled binaries](#using-precompiled-binaries) _do not_ use `oneTBB`.
+If you wish to use [Intel oneAPI Threading Building Blocks (oneTBB)](https://github.com/oneapi-src/oneTBB), please follow the instructions given in header files `mode.h` and `tbbmalloc_proxy.h`. Please note that the [compiled binaries](#using-compiled-binaries) _do not_ use `oneTBB`.
 
 ## Experimental features under development
 
