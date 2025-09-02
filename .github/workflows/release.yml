@@ -78,6 +78,14 @@ jobs:
           library-path: ${{ matrix.lib_path }}
           shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
 
+      - name: Upload CMake configurations
+        uses: actions/upload-artifact@v4
+        with:
+          name: CMake-configurations-${{ matrix.slug }}-${{ github.sha }}
+          path: |
+            CMake_build/libinchi_build/CMakeCache.txt
+            CMake_build/cli_build/CMakeCache.txt
+      
       - name: Collect artifacts
         run: |
           mkdir -p ${{ env.RELEASE_DIR }}
@@ -126,6 +134,15 @@ jobs:
       - name: Package artifacts
         run: zip -r release_artifacts.zip release_artifacts
 
+      - name: Download CMake configurations
+        uses: actions/download-artifact@v4
+        with:
+          path: cmake_configurations
+          pattern: CMake-configurations-*
+
+      - name: Package CMake configurations
+        run: zip -r cmake_configurations.zip cmake_configurations
+
       - name: Create release
         shell: bash
         env:
@@ -136,4 +153,4 @@ jobs:
           --verify-tag \
           --title "${{ github.ref_name }}" \
           --notes "For details about this release have a look at the [CHANGELOG](INCHI-1-DOC/CHANGELOG.md)." \
-          release_artifacts.zip
+          release_artifacts.zip cmake_configurations.zip
