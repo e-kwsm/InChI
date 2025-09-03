@@ -239,14 +239,11 @@ MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
                                    int bNoWarnings)
 {
     int n_alloc_atoms;
-    MOL_FMT_CTAB ctab;
-    MOL_FMT_CTAB *pCtab = NULL;
+    MOL_FMT_CTAB  ctab, *pCtab = NULL;
     MOL_FMT_HEADER_BLOCK *pHdr = NULL;
     MOL_FMT_DATA *mfdata = NULL;
-    int retcode;
-    int prevcode;
-    int data_ended = 0;
-    int should_read_all = 0;
+    int retcode, prevcode;
+    int data_ended = 0, should_read_all = 0;
 
     if (!OnlyHeaderBlock)
     {
@@ -326,8 +323,7 @@ MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
     if (should_read_all)
     {
         n_alloc_atoms = inchi_max(mfdata->ctab.n_atoms, 1);
-        mfdata->ctab.atoms = (MOL_FMT_ATOM *)
-            inchi_calloc(n_alloc_atoms, sizeof(MOL_FMT_ATOM));
+        mfdata->ctab.atoms = (MOL_FMT_ATOM *)inchi_calloc(n_alloc_atoms, sizeof(MOL_FMT_ATOM));
         if (!mfdata->ctab.atoms)
         {
             retcode = 2;
@@ -371,8 +367,7 @@ MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
         if (!data_ended)
         {
             int n_alloc_bonds = inchi_max(mfdata->ctab.n_bonds, 1);
-            mfdata->ctab.bonds = (MOL_FMT_BOND *)
-                inchi_calloc(n_alloc_bonds, sizeof(MOL_FMT_BOND));
+            mfdata->ctab.bonds = (MOL_FMT_BOND *)inchi_calloc(n_alloc_bonds, sizeof(MOL_FMT_BOND));
             if (!mfdata->ctab.bonds)
             {
                 /* can't allocate bonds structure */
@@ -400,8 +395,7 @@ MOL_FMT_DATA *MolfileReadDataLines(INCHI_IOSTREAM *inp_file,
                 retcode = -retcode;
                 data_ended = 1;
             }
-            retcode = prevcode ? prevcode
-                               : retcode + 40;
+            retcode = prevcode ? prevcode : retcode + 40;
         }
 
         /* SGroup, 3D, link line(s), collections, END CTAB */
@@ -523,8 +517,8 @@ int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK *hdr,
     /* Header Block */
 
     char line[MOL_FMT_INPLINELEN]; /* + cr +lf +zero termination + reserve */
-    int err = 0, len;              /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    const int line_len = sizeof(line);
+    int  err = 0, len; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    const int  line_len = sizeof( line );
     char *p;
 
     /* Header line #1: name */
@@ -584,16 +578,16 @@ int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK *hdr,
                            &p); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
     /*------------ Relax strictness -----------------------*/
-    len = MolfileReadField(&hdr->month, 2, MOL_FMT_CHAR_INT_DATA, &p);                         /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->day, 2, MOL_FMT_CHAR_INT_DATA, &p);                           /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->year, 2, MOL_FMT_CHAR_INT_DATA, &p);                          /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->hour, 2, MOL_FMT_CHAR_INT_DATA, &p);                          /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->minute, 2, MOL_FMT_CHAR_INT_DATA, &p);                        /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(hdr->dim_code, sizeof(hdr->dim_code) - 1, MOL_FMT_STRING_DATA, &p); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->scaling_factor1, 2, MOL_FMT_SHORT_INT_DATA, &p);              /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->scaling_factor2, 10, MOL_FMT_DOUBLE_DATA, &p);                /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->energy, 12, MOL_FMT_DOUBLE_DATA, &p);                         /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    len = MolfileReadField(&hdr->internal_regno, 6, MOL_FMT_LONG_INT_DATA, &p);                /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->month, 2, MOL_FMT_CHAR_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->day, 2, MOL_FMT_CHAR_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->year, 2, MOL_FMT_CHAR_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->hour, 2, MOL_FMT_CHAR_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->minute, 2, MOL_FMT_CHAR_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( hdr->dim_code, sizeof( hdr->dim_code ) - 1, MOL_FMT_STRING_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->scaling_factor1, 2, MOL_FMT_SHORT_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->scaling_factor2, 10, MOL_FMT_DOUBLE_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->energy, 12, MOL_FMT_DOUBLE_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    len = MolfileReadField( &hdr->internal_regno, 6, MOL_FMT_LONG_INT_DATA, &p ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
     /* Save the whole line 2 */
     p = line;
@@ -637,9 +631,8 @@ int MolfileReadCountsLine(MOL_FMT_CTAB *ctab,
 {
     char *p;
     char line[MOL_FMT_INPLINELEN];
-    const int line_len = sizeof(line);
-    int err = 0;
-    int len; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    const int line_len = sizeof( line );
+    int   err = 0, len; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
     p = inchi_fgetsLf(line, line_len, inp_file);
 
@@ -665,15 +658,23 @@ int MolfileReadCountsLine(MOL_FMT_CTAB *ctab,
         || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
-        || 0 > MolfileReadField(NULL, /*obsolete*/ 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(&ctab->chiral_flag, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->n_stext_entries, 3, MOL_FMT_SHORT_INT_DATA, &p)
+         || 0 > MolfileReadField(NULL, /*obsolete*/      3, MOL_FMT_JUMP_TO_RIGHT, &p)
+         || 0 > MolfileReadField(&ctab->chiral_flag, 3, MOL_FMT_CHAR_INT_DATA, &p)
+         || 0 > MolfileReadField(&ctab->n_stext_entries, 3, MOL_FMT_SHORT_INT_DATA, &p)
 
-#if (MOL_FMT_CPSS == MOL_FMT_PRESENT)
-        || 0 > MolfileReadField(&ctab->n_reaction_components_plus_1, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->n_reactants, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->n_products, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->n_intermediates, 3, MOL_FMT_SHORT_INT_DATA, &p)
+#if ( MOL_FMT_CPSS == MOL_FMT_PRESENT )
+         || 0 > MolfileReadField(&ctab->n_reaction_components_plus_1, 3, MOL_FMT_SHORT_INT_DATA, &p)
+         || 0 > MolfileReadField(&ctab->n_reactants, 3, MOL_FMT_SHORT_INT_DATA, &p)
+         || 0 > MolfileReadField(&ctab->n_products, 3, MOL_FMT_SHORT_INT_DATA, &p)
+         || 0 > MolfileReadField(&ctab->n_intermediates, 3, MOL_FMT_SHORT_INT_DATA, &p)
 #else
-        || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+         || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+         || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+         || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+         || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
-        || 0 > MolfileReadField(&ctab->n_property_lines, 3, MOL_FMT_SHORT_INT_DATA, &p))
+         || 0 > MolfileReadField(&ctab->n_property_lines, 3, MOL_FMT_SHORT_INT_DATA, &p))
     {
         err = 3;                                            /* can't interpret counts line */
         TREAT_ERR(err, 3, "Cannot interpret counts line:"); /* too long input file line */
@@ -761,16 +762,24 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
 
         if (NULL != ctab->atoms)
         {
-            if (0 > MolfileReadField(&ctab->atoms[i].fx, 10, MOL_FMT_DOUBLE_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].fy, 10, MOL_FMT_DOUBLE_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].fz, 10, MOL_FMT_DOUBLE_DATA, &p) || 0 > MolfileReadField(NULL, /* undescribed in article*/ 1, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 == MolfileReadField(&ctab->atoms[i].symbol, 3, MOL_FMT_STRING_DATA, &p) /* was sizeof(ctab->atoms[0].symbol)-1 */
-                || 0 > MolfileReadField(&ctab->atoms[i].mass_difference, 2, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].charge, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].stereo_parity, 3, MOL_FMT_CHAR_INT_DATA, &p)
+            if (0 > MolfileReadField(&ctab->atoms[i].fx, 10, MOL_FMT_DOUBLE_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].fy, 10, MOL_FMT_DOUBLE_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].fz, 10, MOL_FMT_DOUBLE_DATA, &p)
+                || 0 > MolfileReadField(NULL, /* undescribed in article*/    1, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 == MolfileReadField(&ctab->atoms[i].symbol, 3, MOL_FMT_STRING_DATA, &p) /* was sizeof(ctab->atoms[0].symbol)-1 */
+                || 0 > MolfileReadField(&ctab->atoms[i].mass_difference, 2, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].charge, 3, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].stereo_parity, 3, MOL_FMT_CHAR_INT_DATA, &p)
 
-#if (MOL_FMT_QUERY == MOL_FMT_PRESENT)
-                || 0 > MolfileReadField(&ctab->atoms[i].H_count_plus_1, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].stereo_care, 3, MOL_FMT_CHAR_INT_DATA, &p)
+#if ( MOL_FMT_QUERY == MOL_FMT_PRESENT )
+                || 0 > MolfileReadField(&ctab->atoms[i].H_count_plus_1, 3, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].stereo_care, 3, MOL_FMT_CHAR_INT_DATA, &p)
 #else
-                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
-                || 0 > MolfileReadField(&ctab->atoms[i].valence, 3, MOL_FMT_CHAR_INT_DATA, &p))
+                || 0 > MolfileReadField(&ctab->atoms[i].valence, 3, MOL_FMT_CHAR_INT_DATA, &p)) 
             {
 
                 err = 4;
@@ -810,16 +819,22 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
 
             if (
 
-#if (MOL_FMT_CPSS == MOL_FMT_PRESENT)
-                0 > MolfileReadField(&ctab->atoms[i].H0_designator, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_type, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_num, 3, MOL_FMT_CHAR_INT_DATA, &p)
-#else
-                0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+#if ( MOL_FMT_CPSS == MOL_FMT_PRESENT )
+                   0 > MolfileReadField(&ctab->atoms[i].H0_designator, 3, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_type, 3, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_num, 3, MOL_FMT_CHAR_INT_DATA, &p)
+#else                   
+                   0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
-#if (MOL_FMT_REACT == MOL_FMT_PRESENT)
-                || 0 > MolfileReadField(&ctab->atoms[i].atom_atom_mapping_num, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_type, 3, MOL_FMT_CHAR_INT_DATA, &p)
+#if ( MOL_FMT_REACT == MOL_FMT_PRESENT )
+                || 0 > MolfileReadField(&ctab->atoms[i].atom_atom_mapping_num, 3, MOL_FMT_SHORT_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_type, 3, MOL_FMT_CHAR_INT_DATA, &p)
 #else
-                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p) || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
+                || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
 #if (MOL_FMT_REACT == MOL_FMT_PRESENT || MOL_FMT_QUERY == MOL_FMT_PRESENT)
@@ -905,7 +920,10 @@ int MolfileReadBondsBlock(MOL_FMT_CTAB *ctab,
         if (ctab->bonds)
         {
 
-            if (0 > MolfileReadField(&ctab->bonds[i].atnum1, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->bonds[i].atnum2, 3, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&ctab->bonds[i].bond_type, 3, MOL_FMT_CHAR_INT_DATA, &p) || 0 > MolfileReadField(&ctab->bonds[i].bond_stereo, 3, MOL_FMT_CHAR_INT_DATA, &p)
+            if (0 > MolfileReadField(&ctab->bonds[i].atnum1, 3, MOL_FMT_SHORT_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->bonds[i].atnum2, 3, MOL_FMT_SHORT_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->bonds[i].bond_type, 3, MOL_FMT_CHAR_INT_DATA, &p)
+                || 0 > MolfileReadField(&ctab->bonds[i].bond_stereo, 3, MOL_FMT_CHAR_INT_DATA, &p)
 
 #if (MOL_FMT_QUERY == MOL_FMT_PRESENT)
                 || 0 > MolfileReadField(&ctab->bonds[i].cBondTopology, 3, MOL_FMT_CHAR_INT_DATA, &p) /* ring/chain */
@@ -954,9 +972,10 @@ int MolfileReadSTextBlock(const MOL_FMT_CTAB *ctab,
     /* just pass by all stext enties without attemp to interpret them */
     char *p;
     char line[MOL_FMT_INPLINELEN];
-    const int line_len = sizeof(line);
+    const int line_len = sizeof( line );
+    S_SHORT i;
 
-    for (S_SHORT i = 0; i < 2 * ctab->n_stext_entries; i++)
+    for (i = 0; i < 2 * ctab->n_stext_entries; i++)
     {
         p = inchi_fgetsLf(line, line_len, inp_file);
         if (!p)
@@ -1131,8 +1150,9 @@ int MolfileReadPropBlock(MOL_FMT_CTAB *ctab,
             continue;
         }
 
-        if (1 != MolfileReadField(charM, sizeof(charM) - 1, MOL_FMT_STRING_DATA, &p) || 0 != MolfileReadField(szBlank, sizeof(szBlank) - 1, MOL_FMT_STRING_DATA, &p) /* must contain 0 bytes */
-            || 0 >= MolfileReadField(szType, sizeof(szType) - 1, MOL_FMT_STRING_DATA, &p)                                                                            /* must contain 3 bytes */
+        if (1 != MolfileReadField(charM, sizeof( charM ) - 1, MOL_FMT_STRING_DATA, &p)
+            || 0 != MolfileReadField(szBlank, sizeof( szBlank ) - 1, MOL_FMT_STRING_DATA, &p) /* must contain 0 bytes */
+            || 0 >= MolfileReadField(szType, sizeof( szType ) - 1, MOL_FMT_STRING_DATA, &p) /* must contain 3 bytes */
         )
         {
             if (!strcmp(line, SD_FMT_END_OF_DATA))
@@ -1364,7 +1384,7 @@ int MolfileReadPropBlock(MOL_FMT_CTAB *ctab,
                 {
                     char *at = ctab->atoms[atoms[j] - 1].symbol;
                     if (at[1] || (at[0] != 'D' && at[0] != 'T')) /* djb-rwth: addressing LLVM warning */
-                    {                                            /*  D & T cannot have ISO */
+                    {   /*  D & T cannot have ISO */
                         /*  need atomic weight to calculate isotope difference. 7-14-00 DCh. */
 
                         int atw, atw_diff;
@@ -1487,9 +1507,9 @@ int MolfileReadSgroupOfPolymer(MOL_FMT_CTAB *ctab,
                 MOD = modifications,
                 CRO = crosslink
     */
-    if (!strcmp(szType, "STY") &&
-        0 < MolfileReadField(&num_entries, 3, MOL_FMT_SHORT_INT_DATA, &p) &&
-        1 <= num_entries && num_entries <= 8)
+    if ( !strcmp(szType, "STY")
+         && 0 < MolfileReadField(&num_entries, 3, MOL_FMT_SHORT_INT_DATA, &p)
+         && 1 <= num_entries && num_entries <= 8)
     {
         for (j = 0; j < num_entries; j++)
         {
@@ -1624,7 +1644,8 @@ int MolfileReadSgroupOfPolymer(MOL_FMT_CTAB *ctab,
     {
         for (j = 0; j < num_entries; j++)
         {
-            fail = 0 > MolfileReadField(&sg_nums[j], 0, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(&tmp, 0, MOL_FMT_SHORT_INT_DATA, &p);
+            fail = 0 > MolfileReadField(&sg_nums[j], 0, MOL_FMT_SHORT_INT_DATA, &p)
+                   || 0 > MolfileReadField(&tmp, 0, MOL_FMT_SHORT_INT_DATA, &p);
             if (!fail)
             {
                 index = MolFmtSgroups_GetIndexBySgroupId(sg_nums[j], &(ctab->sgroups));
@@ -1656,7 +1677,8 @@ int MolfileReadSgroupOfPolymer(MOL_FMT_CTAB *ctab,
     {
         for (j = 0; j < num_entries; j++)
         {
-            fail = 0 > MolfileReadField(&sg_nums[j], 0, MOL_FMT_SHORT_INT_DATA, &p) || 0 > MolfileReadField(stmp, 4, MOL_FMT_STRING_DATA, &p);
+            fail = 0 > MolfileReadField(&sg_nums[j], 0, MOL_FMT_SHORT_INT_DATA, &p)
+                   || 0 > MolfileReadField(stmp, 4, MOL_FMT_STRING_DATA, &p);
             if (!fail)
             {
                 index = MolFmtSgroups_GetIndexBySgroupId(sg_nums[j], &(ctab->sgroups));

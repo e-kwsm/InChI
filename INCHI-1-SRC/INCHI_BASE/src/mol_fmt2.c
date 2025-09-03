@@ -69,8 +69,7 @@ int MolfileStrnread(char *dest,
 {
     /* required len >= 0; dest must have at least len+1 bytes */
 
-    int i;
-    int c;
+    int i, c;
 
     if (len > 0)
     {
@@ -80,8 +79,7 @@ int MolfileStrnread(char *dest,
 
     len = (len > 0) ? (int)strlen(dest) : 0;
 
-    for (i = (len - 1); i >= 0 && 0 != (c = source[i]) && isspace(UCINT c); i--)
-        ;
+    for (i = ( len - 1 ); i >= 0 && 0 != ( c = source[i] ) && isspace( UCINT c ); i--);
 
     *first_space = dest + ((long long)i + 1); /* first blank or zero terminating byte in dest */ /* djb-rwth: cast operator added */
 
@@ -109,13 +107,8 @@ int MolfileReadField(void *data,
                      int data_type,
                      char **line_ptr)
 {
-    char *p = *line_ptr;
-    char *q;
-    char *p_end;
-    int i;
-    int c;
-    int len;
-    int ret = 1;
+    char *p = *line_ptr, *q, *p_end;
+    int  i, c, len, ret = 1;
     long ldata;
     double ddata;
 
@@ -149,9 +142,9 @@ int MolfileReadField(void *data,
 
         len = MolfileStrnread((char *)data, &p[i], field_len - i, &q);
 
-        ret = (q - (char *)data);                                                                                              /* actual data length */
-        *q = '\0';                                                                                                             /* add zero termination to data if it is not there yet*/
-        *line_ptr += ((long long)len + (long long)i); /* ptr to the 1st byte of the next input field or to zero termination */ /* djb-rwth: cast operators added */
+            ret = ( q - (char*) data );/* actual data length */
+            *q = '\0'; /* add zero termination to data if it is not there yet*/
+            *line_ptr += ( (long long)len + (long long)i ); /* ptr to the 1st byte of the next input field or to zero termination */ /* djb-rwth: cast operators added */
         break;
 
     case MOL_FMT_CHAR_INT_DATA:
@@ -341,9 +334,8 @@ long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr)
 {
     static char sStruct[] = "Structure #";
     static char sINCHI[] = INCHI_NAME;
-    long lMolfileNumber = 0;
-    char *p;
-    char *q = NULL;
+    long   lMolfileNumber = 0;
+    char   *p, *q = NULL;
 
     if (pHdr)
     {
@@ -426,9 +418,8 @@ int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
             return 1;
         }
 
-        while (fPtrEnd > (fPtr = ftell(infile)) &&
-               fPtr >= 0L &&
-               inchi_fgetsLf(line, sizeof(line) - 1, inp_file))
+        while (fPtrEnd > (fPtr = ftell(infile)) && fPtr >= 0L 
+                && inchi_fgetsLf(line, sizeof(line) - 1, inp_file))
         {
 
             line[sizeof(line) - 1] = '\0'; /*  unnecessary extra precaution */
@@ -466,14 +457,16 @@ int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
     return ret;
 }
 
-#define MIN_STDATA_X_COORD 0.0
-#define MAX_STDATA_X_COORD 256.0
-#define MIN_STDATA_Y_COORD 0.0
-#define MAX_STDATA_Y_COORD 256.0
-#define MIN_STDATA_Z_COORD 0.0
-#define MAX_STDATA_Z_COORD 256.0
-#define MAX_STDATA_AVE_BOND_LENGTH 20.0
-#define MIN_STDATA_AVE_BOND_LENGTH 10.0
+
+#define MIN_STDATA_X_COORD           0.0
+#define MAX_STDATA_X_COORD         256.0
+#define MIN_STDATA_Y_COORD           0.0
+#define MAX_STDATA_Y_COORD         256.0
+#define MIN_STDATA_Z_COORD           0.0
+#define MAX_STDATA_Z_COORD         256.0
+#define MAX_STDATA_AVE_BOND_LENGTH  20.0
+#define MIN_STDATA_AVE_BOND_LENGTH  10.0
+
 
 /****************************************************************************
  Get xyz dimensionality and normalization factors
@@ -541,7 +534,7 @@ int MolfileGetXYZDimAndNormFactors(MOL_FMT_DATA *mfdata,
         dy = mfdata->ctab.atoms[a1].fy - mfdata->ctab.atoms[a2].fy;
         dz = mfdata->ctab.atoms[a1].fz - mfdata->ctab.atoms[a2].fz;
 
-        average_bond_length += sqrt(dx * dx + dy * dy + dz * dz);
+        average_bond_length += sqrt(dx*dx + dy*dy + dz*dz);
         num_bonds++;
     }
 
@@ -573,9 +566,9 @@ int MolfileGetXYZDimAndNormFactors(MOL_FMT_DATA *mfdata,
     }
 
     num_dimensions = ((x_coeff > macheps || y_coeff > macheps) && fabs(z_coeff) < macheps)
-                         ? 2
-                     : (fabs(z_coeff) > macheps) ? 3
-                                                 : 0;
+                        ? 2
+                        : ( fabs( z_coeff ) > macheps ) ? 3 : 0;
+
 
     if (!find_norm_factors)
     {

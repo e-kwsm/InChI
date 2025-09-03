@@ -62,17 +62,18 @@
 
 #define ALIASED_AT(i) (0 < NUM_ISO_H(at, i))
 #define IS_DEUTERIUM(i) (!strcmp(at[i].elname, "D") || at[i].iso_atw_diff == 2 && !strcmp(at[i].elname, "H"))
-#define IS_TRITIUM(i) (!strcmp(at[i].elname, "T") || at[i].iso_atw_diff == 3 && !strcmp(at[i].elname, "H"))
+#define IS_TRITIUM(i)   (!strcmp(at[i].elname, "T") || at[i].iso_atw_diff == 3 && !strcmp(at[i].elname, "H"))
 
 #define ABNORMAL_ISO(i) (at[i].iso_atw_diff == 1 || at[i].iso_atw_diff < -3 || at[i].iso_atw_diff > 5)
 #define ABNORMAL_CHG(i) (abs(at[i].charge) > 3)
 #define ABNORMAL_RAD(i) (RADICAL_SINGLET <= at[i].radical && at[i].radical <= RADICAL_TRIPLET)
 
-#define ANY_ISO(i, X) ((X) ? (at[i].iso_atw_diff && !IS_DEUTERIUM(i) && !IS_TRITIUM(i)) : (at[i].iso_atw_diff || IS_DEUTERIUM(i) || IS_TRITIUM(i)))
-#define ANY_CHG(i) (0 != at[i].charge)
-#define ANY_RAD(i) (RADICAL_SINGLET <= at[i].radical && at[i].radical <= RADICAL_TRIPLET)
+#define ANY_ISO(i, X)   ((X)? (at[i].iso_atw_diff && !IS_DEUTERIUM(i) && !IS_TRITIUM(i)) :\
+                          (at[i].iso_atw_diff ||  IS_DEUTERIUM(i) ||  IS_TRITIUM(i)))
+#define ANY_CHG(i)      (0 != at[i].charge)
+#define ANY_RAD(i)      (RADICAL_SINGLET <= at[i].radical && at[i].radical <= RADICAL_TRIPLET)
 
-#define NORMAL_ISO(i, X) (ANY_ISO(i, X) && !ABNORMAL_ISO(i))
+#define NORMAL_ISO(i, X)   (ANY_ISO(i, X) && !ABNORMAL_ISO(i))
 
 /* needs additional M  CHG. M  RAD, M  ISO line */
 /* due to ISIS/Draw feature always include M  RAD for any radical */
@@ -171,9 +172,8 @@ int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
 {
     char *p = NULL;
     char line[MOL_FMT_INPLINELEN];
-    const int line_len = sizeof(line);
-    int n_blank_lines = 0;
-    int n_lines = 0;
+    const int line_len = sizeof( line );
+    int n_blank_lines = 0, n_lines = 0;
     int current_state = SDF_START;
     int err = 0;
     int wait_for_CAS = 0;
@@ -227,85 +227,85 @@ int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
 
         switch (current_state)
         {
-        case SDF_START:
-        case SD_FMT_END_OF_DATA_ITEM:
-        case SDF_EMPTY_LINE: /* Added 9-25-97 DCh */
+            case SDF_START:
+            case SD_FMT_END_OF_DATA_ITEM:
+            case SDF_EMPTY_LINE: /* Added 9-25-97 DCh */
 
-            if (!strcmp(line, SD_FMT_END_OF_DATA))
-            {
-                current_state = SD_FMT_END_OF_DATA_BLOCK;
-            }
-            else if ('>' == *line)
-            {
-                current_state = (wait_for_name || wait_for_comment || wait_for_CAS || wait_for_user) ? SDFileIdentifyLabel(line, pSdfLabel) : SDF_DATA_HEADER;
-            }
-            else if (*line == '\0')
-            {
-                /* Added 9-25-97 DCh */
-                /* Relax the strictness: Allow more than 1 empty line. */
-                current_state = SDF_EMPTY_LINE;
-            }
-            else if (!prev_err)
-            {
-                TREAT_ERR(err, 3, "Unexpected SData header line:");
-                dotify_non_printable_chars(line);
-                AddErrorMessage(pStrErr, line);
-                /* unexpected contents of data header line */
-            }
-            else
-            {
-                err = 3;
-            }
-            break;
+                if (!strcmp(line, SD_FMT_END_OF_DATA))
+                {
+                    current_state = SD_FMT_END_OF_DATA_BLOCK;
+                }
+                else if ('>' == *line)
+                {
+                    current_state = (wait_for_name || wait_for_comment || wait_for_CAS || wait_for_user) ? SDFileIdentifyLabel( line, pSdfLabel ) : SDF_DATA_HEADER;
+                }
+                else if (*line == '\0')
+                {
+                    /* Added 9-25-97 DCh */
+                    /* Relax the strictness: Allow more than 1 empty line. */
+                    current_state = SDF_EMPTY_LINE;
+                }
+                else if (!prev_err)
+                {
+                    TREAT_ERR(err, 3, "Unexpected SData header line:");
+                    dotify_non_printable_chars(line);
+                    AddErrorMessage(pStrErr, line);
+                    /* unexpected contents of data header line */
+                }
+                else
+                {
+                    err = 3;
+                }
+                break;
 
-        case SDF_DATA_HEADER_NAME:
+            case SDF_DATA_HEADER_NAME:
 
-            if (wait_for_name && 0 < normalize_string(line))
-            {
-                wait_for_name = 0;
-                mystrncpy(name, line, lname);
-            }
-            goto got_data_line;
+                if (wait_for_name && 0 < normalize_string(line))
+                {
+                    wait_for_name = 0;
+                    mystrncpy(name, line, lname);
+                }
+                goto got_data_line;
 
-        case SDF_DATA_HEADER_COMMENT:
+            case SDF_DATA_HEADER_COMMENT:
 
-            if (wait_for_comment && 0 < normalize_string(line))
-            {
-                wait_for_comment = 0;
-                mystrncpy(comment, line, lcomment);
-            }
-            goto got_data_line;
+                if (wait_for_comment && 0 < normalize_string(line))
+                {
+                    wait_for_comment = 0;
+                    mystrncpy(comment, line, lcomment);
+                }
+                goto got_data_line;
 
-        case SDF_DATA_HEADER_USER:
+            case SDF_DATA_HEADER_USER:
 
-            if (wait_for_user && 0 < normalize_string(line))
-            {
-                wait_for_user = 0;
-                mystrncpy(pSdfValue, line, MAX_SDF_VALUE + 1);
+                if (wait_for_user && 0 < normalize_string(line))
+                {
+                    wait_for_user = 0;
+                    mystrncpy(pSdfValue, line, MAX_SDF_VALUE + 1);
 
-                if (CAS_num_is_user && wait_for_CAS)
+                    if (CAS_num_is_user && wait_for_CAS)
+                    {
+                        *CAS_num = SDFileExtractCASNo(line);
+                        wait_for_CAS = (0LU == *CAS_num);
+                    }
+                }
+                goto got_data_line;
+
+            case SDF_DATA_HEADER_CAS:
+
+                if (wait_for_CAS && 0 < normalize_string(line))
                 {
                     *CAS_num = SDFileExtractCASNo(line);
                     wait_for_CAS = (0LU == *CAS_num);
                 }
-            }
-            goto got_data_line;
+                goto got_data_line;
 
-        case SDF_DATA_HEADER_CAS:
+            case SDF_DATA_HEADER:
+            case SDF_DATA_LINE:
 
-            if (wait_for_CAS && 0 < normalize_string(line))
-            {
-                *CAS_num = SDFileExtractCASNo(line);
-                wait_for_CAS = (0LU == *CAS_num);
-            }
-            goto got_data_line;
-
-        case SDF_DATA_HEADER:
-        case SDF_DATA_LINE:
-
-        got_data_line:
-            current_state = *line ? SDF_DATA_LINE : SD_FMT_END_OF_DATA_ITEM;
-            break;
+            got_data_line:
+                current_state = *line ? SDF_DATA_LINE : SD_FMT_END_OF_DATA_ITEM;
+                break;
         }
     }
 
@@ -697,8 +697,8 @@ int MolFmtSgroups_ReAlloc(MOL_FMT_SGROUPS *sgroups)
         if (sgroups->group && sgroups->allocated > 0 && sgroups->increment > 0)
         {
             void *p = sgroups->group;
-            if ((sgroups->group = (MOL_FMT_SGROUP **)inchi_calloc((long long)sgroups->allocated + (long long)sgroups->increment,
-                                                                  sizeof(sgroups->group[0])))) /* djb-rwth: cast operators added; addressing LLVM warning */
+            if ((sgroups->group = (MOL_FMT_SGROUP **)inchi_calloc( (long long)sgroups->allocated + (long long)sgroups->increment,
+                sizeof( sgroups->group[0] ) ))) /* djb-rwth: cast operators added; addressing LLVM warning */
             {
                 memcpy(sgroups->group, p, sgroups->used * sizeof(sgroups->group[0]));
                 inchi_free(p);
@@ -986,12 +986,12 @@ int OrigAtData_WriteToSDfileHeaderAndCountThings(const ORIG_ATOM_DATA *inp_at_da
  OrigAtData : Write To SDfile : Atoms Block
 ****************************************************************************/
 int OrigAtData_WriteToSDfileAtomsBlock(const ORIG_ATOM_DATA *inp_at_data,
-                                       INCHI_IOSTREAM *fcb,
-                                       const char *name,
-                                       const char *comment,
-                                       int bAtomsDT,
-                                       const char *szLabel,
-                                       const char *szValue)
+                                        INCHI_IOSTREAM       *fcb,
+                                        const char           *name,
+                                        const char           *comment,
+                                        int                  bAtomsDT,
+                                        const char           *szLabel,
+                                        const char           *szValue)
 {
     int i, ret = 0;
     int bAtomNeedsAlias;
@@ -1006,11 +1006,10 @@ int OrigAtData_WriteToSDfileAtomsBlock(const ORIG_ATOM_DATA *inp_at_data,
         int iso = 0;
         int charge = 0;
         int valence = 0;
-        int nIsotopeH = IS_DEUTERIUM(i) ? 1 : IS_TRITIUM(i) ? 2
-                                                            : 0;
+        int nIsotopeH = IS_DEUTERIUM( i ) ? 1 : IS_TRITIUM( i ) ? 2 : 0;
         int bonds_val;
-        bAtomNeedsAlias = ALIASED_AT(i);
-        memset(elname, 0, sizeof(elname)); /* djb-rwth: memset_s C11/Annex K variant? */
+        bAtomNeedsAlias = ALIASED_AT( i );
+        memset( elname, 0, sizeof( elname ) ); /* djb-rwth: memset_s C11/Annex K variant? */
 
         if (bAtomNeedsAlias)
         {
@@ -1074,9 +1073,9 @@ int OrigAtData_WriteToSDfileAtomsBlock(const ORIG_ATOM_DATA *inp_at_data,
         /* allow isotopic shift for aliased atoms */
         if (NORMAL_ISO(i, bAtomsDT))
         {
-            iso = at[i].iso_atw_diff > 0 ? at[i].iso_atw_diff - 1 : at[i].iso_atw_diff < 0 ? at[i].iso_atw_diff
-                                                                : nIsotopeH                ? nIsotopeH
-                                                                                           : 0; /* djb-rwth: removing redundant code */
+            iso = at[i].iso_atw_diff > 0 ? at[i].iso_atw_diff - 1 :
+                    at[i].iso_atw_diff < 0 ? at[i].iso_atw_diff :
+                        nIsotopeH ? nIsotopeH : 0; /* djb-rwth: removing redundant code */
         }
 
         x = at[i].x;
@@ -1119,13 +1118,13 @@ int OrigAtData_WriteToSDfileAtomsBlock(const ORIG_ATOM_DATA *inp_at_data,
 /****************************************************************************
  OrigAtData : Write To SDfile : Bonds Block
 ****************************************************************************/
-int OrigAtData_WriteToSDfileBondsBlock(const ORIG_ATOM_DATA *inp_at_data,
-                                       INCHI_IOSTREAM *fcb,
-                                       const char *name,
-                                       const char *comment,
-                                       const char *szLabel,
-                                       const char *szValue,
-                                       INT_ARRAY *written_bond_ends)
+int OrigAtData_WriteToSDfileBondsBlock( const ORIG_ATOM_DATA *inp_at_data,
+                                        INCHI_IOSTREAM       *fcb,
+                                        const char           *name,
+                                        const char           *comment,
+                                        const char           *szLabel,
+                                        const char           *szValue,
+                                        INT_ARRAY            *written_bond_ends )
 {
     int i, j, k, ret = 0;
     int num_atoms = inp_at_data->num_inp_atoms;
@@ -1179,18 +1178,18 @@ int OrigAtData_WriteToSDfileBondsBlock(const ORIG_ATOM_DATA *inp_at_data,
 /****************************************************************************
  OrigAtData : Write To SDfile : Additional Lines
 ****************************************************************************/
-int OrigAtData_WriteToSDfileAdditionalLines(const ORIG_ATOM_DATA *inp_at_data,
-                                            INCHI_IOSTREAM *fcb,
-                                            const char *name,
-                                            const char *comment,
-                                            int bAtomsDT,
-                                            const char *szLabel,
-                                            const char *szValue,
-                                            int nNumAliasLines,
-                                            int nNumChargeLines,
-                                            int nNumRadicalLines,
-                                            int nNumIsoLines,
-                                            INT_ARRAY *written_bond_ends)
+int OrigAtData_WriteToSDfileAdditionalLines( const ORIG_ATOM_DATA *inp_at_data,
+                                             INCHI_IOSTREAM       *fcb,
+                                             const char           *name,
+                                             const char           *comment,
+                                             int                  bAtomsDT,
+                                             const char           *szLabel,
+                                             const char           *szValue,
+                                             int                  nNumAliasLines,
+                                             int                  nNumChargeLines,
+                                             int                  nNumRadicalLines,
+                                             int                  nNumIsoLines,
+                                             INT_ARRAY            *written_bond_ends )
 {
     char str_m[66], entry[25];
     int i, num_m, k, j, ret = 0;
@@ -1219,9 +1218,7 @@ int OrigAtData_WriteToSDfileAdditionalLines(const ORIG_ATOM_DATA *inp_at_data,
                         int num_H = at[i].num_iso_H[k] + (k ? 0 : at[i].num_H);
                         if (num_H)
                         {
-                            len += sprintf(str_m + len, "%s", k == 0 ? "H" : k == 1 ? "D"
-                                                                         : k == 2   ? "T"
-                                                                                    : "?");
+                            len += sprintf(str_m + len, "%s", k == 0 ? "H" : k == 1 ? "D" : k == 2 ? "T" : "?");
                             if (num_H != 1)
                             {
                                 len += sprintf(str_m + len, "%d", num_H);
@@ -1298,9 +1295,7 @@ int OrigAtData_WriteToSDfileAdditionalLines(const ORIG_ATOM_DATA *inp_at_data,
                 {
                     int radical = (at[i].radical == RADICAL_SINGLET ||
                                    at[i].radical == RADICAL_DOUBLET ||
-                                   at[i].radical == RADICAL_TRIPLET)
-                                      ? at[i].radical
-                                      : 0;
+                                   at[i].radical == RADICAL_TRIPLET) ? at[i].radical : 0;
                     if (radical)
                     {
                         sprintf(entry, " %3d %3d", i + 1, radical);
@@ -1391,13 +1386,13 @@ int OrigAtData_WriteToSDfileAdditionalLines(const ORIG_ATOM_DATA *inp_at_data,
 /****************************************************************************
 OrigAtData : Write To SDfile : Polymer Data
 ****************************************************************************/
-int OrigAtData_WriteToSDfilePolymerData(const ORIG_ATOM_DATA *inp_at_data,
-                                        INCHI_IOSTREAM *fcb,
-                                        const char *name,
-                                        const char *comment,
-                                        const char *szLabel,
-                                        const char *szValue,
-                                        INT_ARRAY *written_bond_ends)
+int OrigAtData_WriteToSDfilePolymerData( const ORIG_ATOM_DATA *inp_at_data,
+                                         INCHI_IOSTREAM       *fcb,
+                                         const char           * name,
+                                         const char           *comment,
+                                         const char           *szLabel,
+                                         const char           *szValue,
+                                         INT_ARRAY            *written_bond_ends )
 {
     int j, k, ju, jj, jprev, ret = 0;
     const char *sty[] = {"NON", "SRU", "MON", "COP", "MOD", "CRO", "MER"};
