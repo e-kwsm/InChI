@@ -23,8 +23,9 @@
                     "editor.formatOnSave": true,
                     "editor.defaultFormatter": "charliermarsh.ruff"
                 },
-                "[c]": {
-                    "editor.formatOnSave": false
+                "[c][cpp]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": null
                 },
                 "sonarlint.pathToCompileCommands": "${workspaceFolder}/CMake_build/full_build/compile_commands.json"
             },
@@ -45,7 +46,8 @@
                 "ms-vscode.live-server",
                 "tamasfe.even-better-toml",
                 "DavidAnson.vscode-markdownlint",
-                "SonarSource.sonarlint-vscode@4.28.0"
+                "SonarSource.sonarlint-vscode@4.28.0",
+                "EditorConfig.EditorConfig"
             ]
         }
     },
