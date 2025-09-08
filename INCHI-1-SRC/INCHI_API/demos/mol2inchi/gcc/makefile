@@ -119,8 +119,12 @@ ifndef P_MAIN
 endif
 # === C Compiler Options =======
 ifndef C_OPTIONS
-	ifndef CALLER_IS_MOL2INCHI
-	C_OPTIONS = -std=c11 -O1 -c -fno-strict-aliasing
+	ifdef CALLER_IS_MOL2INCHI
+		ifeq ($(OS_ID),1)
+		C_OPTIONS = -std=c11 -O1 -c -fno-strict-aliasing -pthread
+		else
+		C_OPTIONS = -std=c11 -O1 -c -fno-strict-aliasing
+		endif
 	else
 	C_OPTIONS = -std=c11 -O1 -c -fno-strict-aliasing
 	endif

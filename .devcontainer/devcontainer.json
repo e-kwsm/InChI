@@ -2,7 +2,7 @@
 // https://hub.docker.com/_/python
 {
     "name": "InChI",
-    "image": "gcc:14-bookworm",
+    "image": "python:3.12",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -19,10 +19,15 @@
         "vscode": {
             "settings": {
                 "terminal.integrated.scrollback": 5000,
-                "editor.formatOnSave": true,
-                "python": {
-                    "editor.defaultFormatter": "ms-python.black-formatter"
-                }
+                "[python]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "charliermarsh.ruff"
+                },
+                "[c][cpp]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": null
+                },
+                "sonarlint.pathToCompileCommands": "${workspaceFolder}/CMake_build/full_build/compile_commands.json"
             },
             "extensions": [
                 "ms-vscode.cpptools",
@@ -30,12 +35,9 @@
                 "ms-vscode.cmake-tools",
                 "eamodio.gitlens",
                 "streetsidesoftware.code-spell-checker",
-                "ms-python.python",
-                "ms-python.vscode-pylance",
-                "ms-python.black-formatter",
                 "ms-python.mypy-type-checker",
-                "ms-python.flake8",
                 "KevinRose.vsc-python-indent",
+                "charliermarsh.ruff",
                 "ms-vscode.makefile-tools",
                 "GitHub.vscode-github-actions",
                 "ms-azuretools.vscode-docker",
@@ -43,9 +45,11 @@
                 "qwtel.sqlite-viewer",
                 "ms-vscode.live-server",
                 "tamasfe.even-better-toml",
-                "DavidAnson.vscode-markdownlint"
+                "DavidAnson.vscode-markdownlint",
+                "SonarSource.sonarlint-vscode@4.28.0",
+                "EditorConfig.EditorConfig"
             ]
         }
     },
-    "postCreateCommand": "cd INCHI-1-TEST && ./install_build_dependencies.sh && ./install_test_dependencies.sh"
+    "postCreateCommand": "./.devcontainer/post_create_commands.sh"
 }

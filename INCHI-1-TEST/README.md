@@ -22,7 +22,7 @@ You can now run the commands that are mentioned in the remainder of this README.
 
 ### Visual Studio Code devcontainer
 
-As an alternative to the plain Docker container, you can run the tests in the [Visual Studio Code devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) that's specified under [.devcontainer.json](../.devcontainer.json).
+As an alternative to the plain Docker container, you can run the tests in the [Visual Studio Code devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) that's specified under [.devcontainer.json](../.devcontainer/devcontainer.json).
 Note that, in contrast to the plain container, in the devcontainer, you'll have to [compile the InChI libraries yourself](../README.md#building-from-source).
 
 ## Test data
@@ -46,6 +46,21 @@ Where possible, stick to the following principles:
 - When replicating a bug, reference the (GitHub) issue number in the file name (e.g., `test_github_42.py`).
 
 Have a look at the existing tests for examples on how to write a test.
+
+## Unit tests
+
+Our unit test are implemented with [googletest](https://google.github.io/googletest/) and live under `tests/test_unit`.
+Build the tests with
+
+```shell
+./INCHI-1-TEST/build_with_cmake.sh all
+```
+
+and subsequently run them with
+
+```shell
+cd CMake_build/full_build/INCHI-1-TEST/test/test_unit && ctest --output-on-failure
+```
 
 ## Meta tests
 

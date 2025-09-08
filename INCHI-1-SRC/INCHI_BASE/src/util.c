@@ -25,8 +25,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*
-* The InChI library and programs are free software developed under the
+ *
+ * The InChI library and programs are free software developed under the
  * auspices of the International Union of Pure and Applied Chemistry (IUPAC).
  * Originally developed at NIST.
  * Modifications and additions by IUPAC and the InChI Trust.
@@ -36,17 +36,17 @@
  *
  * info@inchi-trust.org
  *
-*/
+ */
 
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "mode.h"
 
 #if defined(COMPILE_ANSI_ONLY) && defined(__APPLE__)
 /*    For build under OSX, advice from Burt Leland */
-#include "ichicomp.h"    /* Needed for __isascii define */
+#include "ichicomp.h" /* Needed for __isascii define */
 #endif
 
 /* djb-rwth: defining __isascii */
@@ -55,11 +55,11 @@
 #elif defined(isascii)
 #define is_ascii isascii
 #else
-#define is_ascii(c)   ((unsigned)(c) < 0x80)
+#define is_ascii(c) ((unsigned)(c) < 0x80)
 #endif
 
-#include "util.h"
 #include "extr_ct.h"
+#include "util.h"
 
 #include "bcf_s.h"
 
@@ -238,7 +238,7 @@ const ELDATA ElData[] =
 
     { "",     0,   0,   0.000000000,     0 ,  0,  0, {{0,},       {0,},       {0,},       {0,},       {0,}       }},
 };
-
+// clang-format on
 
 const int ERR_ELEM = 255;
 const int nElDataLen = sizeof(ElData) / sizeof(ElData[0]) - 1;
@@ -247,7 +247,6 @@ const int nElDataLen = sizeof(ElData) / sizeof(ElData[0]) - 1;
 /*
     MISC. CHEMICAL-STRUCTURE RELATED UTILITIES AND HELPERS
 */
-
 
 /****************************************************************************
   Finds chemical symbol for element of given number.
@@ -273,7 +272,6 @@ int get_element_chemical_symbol(int nAtNum, char* szElement)
     strcpy(szElement, "??");
     return -1;
 }
-
 
 /****************************************************************************
 Finds symbol for element of given number.
@@ -309,7 +307,6 @@ int get_element_or_pseudoelement_symbol(int nAtNum,
     return -1;
 }
 
-
 /****************************************************************************/
 int el_number_in_internal_ref_table(const char* elname)
 {
@@ -323,7 +320,6 @@ int el_number_in_internal_ref_table(const char* elname)
 
     return p[0] ? i : ERR_ELEM;
 }
-
 
 /****************************************************************************
   Get element number by symbol
@@ -357,17 +353,14 @@ int get_periodic_table_number(const char* elname)
     return num;
 }
 
-
 /****************************************************************************
   Check if no H addition allowed
 ****************************************************************************/
 int if_skip_add_H(int nPeriodicNum)
 /* was called if_skip_add_H(, renamed to avoid confusion with other procedures   */
 {
-    return
-        ElData[nPeriodicNum > 1 ? nPeriodicNum + 1 : 0].bSkipAddingH;
+    return ElData[nPeriodicNum > 1 ? nPeriodicNum + 1 : 0].bSkipAddingH;
 }
-
 
 /****************************************************************************
   Get reference value of atom valence at given charge
@@ -382,7 +375,6 @@ int get_el_valence(int nPeriodicNum, int charge, int val_num)
     return
         ElData[nPeriodicNum > 1 ? nPeriodicNum + 1 : 0].cValence[NEUTRAL_STATE + charge][val_num];
 }
-
 
 /****************************************************************************
     Output valence needed to unambiguosly reconstruct bonds
@@ -409,7 +401,7 @@ int get_unusual_el_valence(int nPeriodicNum,
         }
         return bonds_valence;
     }
-
+  
     if ( !get_el_valence(nPeriodicNum, charge, 0) && bonds_valence == num_bonds )
     {
         return 0;
@@ -446,7 +438,6 @@ int get_unusual_el_valence(int nPeriodicNum,
 
     return (exact_found && 1 == num_found) ? 0 : chem_valence;
 }
-
 
 /****************************************************************************
     Output valence needed to unambiguosly reconstruct number of H
@@ -549,7 +540,6 @@ int needed_unusual_el_valence(int nPeriodicNum,
 #endif
 }
 
-
 /****************************************************************************
     Output valence that does not fit any known valences
 ****************************************************************************/
@@ -575,7 +565,6 @@ int detect_unusual_el_valence(int nPeriodicNum,
         }
         return bonds_valence;
     }
-
     if ( !get_el_valence(nPeriodicNum, charge, 0) && bonds_valence == num_bonds )
     {
         return 0;
@@ -608,7 +597,6 @@ int detect_unusual_el_valence(int nPeriodicNum,
     return chem_valence;
 }
 
-
 /****************************************************************************
  Return element type
 ****************************************************************************/
@@ -626,9 +614,7 @@ int is_el_a_metal(int nPeriodicNum)
     return 0 != (ElData[nPeriodicNum + 1].nType & IS_METAL);
 }
 
-
 /*#ifndef TARGET_API_LIB*/
-
 
 /****************************************************************************
  Extract radicals and charges
@@ -702,9 +688,7 @@ int extract_charges_and_radicals(char* elname, int* pnRadical, int* pnCharge)
     return (nRad || nCharge);
 }
 
-
 /*#endif*/
-
 
 /****************************************************************************/
 int extract_H_atoms(char* elname, S_CHAR num_iso_H[])
@@ -791,7 +775,6 @@ int extract_H_atoms(char* elname, S_CHAR num_iso_H[])
     return num_H;
 }
 
-
 /****************************************************************************
  Return number of attached hydrogens
 ****************************************************************************/
@@ -825,7 +808,6 @@ int get_num_H(const char* elname,
     {
         intl_el_number_C = el_number_in_internal_ref_table("C");
     }
-
 
     /*  atom_input_valence (cValence) cannot be specified in case of */
     /*  aliased MOLFile atom with known inp_num_H or inp_num_iso_H[] */
@@ -938,7 +920,6 @@ int get_num_H(const char* elname,
     return num_H;
 }
 
-
 /****************************************************************************/
 int get_atomic_mass_from_elnum(int nAtNum)
 {
@@ -957,7 +938,6 @@ int get_atomic_mass_from_elnum(int nAtNum)
     return 0;
 }
 
-
 /****************************************************************************
 int get_mw(char elname[])
 {
@@ -969,8 +949,6 @@ int get_mw(char elname[])
     return(0);
 }
 ****************************************************************************/
-
-
 
 /****************************************************************************/
 int get_atomic_mass(const char* elname)
@@ -988,7 +966,6 @@ int get_atomic_mass(const char* elname)
     return atw;
 }
 
-
 /****************************************************************************
   Check if atom is in the list
 ****************************************************************************/
@@ -1001,7 +978,6 @@ AT_NUMB* is_in_the_list(AT_NUMB* pathAtom, AT_NUMB nNextAtom, int nPathLen)
     return nPathLen ? pathAtom : NULL;
 }
 
-
 /****************************************************************************
   Check if integer is in the list
 ****************************************************************************/
@@ -1013,7 +989,6 @@ int* is_in_the_ilist(int* pathAtom, int nNextAtom, int nPathLen)
     }
     return nPathLen ? pathAtom : NULL;
 }
-
 
 /****************************************************************************
   Check if list (of integers) is within the embedding list2
@@ -1030,7 +1005,6 @@ int is_ilist_inside(int* ilist, int nlist, int* ilist2, int nlist2)
     }
     return 1;
 }
-
 
 /****************************************************************************/
 int nBondsValToMetal(inp_ATOM* at, int iat)
@@ -1052,14 +1026,13 @@ int nBondsValToMetal(inp_ATOM* at, int iat)
             }
             else
             {
-                return -1;  /* bond to metal order is not well defined */
+                return -1; /* bond to metal order is not well defined */
             }
         }
     }
 
     return nVal2Metal;
 }
-
 
 /****************************************************************************/
 int num_of_H(inp_ATOM* at, int iat)
@@ -1133,7 +1106,6 @@ int has_other_ion_neigh(inp_ATOM* at,
     return 0;
 }
 
-
 /****************************************************************************
   Check if has_other_ion_in_sphere_2
     BFS r=2
@@ -1188,7 +1160,6 @@ int has_other_ion_in_sphere_2(inp_ATOM* at, int iat,
     return nRet;
 }
 
-
 /****************************************************************************/
 int nNoMetalNumBonds(inp_ATOM* at, int at_no)
 {
@@ -1223,7 +1194,7 @@ int nNoMetalNumBonds(inp_ATOM* at, int at_no)
         }
     }
 
-#if ( S_VI_O_PLUS_METAL_FIX_BOND == 1 )
+#if (S_VI_O_PLUS_METAL_FIX_BOND == 1)
     else
     {
         if ( 1 == a->charge && 2 == get_endpoint_valence(a->el_number) &&
@@ -1254,7 +1225,6 @@ int nNoMetalNumBonds(inp_ATOM* at, int at_no)
 
     return a->valence;
 }
-
 
 /****************************************************************************/
 int nNoMetalBondsValence(inp_ATOM* at, int at_no)
@@ -1321,7 +1291,6 @@ int nNoMetalBondsValence(inp_ATOM* at, int at_no)
     return a->chem_bonds_valence;
 }
 
-
 /****************************************************************************/
 int nNoMetalNeighIndex(inp_ATOM* at, int at_no)
 {
@@ -1339,7 +1308,6 @@ int nNoMetalNeighIndex(inp_ATOM* at, int at_no)
 
     return -1;
 }
-
 
 /****************************************************************************/
 int nNoMetalOtherNeighIndex(inp_ATOM* at, int at_no, int cur_neigh)
@@ -1360,7 +1328,6 @@ int nNoMetalOtherNeighIndex(inp_ATOM* at, int at_no, int cur_neigh)
 
     return -1;
 }
-
 
 /****************************************************************************/
 int nNoMetalOtherNeighIndex2(inp_ATOM* at,
@@ -1385,10 +1352,7 @@ int nNoMetalOtherNeighIndex2(inp_ATOM* at,
     return -1;
 }
 
-
-
 #ifndef COMPILE_ANSI_ONLY
-
 
 /****************************************************************************/
 int MakeRemovedProtonsString(int nNumRemovedProtons,
@@ -1420,7 +1384,7 @@ int MakeRemovedProtonsString(int nNumRemovedProtons,
             if ( num )
             {
                 len += sprintf(szRemovedProtons + len, "%s %d^%dH",
-                    j ? ", " : "  [ removed ", num, i + 1);
+                               j ? ", " : "  [ removed ", num, i + 1);
                 j++;
             }
         }
@@ -1444,7 +1408,6 @@ int MakeRemovedProtonsString(int nNumRemovedProtons,
 }
 #endif
 
-
 /****************************************************************************/
 int get_endpoint_valence(U_CHAR el_number)
 {
@@ -1458,9 +1421,7 @@ int get_endpoint_valence(U_CHAR el_number)
     }
 }
 
-
-#if ( KETO_ENOL_TAUT == 1 )  /* post v.1 feature */
-
+#if (KETO_ENOL_TAUT == 1) /* post v.1 feature */
 
 /****************************************************************************/
 int get_endpoint_valence_KET(U_CHAR el_number)
@@ -1473,11 +1434,9 @@ int get_endpoint_valence_KET(U_CHAR el_number)
 }
 #endif
 
-
 /*
     MEMORY MANAGEMENT
 */
-
 
 #ifndef inchi_malloc
 /****************************************************************************/
@@ -1487,7 +1446,6 @@ void* inchi_malloc(size_t c)
 }
 #endif
 
-
 #ifndef inchi_calloc
 /****************************************************************************/
 void* inchi_calloc(size_t c, size_t n)
@@ -1495,7 +1453,6 @@ void* inchi_calloc(size_t c, size_t n)
     return calloc(c, n);
 }
 #endif
-
 
 #ifndef inchi_free
 /****************************************************************************/
@@ -1508,11 +1465,9 @@ void inchi_free(void* p)
 }
 #endif
 
-
 /*
     STRINGS AND TEXT HANDLING
 */
-
 
 /****************************************************************************
   Remove leading & trailing spaces, replace consecutive
@@ -1555,7 +1510,6 @@ int normalize_string(char* name)
     return len;
 }
 
-
 /****************************************************************************
  Replace non-ASCII characters with '.', return number of replacements
 ****************************************************************************/
@@ -1578,7 +1532,6 @@ int dotify_non_printable_chars(char* line)
 
     return num;
 }
-
 
 /****************************************************************************
     Reads char sequence pointed to by *pstring ( char *p = *ppstring) for
@@ -1633,13 +1586,14 @@ int read_upto_delim(char** pstring, char* field, int maxlen, char* delims)
     return n;
 }
 
-
-/****************************************************************************
-    Check if a character is in the list of possible delimiters
-    NB: same as isspace if delims is " \t\n\v\f\r"
-    (0x20 and 0x09-0x0D)
-****************************************************************************/
-int is_matching_any_delim(char c, char* delims)
+/**
+ * @brief Check if a character is in the list of possible delimiters
+ * @note  same as isspace if delims is " \t\n\v\f\r" (0x20 and 0x09-0x0D)
+ * @param c Character to check
+ * @param delims String of delimiter characters
+ * @return int 1 if c is a delimiter, 0 otherwise
+ */
+int is_matching_any_delim(char c, char *delims)
 {
     int ic = UCINT c;
     while ( *delims )
@@ -1653,26 +1607,30 @@ int is_matching_any_delim(char c, char* delims)
     return 0;
 }
 
-
-/****************************************************************************
-  Remove trailing spaces
-****************************************************************************/
-void remove_trailing_spaces(char* p)
+/**
+ * @brief Remove trailing spaces from a string
+ * 
+ * @param p Input string
+ */
+void remove_trailing_spaces(char *p)
 {
-    int   len;
-    for ( len = (int)strlen(p) - 1; len >= 0 && isspace(UCINT p[len]); len-- )
+    int len;
+    for (len = (int)strlen(p) - 1; len >= 0 && isspace(UCINT p[len]); len--)
     {
         ;
     }
     p[++len] = '\0';
 }
 
-
-/****************************************************************************/
-void remove_one_lf(char* p)
+/**
+ * @brief Remove one line feed character from the end of the string
+ * 
+ * @param p Input string
+ */
+void remove_one_lf(char *p)
 {
     size_t len;
-    if ( p && 0 < (len = strlen(p)) && p[len - 1] == '\n' )
+    if (p && 0 < (len = strlen(p)) && p[len - 1] == '\n')
     {
         p[len - 1] = '\0';
         if ( len >= 2 && p[len - 2] == '\r' )
@@ -1682,14 +1640,17 @@ void remove_one_lf(char* p)
     }
 }
 
-
-/****************************************************************************
-    Copies up to maxlen characters INCLUDING end null from source to target
-    Fills out the rest of the target with null bytes
-
-    protected from non-zero-terminated source and overlapped target/source.
-****************************************************************************/
-int mystrncpy(char* target, const char* source, unsigned maxlen)
+/**
+ * @brief Copies up to maxlen characters INCLUDING end null from source to target.
+ *        Fills out the rest of the target with null bytes.
+ *        Protected from non-zero-terminated source and overlapped target/source.
+ * @note  If source is NULL or maxlen is 0, nothing is copied and 0 is returned.
+ * @param target Target string
+ * @param source Source string
+ * @param maxlen Maximum length to copy
+ * @return 1 on success, 0 if target is NULL or maxlen is 0 or source is NULL
+ */
+int mystrncpy(char *target, const char *source, unsigned maxlen)
 {
     const char* p;
     unsigned len;
@@ -1704,7 +1665,7 @@ int mystrncpy(char* target, const char* source, unsigned maxlen)
         len = (int)(p - source);
     }
     else
-    {    /*  reduced length does not include one more byte for zero termination */
+    { /*  reduced length does not include one more byte for zero termination */
         len = maxlen - 1;
     }
 
@@ -1713,22 +1674,26 @@ int mystrncpy(char* target, const char* source, unsigned maxlen)
         memmove(target, source, len);
     }
 
-    memset(target + len, 0, maxlen - len); /*  zero termination */ /* djb-rwth: memset_s C11/Annex K variant? */
+    memset(target + len, 0, maxlen - len);
+        /*  zero termination */ /* djb-rwth: memset_s C11/Annex K variant? */
 
     return 1;
 }
 
-
-/****************************************************************************
- Remove leading and trailing white spaces
-****************************************************************************/
-char* lrtrim(char* p, int* nLen)
+/**
+ * @brief Remove leading and trailing white spaces
+ * 
+ * @param p Input string
+ * @param nLen Output length of the trimmed string
+ * @return char* Pointer to the trimmed string
+ */
+char *lrtrim(char *p, int *nLen)
 {
     int i, len = 0;
 
-    if ( p && (len = (int)strlen(p)) )
+    if (p && (len = (int)strlen(p)))
     {
-        for ( i = 0; i < len && is_ascii(p[i]) && isspace(p[i]); i++ )
+        for (i = 0; i < len && is_ascii(p[i]) && isspace(p[i]); i++)
         {
             ;
         }
@@ -1837,7 +1802,6 @@ void extract_inchi_substring(char** buf, const char* str, size_t slen)
     return;
 }
 
-
 /****************************************************************************/
 void extract_auxinfo_substring(char** buf, const char* str, size_t slen)
 {
@@ -1878,22 +1842,26 @@ void extract_auxinfo_substring(char** buf, const char* str, size_t slen)
     return;
 }
 
-
 /****************************************************************************
     For compatibility: local implementation of non-ANSI
     (MS-specific) functions, prefixed with "inchi_"
 ****************************************************************************/
 
+#define __MYTOLOWER(c) (((c) >= 'A') && ((c) <= 'Z') ? ((c) - 'A' + 'a') : (c))
 
-#define __MYTOLOWER(c) ( ((c) >= 'A') && ((c) <= 'Z') ? ((c) - 'A' + 'a') : (c) )
-
-
-/****************************************************************************/
-int inchi_memicmp(const void* p1, const void* p2, size_t length)
-{
-    const U_CHAR* s1 = (const U_CHAR*)p1;
-    const U_CHAR* s2 = (const U_CHAR*)p2;
-    while ( length-- )
+/**
+ * @brief Compare two memory blocks in a case-insensitive manner.
+ *
+ * @param p1 Pointer to the first memory block.
+ * @param p2 Pointer to the second memory block.
+ * @param length Number of bytes to compare.
+ * @return int < 0 if p1 < p2, 0 if p1 == p2, > 0 if p1 > p2
+ */
+int inchi_memicmp(const void *p1, const void *p2, size_t length)
+{ 
+    const U_CHAR *s1 = (const U_CHAR *)p1;
+    const U_CHAR *s2 = (const U_CHAR *)p2;
+    while (length--)
     {
         if ( *s1 == *s2 ||
             __MYTOLOWER((int)*s1) == __MYTOLOWER((int)*s2) )
@@ -1910,7 +1878,6 @@ int inchi_memicmp(const void* p1, const void* p2, size_t length)
 
     return 0;
 }
-
 
 /****************************************************************************/
 int inchi_stricmp(const char* s1, const char* s2)
@@ -1938,7 +1905,6 @@ int inchi_stricmp(const char* s1, const char* s2)
     return 0;
 }
 
-
 /****************************************************************************/
 char* inchi__strnset(char* s, int val, size_t length)
 {
@@ -1950,7 +1916,6 @@ char* inchi__strnset(char* s, int val, size_t length)
 
     return s;
 }
-
 
 /****************************************************************************/
 char* inchi__strdup(const char* string)
@@ -1968,6 +1933,5 @@ char* inchi__strdup(const char* string)
 
     return p;
 }
-
 
 #undef __MYTOLOWER

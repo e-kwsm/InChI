@@ -10,39 +10,29 @@ on:
 jobs:
   test_glibc_gcc:
     runs-on: ubuntu-24.04
-    container: gcc:14
+    container: python:3.12
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install test dependencies
-        run: cd INCHI-1-TEST && ./install_test_dependencies.sh
+      - id: setup
+        run: ./.devcontainer/post_create_commands.sh
 
-      - name: Install build dependencies
-        run: cd INCHI-1-TEST && ./install_build_dependencies.sh
-
-      - id: build_exe
-        run: ./INCHI-1-TEST/build_with_cmake.sh exe
+      - name: Run unit tests
+        run: cd CMake_build/full_build/INCHI-1-TEST/tests/test_unit && ctest --output-on-failure
 
       - name: Run executable tests
-        if: ${{ !cancelled() && steps.build_exe.outcome == 'success' }}
         run: pytest INCHI-1-TEST/tests/test_executable
 
-      - id: build_lib
-        run: ./INCHI-1-TEST/build_with_cmake.sh lib
-
       - name: Run multithreading test
-        if: ${{ !cancelled() && steps.build_lib.outcome == 'success' }}
         run: python INCHI-1-TEST/tests/test_library/test_multithreading.py
         timeout-minutes: 1
 
       - uses: ./.github/actions/regression_tests
-        if: ${{ !cancelled() && steps.build_lib.outcome == 'success' }}
         with:
           artifact-name: regression-test-results_glibc_gcc
 
       - uses: ./.github/actions/invariance_tests
-        if: ${{ !cancelled() && steps.build_lib.outcome == 'success' }}
         with:
           artifact-name: invariance-test-results_glibc_gcc
 
@@ -77,23 +67,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e INCHI-1-TEST
 
-      - id: build_exe
-        run: ./INCHI-1-TEST/build_with_cmake.sh exe
+      - id: build
+        run: ./INCHI-1-TEST/build_with_cmake.sh all
+
+      - name: Run unit tests
+        run: cd CMake_build/full_build/INCHI-1-TEST/tests/test_unit && ctest --output-on-failure
 
       - name: Run executable tests
-        if: ${{ !cancelled() && steps.build_exe.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: pytest INCHI-1-TEST/tests/test_executable
 
-      - id: build_lib
-        run: ./INCHI-1-TEST/build_with_cmake.sh lib
-
       - name: Run multithreading test
-        if: ${{ !cancelled() && steps.build_lib.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: python INCHI-1-TEST/tests/test_library/test_multithreading.py
         timeout-minutes: 1
 
       - uses: ./.github/actions/regression_tests
-        if: ${{ !cancelled() && steps.build_lib.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         with:
           artifact-name: regression-test-results_musl_gcc
 

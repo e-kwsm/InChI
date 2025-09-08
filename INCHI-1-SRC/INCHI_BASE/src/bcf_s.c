@@ -185,7 +185,7 @@ static int dbl2int_f(double dblinp, int fwidth, int ndecpl, char* str)
 static int dbl2int_e(double dblinp, int fwidth, int ndecpl, char* str)
 {
 	double dec_part, dblinpabs;
-	int expnr = 0, fw_int, fw_dec, fw_real, dblinp_sign, nintpl, i;
+	int expnr = 0, fw_int, fw_dec, fw_real, dblinp_sign, nintpl, i, j;
 	long long int intpl = 0, decpl = 0;
 
 	dblinp_sign = (dblinp >= 0.0) ? 1 : -1;
@@ -196,7 +196,7 @@ static int dbl2int_e(double dblinp, int fwidth, int ndecpl, char* str)
 
 	if (nintpl > 1)
 	{
-		for (int j = 0; j < nintpl - 1; j++)
+		for (j = 0; j < nintpl - 1; j++)
 		{
 			dblinp /= 10.0;
 			expnr++;
@@ -276,7 +276,7 @@ static int dbl2int_g(double dblinp, int fwidth, int ndecpl, char* str)
 	double dec_part, dblinpabs, dblinpc = dblinp;
 	char* intpl_str;
 	const char* dblinp_signf;
-	int expnr = 0, fw_int, fw_dec, fw_real, dblinp_signe, nintpl, i;
+	int expnr = 0, fw_int, fw_dec, fw_real, dblinp_signe, nintpl, i, j;
 	long long int intpl = 0, decpl = 0;
 
 	dblinpabs = fabsl(dblinpc);
@@ -285,7 +285,7 @@ static int dbl2int_g(double dblinp, int fwidth, int ndecpl, char* str)
 
 	if (nintpl > 1)
 	{
-		for (int j = 0; j < nintpl - 1; j++)
+		for (j = 0; j < nintpl - 1; j++)
 		{
 			dblinpc /= 10.0;
 			expnr++;

@@ -11,7 +11,14 @@ INCHI-1-SRC/INCHI_EXE/bin*
 __pycache__
 .pytest_cache
 .vscode/
+doxygen/
+doxygen_doc/
+.vs/
+build/
+Testing/
+googletest/
 *.egg-info/
+.clang-format
 # Ignore core dump files
 core.*[0-9]
 CMake_build/

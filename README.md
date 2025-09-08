@@ -56,6 +56,35 @@ You are welcome to contribute to this project. To do so, you may [submit a pull 
 
 ![git-flow](./INCHI-1-DOC/assets/git_flow.svg)
 
+## Source code documentation
+
+We've started documenting the source code with [Doxygen](https://www.doxygen.nl/index.html).
+
+Follow the Doxygen syntax when writing comments. For example
+
+```C
+/**
+* @brief Read a field from a MOL file.
+*
+* @param data Pointer to the destination buffer.
+* @param field_len Length of the field to read.
+* @param data_type Type of the data to read.
+* @param line_ptr Pointer to a variable that will receive the address of the next line.
+* @return for MOL_FMT_STRING_DATA: number of bytes excluding trailing zero
+*         for all others:  1=success; 0 = empty; -1= error
+*/
+int MolfileReadField(void *data,
+     int field_len,
+     int data_type,
+     char **line_ptr);
+```
+
+The Doxygen documentation syntax is quite powerful: you can include formulas, tables, and diagrams.
+For details see <https://www.doxygen.nl/manual>.
+
+The documentation is [built on every push](.github/workflows/deploy_docs.yml) to the default branch of this repository and hosted at <https://iupac-inchi.github.io/InChI/>.
+That is, your comments will automatically be rendered to HTML and served as online documentation.
+
 ## Contents of this repository
 
 ### INCHI-1-BIN
