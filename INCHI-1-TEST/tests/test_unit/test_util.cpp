@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-extern "C"
-{
+extern "C" {
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/util.h"
 }
 
@@ -191,17 +190,17 @@ TEST(util_testing, test_lrtrim)
 {
 
     char test_string1[7] = " InChI";
-    int nLen1 = 0;
+    int nLen1            = 0;
     EXPECT_STREQ(lrtrim(test_string1, &nLen1), "InChI");
     EXPECT_EQ(nLen1, 5);
 
     char test_string2[9] = " InChI  ";
-    int nLen2 = 0;
+    int nLen2            = 0;
     EXPECT_STREQ(lrtrim(test_string2, &nLen2), "InChI");
     EXPECT_EQ(nLen2, 5);
 
     char test_string3[6] = "InChI";
-    int nLen3 = 0;
+    int nLen3            = 0;
     EXPECT_STREQ(lrtrim(test_string3, &nLen3), "InChI");
     EXPECT_EQ(nLen3, 5);
 }
@@ -213,39 +212,38 @@ TEST(util_testing, test_extract_H_atoms)
 {
     S_CHAR num_iso_H[NUM_H_ISOTOPES] = {0};
 
-    char elname[4] = "C";
+    char elname[4]                   = "C";
 
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
     EXPECT_STREQ(elname, "C");
 
-    strcpy(elname, "H");    
+    strcpy(elname, "H");
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 1);
     EXPECT_STREQ(elname, "");
 
     EXPECT_EQ(num_iso_H[0], '\0'); // H
 
-    strcpy(elname, "Rh");    
+    strcpy(elname, "Rh");
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
 
-    strcpy(elname, "D");    
+    strcpy(elname, "D");
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
     EXPECT_STREQ(elname, "");
 
     EXPECT_EQ(num_iso_H[0], '\0'); // D
 
-    strcpy(elname, "???");    
+    strcpy(elname, "???");
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
-    
-    strcpy(elname, "T");    
+
+    strcpy(elname, "T");
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
     EXPECT_STREQ(elname, "");
 
-    EXPECT_EQ(num_iso_H[0], '\0'); // T
+    EXPECT_EQ(num_iso_H[0], '\0');  // T
     EXPECT_EQ(num_iso_H[1], '\x1'); // T
 
-    strcpy(elname, "");    
-    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);    
-
+    strcpy(elname, "");
+    EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
 }
 
 TEST(util_testing, test_get_num_H)
@@ -300,49 +298,49 @@ TEST(util_testing, test_normalize_string)
 
 TEST(util_testing, test_read_upto_delim)
 {
-    //read_upto_delim(char **pstring, char *field, int maxlen, char *delims)
+    // read_upto_delim(char **pstring, char *field, int maxlen, char *delims)
 
-    char test_string1[] = "field1,field2,field3";
+    char test_string1[]    = "field1,field2,field3";
     char *test_string1_inp = test_string1;
     char field[15];
-    int maxlen = 10;
+    int maxlen    = 10;
     char delims[] = ",";
 
     EXPECT_EQ(read_upto_delim(&test_string1_inp, field, maxlen, delims), 6);
     EXPECT_STREQ(field, "field1");
     EXPECT_STREQ(test_string1_inp, ",field2,field3");
 
-    char test_string2[] = "";
+    char test_string2[]    = "";
     char *test_string2_inp = test_string2;
 
     EXPECT_EQ(read_upto_delim(&test_string2_inp, field, maxlen, delims), 0);
     EXPECT_STREQ(field, "");
     EXPECT_STREQ(test_string2_inp, NULL);
 
-    char test_string3[] = "afdfs,fdsfff323sd";
+    char test_string3[]    = "afdfs,fdsfff323sd";
     char *test_string3_inp = test_string3;
 
     EXPECT_EQ(read_upto_delim(&test_string3_inp, field, maxlen, delims), 5);
     EXPECT_STREQ(field, "afdfs");
     EXPECT_STREQ(test_string3_inp, ",fdsfff323sd");
 
-    char test_string4[] = "afdfsfdsfff323sd";
+    char test_string4[]    = "afdfsfdsfff323sd";
     char *test_string4_inp = test_string4;
 
     EXPECT_EQ(read_upto_delim(&test_string4_inp, field, maxlen, delims), -1);
     // EXPECT_STREQ(field, "");
     EXPECT_STREQ(test_string4_inp, "afdfsfdsfff323sd");
 
-    char test_string5[] = "afdfsfdsfff323sd";
-    maxlen = 50;
+    char test_string5[]    = "afdfsfdsfff323sd";
+    maxlen                 = 50;
     char *test_string5_inp = test_string5;
 
     EXPECT_EQ(read_upto_delim(&test_string5_inp, field, maxlen, delims), 16);
     EXPECT_STREQ(field, "afdfsfdsfff323sd");
     EXPECT_STREQ(test_string5_inp, NULL);
 
-    char test_string6[] = "field1,field2,field3";
-    maxlen = 3;
+    char test_string6[]    = "field1,field2,field3";
+    maxlen                 = 3;
     char *test_string6_inp = test_string6;
 
     EXPECT_EQ(read_upto_delim(&test_string6_inp, field, maxlen, delims), -1);
@@ -365,12 +363,11 @@ TEST(util_testing, test_is_matching_any_delim)
 
     EXPECT_FALSE(is_matching_any_delim(' ', delims2));
     EXPECT_FALSE(is_matching_any_delim('a', delims2));
-
 }
 
 TEST(util_testing, test_dotify_non_printable_chars)
 {
-    //dotify_non_printable_chars(char *line)
+    // dotify_non_printable_chars(char *line)
     char test_string1[] = "Hello\x01World";
     EXPECT_EQ(dotify_non_printable_chars(test_string1), 1);
     EXPECT_STREQ(test_string1, "Hello.World");
@@ -398,7 +395,7 @@ TEST(util_testing, test_remove_trailing_spaces)
 
 TEST(util_testing, test_remove_one_lf)
 {
-    //remove_one_lf(char *p)
+    // remove_one_lf(char *p)
     char test_string1[] = "Hello World\n";
     remove_one_lf(test_string1);
     EXPECT_STREQ(test_string1, "Hello World");
@@ -406,7 +403,7 @@ TEST(util_testing, test_remove_one_lf)
     char test_string2[] = "Hello World\r\n";
     remove_one_lf(test_string2);
     EXPECT_STREQ(test_string2, "Hello World");
-    
+
     char test_string3[] = "NoLineFeed";
     remove_one_lf(test_string3);
     EXPECT_STREQ(test_string3, "NoLineFeed");
@@ -442,7 +439,8 @@ TEST(util_testing, test_mystrncpy)
     EXPECT_EQ(mystrncpy(NULL, source, 10), 0); // target is NULL
 }
 
-TEST(util_testing, test_inchi_memicmp) {
+TEST(util_testing, test_inchi_memicmp)
+{
 
     // inchi_memicmp(const void *p1, const void *p2, size_t length)
 
@@ -457,7 +455,7 @@ TEST(util_testing, test_inchi_memicmp) {
     EXPECT_TRUE(inchi_memicmp(str7, str8, 1) < 0);
 
     const char *str3 = "Hello";
-    const char *str4 = "hellosdfds";  
+    const char *str4 = "hellosdfds";
 
     EXPECT_TRUE(inchi_memicmp(str3, str4, 9) < 0);
 
@@ -470,10 +468,10 @@ TEST(util_testing, test_inchi_memicmp) {
     const char *str10 = "qwd";
 
     EXPECT_TRUE(inchi_memicmp(str9, str10, 20) > 0);
-
 }
 
-TEST(util_testing, test_inchi_stricmp) {
+TEST(util_testing, test_inchi_stricmp)
+{
 
     // inchi_stricmp(const char *s1, const char *s2)
     EXPECT_EQ(inchi_stricmp("Hello", "hello"), 0);
@@ -483,10 +481,11 @@ TEST(util_testing, test_inchi_stricmp) {
     EXPECT_TRUE(inchi_stricmp("Hello", "HELLO") == 0);
     EXPECT_TRUE(inchi_stricmp("", "") == 0);
     EXPECT_TRUE(inchi_stricmp("123", "12") > 0);
-    EXPECT_TRUE(inchi_stricmp("123", "12455454") < 0);    
+    EXPECT_TRUE(inchi_stricmp("123", "12455454") < 0);
 }
 
-TEST(util_testing, test_inchi_strnset) {
+TEST(util_testing, test_inchi_strnset)
+{
 
     // char *inchi__strnset(char *s, int val, size_t length)
     char test_string1[] = "Hello";
@@ -499,7 +498,8 @@ TEST(util_testing, test_inchi_strnset) {
     EXPECT_STREQ(inchi__strnset(test_string3, 'Z', 0), "NoChange");
 }
 
-TEST(util_testing, test_inchi_strdup) {
+TEST(util_testing, test_inchi_strdup)
+{
 
     // char *inchi__strdup(const char *string)
     char *dup1 = inchi__strdup("Hello");
@@ -511,19 +511,21 @@ TEST(util_testing, test_inchi_strdup) {
     free(dup2);
 }
 
-TEST(util_testing, test_inchi_strtol) {
+TEST(util_testing, test_inchi_strtol)
+{
 
     // long inchi_strtol(const char *str, const char **p, int base)
     // base is for numerical type: 10 -> decimal, 16 -> hexadecimal, 27 -> compressed inchi, 0 -> auto detect
     long result1 = inchi_strtol("12345", NULL, 0);
     EXPECT_EQ(result1, 12345);
 
-    //TODO: what is a compressed inchi? -> base 27
+    // TODO: what is a compressed inchi? -> base 27
     long result2 = inchi_strtol("12345", NULL, 27);
-    EXPECT_EQ(result2, 0);    
+    EXPECT_EQ(result2, 0);
 }
 
-TEST(util_testing, test_inchi_strtod) {
+TEST(util_testing, test_inchi_strtod)
+{
 
     // double inchi_strtod(const char *str, const char **p)
     const char *endptr;
@@ -536,46 +538,49 @@ TEST(util_testing, test_inchi_strtod) {
     EXPECT_EQ(*endptr, 'a');
 }
 
-TEST(util_testing, test_is_in_the_list) {
+TEST(util_testing, test_is_in_the_list)
+{
 
     // AT_NUMB *is_in_the_list(AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen)
     AT_NUMB pathAtom1[] = {1, 2, 3, 4, 5};
-    AT_NUMB nNextAtom1 = 3;
-    int nPathLen1 = 5;
+    AT_NUMB nNextAtom1  = 3;
+    int nPathLen1       = 5;
     EXPECT_TRUE(is_in_the_list(pathAtom1, nNextAtom1, nPathLen1));
 
     AT_NUMB pathAtom2[] = {1, 2, 3, 4, 5};
-    AT_NUMB nNextAtom2 = 6;
-    int nPathLen2 = 5;
+    AT_NUMB nNextAtom2  = 6;
+    int nPathLen2       = 5;
     EXPECT_FALSE(is_in_the_list(pathAtom2, nNextAtom2, nPathLen2));
 
     AT_NUMB pathAtom3[] = {};
-    AT_NUMB nNextAtom3 = 6;
-    int nPathLen3 = 5;
+    AT_NUMB nNextAtom3  = 6;
+    int nPathLen3       = 5;
     EXPECT_FALSE(is_in_the_list(pathAtom3, nNextAtom3, nPathLen3));
 }
 
-TEST(util_testing, test_is_in_the_ilist) {
+TEST(util_testing, test_is_in_the_ilist)
+{
 
-    //int *is_in_the_ilist(int *pathAtom, int nNextAtom, int nPathLen)
+    // int *is_in_the_ilist(int *pathAtom, int nNextAtom, int nPathLen)
 
     int pathAtom1[] = {1, 2, 3, 4, 5};
-    int nNextAtom1 = 3;
-    int nPathLen1 = 5;
+    int nNextAtom1  = 3;
+    int nPathLen1   = 5;
     EXPECT_TRUE(is_in_the_ilist(pathAtom1, nNextAtom1, nPathLen1));
 
     int pathAtom2[] = {1, 2, 3, 4, 5};
-    int nNextAtom2 = 6;
-    int nPathLen2 = 5;
+    int nNextAtom2  = 6;
+    int nPathLen2   = 5;
     EXPECT_FALSE(is_in_the_ilist(pathAtom2, nNextAtom2, nPathLen2));
 
     int pathAtom3[] = {};
-    int nNextAtom3 = -6;
-    int nPathLen3 = 5;
+    int nNextAtom3  = -6;
+    int nPathLen3   = 5;
     EXPECT_FALSE(is_in_the_ilist(pathAtom3, nNextAtom3, nPathLen3));
 }
 
-TEST(util_testing, test_is_ilist_inside) {
+TEST(util_testing, test_is_ilist_inside)
+{
 
     // int is_ilist_inside(int *ilist, int nlist, int *ilist2, int nlist2)
 
@@ -586,63 +591,63 @@ TEST(util_testing, test_is_ilist_inside) {
     int pathAtom3[] = {6, 7};
     EXPECT_FALSE(is_ilist_inside(pathAtom3, 2, pathAtom1, 5));
 
-    EXPECT_FALSE(is_ilist_inside(pathAtom2, 2, pathAtom3, 2));    
+    EXPECT_FALSE(is_ilist_inside(pathAtom2, 2, pathAtom3, 2));
 
     int pathAtom4[] = {};
     int pathAtom5[] = {};
     EXPECT_TRUE(is_ilist_inside(pathAtom4, 0, pathAtom5, 0));
 }
 
-TEST(util_testing, test_nBondsValToMetal) {
+TEST(util_testing, test_nBondsValToMetal)
+{
 
     // int nBondsValToMetal(inp_ATOM *at, int iat)
 
     // EXPECT_EQ(nBondsValToMetal(NULL, 0), 0);  SEG FAULT
-    
-    inp_ATOM *atoms1 = CreateInpAtom(2);
-    atoms1[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
+
+    inp_ATOM *atoms1    = CreateInpAtom(2);
+    atoms1[0].el_number = get_periodic_table_number("C");  // Carbon 6 valence 4
     atoms1[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
 
-
-    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
-    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
+    atoms1[0].valence   = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence   = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
 
     EXPECT_EQ(atoms1[0].valence, 4);
     EXPECT_EQ(atoms1[1].valence, 2);
 
-    atoms1[0].neighbor[0] = 1;
-    atoms1[1].neighbor[0] = 0;
+    atoms1[0].neighbor[0]  = 1;
+    atoms1[1].neighbor[0]  = 0;
 
     atoms1[0].bond_type[0] = 1;
     atoms1[1].bond_type[0] = 1;
 
-    EXPECT_EQ(nBondsValToMetal(atoms1, 0), 1);    
+    EXPECT_EQ(nBondsValToMetal(atoms1, 0), 1);
     EXPECT_EQ(nBondsValToMetal(atoms1, 1), 0);
 
-    inp_ATOM *atoms2 = CreateInpAtom(3);
-    atoms2[0].el_number = get_periodic_table_number("C"); // Carbon 6 valence 4
+    inp_ATOM *atoms2    = CreateInpAtom(3);
+    atoms2[0].el_number = get_periodic_table_number("C");  // Carbon 6 valence 4
     atoms2[1].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
     atoms2[2].el_number = get_periodic_table_number("Fe"); // Iron 26 valence 8
 
-    atoms2[0].valence = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
-    atoms2[1].valence = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
-    atoms2[2].valence = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
+    atoms2[0].valence   = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
+    atoms2[1].valence   = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
+    atoms2[2].valence   = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
 
     EXPECT_EQ(atoms2[0].valence, 4);
     EXPECT_EQ(atoms2[1].valence, 2);
     EXPECT_EQ(atoms2[2].valence, 2);
 
-    atoms2[0].neighbor[0] = 1;
-    atoms2[0].neighbor[1] = 2;
-    atoms2[1].neighbor[0] = 0;
-    atoms2[2].neighbor[0] = 0;
+    atoms2[0].neighbor[0]  = 1;
+    atoms2[0].neighbor[1]  = 2;
+    atoms2[1].neighbor[0]  = 0;
+    atoms2[2].neighbor[0]  = 0;
 
     atoms2[0].bond_type[0] = 1;
     atoms2[0].bond_type[1] = 1; // dont forget to set bond types for each atom
     atoms2[1].bond_type[0] = 1;
-    atoms2[2].bond_type[0] = 1;    
+    atoms2[2].bond_type[0] = 1;
 
-    EXPECT_EQ(nBondsValToMetal(atoms2, 0), 2);    
+    EXPECT_EQ(nBondsValToMetal(atoms2, 0), 2);
     EXPECT_EQ(nBondsValToMetal(atoms2, 1), 0);
     EXPECT_EQ(nBondsValToMetal(atoms2, 2), 0);
 
@@ -650,23 +655,23 @@ TEST(util_testing, test_nBondsValToMetal) {
     FreeInpAtom(&atoms2);
 }
 
-TEST(util_testing, test_num_of_H) {
+TEST(util_testing, test_num_of_H)
+{
 
     // int num_of_H(inp_ATOM *at, int iat)
 
-    
-    inp_ATOM *atoms1 = CreateInpAtom(5);
-    atoms1[0].el_number = get_periodic_table_number("C");
-    atoms1[1].el_number = get_periodic_table_number("H");
-    atoms1[2].el_number = get_periodic_table_number("H");
-    atoms1[3].el_number = get_periodic_table_number("H");
-    atoms1[4].el_number = get_periodic_table_number("H");
+    inp_ATOM *atoms1      = CreateInpAtom(5);
+    atoms1[0].el_number   = get_periodic_table_number("C");
+    atoms1[1].el_number   = get_periodic_table_number("H");
+    atoms1[2].el_number   = get_periodic_table_number("H");
+    atoms1[3].el_number   = get_periodic_table_number("H");
+    atoms1[4].el_number   = get_periodic_table_number("H");
 
-    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
-    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
-    atoms1[2].valence = static_cast<S_CHAR>(get_el_valence(atoms1[2].el_number, atoms1[2].charge, 0));
-    atoms1[3].valence = static_cast<S_CHAR>(get_el_valence(atoms1[3].el_number, atoms1[3].charge, 0));
-    atoms1[4].valence = static_cast<S_CHAR>(get_el_valence(atoms1[4].el_number, atoms1[4].charge, 0));
+    atoms1[0].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
+    atoms1[2].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[2].el_number, atoms1[2].charge, 0));
+    atoms1[3].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[3].el_number, atoms1[3].charge, 0));
+    atoms1[4].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[4].el_number, atoms1[4].charge, 0));
 
     atoms1[0].neighbor[0] = 1;
     atoms1[0].neighbor[1] = 2;
@@ -682,26 +687,26 @@ TEST(util_testing, test_num_of_H) {
 
     FreeInpAtom(&atoms1);
 
-    inp_ATOM *atoms2 = CreateInpAtom(8);
+    inp_ATOM *atoms2      = CreateInpAtom(8);
 
-    atoms2[0].el_number = get_periodic_table_number("C");    
-    atoms2[1].el_number = get_periodic_table_number("H");
-    atoms2[2].el_number = get_periodic_table_number("H");
-    atoms2[3].el_number = get_periodic_table_number("H");
-    
-    atoms2[4].el_number = get_periodic_table_number("C");
-    atoms2[5].el_number = get_periodic_table_number("H");
-    atoms2[6].el_number = get_periodic_table_number("H");
-    atoms2[7].el_number = get_periodic_table_number("H");
+    atoms2[0].el_number   = get_periodic_table_number("C");
+    atoms2[1].el_number   = get_periodic_table_number("H");
+    atoms2[2].el_number   = get_periodic_table_number("H");
+    atoms2[3].el_number   = get_periodic_table_number("H");
 
-    atoms2[0].valence = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
-    atoms2[1].valence = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
-    atoms2[2].valence = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
-    atoms2[3].valence = static_cast<S_CHAR>(get_el_valence(atoms2[3].el_number, atoms2[3].charge, 0));
-    atoms2[4].valence = static_cast<S_CHAR>(get_el_valence(atoms2[4].el_number, atoms2[4].charge, 0));
-    atoms2[5].valence = static_cast<S_CHAR>(get_el_valence(atoms2[5].el_number, atoms2[5].charge, 0));
-    atoms2[6].valence = static_cast<S_CHAR>(get_el_valence(atoms2[6].el_number, atoms2[6].charge, 0));
-    atoms2[7].valence = static_cast<S_CHAR>(get_el_valence(atoms2[7].el_number, atoms2[7].charge, 0));
+    atoms2[4].el_number   = get_periodic_table_number("C");
+    atoms2[5].el_number   = get_periodic_table_number("H");
+    atoms2[6].el_number   = get_periodic_table_number("H");
+    atoms2[7].el_number   = get_periodic_table_number("H");
+
+    atoms2[0].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[0].el_number, atoms2[0].charge, 0));
+    atoms2[1].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[1].el_number, atoms2[1].charge, 0));
+    atoms2[2].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[2].el_number, atoms2[2].charge, 0));
+    atoms2[3].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[3].el_number, atoms2[3].charge, 0));
+    atoms2[4].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[4].el_number, atoms2[4].charge, 0));
+    atoms2[5].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[5].el_number, atoms2[5].charge, 0));
+    atoms2[6].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[6].el_number, atoms2[6].charge, 0));
+    atoms2[7].valence     = static_cast<S_CHAR>(get_el_valence(atoms2[7].el_number, atoms2[7].charge, 0));
 
     atoms2[0].neighbor[0] = 1;
     atoms2[0].neighbor[1] = 2;
@@ -711,7 +716,7 @@ TEST(util_testing, test_num_of_H) {
     atoms2[1].neighbor[0] = 0;
     atoms2[2].neighbor[0] = 0;
     atoms2[3].neighbor[0] = 0;
-    
+
     atoms2[4].neighbor[0] = 0;
     atoms2[4].neighbor[1] = 5;
     atoms2[4].neighbor[2] = 6;
@@ -719,17 +724,17 @@ TEST(util_testing, test_num_of_H) {
 
     atoms2[5].neighbor[0] = 4;
     atoms2[6].neighbor[0] = 4;
-    atoms2[7].neighbor[0] = 4;    
+    atoms2[7].neighbor[0] = 4;
 
     EXPECT_EQ(num_of_H(atoms2, 0), 3);
 
     EXPECT_EQ(num_of_H(atoms2, 4), 3);
 
-    
     FreeInpAtom(&atoms2);
 }
 
-TEST(util_testing, test_ion_el_group) {
+TEST(util_testing, test_ion_el_group)
+{
 
     // U_CHAR ion_el_group(int el)
     EXPECT_EQ(ion_el_group(get_periodic_table_number("C")), EL_NUMBER_C);
@@ -738,33 +743,34 @@ TEST(util_testing, test_ion_el_group) {
     EXPECT_EQ(ion_el_group(get_periodic_table_number("Mn")), 0);
 }
 
-TEST(util_testing, test_has_other_ion_neigh) {
+TEST(util_testing, test_has_other_ion_neigh)
+{
 
     // int has_other_ion_neigh(inp_ATOM *at, int iat, int iat_ion_neigh)
-    inp_ATOM *atoms1 = CreateInpAtom(2);
+    inp_ATOM *atoms1      = CreateInpAtom(2);
 
-    atoms1[0].el_number = get_periodic_table_number("C");    
-    atoms1[1].el_number = get_periodic_table_number("O");
+    atoms1[0].el_number   = get_periodic_table_number("C");
+    atoms1[1].el_number   = get_periodic_table_number("O");
 
-    atoms1[0].valence = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
-    atoms1[1].valence = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
+    atoms1[0].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[0].el_number, atoms1[0].charge, 0));
+    atoms1[1].valence     = static_cast<S_CHAR>(get_el_valence(atoms1[1].el_number, atoms1[1].charge, 0));
 
     atoms1[0].neighbor[0] = 1;
-    atoms1[1].neighbor[0] = 0;    
+    atoms1[1].neighbor[0] = 0;
 
     EXPECT_EQ(has_other_ion_neigh(atoms1, 0, 1), 1);
-    EXPECT_EQ(has_other_ion_neigh(atoms1, 1, 0), 0);  // ?? 
+    EXPECT_EQ(has_other_ion_neigh(atoms1, 1, 0), 0); // ??
 
     FreeInpAtom(&atoms1);
-
 }
 
-TEST(util_testing, test_extract_charges_and_radicals) {    
+TEST(util_testing, test_extract_charges_and_radicals)
+{
 
     // int extract_charges_and_radicals(char *elname, int *pnRadical, int *pnCharge)
 
-    int nRadical = 0;
-    int nCharge = 0;
+    int nRadical     = 0;
+    int nCharge      = 0;
 
     char el_name[10] = "";
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 0);
@@ -789,12 +795,12 @@ TEST(util_testing, test_extract_charges_and_radicals) {
     strcpy(el_name, "Cl+2");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 0);
-    EXPECT_EQ(nCharge, 2);    
-    
+    EXPECT_EQ(nCharge, 2);
+
     strcpy(el_name, "Cl2+");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 0);
-    EXPECT_EQ(nCharge, 1);   
+    EXPECT_EQ(nCharge, 1);
 
     strcpy(el_name, "Cl++");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
@@ -814,37 +820,36 @@ TEST(util_testing, test_extract_charges_and_radicals) {
     strcpy(el_name, "Cl:");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 1);
-    EXPECT_EQ(nCharge, 0);    
+    EXPECT_EQ(nCharge, 0);
 
     strcpy(el_name, "Cl::");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 1);
-    EXPECT_EQ(nCharge, 0);      
+    EXPECT_EQ(nCharge, 0);
 
     strcpy(el_name, "Cl^");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 2);
-    EXPECT_EQ(nCharge, 0);  
+    EXPECT_EQ(nCharge, 0);
 
     strcpy(el_name, "Cl.");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 2);
-    EXPECT_EQ(nCharge, 0);    
+    EXPECT_EQ(nCharge, 0);
 
     strcpy(el_name, "Cl^^");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 3);
-    EXPECT_EQ(nCharge, 0);   
+    EXPECT_EQ(nCharge, 0);
 
     strcpy(el_name, "C^^");
     EXPECT_EQ(extract_charges_and_radicals(el_name, &nRadical, &nCharge), 1);
     EXPECT_EQ(nRadical, 3);
-    EXPECT_EQ(nCharge, 0); 
-        
+    EXPECT_EQ(nCharge, 0);
 }
 
-
-TEST(util_testing, test_extract_inchi_substring) {
+TEST(util_testing, test_extract_inchi_substring)
+{
 
     // void extract_inchi_substring(char **buf, const char *str, size_t slen)
 
@@ -855,26 +860,76 @@ TEST(util_testing, test_extract_inchi_substring) {
     //    all will be trimmed to
     //        "InChI=1/Ar"
 
-    char *buf1 = NULL;
+    char *buf1             = NULL;
     const char *str_inchi1 = "InChI=1/Ar%";
-    size_t slen1 = strlen(str_inchi1);
+    size_t slen1           = strlen(str_inchi1);
 
     extract_inchi_substring(&buf1, str_inchi1, slen1);
 
     EXPECT_NE(buf1, nullptr);
-    EXPECT_STREQ(buf1, "InChI=1/Ar");    
+    EXPECT_STREQ(buf1, "InChI=1/Ar");
     free(buf1);
 
-    char *buf2 = NULL;
+    char *buf2             = NULL;
     const char *str_inchi2 = "InChI=1/Ar\r\t";
-    size_t slen2 = strlen(str_inchi2);
+    size_t slen2           = strlen(str_inchi2);
 
     extract_inchi_substring(&buf2, str_inchi2, slen2);
 
     EXPECT_NE(buf2, nullptr);
-    EXPECT_STREQ(buf2, "InChI=1/Ar");    
+    EXPECT_STREQ(buf2, "InChI=1/Ar");
+    free(buf2);
+}
+
+TEST(util_testing, test_extract_auxinfo_substring)
+{
+    // void extract_auxinfo_substring(char **buf, const char *str, size_t slen)
+
+    char *buf1               = NULL;
+    const char *str_auxinfo1 = "AuxInfo=1/0/N:1/rA:1nC/rB:/rC:3.025,-3.725,0;       ";
+    size_t slen1             = strlen(str_auxinfo1);
+
+    extract_auxinfo_substring(&buf1, str_auxinfo1, slen1);
+
+    EXPECT_NE(buf1, nullptr);
+    EXPECT_STREQ(buf1, "AuxInfo=1/0/N:1/rA:1nC/rB:/rC:3.025,-3.725,0;");
+    free(buf1);
+
+    char *buf2               = NULL;
+    const char *str_auxinfo2 = "AuxInfo=1/0/N:1/rA:1nC/rB:/rC:3.025,-3.725,0;\r\t";
+    size_t slen2             = strlen(str_auxinfo2);
+
+    extract_auxinfo_substring(&buf2, str_auxinfo2, slen2);
+
+    EXPECT_NE(buf2, nullptr);
+    EXPECT_STREQ(buf2, "AuxInfo=1/0/N:1/rA:1nC/rB:/rC:3.025,-3.725,0;");
     free(buf2);
 
-    
+    char *buf3 = NULL;
+    const char *str_auxinfo3 =
+        "AuxInfo=1/0/N:1,3,5,2,6,4/E:(1,2,3,4,5,6)/rA:6nCCCCCC/rB:;d1s2;d2;s1;s4d5;/rC:3.2848,-6.7251,0;5.0152,-6.7246,0;4.1516,-6.225,0;5.0152,-7.7255,0;3.2848,-7.73,0;4.1538,-8.225,0;\r\t";
+    size_t slen3 = strlen(str_auxinfo3);
 
+    extract_auxinfo_substring(&buf3, str_auxinfo3, slen3);
+
+    EXPECT_NE(buf3, nullptr);
+    EXPECT_STREQ(buf3,
+                 "AuxInfo=1/0/N:1,3,5,2,6,4/E:(1,2,3,4,5,6)/rA:6nCCCCCC/rB:;d1s2;d2;s1;s4d5;/rC:3.2848,-6.7251,0;5.0152,-6.7246,0;4.1516,-6.225,0;5.0152,-7.7255,0;3.2848,-7.73,0;4.1538,-8.225,0;");
+    free(buf3);
+
+    char *buf4               = NULL;
+    const char *str_auxinfo4 = "Aunfo=1/0/N:1/rA:1nC/rB:/rC:3.025,-3.725,0;";
+    size_t slen4             = strlen(str_auxinfo4);
+
+    extract_auxinfo_substring(&buf4, str_auxinfo4, slen4);
+
+    EXPECT_EQ(buf4, nullptr);
+    free(buf4);
+}
+
+TEST(util_testing, test_extract_stereo_info_from_inchi_string)
+{
+    // int extract_stereo_info_from_inchi_string(char *sinchi, int nat, int *orig, int *at_stereo_mark);
+
+    char inchi1[] = "InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3/t2-/m0/s1";
 }
