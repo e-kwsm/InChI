@@ -3866,19 +3866,23 @@ void OAD_Polymer_SmartReopenCyclizedUnits( OAD_Polymer *p,
 
     if (!p)
     {
+        inchi_free(aprops); /* djb-rwth: avoiding memory leak */
         return;
     }
     if (p->n < 1)
     {
+        inchi_free(aprops); /* djb-rwth: avoiding memory leak */
         return;
     }
     if (!p->really_do_frame_shift)
     {
+        inchi_free(aprops); /* djb-rwth: avoiding memory leak */
         return;
     }
     /* djb-rwth: fixing oss-fuzz issue #68329 */
     if (nat <= 0)
     {
+        inchi_free(aprops); /* djb-rwth: avoiding memory leak */
         return;
     }
 
@@ -3888,6 +3892,7 @@ void OAD_Polymer_SmartReopenCyclizedUnits( OAD_Polymer *p,
     /* Set atom properties for sorting */
     if (!aprops || !at) /* djb-rwth: fixing oss-fuzz issue #68329, #68286 */
     {
+        inchi_free(aprops); /* djb-rwth: avoiding memory leak */
         return;
     }
     OAD_Polymer_SetAtProps( p, at, nat, num_inp_bonds, aprops, NULL ); /* NULL as we alredy are in 1-based cano_nums while at i2s/i2i*/

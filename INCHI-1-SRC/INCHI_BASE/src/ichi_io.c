@@ -881,6 +881,7 @@ int inchi_print_nodisplay(FILE* f, const char* lpszFormat, ...)
 
     my_va_start(argList, lpszFormat);
     ret = vfprintf(fi, lpszFormat, argList);
+    va_end(argList);
     return ret;
 }
 

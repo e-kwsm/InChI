@@ -4407,7 +4407,7 @@ int MarkDisconnectedComponents( ORIG_ATOM_DATA *orig_at_data,
     stable sort
     */
 
-    qsort( (void*) component_nbr[0], num_components, sizeof( component_nbr[0] ), cmp_components ); /* djb-rwth: buffer overrun while writing component_nbr[0]? */ /* djb-rwth: ui_rr? */
+    qsort( (void*) component_nbr[0], num_components, sizeof( component_nbr[0] ), cmp_components ); /* djb-rwth: fixed buffer overrun */
 
     /* Invert the transposition */
     for (i = 0; i < num_components; i++)
@@ -5033,7 +5033,7 @@ void imat_free( int m, int **a )
     {
         for (i = 0; i < m; i++)
         {
-            if (NULL != a[i]) /* djb-rwth: ui_rr? */
+            if (NULL != a[i]) /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
             {
                 inchi_free( a[i] );
             }
@@ -5168,7 +5168,7 @@ void subgraf_free( subgraf *sg )
     {
         for (i = 0; i < sg->nnodes; i++)
         {
-            if (sg->adj[i]) /* djb-rwth: ui_rr? */
+            if (sg->adj[i]) /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
             {
                 inchi_free( sg->adj[i] );
             }

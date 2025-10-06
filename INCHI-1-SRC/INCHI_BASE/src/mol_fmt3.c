@@ -281,7 +281,7 @@ int MolfileV3000ReadField( void* data,
     {
         case MOL_FMT_STRING_DATA:
         {
-            if (nread && (nread <= 6)) /* djb-rwth: fixing GHI #133 */
+            if (nread && (nread <= ATOM_EL_LEN)) /* djb-rwth: fixing GHI #133 -- updated 28/09/2025 */
             {
                 mystrncpy( (char *) data, field, nread + 1 );
             }

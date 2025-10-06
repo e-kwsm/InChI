@@ -6864,7 +6864,7 @@ int ParseSegmentSp2(const char* str,
     int* pbAbc)
 {
     /* Pass 1: count bonds and find actual numbers of  atom */
-    int i, mpy_component, val;
+    int i, mpy_component, val, len_limit;
     int nNumComponents, iComponent, len, iBond;
     AT_NUMB nAtom1, nAtom2;
     int     bondParity;
@@ -7254,6 +7254,7 @@ int ParseSegmentSp2(const char* str,
             goto exit_function;
         }
         /* allocate sp2 stereo */
+        len_limit = len + 1;
         if (!(pStereo[0]->b_parity = (S_CHAR*)inchi_calloc((long long)len + 1, sizeof(pStereo[0]->b_parity[0]))) ||
             !(pStereo[0]->nBondAtom1 = (AT_NUMB*)inchi_calloc((long long)len + 1, sizeof(pStereo[0]->nBondAtom1[0]))) ||
             !(pStereo[0]->nBondAtom2 = (AT_NUMB*)inchi_calloc((long long)len + 1, sizeof(pStereo[0]->nBondAtom2[0])))) /* djb-rwth: cast operators added */
@@ -7346,10 +7347,18 @@ int ParseSegmentSp2(const char* str,
                 }
                 p = q + 1;
                 bondParity = (int)(r - parity_type) + 1;
-                /* djb-rwth: ui_rr */
-                pStereo[0]->b_parity[iBond] = bondParity;
-                pStereo[0]->nBondAtom1[iBond] = nAtom1;
-                pStereo[0]->nBondAtom2[iBond] = nAtom2;
+                /* djb-rwth: preventing buffer overrun */
+                if (iBond < len_limit)
+                {
+                    pStereo[0]->b_parity[iBond] = bondParity;
+                    pStereo[0]->nBondAtom1[iBond] = nAtom1;
+                    pStereo[0]->nBondAtom2[iBond] = nAtom2;
+                }
+                else
+                {
+                    ret = RI_ERR_PROGR;
+                    goto exit_function;
+                }
 
                 if (iBond &&
                     !(pStereo[0]->nBondAtom1[iBond - 1] < nAtom1 ||
@@ -7487,7 +7496,7 @@ int ParseSegmentPolymer(const char* str,
 {
     const char* p, * q, * pStart, * pEnd, * p0;
     char  comma = ',', dot = '.', dash = '-', lt_par = '(', rt_par = ')';
-    int         iunit, val, ret, prev, is_range;
+    int         iunit, val, ret, prev, is_range, pdn_limit;
     int         curr_atom, type = -1, subtype = -1, conn = -1;
     AT_NUMB     num_atom;
     INT_ARRAY   alist;
@@ -7533,6 +7542,7 @@ int ParseSegmentPolymer(const char* str,
     }
     pd->units = (OAD_PolymerUnit**)
         inchi_calloc(pd->n, sizeof(OAD_PolymerUnit*));
+    pdn_limit = pd->n;
     if (!pd->units)
     {
         ret = RI_ERR_ALLOC; goto exit_function;
@@ -7679,7 +7689,16 @@ int ParseSegmentPolymer(const char* str,
             {
                 ret = RI_ERR_ALLOC; goto exit_function;
             }
-            pd->units[iunit] = unit;
+            /* djb-rwth: preventing buffer overrun */
+            if (iunit < pdn_limit)
+            {
+                pd->units[iunit] = unit;
+            }
+            else
+            {
+                ret = RI_ERR_PROGR;
+                goto exit_function;
+            }
             IntArray_Reset(&alist);
             iunit++;
         }
@@ -10032,6 +10051,10 @@ int ParseSegmentFormula(const char* str,
                 memcpy(pInChI[iComponent].szHillFormula, p, len);
                 pInChI[iComponent + i].szHillFormula[len] = '\0';
             }
+            else
+            {
+                return RI_ERR_ALLOC; /* djb-rwth: memory could not be allocated */
+            }
             if (!i)
             {
                 /* Pass 2.1 Parse formula and count atoms except H */
@@ -10165,7 +10188,7 @@ int ParseSegmentFormula(const char* str,
             {
                 U_CHAR* pci1 = NULL;  /* copied from below to obey C syntax - 2024-09-01 DT */
                 /* Copy duplicated formula */
-                strcpy(pInChI[iComponent + i].szHillFormula, pInChI[iComponent].szHillFormula);
+                strcpy(pInChI[iComponent + i].szHillFormula, pInChI[iComponent].szHillFormula); /* djb-rwth: ui_rr? */
                 /* Copy atoms in the duplicated formula */
                 pInChI[iComponent + i].nNumberOfAtoms = nNumAtoms;
                 /* djb-rwth: fixing oss-fuzz issue #43420, #34772 */

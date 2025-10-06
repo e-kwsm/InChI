@@ -2684,6 +2684,14 @@ int e_half_stereo_bond_parity( inchi_Atom *at,
         return CT_ISO_H_ERR;  /*  program error */ /*   <BRKPT> */
     }
 
+    for (j = 0; j < MAX_NUM_STEREO_BOND_NEIGH; j++) /* djb-rwth: avoiding garbage values with proper initialisation */
+    {
+        for (k = 0; k < 3; k++)
+        {
+            at_coord[j][k] = 0;
+        }
+    }
+
     /********************************************************************
      * Note. At this point all (implicit and explicit) isotopic
      * terminal H neighbors are either different or not present.

@@ -769,18 +769,21 @@ int NormOneComponentINChI( CANON_GLOBALS *pCG,
         }
     }
 
-    cti->nUserMode = ip->nMode;
-    cti->bLooseTSACheck = ip->bLooseTSACheck;
-    cti->bStereoAtZz = ip->bStereoAtZz;
-
-    /* vABParityUnknown holds actual value of an internal constant signifying       */
-    /* unknown parity: either the same as for undefined parity (default==standard)  */
-    /*  or a specific one (non-std; requested by SLUUD switch).                     */
-    cti->vABParityUnknown = AB_PARITY_UNDF;
-    if (0 != ( ip->nMode & REQ_MODE_DIFF_UU_STEREO ))
+    if (cti) /* djb-rwth: fixing a NULL pointer dereference */
     {
-        /* Make labels for unknown and undefined stereo different */
-        cti->vABParityUnknown = AB_PARITY_UNKN;
+        cti->nUserMode = ip->nMode;
+        cti->bLooseTSACheck = ip->bLooseTSACheck;
+        cti->bStereoAtZz = ip->bStereoAtZz;
+
+        /* vABParityUnknown holds actual value of an internal constant signifying       */
+        /* unknown parity: either the same as for undefined parity (default==standard)  */
+        /*  or a specific one (non-std; requested by SLUUD switch).                     */
+        cti->vABParityUnknown = AB_PARITY_UNDF;
+        if (0 != (ip->nMode & REQ_MODE_DIFF_UU_STEREO))
+        {
+            /* Make labels for unknown and undefined stereo different */
+            cti->vABParityUnknown = AB_PARITY_UNKN;
+        }
     }
 
     if (inp_cur_data) /* djb-rwth: fixing a NULL pointer dereference */

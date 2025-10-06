@@ -791,7 +791,7 @@ int TreatErrorsInReadTheStructure( STRUCT_DATA      *sd,
         }
 
 #if ( bRELEASE_VERSION == 1 || EXTR_FLAGS == 0 )
-        if (prb_file->f && 0L <= sd->fPtrStart && sd->fPtrStart < sd->fPtrEnd && !ip->bSaveAllGoodStructsAsProblem)
+        if (prb_file && prb_file->f && 0L <= sd->fPtrStart && sd->fPtrStart < sd->fPtrEnd && !ip->bSaveAllGoodStructsAsProblem)
         {
             MolfileSaveCopy( inp_file, sd->fPtrStart, sd->fPtrEnd, prb_file->f, *num_inp );
         }
@@ -1192,12 +1192,12 @@ int InchiToOrigAtom( INCHI_IOSTREAM *inp_molfile,
                 }
                 if (at_old)
                 {
-                    inchi_free( at_old );
+                    /* inchi_free( at_old ); */ /* djb-rwth: avoiding the use of freed memory */
                     at_old = NULL;
                 }
                 if (szCoordOld)
                 {
-                    inchi_free( szCoordOld );
+                    /* inchi_free( szCoordOld ); */ /* djb-rwth: avoiding the use of freed memory */
                     szCoordOld = NULL;
                 }
                 /*  copy newly read structure */
@@ -1226,7 +1226,7 @@ int InchiToOrigAtom( INCHI_IOSTREAM *inp_molfile,
         }
         if (at_new)
         {
-            inchi_free( at_new );
+            /* inchi_free( at_new ); */ /* djb-rwth: avoiding the use of freed memory */
             at_new = NULL;
         }
     }
@@ -1247,6 +1247,8 @@ int InchiToOrigAtom( INCHI_IOSTREAM *inp_molfile,
      }
      */
 
+    /* djb-rwth: avoiding the use of freed memory */
+    /*
     if (szCoordNew)
     {
         inchi_free( szCoordNew );
@@ -1255,6 +1257,8 @@ int InchiToOrigAtom( INCHI_IOSTREAM *inp_molfile,
     {
         inchi_free( at_new );
     }
+    */
+
     if (!*err && orig_at_data)
     {
         if (ReconcileAllCmlBondParities( orig_at_data->at,
