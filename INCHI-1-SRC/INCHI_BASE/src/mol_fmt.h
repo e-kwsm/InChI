@@ -76,38 +76,38 @@
 #define MOL_FMT_ABSENT 0
 
 /* configuration */
-#define MOL_FMT_QUERY          MOL_FMT_ABSENT
-#define MOL_FMT_CPSS           MOL_FMT_ABSENT
-#define MOL_FMT_REACT          MOL_FMT_ABSENT
+#define MOL_FMT_QUERY MOL_FMT_ABSENT
+#define MOL_FMT_CPSS MOL_FMT_ABSENT
+#define MOL_FMT_REACT MOL_FMT_ABSENT
 
-#define MOL_FMT_STRING_DATA    'S'
-#define MOL_FMT_CHAR_INT_DATA  'C'
+#define MOL_FMT_STRING_DATA 'S'
+#define MOL_FMT_CHAR_INT_DATA 'C'
 #define MOL_FMT_SHORT_INT_DATA 'N'
-#define MOL_FMT_LONG_INT_DATA  'L'
-#define MOL_FMT_DOUBLE_DATA    'D'
-#define MOL_FMT_FLOAT_DATA     'F'
-#define MOL_FMT_JUMP_TO_RIGHT  'J'
-#define MOL_FMT_INT_DATA       'I'
+#define MOL_FMT_LONG_INT_DATA 'L'
+#define MOL_FMT_DOUBLE_DATA 'D'
+#define MOL_FMT_FLOAT_DATA 'F'
+#define MOL_FMT_JUMP_TO_RIGHT 'J'
+#define MOL_FMT_INT_DATA 'I'
 
-#define MOL_FMT_MAX_VALUE_LEN  32 /* max length of string containing a numerical value */
+#define MOL_FMT_MAX_VALUE_LEN 32 /* max length of string containing a numerical value */
 
-#define MOL_FMT_M_STY_NON      0 /**< None */
-#define MOL_FMT_M_STY_SRU      1 /**< Structure repeating unit */
-#define MOL_FMT_M_STY_MON      2 /**< Monomer */
-#define MOL_FMT_M_STY_COP      3 /**< Copolymer */
-#define MOL_FMT_M_STY_MOD      4 /**< Modification */
-#define MOL_FMT_M_STY_CRO      5 /**< Crosslink */
-#define MOL_FMT_M_STY_MER      6 /**< Mer type */
+#define MOL_FMT_M_STY_NON 0 /**< None */
+#define MOL_FMT_M_STY_SRU 1 /**< Structure repeating unit */
+#define MOL_FMT_M_STY_MON 2 /**< Monomer */
+#define MOL_FMT_M_STY_COP 3 /**< Copolymer */
+#define MOL_FMT_M_STY_MOD 4 /**< Modification */
+#define MOL_FMT_M_STY_CRO 5 /**< Crosslink */
+#define MOL_FMT_M_STY_MER 6 /**< Mer type */
 
-#define MOL_FMT_M_SST_NON      0 /**< None */
-#define MOL_FMT_M_SST_ALT      1 /**< Alternating */
-#define MOL_FMT_M_SST_RAN      2 /**< Random */
-#define MOL_FMT_M_SST_BLK      3 /**< Block */
+#define MOL_FMT_M_SST_NON 0 /**< None */
+#define MOL_FMT_M_SST_ALT 1 /**< Alternating */
+#define MOL_FMT_M_SST_RAN 2 /**< Random */
+#define MOL_FMT_M_SST_BLK 3 /**< Block */
 
-#define MOL_FMT_M_CONN_NON     0
-#define MOL_FMT_M_CONN_HT      1
-#define MOL_FMT_M_CONN_HH      2
-#define MOL_FMT_M_CONN_EU      3
+#define MOL_FMT_M_CONN_NON 0
+#define MOL_FMT_M_CONN_HT 1
+#define MOL_FMT_M_CONN_HH 2
+#define MOL_FMT_M_CONN_EU 3
 
 /* V3000 specific constants */
 #define MOL_FMT_V3000_STENON -1
@@ -545,7 +545,6 @@ typedef struct A_MOL_FMT_BOND
 #endif
 } MOL_FMT_BOND;
 
-
 /**
  * @brief Data structure for V3000 representation in the MOL format.
  *
@@ -558,7 +557,7 @@ typedef struct A_MOL_FMT_BOND
  * @param n_collections Number of collections.
  * @param n_non_haptic_bonds Number of non-haptic bonds.
  * @param n_haptic_bonds Number of haptic bonds.
- * @param haptic_bonds Pointer to the list of haptic bonds.
+ * @param haptic_bonds Pointer to the list of haptic bonds (int* contains bond type, non-star atom number, nendpts, then endpts themselves).
  * @param n_steabs Number of absolute stereo groups.
  * @param steabs Pointer to the list of absolute stereo groups (e.g. R and S).
  * @param n_sterel Number of relative stereo groups.
