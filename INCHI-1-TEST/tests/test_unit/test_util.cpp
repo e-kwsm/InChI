@@ -930,6 +930,64 @@ TEST(util_testing, test_extract_auxinfo_substring)
 TEST(util_testing, test_extract_stereo_info_from_inchi_string)
 {
     // int extract_stereo_info_from_inchi_string(char *sinchi, int nat, int *orig, int *at_stereo_mark);
+    
+    char inchi1[] = "InChI=1S/C2H5BrClN/c1-2(3,4)5/h5H2,1H3/t2-/m1/s1";
 
-    char inchi1[] = "InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3/t2-/m0/s1";
+    int num_atoms1 = 4;
+    int orig1[4] = {0, 1, 2, 3}; 
+    int at_stereo_mark_orig1[4] = {0, 0, 0, 0};
+
+    int ret1 = extract_stereo_info_from_inchi_string(inchi1, num_atoms1, orig1, at_stereo_mark_orig1);
+    EXPECT_EQ(ret1, 0);
+    int found_stereo1 = 0;
+    for (int i = 1; i <= num_atoms1; i++) {
+        if (at_stereo_mark_orig1[i] != 0) {
+            found_stereo1 = 1;            
+            break;
+        }
+    }    
+    EXPECT_EQ(at_stereo_mark_orig1[0], 0);
+    EXPECT_EQ(at_stereo_mark_orig1[1], 0);
+    EXPECT_EQ(at_stereo_mark_orig1[2], 1);
+    EXPECT_EQ(at_stereo_mark_orig1[3], 0);
+    
+    EXPECT_EQ(found_stereo1, 1);
+
+
+    char inchi2[] = "InChI=1S/C2H6/c1-2/h1-2H3";
+
+    int num_atoms2 = 2;
+    int orig2[2] = {0, 1}; 
+    int at_stereo_mark_orig2[2] = {0, 0};
+
+    int ret2 = extract_stereo_info_from_inchi_string(inchi2, num_atoms2, orig2, at_stereo_mark_orig2);
+    EXPECT_EQ(ret2, 0);
+    int found_stereo2 = 0;
+    for (int i = 1; i <= num_atoms2; i++) {
+        if (at_stereo_mark_orig2[i] != 0) {
+            found_stereo2 = 1;            
+            break;
+        }
+    }    
+    EXPECT_EQ(at_stereo_mark_orig2[0], 0);
+    EXPECT_EQ(at_stereo_mark_orig2[1], 0);
+    
+    EXPECT_EQ(found_stereo2, 0);
+
+}
+
+TEST(util_testing, test_extract_all_backbone_bonds_from_inchi_string) {
+
+    // int extract_all_backbone_bonds_from_inchi_string(char *sinchi, int *n_all_bkb_orig, int *orig, int *all_bkb_orig);
+
+    char inchi1[] = "InChI=1S/C2H6/c1-2/h1-2H3";
+
+    int n_all_bkb_orig[2] = {0, 0};
+    int orig[2] = {0, 1}; 
+    int all_bkb_orig[2] = {0, 0};
+
+    int ret1 = extract_all_backbone_bonds_from_inchi_string(inchi1, n_all_bkb_orig, orig, all_bkb_orig);
+
+    EXPECT_EQ(ret1, 0);
+
 }
