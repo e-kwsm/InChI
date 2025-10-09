@@ -494,7 +494,7 @@ void NumLists_Free(NUM_LISTS *num_lists)
     {
         int i;
         for (i = 0; i < num_lists->used; i++)
-            inchi_free(num_lists->lists[i]); /* djb-rwth: ui_rr? */
+            inchi_free(num_lists->lists[i]); /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
         inchi_free(num_lists->lists);
         memset(num_lists, 0, sizeof(*num_lists)); /* djb-rwth: memset_s C11/Annex K variant? */
     }
@@ -728,7 +728,8 @@ int MolFmtSgroups_Append(MOL_FMT_SGROUPS *sgroups, int id, int type)
             /* expand buffer */
             if (MolFmtSgroups_ReAlloc(sgroups))
             {
-                return -1; /*  no RAM */ /* djb-rwth: ignoring LLVM warning: since a pointer is returned, memory should be freed in a function which calls *CreateNeighListFromLinearCT */
+                MolFmtSgroup_Free(sgroup); /* djb-rwth: avoiding memory leak */
+                return -1; /*  no RAM */
             }
         }
         sgroups->group[sgroups->used++] = sgroup;

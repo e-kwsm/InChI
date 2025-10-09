@@ -97,7 +97,7 @@ static int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK *hdr, INCHI_IOSTREAM *inp
 
 /**
  * @brief Reads counts line from input MOL file, includes information about the number of atoms, bonds, and atom lists, the chiral flag setting, and the Ctab version.
- * 
+ *
  * @param ctab Connection table data structure
  * @param inp_file Input file
  * @param pStrErr Error string
@@ -118,7 +118,7 @@ static int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
 
 /**
  * @brief Reads a bond block from input MOL file (V2000)
- * 
+ *
  * @param ctab Connection table data structure
  * @param inp_file Input file
  * @param err Error code
@@ -130,7 +130,7 @@ static int MolfileReadBondsBlock(MOL_FMT_CTAB *ctab, INCHI_IOSTREAM *inp_file,
 
 /**
  * @brief Reads a substance text block
- * 
+ *
  * @param ctab Connection table data structure
  * @param inp_file Input file
  * @param err Error code
@@ -779,7 +779,7 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
                 || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
 #endif
 
-                || 0 > MolfileReadField(&ctab->atoms[i].valence, 3, MOL_FMT_CHAR_INT_DATA, &p)) 
+                || 0 > MolfileReadField(&ctab->atoms[i].valence, 3, MOL_FMT_CHAR_INT_DATA, &p))
             {
 
                 err = 4;
@@ -823,7 +823,7 @@ int MolfileReadAtomsBlock(MOL_FMT_CTAB *ctab,
                    0 > MolfileReadField(&ctab->atoms[i].H0_designator, 3, MOL_FMT_CHAR_INT_DATA, &p)
                 || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_type, 3, MOL_FMT_CHAR_INT_DATA, &p)
                 || 0 > MolfileReadField(&ctab->atoms[i].reaction_component_num, 3, MOL_FMT_CHAR_INT_DATA, &p)
-#else                   
+#else
                    0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
                 || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)
                 || 0 > MolfileReadField(NULL, 3, MOL_FMT_JUMP_TO_RIGHT, &p)

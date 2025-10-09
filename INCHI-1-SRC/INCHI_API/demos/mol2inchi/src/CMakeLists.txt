@@ -70,7 +70,7 @@ else()
 	set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 	set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 	find_package(Threads REQUIRED)
-	target_link_libraries(mol2inchi PUBLIC Threads::Threads)
+	target_link_libraries(mol2inchi Threads::Threads)
 	add_custom_command(TARGET mol2inchi POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:libinchi> $<TARGET_FILE_DIR:mol2inchi>
 		COMMAND_EXPAND_LISTS

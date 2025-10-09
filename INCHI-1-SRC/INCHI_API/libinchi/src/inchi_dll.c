@@ -3275,7 +3275,7 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
         if (!iip_tmp || !units_tmp || !uk_al_tmp || !unitk)
         {
             err = 9001;
-            goto exitf;
+            goto preexitf;
         }
         *iip = iip_tmp;
         iip_tmp->n = orp->n;
@@ -3290,7 +3290,7 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
             if (!unitk[k])
             {
                 err = 9001; 
-                goto exitf;
+                goto preexitf;
             }
             iip_tmp->units[k] = unitk[k];
             memset( unitk[k], 0, sizeof(*unitk[k])); /* djb-rwth: memset_s C11/Annex K variant? */
@@ -3310,7 +3310,7 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
             if (!uk_al_tmp[k])
             {
                 err = 9001; 
-                goto exitf;
+                goto preexitf;
             }
             unitk[k]->alist = uk_al_tmp[k];
             for (m = 0; m < unitk[k]->na; m++)
@@ -3324,7 +3324,7 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
                 if (!unitk[k]->blist)
                 {
                     err = 9001;
-                    goto exitf;
+                    goto preexitf;
                 }
                 for (m = 0; m < 2 * groupk->nb; m++)
                 {
@@ -3339,10 +3339,16 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
             inchi_free(unitk[k]);
             inchi_free(uk_al_tmp[k]);
         }
+    /* djb-rwth: avoiding memory leak */
+    preexitf:
         inchi_free(iip_tmp);
         inchi_free(units_tmp);
         inchi_free(uk_al_tmp);
         inchi_free(unitk);
+        if (err)
+        {
+            return err;
+        }
     }
 
     if (orv)
@@ -3351,7 +3357,8 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
         *iiv = (inchi_Input_V3000 *) inchi_calloc( 1, sizeof(inchi_Input_V3000) ); /* djb-rwth: fixing the incorrect type of variable */
         if (!*iiv)
         {
-            err = 9001; goto exitf;
+            err = 9001;
+            goto exitf;
         }
         memset( *iiv, 0, sizeof( **iiv ) ); /* djb-rwth: memset_s C11/Annex K variant? */
 

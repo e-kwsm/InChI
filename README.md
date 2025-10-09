@@ -437,6 +437,13 @@ More reliably, `LD_LIBRARY_PATH` can be set in several ways:
 
 If a similar issue occurs on Apple macOS, one of the above solutions should be applied for setting `DYLD_LIBRARY_PATH` and/or `DYLD_FALLBACK_LIBRARY_PATH` (which behave like `LD_LIBRARY_PATH`).
 
+##### Important note about pre-C99 C language standard support
+Pre-`C99` `C` language standard support will be gradually phased out starting with `InChI` version `1.07.5`.
+Please make sure that the following versions of `C` compilers are installed:
+- `GCC 4.5` or later
+- `LLVM/Clang 8.0` or later
+- `Microsoft Visual C++ 12.0/Microsoft Visual Studio 2013` or later
+
 ### Optional features
 
 #### Bounds checking functions

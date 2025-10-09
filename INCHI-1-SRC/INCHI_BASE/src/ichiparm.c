@@ -1795,9 +1795,9 @@ int ReadCommandLineParms(int argc,
                 char* pLastExt = NULL;
 #endif
                 len = (int)strlen(p_prev) + strlen(szNameSuffix) + strlen(ext[i]);
-                if ( (sz = (char*)inchi_malloc(((long long)len + 1) * sizeof(sz[0]))) ) /* djb-rwth: cast operator added; addressing LLVM warning; cast operator added */
+                if ((sz = (char*)inchi_malloc(((long long)len + 1) * sizeof(sz[0])))) /* djb-rwth: cast operators added; addressing and ignoring LLVM warnings */
                 {
-                    strcpy(sz, p);
+                    strcpy(sz, p_prev); /* djb-rwth: fix for use of memory after being freed */
 #if ( BUILD_WITH_AMI == 1 ) && ( OUTPUT_FILE_EXT == 1 )
                     if ( pLastExt )
                     {

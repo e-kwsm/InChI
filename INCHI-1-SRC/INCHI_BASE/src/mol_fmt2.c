@@ -62,9 +62,9 @@
 /****************************************************************************
  Read n chars and find where they are terminated with space or trailing 0
 ****************************************************************************/
-int MolfileStrnread(char *dest, 
-                    char *source, 
-                    int len, 
+int MolfileStrnread(char *dest,
+                    char *source,
+                    int len,
                     char **first_space)
 {
     /* required len >= 0; dest must have at least len+1 bytes */
@@ -418,7 +418,7 @@ int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
             return 1;
         }
 
-        while (fPtrEnd > (fPtr = ftell(infile)) && fPtr >= 0L 
+        while (fPtrEnd > (fPtr = ftell(infile)) && fPtr >= 0L
                 && inchi_fgetsLf(line, sizeof(line) - 1, inp_file))
         {
 

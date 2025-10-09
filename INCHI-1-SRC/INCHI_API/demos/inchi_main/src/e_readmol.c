@@ -1385,7 +1385,7 @@ int identify_sdf_label( char* inp_line, const char *pSdfLabel )
     {
         memcpy( line, p + 1, len );
         line[len] = '\0';
-        for (i = 0; isspace( UCINT line[i] ); i++) /* djb-rwth: ui_rr */
+        for (i = 0; isspace( UCINT line[i] ); i++) /* djb-rwth: ignoring MSVC warning -- i > 0 for len > 0 */
         {
             ;
         }

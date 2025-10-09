@@ -205,10 +205,10 @@ void NumLists_Free(NUM_LISTS *num_lists);
  */
 typedef struct tagINT_ARRAY
 {
-    int *item;     
-    int allocated; 
-    int used;      
-    int increment; 
+    int *item;
+    int allocated;
+    int used;
+    int increment;
 } INT_ARRAY;
 
 /**
@@ -273,35 +273,35 @@ void IntArray_DebugPrint(INT_ARRAY *items);
 
 /**
  * @brief Data structure for Sgroup data (substance group data).
- * 
- * @param id it is what is called 'Sgroup number' in CTFile 
- * @param type Sgroup type: SUP = superatom, MUL = multiple group, SRU = SRU type, MON = monomer, MER = Mer type, COP = copolymer, CRO = crosslink, MOD = modification, GRA = graft, COM = component, MIX = mixture, FOR = formulation, DAT = data Sgroup, ANY = any polymer, GEN = generic 
- * @param subtype (SST) 
- * @param conn (SCN) Connectivity   
+ *
+ * @param id it is what is called 'Sgroup number' in CTFile
+ * @param type Sgroup type: SUP = superatom, MUL = multiple group, SRU = SRU type, MON = monomer, MER = Mer type, COP = copolymer, CRO = crosslink, MOD = modification, GRA = graft, COM = component, MIX = mixture, FOR = formulation, DAT = data Sgroup, ANY = any polymer, GEN = generic
+ * @param subtype (SST)
+ * @param conn (SCN) Connectivity
  * @param label  what is called 'unique Sgroup identifier' in CTFile (SLB)
- * @param xbr1 bracket ends coordinates (SDI) 
+ * @param xbr1 bracket ends coordinates (SDI)
  * @param xbr2 bracket ends coordinates (SDI)
  * @param smt Sgroup Subscript (SMT)
  * @param alist list of atom indices (AL)
- * @param blist list of bond indices (BL)  
+ * @param blist list of bond indices (BL)
  */
 typedef struct A_MOL_FMT_SGROUP
 {
-    int id;          
-    int type;        
-    int subtype;     
-    int conn;       
-    int label;  
-    double xbr1[4];  
-    double xbr2[4];  
-    char smt[80];    
-    INT_ARRAY alist; 
-    INT_ARRAY blist; 
+    int id;
+    int type;
+    int subtype;
+    int conn;
+    int label;
+    double xbr1[4];
+    double xbr2[4];
+    char smt[80];
+    INT_ARRAY alist;
+    INT_ARRAY blist;
 } MOL_FMT_SGROUP;
 
 /**
  * @brief  Allocate new array Sgroup.
- * 
+ *
  * @param sgroup Pointer to the Sgroup structure to allocate.
  * @param id Sgroup ID.
  * @param type Sgroup type.
@@ -313,14 +313,14 @@ int MolFmtSgroup_Create(MOL_FMT_SGROUP **sgroup,
 
 /**
  * @brief Frees the memory allocated for the Sgroup.
- * 
+ *
  * @param sgroup Pointer to the Sgroup structure to free.
  */
 void MolFmtSgroup_Free(MOL_FMT_SGROUP *sgroup);
 
 /**
  * @brief MOL_FMT_SGROUPS is a dynamically growing array of pointers to MOL_FMT_SGROUP objects.
- * 
+ *
  * @param group Pointer to the growable array of pointers to MOL_FMT_SGROUPs
  * @param allocated Number of allocated objects
  * @param used Number of used objects
@@ -328,15 +328,15 @@ void MolFmtSgroup_Free(MOL_FMT_SGROUP *sgroup);
  */
 typedef struct A_MOL_FMT_SGROUPS
 {
-    MOL_FMT_SGROUP **group; 
-    int allocated;      
-    int used;        
-    int increment;   
+    MOL_FMT_SGROUP **group;
+    int allocated;
+    int used;
+    int increment;
 } MOL_FMT_SGROUPS;
 
 /**
  * @brief Allocates memory for a specified number of Sgroup objects.
- * 
+ *
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @param nitems Number of Sgroup objects to allocate.
  * @return 0 on success, -1 on failure.
@@ -345,7 +345,7 @@ int MolFmtSgroups_Alloc(MOL_FMT_SGROUPS *items, int nitems);
 
 /**
  * @brief Expand array of Sgroups.
- * 
+ *
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @return 0 on success, -1 on failure.
  */
@@ -353,7 +353,7 @@ int MolFmtSgroups_ReAlloc(MOL_FMT_SGROUPS *items);
 
 /**
  * @brief Appends a new Sgroup to the array.
- * 
+ *
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @param id Sgroup ID.
  * @param type Sgroup type.
@@ -363,14 +363,14 @@ int MolFmtSgroups_Append(MOL_FMT_SGROUPS *items, int id, int type);
 
 /**
  * @brief Frees the memory allocated for the MOL_FMT_SGROUPS list.
- * 
+ *
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  */
 void MolFmtSgroups_Free(MOL_FMT_SGROUPS *items);
 
 /**
  * @brief Gets the index of a Sgroup by its ID.
- * 
+ *
  * @param id Sgroup ID.
  * @param items Pointer to the MOL_FMT_SGROUPS structure.
  * @return Index of the Sgroup on success, -1 on failure.
@@ -379,8 +379,8 @@ int MolFmtSgroups_GetIndexBySgroupId(int id, MOL_FMT_SGROUPS *items);
 
 /**
  * @brief Data structure for MOL file header block (3 lines).
- * 
- * @param molname Name of molecule (up to 80 characters) 
+ *
+ * @param molname Name of molecule (up to 80 characters)
  * @param line2 Second line of the header (the whole line2, up to 80 chars)
  * @param user_initls User initials (2 bytes; char)
  * @param prog_name Program name (8 bytes; char)
@@ -398,36 +398,36 @@ int MolFmtSgroups_GetIndexBySgroupId(int id, MOL_FMT_SGROUPS *items);
  */
 typedef struct A_MOL_FMT_HEADER_BLOCK
 {
-    char molname[MOL_FMT_MAXLINELEN + 1]; 
-    char line2[MOL_FMT_MAXLINELEN + 1];   
-    char user_initls[3];                  
-    char prog_name[9];               
-    char month;                         
-    char day;                         
-    char year;                          
-    char hour;                           
-    char minute;                       
-    char dim_code[3];                    
-    short scaling_factor1;               
-    double scaling_factor2;               
-    double energy;                       
-    long internal_regno;                  
-    char comment[81];                     
+    char molname[MOL_FMT_MAXLINELEN + 1];
+    char line2[MOL_FMT_MAXLINELEN + 1];
+    char user_initls[3];
+    char prog_name[9];
+    char month;
+    char day;
+    char year;
+    char hour;
+    char minute;
+    char dim_code[3];
+    short scaling_factor1;
+    double scaling_factor2;
+    double energy;
+    long internal_regno;
+    char comment[81];
 } MOL_FMT_HEADER_BLOCK;
 
 /**
  * @brief Data structure for atom representation in the MOL format.
- * 
- * @param fx x coordinate: F10.5;       Generic 
- * @param fy y coordinate: F10.5;       Generic 
- * @param fz z coordinate: F10.5;       Generic 
+ *
+ * @param fx x coordinate: F10.5;       Generic
+ * @param fy y coordinate: F10.5;       Generic
+ * @param fz z coordinate: F10.5;       Generic
  * @param symbol Element symbol (aaa; up to 6 characters)
  * @param mass_difference Mass difference (dd;  (M_ISO); Generic: -3..+4 otherwise 0 or 127=most abund. isotope )
- * @param charge Formal charge (M CHG) 
+ * @param charge Formal charge (M CHG)
  * @param radical Radical status (M RAD)
  * @param stereo_parity Stereochemical parity (M STY)
  * @param H_count_plus_1 Hydrogen count plus one (hhh;         Query; Hn means >= n H; H0 means no H)
- * @param stereo_care bbb; Query: 0=ignore; 1=must match 
+ * @param stereo_care bbb; Query: 0=ignore; 1=must match
  * @param valence vvv: <vvv: 0=no marking; (1..14)=(1..14); 15=zero valence.Number of bonds includes bonds to impl. H's>
  * @param H0_designator HHH: CPSS
  * @param reaction_component_type rrr: CPSS: 1=reactant, 2=product, 3=intermediate
@@ -435,7 +435,7 @@ typedef struct A_MOL_FMT_HEADER_BLOCK
  * @param atom_atom_mapping_num mmm:        Reaction: 1..255
  * @param cInversionRetentionFlag nnn: 1=inverted, 2=retained config.; 0=property not applied
  * @param exact_change_flag eee
- * @param my_n_impH number of implicit H calculated for adding H to strings in STDATA 
+ * @param my_n_impH number of implicit H calculated for adding H to strings in STDATA
  * @param display_tom Do not hide element's name (applies to C 7-25-98 DCh)
  * @param atom_aliased_flag Do not remove charge/radical/isotope if it is in the alias. 9-3-99 DCh
  */
@@ -548,7 +548,7 @@ typedef struct A_MOL_FMT_BOND
 
 /**
  * @brief Data structure for V3000 representation in the MOL format.
- * 
+ *
  * @param n_non_star_atoms Number of non-star atoms.
  * @param n_star_atoms Number of star atoms.
  * @param atom_index_orig Original atom indices as supplied.
@@ -597,7 +597,7 @@ typedef struct A_MOL_FMT_v3000
 
 /**
  * @brief Connection table data structure.
- * 
+ *
  * @param n_atoms Number of atoms in the molecule.
  * @param n_bonds Number of bonds in the molecule.
  * @param n_atom_lists Number of atom lists.
@@ -645,7 +645,7 @@ typedef struct A_MOL_FMT_CTAB
 
 /**
  * @brief Data structure for a MOL file
- * 
+ *
  * @param hdr Header block data structure.
  * @param ctab Connection table data structure.
  */
@@ -661,7 +661,7 @@ typedef struct A_MOL_FMT_DATA
 
 /**
  * @brief Read MOL file data in to data structures.
- * 
+ *
  * @param inp_file Pointer to the input file stream.
  * @param OnlyHeaderBlock Pointer to the header block to read.
  * @param OnlyCTab Pointer to the connection table to read.
@@ -711,7 +711,7 @@ int MolfileStrnread(char *dest,
  * @brief Extract the 'data' in the MOL file field at given text position 'line_ptr'.
  *
  * @param data Pointer to the destination buffer.
- * @param field_len Length of the field to read. For MOL_FMT_STRING_DATA does not include 
+ * @param field_len Length of the field to read. For MOL_FMT_STRING_DATA does not include
  *                  trailing zero, that is actual length of the string pointed by 'data'
  *                  should be at least field_len+1 bytes.
  *                  For numerical data 'field_len' is length of input data field

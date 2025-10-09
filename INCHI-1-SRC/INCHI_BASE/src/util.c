@@ -1609,7 +1609,7 @@ int is_matching_any_delim(char c, char *delims)
 
 /**
  * @brief Remove trailing spaces from a string
- * 
+ *
  * @param p Input string
  */
 void remove_trailing_spaces(char *p)
@@ -1624,7 +1624,7 @@ void remove_trailing_spaces(char *p)
 
 /**
  * @brief Remove one line feed character from the end of the string
- * 
+ *
  * @param p Input string
  */
 void remove_one_lf(char *p)
@@ -1682,7 +1682,7 @@ int mystrncpy(char *target, const char *source, unsigned maxlen)
 
 /**
  * @brief Remove leading and trailing white spaces
- * 
+ *
  * @param p Input string
  * @param nLen Output length of the trimmed string
  * @return char* Pointer to the trimmed string
@@ -1858,7 +1858,7 @@ void extract_auxinfo_substring(char** buf, const char* str, size_t slen)
  * @return int < 0 if p1 < p2, 0 if p1 == p2, > 0 if p1 > p2
  */
 int inchi_memicmp(const void *p1, const void *p2, size_t length)
-{ 
+{
     const U_CHAR *s1 = (const U_CHAR *)p1;
     const U_CHAR *s2 = (const U_CHAR *)p2;
     while (length--)

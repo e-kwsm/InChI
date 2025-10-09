@@ -151,7 +151,7 @@ int user_quit(struct tagINCHI_CLOCK* ic,
 /****************************************************************************/
 void eat_keyboard_input(void)
 {
-    int ret_val; /* djb-rwth: adding return value */
+    int ret_val; /* djb-rwth: adding return value */ /* djb-rwth: ignoring LLVM warning */
 #ifndef TARGET_LIB_FOR_WINCHI
 
     while (_kbhit())
@@ -269,7 +269,7 @@ int ProcessMultipleInputFiles(int argc, char* argv[])
     char* fn_out, * fn_log, * fn_prb;
     char pNUL[] = "NUL";
     char** fn_ins = NULL, ** targv = NULL;
-    int ret_val; /* djb-rwth: adding return value */
+    int ret_val; /* djb-rwth: adding return value */ /* djb-rwth: ignoring LLVM warning */
 
 #if( BUILD_WITH_AMI == 1 && defined( _MSC_VER ) && MSC_AMI == 1 )
 #ifdef _WIN64
@@ -280,9 +280,9 @@ int ProcessMultipleInputFiles(int argc, char* argv[])
     struct _finddata_t file_info;
     intptr_t hFile = -1;
     int   retFile, lenPath;
-    char* pName, * pOutPath = NULL;
+    char* pName, * pOutPath = NULL; /* djb-rwth: ignoring LLVM warning */
     char pathname[_MAX_PATH];
-    char szBlank[] = "";
+    char szBlank[] = ""; /* djb-rwth: ignoring LLVM warning */
     int  numFiles = 0; /* counts processed files */
 #else
     int p;
@@ -639,8 +639,8 @@ int ProcessSingleInputFile(int argc, char* argv[])
     inchi_ios_init(pprb, inchi_ios_type, NULL);
     memset(strbuf, 0, sizeof(*strbuf)); /* djb-rwth: memset_s C11/Annex K variant?; dereferencing strbuf */
 
-    if (argc == 1 || (argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX)) &&
-        (!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help"))) /* djb-rwth: addressing LLVM warning */
+    if (argc == 1 || (argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX) &&
+        ((!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help"))))) /* djb-rwth: addressing LLVM warning */
     {
         HelpCommandLineParms(plog);
         inchi_ios_flush(plog);

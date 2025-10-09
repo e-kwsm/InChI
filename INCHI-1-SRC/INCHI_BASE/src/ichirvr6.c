@@ -237,7 +237,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
                 if (v2 == ( pe->neighbor12 ^ v1 ))
                     break; /* the edge has been found */
             }
-            if (k == at2[v1].valence)
+            if (k >= at2[v1].valence) /* djb-rwth: addressing LLVM warning */
             {
                 ret = RI_ERR_SYNTAX;
                 goto exit_function;
@@ -612,7 +612,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
                 if (v2 == ( pe->neighbor12 ^ v1 ))
                     break; /* the edge has been found */
             }
-            if (k == at2[v1].valence)
+            if (k >= at2[v1].valence) /* djb-rwth: addressing LLVM warning */
             {
                 ret = RI_ERR_SYNTAX;
                 goto exit_function;
@@ -1348,7 +1348,7 @@ int FixRestoredStructureStereo( struct tagCANON_GLOBALS *pCG,
                 if (v2 == ( pe->neighbor12 ^ v1 ))
                     break; /* the edge has been found */
             }
-            if (k == at2[v1].valence)
+            if (k >= at2[v1].valence) /* djb-rwth: addressing LLVM warning */
             {
                 ret = RI_ERR_SYNTAX;
                 goto exit_function;

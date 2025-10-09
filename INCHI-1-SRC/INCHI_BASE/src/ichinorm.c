@@ -7570,13 +7570,19 @@ void OAD_Edit_MergeComponentsAndRecreateOAD( ORIG_ATOM_DATA *orig_OrigAtomData,
     int i, num_atoms = 0, cur_num_at = 0;
     inp_ATOM *at;
 
+    if (num_components <= 0)
+    {
+        *errcode = -999; /* num atoms mismatch */
+        return;
+    }
+
     /* Merge kept components into 'at' */
     for (i = 0; i < num_components; i++)
     {
         num_atoms += curr_InpAtomData[i].num_at;
     }
 
-    at = (inp_ATOM *) inchi_calloc( num_atoms, sizeof( at[0] ) ); /* djb-rwth: ignoring LLVM warning: possible presence of global variables -- senseless statement */
+    at = (inp_ATOM *) inchi_calloc( num_atoms, sizeof( at[0] ) );
     cur_num_at = 0;
 
     for (i = 0; i < num_components; i++)
@@ -7690,7 +7696,7 @@ void remove_cut_derivs( int num_atoms,
 
     inp_cur_data1 = (INP_ATOM_DATA *) inchi_calloc( num_components1, sizeof( inp_cur_data1[0] ) );
 
-    if (inp_cur_data1) /* djb-rwth: fixing a NULL pointer dereference */
+    if (inp_cur_data1 && (num_components1 > 0)) /* djb-rwth: fixing a NULL pointer dereference */
     {
     /* Extract components and discard disconnected derivatizing agents */
     for (i_component1 = 0; i_component1 < num_components1; i_component1++)
@@ -7725,7 +7731,7 @@ void remove_cut_derivs( int num_atoms,
     {
         num_atoms += inp_cur_data1[i_component1].num_at;
     }
-    at = (inp_ATOM *) inchi_calloc( num_atoms, sizeof( at[0] ) ); /* djb-rwth: ignoring LLVM warning: possible presence of global variables -- senseless statement */
+    at = (inp_ATOM *) inchi_calloc( num_atoms, sizeof( at[0] ) );
     cur_num_at = 0;
     for (i_component1 = 0; i_component1 < num_components1; i_component1++)
     {

@@ -596,7 +596,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                       int *err,
                       char *pStrErr )
 {
-    int      num_atoms = 0, bFindNext = 0, len, bHeaderRead, bItemIsOver, bErrorMsg, bRestoreInfo;; /* djb-rwth: removing redundant variables; initialising variables */
+    int      num_atoms = 0, bFindNext = 0, len = 0, bHeaderRead, bItemIsOver, bErrorMsg, bRestoreInfo;; /* djb-rwth: removing redundant variables; initialising variables -- updated 28/09/2025 */
     int      bFatal = 0, num_struct = 0;
     int      i, k, k2, res, bond_type, bond_stereo1, bond_stereo2, bond_char, neigh, bond_parity, bond_parityNM;
     int      bTooLongLine, res2, bTooLongLine2, pos, hlen, hk;
@@ -881,6 +881,9 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                                     num_atoms = INCHI_INP_FATAL_RET; /* fatal error: cannot allocate */
                                     *err = INCHI_INP_FATAL_ERR;
                                     TREAT_ERR( *err, 0, "Out of RAM" );
+                                    /* djb-rwth: avoiding memory leak */
+                                    inchi_free(atom);
+                                    atom = NULL;
                                     goto bypass_end_of_INChI_plain;
                                 }
                             }
@@ -1001,6 +1004,9 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                         num_atoms = INCHI_INP_ERROR_RET; /* error */
                         *err = INCHI_INP_ERROR_ERR;
                         TREAT_ERR( *err, 0, "Wrong number of atoms" );
+                        /* djb-rwth: avoiding memory leak */
+                        inchi_free(atom);
+                        atom = NULL;
                         goto bypass_end_of_INChI_plain;
                     }
                 }
@@ -2048,6 +2054,9 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                         num_atoms = INCHI_INP_FATAL_RET; /* fatal error: cannot allocate */
                         *err = INCHI_INP_FATAL_ERR;
                         TREAT_ERR( *err, 0, "Out of RAM" );
+                        /* djb-rwth: avoiding memory leak */
+                        inchi_free(atom);
+                        atom = NULL;
                         goto bypass_end_of_INChI;
                     }
                 }
@@ -2090,6 +2099,9 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                         num_atoms = INCHI_INP_ERROR_RET; /* was 0, error */
                         *err = INCHI_INP_ERROR_ERR;     /* 40 */
                         TREAT_ERR( *err, 0, "Wrong atoms data" );
+                        /* djb-rwth: avoiding memory leak */
+                        inchi_free(atom);
+                        atom = NULL;
                         goto bypass_end_of_INChI;
                     }
                     atom[i].elname[0] = *p++;
@@ -2197,6 +2209,9 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                     num_atoms = INCHI_INP_ERROR_RET; /* error */
                     *err = INCHI_INP_ERROR_ERR;
                     TREAT_ERR( *err, 0, "Wrong number of atoms" );
+                    /* djb-rwth: avoiding memory leak */
+                    inchi_free(atom);
+                    atom = NULL;
                     goto bypass_end_of_INChI;
                 }
 

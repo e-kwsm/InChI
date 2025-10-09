@@ -1376,7 +1376,7 @@ int InchiToInpAtom( INCHI_IOSTREAM *inp_file,
                                             {
                                                 *err = -2;  /*  Program error */
                                                 TREAT_ERR(*err, 0, "Program error interpreting InChI aux");
-                                                num_atoms = 0;
+                                                num_atoms = INCHI_INP_FATAL_RET;
                                                 goto bypass_end_of_INChI_plain; /*  no structure */
                                             }
                                         }
@@ -1698,7 +1698,7 @@ int InchiToInpAtom( INCHI_IOSTREAM *inp_file,
 
 bypass_end_of_INChI_plain:
     /* Cleanup */
-    if (num_atoms == INCHI_INP_ERROR_RET && atom_stereo0D)
+    if (atom_stereo0D && (num_atoms == INCHI_INP_ERROR_RET || num_atoms == INCHI_INP_FATAL_RET)) /* djb-rwth: avoiding memory leak */
     {
         FreeInchi_Stereo0D(&atom_stereo0D);
     }
