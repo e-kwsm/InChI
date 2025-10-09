@@ -726,6 +726,7 @@ int MolfileReadField(void *data,
                      int field_len,
                      int data_type,
                      char **line_ptr);
+
 /**
  * @brief Extract the MOL file number from the header name line like "Structure #22"
  *
@@ -733,12 +734,47 @@ int MolfileReadField(void *data,
  * @return The structure number.
  */
 long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr);
+
+/**
+ * @brief Check if the MOL file has no chemical structure.
+ *
+ * @param mfdata Pointer to the MOL file data structure.
+ * @return 1 if no chemical structure, 0 otherwise.
+ */
 int MolfileHasNoChemStruc(MOL_FMT_DATA *mfdata);
+
+/**
+ * @brief Copy MOL-formatted data of SDF record or Molfile to another file
+ *
+ * @param inp_file Pointer to the input file stream.
+ * @param fPtrStart File pointer position to start copying from.
+ * @param fPtrEnd File pointer position to stop copying at.
+ * @param outfile Pointer to the output file stream.
+ * @param num Structure number to write in the header line.
+ * @return last position of the output file stream.
+ */
 int MolfileSaveCopy(INCHI_IOSTREAM *inp_file,
                     long fPtrStart,
                     long fPtrEnd,
                     FILE *outfile,
                     long num);
+
+/**
+ * @brief Get xyz dimensionality and normalization factors in the MOL file
+ *
+ * @param mfdata Pointer to the MOL file data structure.
+ * @param find_norm_factors Flag indicating whether to find normalization/scaling factors.
+ * @param x0 Pointer to the minimum x-coordinate of the molecule.
+ * @param y0 Pointer to the minimum y-coordinate of the molecule.
+ * @param z0 Pointer to the minimum z-coordinate of the molecule.
+ * @param xmin Pointer to the x-coordinate (is set to 0).
+ * @param ymin Pointer to the y-coordinate (is set to 0).
+ * @param zmin Pointer to the z-coordinate (is set to 0).
+ * @param scaler Pointer to the scaling factor.
+ * @param err Pointer to the error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return number of dimensions: 0, 2, 3
+ */
 int MolfileGetXYZDimAndNormFactors(MOL_FMT_DATA *mfdata,
                                    int find_norm_factors,
                                    double *x0,
@@ -750,21 +786,69 @@ int MolfileGetXYZDimAndNormFactors(MOL_FMT_DATA *mfdata,
                                    double *scaler,
                                    int *err,
                                    char *pStrErr);
+
+/**
+ * @brief Free MOL file data structure.
+ *
+ * @param mfdata Pointer to the MOL file data structure to free.
+ * @return NULL pointer.
+ */
 MOL_FMT_DATA *FreeMolfileData(MOL_FMT_DATA *mfdata);
 
 /*
     V3000 Molfile
 */
 
+/**
+ * @brief Initialize V3000 connection table in MOL file data structure.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0 on success, -1 on failure.
+ */
 int MolfileV3000Init(MOL_FMT_CTAB *ctab,
                      char *pStrErr);
+
+/**
+ *  @brief Read V3000 head (begin and counts line) of in MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0 on success, -1 on failure.
+ */
 int MolfileV3000ReadCTABBeginAndCountsLine(MOL_FMT_CTAB *ctab,
                                            INCHI_IOSTREAM *inp_file,
                                            char *pStrErr);
+
+/**
+ * @brief Read V3000 atoms block in MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0 on success, -1 on failure.
+ */
 int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
                                INCHI_IOSTREAM *inp_file,
                                int err,
                                char *pStrErr);
+
+/**
+ * @brief Read V3000 bonds block in MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0: Success (no error, bonds block read correctly),
+ *         1: Error: No V3000 Bond block start marker ("BEGIN BOND" missing),
+ *         2: Error: Cannot read V3000 bond block line (input line missing or unreadable),
+ *         4: Error: Cannot interpret V3000 bond block line (parsing failure)
+ *         Negative values: If the end-of-data marker ($$$$) is encountered, err is set to -abs(err) (e.g., -1, -2, -4)
+ *         Other values: If the end marker ("END BOND") is missing, err is set to 1
+ */
 int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                                INCHI_IOSTREAM *inp_file,
                                int err,
