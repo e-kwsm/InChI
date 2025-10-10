@@ -853,43 +853,152 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                                INCHI_IOSTREAM *inp_file,
                                int err,
                                char *pStrErr);
+
+/**
+ * @brief Read V3000 tail (haptic bonds, stereo collections, Sgroups, 3D constraints, collections, end line) in to the MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0: Success (no error encountered, tail of CTAB read correctly)
+ *         1: Error (e.g., missing "END CTAB" marker, or other parsing errors)
+ *         7: Error in reading or interpreting V3000 collection lines
+ *         71, 77, etc.: Error codes from sub-blocks (e.g., SGroup, 3DBlock, Collection) plus 70, indicating which sub-block failed
+ *         Other positive values: Error codes from called functions (e.g., MolfileV3000ReadSGroup, MolfileV3000Read3DBlock, MolfileV3000ReadCollections) plus 70
+ *         Negative values: If an end-of-data marker ($$$$) is encountered during an error, the error code may be returned as a negative value (e.g., -1, -7, -71, etc.)
+ */
 int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
                                INCHI_IOSTREAM *inp_file,
                                int err,
                                char *pStrErr);
+
+/**
+ * @brief Read V3000 haptic bond information from the input line.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param line_ptr Pointer to the line buffer.
+ * @param num_list Pointer to the list of numbers.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return Positive integer (nread > 0): Success; number of bytes/fields read from the haptic bond block.
+ *         0: No data read (rare, usually means nothing was parsed).
+ *        -1: Error; parsing failed at any step (missing '(', invalid count, allocation failure, field read error, missing "ATTACH=ALL", etc.).
+ */
 int MolfileV3000ReadHapticBond(MOL_FMT_CTAB *ctab,
                                char **line_ptr,
                                int **num_list,
                                char *pStrErr);
+
+/**
+ * @brief Read V3000 stereo collection information from the input line.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param line_ptr Pointer to the line buffer.
+ * @param num_list Pointer to the list of numbers.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return Positive integer (nread > 0): Success; number of bytes/fields read from the stereo collection block.
+ *         0: No data read (rare, usually means nothing was parsed).
+ *        -1: Error; parsing failed at any step (missing '(', invalid count, allocation failure, field read error, missing "ATTACH=ALL", etc.).
+ */
 int MolfileV3000ReadStereoCollection(MOL_FMT_CTAB *ctab,
                                      char **line_ptr,
                                      int **num_list,
                                      char *pStrErr);
+
+/**
+ * @brief Read V3000 Sgroup information from the input file stream into the MOL file data structure.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0: Success (no error encountered, SGroup read correctly)
+ *         1: Error (e.g., missing "END SGROUP" marker, or other parsing errors)
+ */
 int MolfileV3000ReadSGroup(MOL_FMT_CTAB *ctab,
                            INCHI_IOSTREAM *inp_file,
                            int err,
                            char *pStrErr);
+
+/**
+ * @brief Read V3000 3D constraints block in MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0: Success (no error encountered, 3D block read correctly)
+ *         1: Error (e.g., missing "END 3D" marker, or other parsing errors)
+ */
 int MolfileV3000Read3DBlock(MOL_FMT_CTAB *ctab,
                             INCHI_IOSTREAM *inp_file,
                             int err,
                             char *pStrErr);
+
+/**
+ * @brief Read V3000 collections block in MOL file data structure from input file stream.
+ *
+ * @param ctab Pointer to the connection table data structure.
+ * @param inp_file Pointer to the input file stream.
+ * @param err Error code.
+ * @param pStrErr Pointer to the error string buffer.
+ * @return 0: Success (collections block read and parsed correctly)
+ *         7: Error in reading or interpreting V3000 collection lines (parsing failure, unexpected format, missing required fields, etc.)
+ */
 int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
                                 INCHI_IOSTREAM *inp_file,
                                 int err,
                                 char *pStrErr);
 /*    Clean V3000 stuff */
+
+/**
+ * @brief Free memory allocated for V3000 specific data in the MOL file data structure.
+ *
+ * @param v3000 Pointer to the V3000 specific data structure to free.
+ * @return 0.
+ */
 int DeleteMolfileV3000Info(MOL_FMT_v3000 *v3000);
 
+/**
+ * @brief Read a line from the input file stream, handling V3000 line continuations: Extended version of inchi_fgetsLf which is able of reading
+ *        concatenated lines (ending with '-') of V3000 Molfile. Also removes "M  V30 " prefix" and normalizes the rest of string.
+ *
+ * @param line Pointer to the buffer to store the read line.
+ * @param inp_stream Pointer to the input file stream.
+ * @return Pointer to the read line, or NULL on end of file or error.
+ */
 char *inchi_fgetsLf_V3000(char *line,
                           INCHI_IOSTREAM *inp_stream);
+
+/**
+ * @brief Get a V3000 input line and store it in a string buffer.
+ *
+ * @param buf Pointer to the string buffer to store the line.
+ * @param inp_stream Pointer to the input file stream.
+ * @return Length of buffer stored on success, -1 on failure.
+ */
 int get_V3000_input_line_to_strbuf(INCHI_IOS_STRING *buf,
                                    INCHI_IOSTREAM *inp_stream);
 
-/*    Extract the 'data' in specified mol file field at given text position 'line_ptr'  */
+/**
+ * @brief Extract the 'data' in specified mol file field at given text position 'line_ptr'
+ *
+ * @param data Pointer to the destination buffer.
+ * @param data_type Type of the data to read. E.g. MOL_FMT_STRING_DATA, MOL_FMT_CHAR_INT_DATA, etc.
+ * @param line_ptr Pointer to the line buffer.
+ * @return for MOL_FMT_STRING_DATA: number of bytes excluding trailing zero
+ *         for all others:  1=success; 0 = empty
+ */
 int MolfileV3000ReadField(void *data,
                           int data_type,
                           char **line_ptr);
-/*    Read keyword */
+/**
+ * @brief Read keyword from the specified line.
+ *
+ * @param key Pointer to the buffer to store the keyword.
+ * @param line_ptr Pointer to the line buffer.
+ * @return Length of the keyword on success, -1 on failure.
+ */
 int MolfileV3000ReadKeyword(char *key,
                             char **line_ptr);
 
@@ -897,6 +1006,26 @@ int MolfileV3000ReadKeyword(char *key,
     SDF
 */
 
+/**
+ * @brief Skip extra data in SDF file after the MOL file data.
+ *
+ * @param inp_file Pointer to the input file stream.
+ * @param CAS_num Pointer to the variable to store the CAS number.
+ * @param comment Pointer to the buffer to store the comment.
+ * @param lcomment Length of the comment buffer.
+ * @param name Pointer to the buffer to store the name.
+ * @param lname Length of the name buffer.
+ * @param prev_err Previous error code.
+ * @param pSdfLabel Pointer to the SDF label buffer.
+ * @param pSdfValue Pointer to the SDF value buffer.
+ * @param pStrErr Pointer to the error string buffer.
+ * @param bNoWarnings Flag indicating whether to suppress warnings.
+ * @return 0: Success; extra SDF data was skipped without errors.
+ *         3: Unexpected SData header line (unexpected contents or format).
+ *         5: Only blank lines encountered (all lines empty).
+ *         9: Error occurred, but successfully bypassed to the next structure ($$$$ marker found); non-fatal, warning issued.
+ *         Other values: The function may propagate the value of prev_err if set before entering the loop.
+ */
 int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
                         unsigned long *CAS_num,
                         char *comment,
@@ -908,7 +1037,26 @@ int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
                         char *pSdfValue,
                         char *pStrErr,
                         int bNoWarnings);
+
+/**
+ * @brief Identify if the given line matches the specified SDF label.
+ *
+ * @param inp_line Pointer to the input line.
+ * @param pSdfLabel Pointer to the SDF label to match.
+ * @return SDF_DATA_HEADER_USER: The label matches the user-specified label (pSdfLabel).
+ *         SDF_DATA_HEADER_NAME: The label is "NAME".
+ *         SDF_DATA_HEADER_COMMENT: The label is "COMMENT".
+ *         SDF_DATA_HEADER_CAS: The label is "CAS".
+ *         SDF_DATA_HEADER: The label does not match any of the above (default case).
+ */
 int SDFileIdentifyLabel(char *inp_line, const char *pSdfLabel);
+
+/**
+ * @brief Extract CAS number from the given line.
+ *
+ * @param line Pointer to the line containing the CAS number.
+ * @return The extracted CAS number, or 0 if not found or invalid.
+ */
 unsigned long SDFileExtractCASNo(char *line);
 
 #endif /* _MOL_FMT_H_ */
