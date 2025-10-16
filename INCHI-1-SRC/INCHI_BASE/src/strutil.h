@@ -108,7 +108,7 @@ extern "C" {
     /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, for updating the neighbour's list in the main molecular inorganics function processing */
     void updateNeighborListMolecularInorganics(inp_ATOM* at, int atom_idx, int neighbor_idx);
     /* (@nnuk : Nauman Ullah Khan) :: Function related to molecular inorganics, decides for the specific metal bonds to be kept or disconnected. */
-    int MolecularInorganicsIsMetalToDisconnect(inp_ATOM* at, int i, int bCheckMetalValence);
+    int MolecularInorganicsIsMetalToDisconnect(inp_ATOM* at, int atom_idx);
     /* Function retrieves valence values for molecular inorganics functionality*/
     int getElValenceforMolecularInorganics(int nPeriodicNum, int charge, int val_num);
     /* Function retrieves element type value for molecular inorganics functionality*/

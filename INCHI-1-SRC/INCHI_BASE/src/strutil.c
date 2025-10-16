@@ -6158,11 +6158,11 @@ int getElTypeforMolecularInorganics(int nPeriodicNum)
  * Function check for molecular inorganics if a metal atom has to be disconnected
  * or not.
  ******************************************************************************/
-int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int i, int bCheckMetalValence)
+int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int atom_idx)
 {
 
     int at_valence, num_H;
-    int type = getElTypeforMolecularInorganics(at[i].el_number);
+    int type = getElTypeforMolecularInorganics(at[atom_idx].el_number);
     int j;
 
     /* Calculate the actual valence of the atom
@@ -6170,32 +6170,23 @@ int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int i, int bCheckMetalV
      * of the atom has to be taken into account
      * which will further get equated within the
      * elements array to a metal atom(neutral or an ion) */
-    num_H = NUMH(at, i);
-    at_valence = num_H + at[i].chem_bonds_valence;
+    num_H = NUMH(at, atom_idx);
+    at_valence = num_H + at[atom_idx].chem_bonds_valence;
 
-    if (!at_valence)
+    if (!at_valence || (abs(at[atom_idx].charge) > 1))
     {
-        return 0; /* Isolated metal atom */
+        return 0; /* Isolated metal atom or Atom has multiple charges */
     }
 
-    if (bCheckMetalValence)
+    /* Check if the valence matches a known normal valence */
+    for (j = 0; j < 4; j++)
     {
-        /* Handle metals with multiple charges */
-        if (abs(at[i].charge) > 1)
-        {
-            return 1; /* Atom has multiple charges, handle bonds */
-        }
+        const int bitmask = (1 << j);                              /* Create bitmask for the j-th bit */
+        const bool is_valence_state_valid = (bitmask & type) != 0; /* Check if the j-th valence state is allowed */
 
-        /* Check if the valence matches a known normal valence */
-        for (j = 0; j < 4; j++)
+        if (is_valence_state_valid && at_valence == getElValenceforMolecularInorganics(at[atom_idx].el_number, at[atom_idx].charge, j))
         {
-            const int bitmask = (1 << j);                              /* Create bitmask for the j-th bit */
-            const bool is_valence_state_valid = (bitmask & type) != 0; /* Check if the j-th valence state is allowed */
-
-            if (is_valence_state_valid && at_valence == getElValenceforMolecularInorganics(at[i].el_number, at[i].charge, j))
-            {
-                return 2; /* Atom has normal valence follows disconnection logic if applicable */
-            }
+            return 1; /* Atom has normal valence follows disconnection logic if applicable */
         }
     }
 
@@ -6351,13 +6342,6 @@ int shouldBondBeCut(int atom1, int atom2)
 {
     int index1, index2, binaryValue;
 
-    /* Ensure the elememt numbers are within the valid range */
-    if (atom1 < 1 || atom1 > NUM_ELEMENTS || atom2 < 1 || atom2 > NUM_ELEMENTS)
-    {
-        fprintf(stderr, "Invalid element number for atom1 : %d or atom2 : %d\n", atom1, atom2);
-        return -1; /* Error case */
-    }
-
     /* Get the indices corresponding to the atomic numbers */
     index1 = atom1 - 1;
     index2 = atom2 - 1;
@@ -6466,9 +6450,9 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         metal_atoms[num_metals++] = i;
 
         /* Call the MolecularInorganicsIsMetalToDisconnect function */
-        disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i, 1); /* 1 for bCheckMetalValence */
+        disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i);
 
-        if (disconnectDecision != 2) /* If disconnectDecision = 2, then disconnection procedure will be followed if applicable */
+        if (disconnectDecision != 1) /* If disconnectDecision = 1, then disconnection procedure will be followed if applicable */
         {
             /* (@nnuk) : No disconnection if the metal atom bounding capacity is greater than
              * the limit set inside Molecular Inorganics elements array or if the metal atom is
