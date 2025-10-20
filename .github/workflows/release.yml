@@ -3,8 +3,6 @@ name: Release
 on:
   workflow_dispatch:
   push:
-    # TODO: Remove branches trigger.
-    branches: [ release-automation ]
     # Trigger this workflow by pushing a release tag.
     # Make sure that `HEAD` is pointing to the commit you want to release.
     # Then run `git tag -a v<version_tag> -m "Release version <version_tag> (<yyyy>-<mm>-<dd>)" && git push && git push --tags`.
@@ -87,7 +85,7 @@ jobs:
           path: |
             CMake_build/libinchi_build/CMakeCache.txt
             CMake_build/cli_build/CMakeCache.txt
-      
+
       - name: Collect artifacts
         run: |
           mkdir -p ${{ env.RELEASE_DIR }}
@@ -103,12 +101,12 @@ jobs:
 
       - name: Sign artifacts
         if: runner.os == 'Windows'
-        uses: signpath/github-action-submit-signing-request@4f13d373e8f0cd8d3c0465ff4877feff27aed2ae
+        uses: signpath/github-action-submit-signing-request@ced31329c0317e779dad2eec2a7c3bb46ea1343e
         with:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
           organization-id: 656f8204-f8c5-4028-bd48-f832f5f89b31
           project-slug: InChI
-          signing-policy-slug: test-signing
+          signing-policy-slug: release-signing
           github-artifact-id: ${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}
           wait-for-completion: true
           output-artifact-directory: ${{ env.RELEASE_DIR }}-signed
@@ -127,6 +125,13 @@ jobs:
       contents: write
 
     steps:
+
+      - uses: actions/checkout@v4
+        # git repository needs to be checked out (including tags, hence `fetch-depth: 0`),
+        # otherwise the `--verify-tag` flag to `gh release create` fails.
+        with:
+          fetch-depth: 0
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
