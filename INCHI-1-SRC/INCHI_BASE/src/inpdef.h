@@ -47,52 +47,52 @@
 #include "mode.h"
 #include "mol_fmt.h"
 
-#define CLOSING_STARRED_SRU_IS_A_MUST           1
+#define CLOSING_STARRED_SRU_IS_A_MUST 1
 #define ALLOW_CLOSING_SRU_VIA_HIGHER_ORDER_BOND 1
-#define ALLOW_CLOSING_SRU_VIA_DIRADICAL         1
+#define ALLOW_CLOSING_SRU_VIA_DIRADICAL 1
 
-#define CLOSING_SRU_NOT_APPLICABLE              0
-#define CLOSING_SRU_RING                        1
-#define CLOSING_SRU_HIGHER_ORDER_BOND           2
-#define CLOSING_SRU_DIRADICAL                   3
-#define CLOSING_SRU_RING_OPENED                 4
-#define CLOSING_SRU_MOVED_BRACKETS              5
+#define CLOSING_SRU_NOT_APPLICABLE 0
+#define CLOSING_SRU_RING 1
+#define CLOSING_SRU_HIGHER_ORDER_BOND 2
+#define CLOSING_SRU_DIRADICAL 3
+#define CLOSING_SRU_RING_OPENED 4
+#define CLOSING_SRU_MOVED_BRACKETS 5
 
-#define bDrawingLabelLeftShift                  endpoint /* for drawing only */
+#define bDrawingLabelLeftShift endpoint /* for drawing only */
 typedef S_SHORT ST_CAP_FLOW;
 
 /* inp_ATOM::at_type */
-#define ATT_NONE        0x0000
-#define ATT_ACIDIC_CO   0x0001
-#define ATT_ACIDIC_S    0x0002
-#define ATT_OO          0x0004
-#define ATT_ZOO         0x0008
-#define ATT_NO          0x0010
-#define ATT_N_O         0x0020
-#define ATT_ATOM_N      0x0040
-#define ATT_ATOM_P      0x0080
+#define ATT_NONE 0x0000
+#define ATT_ACIDIC_CO 0x0001
+#define ATT_ACIDIC_S 0x0002
+#define ATT_OO 0x0004
+#define ATT_ZOO 0x0008
+#define ATT_NO 0x0010
+#define ATT_N_O 0x0020
+#define ATT_ATOM_N 0x0040
+#define ATT_ATOM_P 0x0080
 #define ATT_OTHER_NEG_O 0x0100
-#define ATT_OTHER_ZO    0x0200 /* -Z=O or =Z=O */
-#define ATT_OH_MINUS    0x0400 /* OH(-), O=O,S,Se,Te */
-#define ATT_O_PLUS      0x0800 /* -OH2(+), =OH(+), -OH(+)-, OH3(+), =O(+)-, etc; O=O,S,Se,Te */
-#define ATT_PROTON      0x1000
-#define ATT_HalAnion    0x2000
-#define ATT_HalAcid     0x4000
+#define ATT_OTHER_ZO 0x0200 /* -Z=O or =Z=O */
+#define ATT_OH_MINUS 0x0400 /* OH(-), O=O,S,Se,Te */
+#define ATT_O_PLUS 0x0800   /* -OH2(+), =OH(+), -OH(+)-, OH3(+), =O(+)-, etc; O=O,S,Se,Te */
+#define ATT_PROTON 0x1000
+#define ATT_HalAnion 0x2000
+#define ATT_HalAcid 0x4000
 #if (FIX_NP_MINUS_BUG == 1)
 #define ATT_NP_MINUS_V23 0x8000 /* =N(-) or =P(-) where = previously was triple */
 #endif
 
 #define AT_FLAG_ISO_H_POINT 0x01 /* may have isotopic H */
 
-#define PERIODIC_NUMBER_H   1
+#define PERIODIC_NUMBER_H 1
 
 #ifndef NUMH
 #define NUM_ISO_H(AT, N) (AT[N].num_iso_H[0] + AT[N].num_iso_H[1] + AT[N].num_iso_H[2])
-#define NUMH(AT, N)      (AT[N].num_H + NUM_ISO_H(AT, N))
+#define NUMH(AT, N) (AT[N].num_H + NUM_ISO_H(AT, N))
 #endif
 
-#define FlagSC_0D      1 /* bUsed0DParity */
-#define FlagSB_0D      2 /* bUsed0DParity */
+#define FlagSC_0D 1 /* bUsed0DParity */
+#define FlagSB_0D 2 /* bUsed0DParity */
 
 #define SB_PARITY_FLAG 0x38 /* mask for disconnected metal parity if it is different */
 #define SB_PARITY_SHFT 3    /* number of right shift bits to get disconnected metal parity */
@@ -138,7 +138,8 @@ typedef S_SHORT ST_CAP_FLOW;
  * @param nBlockSystem Block system number (part of ring system analysis)
  * @param nDistanceFromTerminal Distance from terminal atom or ring system (terminal atom or ring system has 1, next has 2, etc.)
  */
-typedef struct tagInputAtom {
+typedef struct tagInputAtom
+{
     char elname[ATOM_EL_LEN];         /* name of chemical element                                 */
     U_CHAR el_number;                 /* number of the element in the Periodic Table              */
     AT_NUMB neighbor[MAXVAL];         /* positions (from 0) of the neighbors in the inp_ATOM array*/
@@ -202,33 +203,33 @@ typedef struct tagInputAtom {
 /* v. 1.05 Polymer stuff                                            */
 
 /* Polymer representation type */
-#define NO_POLYMER                             -1
-#define POLYMER_REPRESENTATION_SOURCE_BASED    1
+#define NO_POLYMER -1
+#define POLYMER_REPRESENTATION_SOURCE_BASED 1
 #define POLYMER_REPRESENTATION_STRUCTURE_BASED 2
-#define POLYMER_REPRESENTATION_MIXED           3
-#define POLYMER_REPRESENTATION_UNRECOGNIZED    4
+#define POLYMER_REPRESENTATION_MIXED 3
+#define POLYMER_REPRESENTATION_UNRECOGNIZED 4
 
-#define ALLOW_MIXED_SRU_AND_MON                1 /* allow simultaneous presence of source-based and    */
-                                                 /* structure-based units in embedding copolymer unit    */
+#define ALLOW_MIXED_SRU_AND_MON 1 /* allow simultaneous presence of source-based and    */
+                                  /* structure-based units in embedding copolymer unit    */
 
 #define POLYMER_STY_NON 0
-#define POLYMER_STY_SRU 1  /* structure-based unit or copolymer subunit                        */
-#define POLYMER_STY_MON 2  /* source-based    polymer unit or copolymer subunit                    */
-#define POLYMER_STY_COP 3  /* copolymer unit embedding >1 subunits                                */
-                           /* (may be SRU, MON, MER, CRO, MOD; others not supported yet)        */
-#define POLYMER_STY_MOD  4 /* copolymer subunit only, designates chemical modification of SRU    */
-#define POLYMER_STY_CRO  5 /* copolymer subunit only, designates cross-linked version of SRU    */
-#define POLYMER_STY_MER  6 /* copolymer subunit only, source-based with no homopolymerize        */
+#define POLYMER_STY_SRU 1 /* structure-based unit or copolymer subunit                        */
+#define POLYMER_STY_MON 2 /* source-based    polymer unit or copolymer subunit                    */
+#define POLYMER_STY_COP 3 /* copolymer unit embedding >1 subunits                                */
+                          /* (may be SRU, MON, MER, CRO, MOD; others not supported yet)        */
+#define POLYMER_STY_MOD 4 /* copolymer subunit only, designates chemical modification of SRU    */
+#define POLYMER_STY_CRO 5 /* copolymer subunit only, designates cross-linked version of SRU    */
+#define POLYMER_STY_MER 6 /* copolymer subunit only, source-based with no homopolymerize        */
 
-#define POLYMER_SST_NON  0
-#define POLYMER_SST_ALT  1
-#define POLYMER_SST_RAN  2
-#define POLYMER_SST_BLK  3
+#define POLYMER_SST_NON 0
+#define POLYMER_SST_ALT 1
+#define POLYMER_SST_RAN 2
+#define POLYMER_SST_BLK 3
 
 #define POLYMER_CONN_NON 0
-#define POLYMER_CONN_HT  1
-#define POLYMER_CONN_HH  2
-#define POLYMER_CONN_EU  3
+#define POLYMER_CONN_HT 1
+#define POLYMER_CONN_HH 2
+#define POLYMER_CONN_EU 3
 
 /**
  * @brief Structure describing a polymer unit
@@ -259,7 +260,8 @@ typedef struct tagInputAtom {
  * single-order non-intraring bonds)
  * @param bkbonds        List of [breakable] backbone bonds [(a1,a2), (a3,a4),...]
  */
-typedef struct OAD_PolymerUnit {
+typedef struct OAD_PolymerUnit
+{
     int id;         /* it is what is called 'Sgroup number' in CTFILE           */
     int type;       /* type as by MDL format (STY)                              */
     int subtype;    /* subtype as by MDL format (SST)                           */
@@ -305,7 +307,8 @@ typedef struct OAD_PolymerUnit {
  * @param is_in_reconn   flag indicating whether polymer is in reconnection mode
  * @param edit_repeats   flag indicating whether repeats need to be edited (-1 unknown, to be checked; 0 no, no edits required; 1 yes, edits are necessary)
  */
-typedef struct OAD_Polymer {
+typedef struct OAD_Polymer
+{
     OAD_PolymerUnit **units; /* array of pointers to units               */
     int n;
     int n_pzz; /* number of polymeric Zz atoms             */
@@ -333,7 +336,8 @@ typedef struct OAD_Polymer {
  *                      ring_erank != 0    heterocycle of ring_size
  *                      ring_erank==0 && ring_size>0    carbocycle of ring_size
  */
-typedef struct OAD_AtProps {
+typedef struct OAD_AtProps
+{
     int erank;      /* rank of element; 2 - C, >2 - rank of heteroatom in chain,    */
                     /* O > S > Se > Te > N ...., Rule 4                             */
     int ring_erank; /* 0 - not ring or just carbocycle,
@@ -374,7 +378,8 @@ typedef struct OAD_AtProps {
  *                           sterac[k][1] -  number of members in collection
  */
 /* Extended input supports v. 1.05 extensions: V3000; polymers  */
-typedef struct OAD_V3000 {
+typedef struct OAD_V3000
+{
     int n_non_star_atoms;
     int n_star_atoms;
     int *atom_index_orig; /* index as supplied for atoms                                  */
@@ -426,7 +431,8 @@ typedef struct OAD_V3000 {
  * @param valid_polymer    Flag indicating if polymer data is valid
  * @param n_zy            Number of non-polymeric pseudoatoms (Zy)
  */
-typedef struct tagOrigAtom {
+typedef struct tagOrigAtom
+{
     /* Initially filled out by CreateOrigInpDataFromMolfile()                               */
     /* may be changed by disconnecting salts and disconnecting metals                       */
     inp_ATOM *at;
@@ -470,7 +476,8 @@ typedef struct tagOrigAtom {
  * @param v3000       Pointer to V3000 data structure (uses pointer copy from orig_inp_data, do not free after use!)
  * @param n_zy        Number of non-polymeric pseudoatoms (Zy)
  */
-typedef struct tagOriginalStruct {
+typedef struct tagOriginalStruct
+{
     int num_atoms;
     char *szAtoms;
     char *szBonds;
@@ -500,7 +507,8 @@ typedef struct tagOriginalStruct {
  * @param cStereoBondWarning       Stereo bond warnings
  * @param cStereoBondNumber        Stereo bond numbers
  */
-typedef struct tagAtomParmsForDrawing {
+typedef struct tagAtomParmsForDrawing
+{
     char at_string[ATOM_INFO_LEN];
     int DrawingLabelLeftShift;
     int DrawingLabelLength;
@@ -519,14 +527,14 @@ typedef struct tagAtomParmsForDrawing {
     S_CHAR cStereoBondNumber[MAX_STEREO_BONDS];
 } inf_ATOM;
 
-#define INF_STEREO_ABS          0x0001
-#define INF_STEREO_REL          0x0002
-#define INF_STEREO_RAC          0x0004
-#define INF_STEREO_NORM         0x0008
-#define INF_STEREO_INV          0x0010
-#define INF_STEREO              0x0020
-#define INF_STEREO_ABS_REL_RAC  (INF_STEREO_ABS | INF_STEREO_REL | INF_STEREO_RAC)
-#define INF_STEREO_NORM_INV     (INF_STEREO_NORM | INF_STEREO_INV)
+#define INF_STEREO_ABS 0x0001
+#define INF_STEREO_REL 0x0002
+#define INF_STEREO_RAC 0x0004
+#define INF_STEREO_NORM 0x0008
+#define INF_STEREO_INV 0x0010
+#define INF_STEREO 0x0020
+#define INF_STEREO_ABS_REL_RAC (INF_STEREO_ABS | INF_STEREO_REL | INF_STEREO_RAC)
+#define INF_STEREO_NORM_INV (INF_STEREO_NORM | INF_STEREO_INV)
 
 #define MAX_LEN_REMOVED_PROTONS 128
 
@@ -543,7 +551,8 @@ typedef struct tagAtomParmsForDrawing {
  * @param num_iso_H       Array with number of removed isotopic hydrogens per isotope
  * @param szRemovedProtons String with removed protons
  */
-typedef struct tagInfoAtomData {
+typedef struct tagInfoAtomData
+{
     inf_ATOM *at;
     int num_at;
     AT_NUMB StereoFlags;
@@ -577,7 +586,8 @@ typedef struct tagInfoAtomData {
  * @param bTautFlagsDone       Tautomeric flags done
  * @param bNormalizationFlags  Normalization flags
  */
-typedef struct tagInputAtomData {
+typedef struct tagInputAtomData
+{
     inp_ATOM *at;
     inp_ATOM *at_fixed_bonds; /* tautomeric case, added or removed H  */
     int num_at;
@@ -609,7 +619,8 @@ typedef INP_ATOM_DATA INP_ATOM_DATA2[TAUT_NUM];
  * @param bNormalizationFlags   Normalization flags
  * @param nCanonFlags           Canonicalization flags
  */
-typedef struct tagNormCanonFlags {
+typedef struct tagNormCanonFlags
+{
     INCHI_MODE bTautFlags[INCHI_NUM][TAUT_NUM];
     INCHI_MODE bTautFlagsDone[INCHI_NUM][TAUT_NUM];
     INCHI_MODE bNormalizationFlags[INCHI_NUM][TAUT_NUM];
@@ -634,7 +645,8 @@ typedef struct tagNormCanonFlags {
  * @param nOffsetAtAndH        Array with offsets for atoms and hydrogens
  * @param num_components       Number of components
  */
-typedef struct tagCompositeAtomData {
+typedef struct tagCompositeAtomData
+{
     inp_ATOM *at;
     int num_at;
     int num_removed_H;
@@ -670,7 +682,8 @@ typedef long INCHI_FPTR;
  * @param cur_fptr      Current file pointer index (input: k-1 to read the kth struct, k = 1, 2, 3,...; left unchanged; struct number := cur_fptr+1)
  * @param max_fptr      Length of the filled out portion of fptr
  */
-typedef struct tagStructFptrs {
+typedef struct tagStructFptrs
+{
     INCHI_FPTR *fptr; /* input:  fptr[cur_fptr]  =file ptr to the struct to read      */
                       /* output: fptr[cur_fptr+1]=file ptr to the next struct or EOF  */
     int len_fptr;     /* allocated length of fptr                                     */
@@ -688,142 +701,330 @@ struct tagINCHI_CLOCK;
 int bInchiTimeIsOver(struct tagINCHI_CLOCK *ic, struct tagInchiTime *TickEnd);
 #endif
 
-#define FLAG_INP_AT_CHIRAL        1
-#define FLAG_INP_AT_NONCHIRAL     2
-#define FLAG_SET_INP_AT_CHIRAL    4
+#define FLAG_INP_AT_CHIRAL 1
+#define FLAG_INP_AT_NONCHIRAL 2
+#define FLAG_SET_INP_AT_CHIRAL 4
 #define FLAG_SET_INP_AT_NONCHIRAL 8
-#define FLAG_SET_INP_LARGE_MOLS   16
+#define FLAG_SET_INP_LARGE_MOLS 16
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #endif
 
-int CreateOrigInpDataFromMolfile(INCHI_IOSTREAM *inp_file, ORIG_ATOM_DATA *orig_at_data, int bMergeAllInputStructures, int bGetOrigCoord, int bDoNotAddH, int treat_polymers, int treat_NPZz,
-                                 const char *pSdfLabel, char *pSdfValue, unsigned long *lSdfId, long *lMolfileNumber, INCHI_MODE *pInpAtomFlags, int *err, char *pStrErr, int bNoWarnings);
-int InchiToOrigAtom(INCHI_IOSTREAM *infile, ORIG_ATOM_DATA *orig_at_data, int bMergeAllInputStructures, int bGetOrigCoord, int bDoNotAddH, int vABParityUnknown, INPUT_TYPE nInputType, char *pSdfLabel,
-                    char *pSdfValue, unsigned long *lSdfId, INCHI_MODE *pInpAtomFlags, int *err, char *pStrErr);
-int MarkDisconnectedComponents(ORIG_ATOM_DATA *orig_at_data, int bProcessOldCompNumbers);
-int DisconnectSalts(ORIG_ATOM_DATA *orig_inp_data, int bDisconnect);
-int DisconnectMetals(ORIG_ATOM_DATA *orig_inp_data, int bCheckMetalValence, INCHI_MODE *bTautFlagsDone);
-int bMayDisconnectMetals(ORIG_ATOM_DATA *orig_inp_data, int bCheckMetalValence, INCHI_MODE *bTautFlagsDone);
-int bHasMetalAtom(ORIG_ATOM_DATA *orig_inp_data);
-int FixAdjacentRadicals(int num_inp_atoms, inp_ATOM *at); /* FIX_ADJ_RAD == 1 */
-int fix_odd_things(int num_atoms, inp_ATOM *at, int bFixBug, int bFixNonUniformDraw);
-int post_fix_odd_things(int num_atoms, inp_ATOM *at);
-int remove_ion_pairs(int num_atoms, inp_ATOM *at);
-int bFoundFeature(inp_ATOM *at, int num_atoms);
+    /**
+     * @brief Create original input data from molfile
+     *
+     * @param inp_file Input file stream
+     * @param orig_at_data Pointer to original atom data structure to be filled
+     * @param bMergeAllInputStructures Flag indicating whether to merge all input structures
+     * @param bGetOrigCoord Flag indicating whether to get original coordinates
+     * @param bDoNotAddH Flag indicating whether to avoid adding hydrogens
+     * @param treat_polymers Flag indicating how to treat polymers
+     * @param treat_NPZz Flag indicating how to treat non-polymeric Zz atoms
+     * @param pSdfLabel Pointer to SDF label
+     * @param pSdfValue Pointer to SDF value
+     * @param lSdfId Pointer to SDF ID
+     * @param lMolfileNumber Pointer to molfile number
+     * @param pInpAtomFlags Pointer to input atom flags
+     * @param err Pointer to error code
+     * @param pStrErr Pointer to error string
+     * @param bNoWarnings Flag indicating whether to suppress warnings
+     *
+     * @return int Status code
+     */
+    int CreateOrigInpDataFromMolfile(INCHI_IOSTREAM *inp_file, ORIG_ATOM_DATA *orig_at_data, int bMergeAllInputStructures, int bGetOrigCoord, int bDoNotAddH, int treat_polymers, int treat_NPZz,
+                                     const char *pSdfLabel, char *pSdfValue, unsigned long *lSdfId, long *lMolfileNumber, INCHI_MODE *pInpAtomFlags, int *err, char *pStrErr, int bNoWarnings);
 
-int UnMarkRingSystemsInp(inp_ATOM *at, int num_atoms);
+    /**
+     * @brief Convert InChI representation to original atom data
+     *
+     * @param infile Input file stream
+     * @param orig_at_data Pointer to original atom data structure to be filled
+     * @param bMergeAllInputStructures Flag indicating whether to merge all input structures
+     * @param bGetOrigCoord Flag indicating whether to get original coordinates
+     * @param bDoNotAddH Flag indicating whether to avoid adding hydrogens
+     * @param vABParityUnknown Flag indicating whether to treat vAB parity as unknown
+     * @param nInputType Input type
+     * @param pSdfLabel Pointer to SDF label
+     * @param pSdfValue Pointer to SDF value
+     * @param lSdfId Pointer to SDF ID
+     * @param pInpAtomFlags Pointer to input atom flags
+     * @param err Pointer to error code
+     * @param pStrErr Pointer to error string
+     * @return int Status code
+     */
+    int InchiToOrigAtom(INCHI_IOSTREAM *infile, ORIG_ATOM_DATA *orig_at_data, int bMergeAllInputStructures, int bGetOrigCoord, int bDoNotAddH, int vABParityUnknown, INPUT_TYPE nInputType, char *pSdfLabel,
+                        char *pSdfValue, unsigned long *lSdfId, INCHI_MODE *pInpAtomFlags, int *err, char *pStrErr);
 
-int OrigAtData_WriteToSDfile(const ORIG_ATOM_DATA *inp_at_data, INCHI_IOSTREAM *fcb, const char *name, const char *comment, int bChiralFlag, int bAtomsDT, const char *szLabel, const char *szValue);
-void FreeInpAtom(inp_ATOM **at);
-void FreeInfAtom(inf_ATOM **at);
-void FreeOrigAtData(ORIG_ATOM_DATA *orig_at_data);
-void FreeExtOrigAtData(OAD_Polymer *pd, OAD_V3000 *v3k);
-void FreeInpAtomData(INP_ATOM_DATA *inp_at_data);
-void FreeCompAtomData(COMP_ATOM_DATA *inp_at_data);
-void FreeInfoAtomData(INF_ATOM_DATA *inf_at_data);
+    /**
+     * @brief Mark disconnected components in the original atom data
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param bProcessOldCompNumbers Flag indicating whether to process old component numbers
+     * @return int Status code
+     */
+    int MarkDisconnectedComponents(ORIG_ATOM_DATA *orig_at_data, int bProcessOldCompNumbers);
 
-/*
-    ORIG_ATOM_DATA
-        functions
-*/
+    /**
+     * @brief Disconnect salts in the original atom data
+     *
+     * @param orig_inp_data Pointer to original atom data structure
+     * @param bDisconnect Flag indicating whether to disconnect salts
+     * @return int Status code
+     */
+    int DisconnectSalts(ORIG_ATOM_DATA *orig_inp_data, int bDisconnect);
 
-/* OAD_Edit */
-typedef struct tagOAD_StructureEdits {
-    INT_ARRAY *del_atom;
-    INT_ARRAY *del_bond;
-    INT_ARRAY *new_bond;
-    INT_ARRAY *mod_bond;
-    INT_ARRAY *mod_coord;
-    int del_side_chains;
-} OAD_StructureEdits;
-int OAD_StructureEdits_Init(OAD_StructureEdits *ed);
-void OAD_StructureEdits_Clear(OAD_StructureEdits *ed);
-void OAD_StructureEdits_DebugPrint(OAD_StructureEdits *ed);
+    /**
+     * @brief Disconnect metals in the original atom data
+     *
+     * @param orig_inp_data Pointer to original atom data structure
+     * @param bCheckMetalValence Flag indicating whether to check metal valence
+     * @param bTautFlagsDone Pointer to tautomeric flags done
+     * @return int Status code
+     */
+    int DisconnectMetals(ORIG_ATOM_DATA *orig_inp_data, int bCheckMetalValence, INCHI_MODE *bTautFlagsDone);
+
+    /**
+     * @brief Check if metals may be disconnected in the original atom data
+     *
+     * @param orig_inp_data Pointer to original atom data structure
+     * @param bCheckMetalValence Flag indicating whether to check metal valence
+     * @param bTautFlagsDone Pointer to tautomeric flags done
+     * @return int Status code
+     */
+    int bMayDisconnectMetals(ORIG_ATOM_DATA *orig_inp_data, int bCheckMetalValence, INCHI_MODE *bTautFlagsDone);
+
+    /**
+     * @brief Check if there is a metal atom in the original atom data
+     *
+     * @param orig_inp_data Pointer to original atom data structure
+     * @return int Status code
+     */
+    int bHasMetalAtom(ORIG_ATOM_DATA *orig_inp_data);
+
+    /**
+     * @brief Fix adjacent radicals in the input atoms
+     *
+     * @param num_inp_atoms Number of input atoms
+     * @param at Array of input atoms
+     * @return int Status code
+     */
+    int FixAdjacentRadicals(int num_inp_atoms, inp_ATOM *at); /* FIX_ADJ_RAD == 1 */
+
+    /**
+     * @brief Fix odd things in the input atoms
+     *
+     * @param num_atoms Number of input atoms
+     * @param at Array of input atoms
+     * @param bFixBug Flag indicating whether to fix bugs
+     * @param bFixNonUniformDraw Flag indicating whether to fix non-uniform drawing
+     * @return int Status code
+     */
+    int fix_odd_things(int num_atoms, inp_ATOM *at, int bFixBug, int bFixNonUniformDraw);
+
+    /**
+     * @brief Post-fix odd things in the input atoms (does nothing, returns 0)
+     *
+     * @param num_atoms Number of input atoms
+     * @param at Array of input atoms
+     * @return int Status code
+     */
+    int post_fix_odd_things(int num_atoms, inp_ATOM *at);
+
+    /**
+     * @brief Remove ion pairs from the input atoms
+     *
+     * @param num_atoms Number of input atoms
+     * @param at Array of input atoms
+     * @return int Status code
+     */
+    int remove_ion_pairs(int num_atoms, inp_ATOM *at);
+
+    /**
+     * @brief Check if a feature is found in the input atoms ???
+     *
+     * @param at Array of input atoms
+     * @param num_atoms Number of input atoms
+     * @return int Status code
+     */
+    int bFoundFeature(inp_ATOM *at, int num_atoms);
+
+    /**
+     * @brief Unmark ring systems in the input atoms
+     *
+     * @param at Array of input atoms
+     * @param num_atoms Number of input atoms
+     * @return int Status code
+     */
+    int UnMarkRingSystemsInp(inp_ATOM *at, int num_atoms);
+
+    /**
+     * @brief Write original atom data to SD file
+     *
+     * @param inp_at_data Pointer to original atom data structure
+     * @param fcb File stream to write to
+     * @param name Name of the structure
+     * @param comment Comment to include
+     * @param bChiralFlag Flag indicating for chiral information
+     * @param bAtomsDT Flag indicating how H isotopes (D/T) are represented in the SD output
+     * @param szLabel SDF label
+     * @param szValue SDF value
+     * @return int Status code
+     */
+    int OrigAtData_WriteToSDfile(const ORIG_ATOM_DATA *inp_at_data, INCHI_IOSTREAM *fcb, const char *name, const char *comment, int bChiralFlag, int bAtomsDT, const char *szLabel, const char *szValue);
+
+    /**
+     * @brief Free input atom array
+     *
+     * @param at Pointer to input atom array
+     */
+    void FreeInpAtom(inp_ATOM **at);
+
+    /**
+     * @brief Free information atom array (same as FreeInpAtom)
+     *
+     * @param at Pointer to information atom array
+     */
+    void FreeInfAtom(inf_ATOM **at);
+
+    /**
+     * @brief Free original atom data
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     */
+    void FreeOrigAtData(ORIG_ATOM_DATA *orig_at_data);
+
+    /**
+     * @brief Free extended original atom data (polymers and V3000)
+     *
+     * @param pd Pointer to polymer data structure
+     * @param v3k Pointer to V3000 data structure
+     */
+    void FreeExtOrigAtData(OAD_Polymer *pd, OAD_V3000 *v3k);
+
+    /**
+     * @brief Free input atom data
+     *
+     * @param inp_at_data Pointer to input atom data structure
+     */
+    void FreeInpAtomData(INP_ATOM_DATA *inp_at_data);
+
+    /**
+     * @brief Free composite atom data
+     *
+     * @param inp_at_data Pointer to composite atom data structure
+     */
+    void FreeCompAtomData(COMP_ATOM_DATA *inp_at_data);
+
+    /**
+     * @brief Free information atom data
+     *
+     * @param inf_at_data Pointer to information atom data structure
+     */
+    void FreeInfoAtomData(INF_ATOM_DATA *inf_at_data);
+
+    /*
+        ORIG_ATOM_DATA
+            functions
+    */
+
+    /* OAD_Edit */
+    typedef struct tagOAD_StructureEdits
+    {
+        INT_ARRAY *del_atom;
+        INT_ARRAY *del_bond;
+        INT_ARRAY *new_bond;
+        INT_ARRAY *mod_bond;
+        INT_ARRAY *mod_coord;
+        int del_side_chains;
+    } OAD_StructureEdits;
+    int OAD_StructureEdits_Init(OAD_StructureEdits *ed);
+    void OAD_StructureEdits_Clear(OAD_StructureEdits *ed);
+    void OAD_StructureEdits_DebugPrint(OAD_StructureEdits *ed);
 
 #if (RING2CHAIN == 1)
-int Ring2Chain(struct tagINCHI_CLOCK *ic, struct tagCANON_GLOBALS *pCG, ORIG_ATOM_DATA *orig_inp_data);
+    int Ring2Chain(struct tagINCHI_CLOCK *ic, struct tagCANON_GLOBALS *pCG, ORIG_ATOM_DATA *orig_inp_data);
 #endif
 
 #if (UNDERIVATIZE == 1)
-int OAD_Edit_Underivatize(struct tagINCHI_CLOCK *ic, struct tagCANON_GLOBALS *pCG, ORIG_ATOM_DATA *orig_inp_data, int bOutputSdf, int bOutputReport, char *pSdfValue);
+    int OAD_Edit_Underivatize(struct tagINCHI_CLOCK *ic, struct tagCANON_GLOBALS *pCG, ORIG_ATOM_DATA *orig_inp_data, int bOutputSdf, int bOutputReport, char *pSdfValue);
 
-void OAD_Edit_MergeComponentsAndRecreateOAD(ORIG_ATOM_DATA *orig_OrigAtomData, INP_ATOM_DATA *curr_InpAtomData, int num_components, int *errcode);
+    void OAD_Edit_MergeComponentsAndRecreateOAD(ORIG_ATOM_DATA *orig_OrigAtomData, INP_ATOM_DATA *curr_InpAtomData, int num_components, int *errcode);
 
 #endif
 
-/* OAD misc. */
+    /* OAD misc. */
 
-int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int bNPZz, char *pStrErr, int bNoWarnings);
+    int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int bNPZz, char *pStrErr, int bNoWarnings);
 
-/* OAD_Polymer */
+    /* OAD_Polymer */
 
-void OAD_ValidateAndSortOutPseudoElementAtoms(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int use_zz, int *err, char *pStrErr);
-int OAD_Polymer_GetRepresentation(OAD_Polymer *p);
-int OAD_Polymer_CyclizeCloseableUnits(ORIG_ATOM_DATA *orig_at_data, int use_zz, char *pStrErr, int bNoWarnings);
-int OAD_Polymer_FindRingSystems(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, int *num_ring_sys, int *size_ring_sys, int start);
-void OAD_Polymer_SetAtProps(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, OAD_AtProps *aprops, int *cano_nums);
-int OAD_Polymer_CompareBackboneBondsSeniority(int *b1, int *b2, OAD_AtProps *aprops);
-int OAD_Polymer_CompareRanksOfTwoAtoms(int atom1, int atom2, OAD_AtProps *aprops);
-int OAD_Polymer_IsFirstAtomRankLower(int atom1, int atom2, OAD_AtProps *aprops);
-int OAD_PolymerUnit_SetReopeningDetails(OAD_PolymerUnit *u, inp_ATOM *at);
-void OAD_PolymerUnit_SortBackboneBondsAndSetSeniors(OAD_PolymerUnit *u, inp_ATOM *at, OAD_AtProps *aprops, int *senior_bond);
-void OAD_Polymer_FindBackbones(ORIG_ATOM_DATA *where_to_look, COMP_ATOM_DATA *composite_norm_data, int *err, char *pStrErr);
-int OAD_Polymer_PrepareWorkingSet(OAD_Polymer *p, int *cano_nums, int *compnt_nums, OAD_PolymerUnit **units2, int *unum);
-void OAD_Polymer_Free(OAD_Polymer *p);
-void OAD_Polymer_DebugTrace(OAD_Polymer *p);
-void OAD_Polymer_SmartReopenCyclizedUnits(OAD_Polymer *p, inp_ATOM *at, int nat, int *num_inp_bonds);
-int OAD_Polymer_PrepareFoldCRUEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi_noedits, char *saux_noedits, char *sinchi, char *saux, OAD_StructureEdits *ed);
-int OAD_Polymer_PrepareFrameShiftEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi, char *saux, OAD_StructureEdits *ed);
+    void OAD_ValidateAndSortOutPseudoElementAtoms(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int use_zz, int *err, char *pStrErr);
+    int OAD_Polymer_GetRepresentation(OAD_Polymer *p);
+    int OAD_Polymer_CyclizeCloseableUnits(ORIG_ATOM_DATA *orig_at_data, int use_zz, char *pStrErr, int bNoWarnings);
+    int OAD_Polymer_FindRingSystems(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, int *num_ring_sys, int *size_ring_sys, int start);
+    void OAD_Polymer_SetAtProps(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, OAD_AtProps *aprops, int *cano_nums);
+    int OAD_Polymer_CompareBackboneBondsSeniority(int *b1, int *b2, OAD_AtProps *aprops);
+    int OAD_Polymer_CompareRanksOfTwoAtoms(int atom1, int atom2, OAD_AtProps *aprops);
+    int OAD_Polymer_IsFirstAtomRankLower(int atom1, int atom2, OAD_AtProps *aprops);
+    int OAD_PolymerUnit_SetReopeningDetails(OAD_PolymerUnit *u, inp_ATOM *at);
+    void OAD_PolymerUnit_SortBackboneBondsAndSetSeniors(OAD_PolymerUnit *u, inp_ATOM *at, OAD_AtProps *aprops, int *senior_bond);
+    void OAD_Polymer_FindBackbones(ORIG_ATOM_DATA *where_to_look, COMP_ATOM_DATA *composite_norm_data, int *err, char *pStrErr);
+    int OAD_Polymer_PrepareWorkingSet(OAD_Polymer *p, int *cano_nums, int *compnt_nums, OAD_PolymerUnit **units2, int *unum);
+    void OAD_Polymer_Free(OAD_Polymer *p);
+    void OAD_Polymer_DebugTrace(OAD_Polymer *p);
+    void OAD_Polymer_SmartReopenCyclizedUnits(OAD_Polymer *p, inp_ATOM *at, int nat, int *num_inp_bonds);
+    int OAD_Polymer_PrepareFoldCRUEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi_noedits, char *saux_noedits, char *sinchi, char *saux, OAD_StructureEdits *ed);
+    int OAD_Polymer_PrepareFrameShiftEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi, char *saux, OAD_StructureEdits *ed);
 
-/* OAD_PolymerUnit */
-OAD_PolymerUnit *OAD_PolymerUnit_New(int maxatoms, int maxbonds, int id, int label, int type, int subtype, int conn, char *smt, int na, INT_ARRAY *alist, int nb, INT_ARRAY *blist, int nbkbonds,
-                                     int **bkbonds);
-OAD_PolymerUnit *OAD_PolymerUnit_CreateCopy(OAD_PolymerUnit *u);
-void OAD_PolymerUnit_Free(OAD_PolymerUnit *unit);
-void OAD_PolymerUnit_DebugTrace(OAD_PolymerUnit *unit);
-void OAD_PolymerUnit_FindEndsAndCaps(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *end1, int *cap1, int *cap1_is_undef, int *end2, int *cap2, int *cap2_is_undef, int *err, char *pStrErr);
-void OAD_PolymerUnit_SetEndsAndCaps(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
-void OAD_PolymerUnit_UnlinkCapsAndConnectEndAtoms(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
-void OAD_PolymerUnit_PrepareToFrameShift(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
+    /* OAD_PolymerUnit */
+    OAD_PolymerUnit *OAD_PolymerUnit_New(int maxatoms, int maxbonds, int id, int label, int type, int subtype, int conn, char *smt, int na, INT_ARRAY *alist, int nb, INT_ARRAY *blist, int nbkbonds,
+                                         int **bkbonds);
+    OAD_PolymerUnit *OAD_PolymerUnit_CreateCopy(OAD_PolymerUnit *u);
+    void OAD_PolymerUnit_Free(OAD_PolymerUnit *unit);
+    void OAD_PolymerUnit_DebugTrace(OAD_PolymerUnit *unit);
+    void OAD_PolymerUnit_FindEndsAndCaps(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *end1, int *cap1, int *cap1_is_undef, int *end2, int *cap2, int *cap2_is_undef, int *err, char *pStrErr);
+    void OAD_PolymerUnit_SetEndsAndCaps(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
+    void OAD_PolymerUnit_UnlinkCapsAndConnectEndAtoms(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
+    void OAD_PolymerUnit_PrepareToFrameShift(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
 
-int OAD_CollectReachableAtoms(ORIG_ATOM_DATA *orig_at_data, int start_atom, int nforbidden_bonds, int *forbidden_bonds, int *n_reachable, int *reachable, int *err, char *pStrErr);
+    int OAD_CollectReachableAtoms(ORIG_ATOM_DATA *orig_at_data, int start_atom, int nforbidden_bonds, int *forbidden_bonds, int *n_reachable, int *reachable, int *err, char *pStrErr);
 
-void OAD_CollectBackboneAtoms(ORIG_ATOM_DATA *at_data, int na, int *alist, int end_atom1, int end_atom2, int *nbkatoms, int *bkatoms, int *err, char *pStrErr);
+    void OAD_CollectBackboneAtoms(ORIG_ATOM_DATA *at_data, int na, int *alist, int end_atom1, int end_atom2, int *nbkatoms, int *bkatoms, int *err, char *pStrErr);
 
-void OAD_CollectBackboneBonds(ORIG_ATOM_DATA *at_data, int na, int *alist, int end_atom1, int end_atom2, int *nbkbonds, int **bkbonds, int *err, char *pStrErr);
-void OAD_PolymerUnit_DelistIntraRingBackboneBonds(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
-void OAD_PolymerUnit_DelistHighOrderBackboneBonds(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, COMP_ATOM_DATA *composite_norm_data, int *err, char *pStrErr);
-void OAD_PolymerUnit_SortBackboneBonds(OAD_PolymerUnit *u, OAD_AtProps *aprops, int *bnum);
+    void OAD_CollectBackboneBonds(ORIG_ATOM_DATA *at_data, int na, int *alist, int end_atom1, int end_atom2, int *nbkbonds, int **bkbonds, int *err, char *pStrErr);
+    void OAD_PolymerUnit_DelistIntraRingBackboneBonds(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, int *err, char *pStrErr);
+    void OAD_PolymerUnit_DelistHighOrderBackboneBonds(OAD_PolymerUnit *unit, ORIG_ATOM_DATA *orig_at_data, COMP_ATOM_DATA *composite_norm_data, int *err, char *pStrErr);
+    void OAD_PolymerUnit_SortBackboneBonds(OAD_PolymerUnit *u, OAD_AtProps *aprops, int *bnum);
 
-void OAD_PolymerUnit_ReopenCyclized(OAD_PolymerUnit *u, inp_ATOM *at, OAD_AtProps *aprops, int nat, int *num_inp_bonds);
+    void OAD_PolymerUnit_ReopenCyclized(OAD_PolymerUnit *u, inp_ATOM *at, OAD_AtProps *aprops, int nat, int *num_inp_bonds);
 
-int OAD_PolymerUnit_CompareAtomLists(OAD_PolymerUnit *u1, OAD_PolymerUnit *u2);
-int OAD_PolymerUnit_CompareAtomListsMod(OAD_PolymerUnit *u1, OAD_PolymerUnit *u2);
-int OAD_PolymerUnit_OrderBondAtomsAndBondsThemselves(OAD_PolymerUnit *u, int n_stars, int *stars);
-int OAD_PolymerUnit_HasMetal(OAD_PolymerUnit *u, inp_ATOM *at);
+    int OAD_PolymerUnit_CompareAtomLists(OAD_PolymerUnit *u1, OAD_PolymerUnit *u2);
+    int OAD_PolymerUnit_CompareAtomListsMod(OAD_PolymerUnit *u1, OAD_PolymerUnit *u2);
+    int OAD_PolymerUnit_OrderBondAtomsAndBondsThemselves(OAD_PolymerUnit *u, int n_stars, int *stars);
+    int OAD_PolymerUnit_HasMetal(OAD_PolymerUnit *u, inp_ATOM *at);
 
-int FixUnkn0DStereoBonds(inp_ATOM *at, int num_at);
-inf_ATOM *CreateInfAtom(int num_atoms);
-inp_ATOM *CreateInpAtom(int num_atoms);
-int CreateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
-int AllocateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
-int DuplicateInfoAtomData(INF_ATOM_DATA *inf_at_data_to, const INF_ATOM_DATA *inf_at_data_from);
-int CreateInpAtomData(INP_ATOM_DATA *inp_at_data, int num_atoms, int create_at_fixed_bonds);
-int CreateCompAtomData(COMP_ATOM_DATA *inp_at_data, int num_atoms, int num_components, int bIntermediateTaut);
+    int FixUnkn0DStereoBonds(inp_ATOM *at, int num_at);
+    inf_ATOM *CreateInfAtom(int num_atoms);
+    inp_ATOM *CreateInpAtom(int num_atoms);
+    int CreateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
+    int AllocateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
+    int DuplicateInfoAtomData(INF_ATOM_DATA *inf_at_data_to, const INF_ATOM_DATA *inf_at_data_from);
+    int CreateInpAtomData(INP_ATOM_DATA *inp_at_data, int num_atoms, int create_at_fixed_bonds);
+    int CreateCompAtomData(COMP_ATOM_DATA *inp_at_data, int num_atoms, int num_components, int bIntermediateTaut);
 
 #ifndef COMPILE_ANSI_ONLY
-int DisplayInputStructure(char *szOutputString, inp_ATOM *at, INF_ATOM_DATA *inf_at_data, int num_at, DRAW_PARMS *dp);
+    int DisplayInputStructure(char *szOutputString, inp_ATOM *at, INF_ATOM_DATA *inf_at_data, int num_at, DRAW_PARMS *dp);
 #endif
 
-void PrintFileName(const char *fmt, FILE *out_file, const char *szFname);
+    void PrintFileName(const char *fmt, FILE *out_file, const char *szFname);
 
-void MySleep(unsigned long ms);
+    void MySleep(unsigned long ms);
 
-int ReconcileAllCmlBondParities(inp_ATOM *at, int num_atoms, int bDisconnected);
+    int ReconcileAllCmlBondParities(inp_ATOM *at, int num_atoms, int bDisconnected);
 
 #ifndef COMPILE_ALL_CPP
 #ifdef __cplusplus
