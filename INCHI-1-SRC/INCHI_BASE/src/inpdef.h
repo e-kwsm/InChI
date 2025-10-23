@@ -958,26 +958,192 @@ extern "C"
 
     /* OAD misc. */
 
+    /**
+     * @brief Validate polymer and pseudo-element data in the original atom data
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param treat_polymers Flag indicating how to treat polymers
+     * @param bNPZz Flag indicating whether to treat non-polymeric Zz atoms
+     * @param pStrErr Pointer to error string
+     * @param bNoWarnings Flag indicating whether to suppress warnings
+     * @return int Status code
+     */
     int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int bNPZz, char *pStrErr, int bNoWarnings);
 
     /* OAD_Polymer */
-
+    /**
+     * @brief Validate and sort out pseudo-element atoms in the original atom data
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param treat_polymers Flag indicating how to treat polymers (POLYMER_NO, POLYMER_MODERN, POLYMER_LEGACY, POLYMER_LEGACY_PLUS)
+     * @param use_zz Flag indicating whether to use Zz atoms
+     * @param err Pointer to error code
+     * @param pStrErr Pointer to error string
+     */
     void OAD_ValidateAndSortOutPseudoElementAtoms(ORIG_ATOM_DATA *orig_at_data, int treat_polymers, int use_zz, int *err, char *pStrErr);
+
+    /**
+     * @brief Get polymer representation type
+     *
+     * @param p Pointer to polymer data structure
+     * @return int Polymer representation type (NO_POLYMER, POLYMER_REPRESENTATION_SOURCE_BASED, POLYMER_REPRESENTATION_STRUCTURE_BASED, POLYMER_REPRESENTATION_MIXED,POLYMER_REPRESENTATION_UNRECOGNIZED)
+     */
     int OAD_Polymer_GetRepresentation(OAD_Polymer *p);
+
+    /**
+     * @brief Cyclize closeable units in the original atom data
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param use_zz Flag indicating whether to use Zz atoms
+     * @param pStrErr Pointer to error string
+     * @param bNoWarnings Flag indicating whether to suppress warnings
+     * @return int Status code
+     */
     int OAD_Polymer_CyclizeCloseableUnits(ORIG_ATOM_DATA *orig_at_data, int use_zz, char *pStrErr, int bNoWarnings);
+
+    /**
+     * @brief Find ring systems in the polymer data
+     *
+     * @param pd Pointer to polymer data structure
+     * @param at Array of input atoms
+     * @param nat Number of input atoms
+     * @param num_inp_bonds Pointer to number of input bonds
+     * @param num_ring_sys Pointer to number of ring systems found
+     * @param size_ring_sys Pointer to size of ring systems found
+     * @param start Starting atom index
+     * @return int Status code
+     */
     int OAD_Polymer_FindRingSystems(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, int *num_ring_sys, int *size_ring_sys, int start);
+
+    /**
+     * @brief Set atom properties for the polymer data
+     *
+     * @param pd Pointer to polymer data structure
+     * @param at Array of input atoms
+     * @param nat Number of input atoms
+     * @param num_inp_bonds Pointer to number of input bonds
+     * @param aprops Pointer to atom properties structure
+     * @param cano_nums Pointer to canonical numbers array
+     */
     void OAD_Polymer_SetAtProps(OAD_Polymer *pd, inp_ATOM *at, int nat, int *num_inp_bonds, OAD_AtProps *aprops, int *cano_nums);
+
+    /**
+     * @brief Compare backbone bonds seniority (for sorting SRU cyclizing bonds (PS=='frame-shift') in descending order)
+     *
+     * @param b1 Pointer to first backbone bond
+     * @param b2 Pointer to second backbone bond
+     * @param aprops Pointer to atom properties structure
+     * @return int Comparison result (-1 if b1 < b2, 0 if equal, 1 if b1 > b2)
+     */
     int OAD_Polymer_CompareBackboneBondsSeniority(int *b1, int *b2, OAD_AtProps *aprops);
+
+    /**
+     * @brief Compare ranks of two atoms (compare seniority of two atoms in polymer SRU)
+     *
+     * @param atom1 Index of the first atom
+     * @param atom2 Index of the second atom
+     * @param aprops Pointer to atom properties structure
+     * @return int Comparison result
+     */
     int OAD_Polymer_CompareRanksOfTwoAtoms(int atom1, int atom2, OAD_AtProps *aprops);
+
+    /**
+     * @brief Check if the first atom has a lower rank than the second atom (check seniority of two atoms in polymer SRU)
+     *
+     * @param atom1 Index of the first atom
+     * @param atom2 Index of the second atom
+     * @param aprops Pointer to atom properties structure
+     * @return int 1 if atom1 has a lower rank than atom2, 0 otherwise
+     */
     int OAD_Polymer_IsFirstAtomRankLower(int atom1, int atom2, OAD_AtProps *aprops);
+
+    /**
+     * @brief Set reopening details for a polymer unit
+     *
+     * @param u Pointer to polymer unit
+     * @param at Array of input atoms
+     * @return int Number of breakable bonds
+     */
     int OAD_PolymerUnit_SetReopeningDetails(OAD_PolymerUnit *u, inp_ATOM *at);
+
+    /**
+     * @brief Sort backbone bonds and set seniors for a polymer unit
+     *
+     * @param u Pointer to polymer unit
+     * @param at Array of input atoms
+     * @param aprops Pointer to atom properties structure
+     * @param senior_bond Pointer to array to store senior bond indices
+     */
     void OAD_PolymerUnit_SortBackboneBondsAndSetSeniors(OAD_PolymerUnit *u, inp_ATOM *at, OAD_AtProps *aprops, int *senior_bond);
+
+    /**
+     * @brief Find backbones in the original atom data
+     *
+     * @param where_to_look Pointer to original atom data structure
+     * @param composite_norm_data Pointer to composite atom data structure
+     * @param err Pointer to error code
+     * @param pStrErr Pointer to error string
+     */
     void OAD_Polymer_FindBackbones(ORIG_ATOM_DATA *where_to_look, COMP_ATOM_DATA *composite_norm_data, int *err, char *pStrErr);
+
+    /**
+     * @brief Prepare working set for polymer processing (replace original atom numbers in polymer data with (canonical num + 1))
+     *
+     * @param p Pointer to polymer data structure
+     * @param cano_nums Pointer to canonical numbers array
+     * @param compnt_nums Pointer to component numbers array
+     * @param units2 Pointer to array of polymer units (a copy of original polymer units with updated atom numbers)
+     * @param unum Pointer to number of polymer units
+     * @return int Status code
+     */
     int OAD_Polymer_PrepareWorkingSet(OAD_Polymer *p, int *cano_nums, int *compnt_nums, OAD_PolymerUnit **units2, int *unum);
+
+    /**
+     * @brief Free polymer data structure
+     *
+     * @param p Pointer to polymer data structure
+     */
     void OAD_Polymer_Free(OAD_Polymer *p);
+
+    /**
+     * @brief Debug trace for polymer data structure (print the whole polymer data)
+     *
+     * @param p Pointer to polymer data structure
+     */
     void OAD_Polymer_DebugTrace(OAD_Polymer *p);
+
+    /**
+     * @brief Smartly reopen cyclized units in the original atom data (open pre-cyclized CRUs appropriately (i.e., make frame shift))
+     *
+     * @param p Pointer to polymer data structure
+     * @param at Pointer to input atom data
+     * @param nat Number of input atoms
+     * @param num_inp_bonds Pointer to number of input bonds
+     */
     void OAD_Polymer_SmartReopenCyclizedUnits(OAD_Polymer *p, inp_ATOM *at, int nat, int *num_inp_bonds);
+
+    /**
+     * @brief Prepare CRU edits for polymer data structure (prepare CRU fold edits as suggested by the strings with preliminary generated interim (1.05+ flavoured) InChI and AuxInfo)
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param sinchi_noedits Pointer to InChI string without edits
+     * @param saux_noedits Pointer to auxiliary InChI string without edits
+     * @param sinchi Pointer to InChI string with edits
+     * @param saux Pointer to auxiliary InChI string with edits
+     * @param ed Pointer to structure edits to be filled
+     * @return int Status code
+     */
     int OAD_Polymer_PrepareFoldCRUEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi_noedits, char *saux_noedits, char *sinchi, char *saux, OAD_StructureEdits *ed);
+
+    /**
+     * @brief Prepare frame shift edits for polymer data structure (prepare frame shift edits as suggested by the strings with preliminary generated interim (1.05+ flavoured) InChI and AuxInfo)
+     *
+     * @param orig_at_data Pointer to original atom data structure
+     * @param sinchi Pointer to InChI string with edits
+     * @param saux Pointer to auxiliary InChI string with edits
+     * @param ed Pointer to structure edits to be filled
+     * @return int Status code
+     */
     int OAD_Polymer_PrepareFrameShiftEdits(ORIG_ATOM_DATA *orig_at_data, char *sinchi, char *saux, OAD_StructureEdits *ed);
 
     /* OAD_PolymerUnit */

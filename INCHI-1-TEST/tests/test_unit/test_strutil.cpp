@@ -21,3 +21,19 @@ TEST(strutil_testing, test_SetConnectedComponentNumber)
     }
     FreeInpAtom(&new_mol);
 }
+
+TEST(strutil_testing, test_UnMarkRingSystemsInp)
+{
+
+    int num_atoms = 1;
+    inp_ATOM *new_mol = CreateInpAtom(num_atoms);
+
+    // int UnMarkRingSystemsInp( inp_ATOM *at, int num_atoms )
+    EXPECT_EQ(UnMarkRingSystemsInp(new_mol, num_atoms), 0);
+
+    for (int i = 0; i < num_atoms; i++)
+    {
+        EXPECT_EQ(new_mol[i].nRingSystem, 0);
+    }
+    FreeInpAtom(&new_mol);
+}
