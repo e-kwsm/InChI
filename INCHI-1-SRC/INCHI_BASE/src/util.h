@@ -219,36 +219,215 @@ int inchi_stricmp(const char *s1, const char *s2);
 /**
  * @brief Set a string to a specified value for a given length
  *
- * @param s
- * @param val
- * @param length
- * @return char*
+ * @param s Pointer to the string
+ * @param val Value to set
+ * @param length Length of the string to set
+ * @return char* Pointer to the modified string
  */
 char *inchi__strnset(char *s, int val, size_t length);
+
+/**
+ * @brief Duplicate a string
+ *
+ * @param string Pointer to the input string
+ * @return char* Pointer to the duplicated string
+ */
 char *inchi__strdup(const char *string);
 
+/**
+ * @brief Convert string to long integer
+ *
+ * @param str Pointer to the input string
+ * @param p Pointer to the position where conversion stopped
+ * @param base Base for conversion
+ * @return long Converted value
+ */
 long inchi_strtol(const char *str, const char **p, int base);
+
+/**
+ * @brief Convert string to double
+ *
+ * @param str Pointer to the input string
+ * @param p Pointer to the position where conversion stopped
+ * @return double Converted value
+ */
 double inchi_strtod(const char *str, const char **p);
+
+/**
+ * @brief Checks if an atom is in the list/path
+ *
+ * @param pathAtom Pointer to the list/path of atoms
+ * @param nNextAtom Atom to find
+ * @param nPathLen List length
+ * @return AT_NUMB* Pointer to the found atom in the list/path, NULL if not found
+ */
 AT_NUMB *is_in_the_list(AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen);
+
+/**
+ * @brief Checks if an integer is in the list/path
+ *
+ * @param pathAtom Pointer to the list/path of integers
+ * @param nNextAtom Integer to find
+ * @param nPathLen Length of the list/path
+ * @return int* Pointer to the found integer in the list/path, NULL if not found
+ */
 int *is_in_the_ilist(int *pathAtom, int nNextAtom, int nPathLen);
+
+/**
+ * @brief Checks if one list of integers is inside another list (ilist in ilist2)
+ *
+ * @param ilist Pointer to the first list of integers
+ * @param nlist Length of ilist
+ * @param ilist2 Pointer to the second list of integers
+ * @param nlist2 Length of ilist2
+ * @return int Returns 1 if ilist is inside ilist2, 0 otherwise
+ */
 int is_ilist_inside(int *ilist, int nlist, int *ilist2, int nlist2);
 
+/**
+ * @brief Extract InChI substring embedded into a longer string
+ *
+ * @param buf Pointer to output buffer
+ * @param str Pointer to input string
+ * @param slen Length of the input string
+ */
 void extract_inchi_substring(char **buf, const char *str, size_t slen);
+
+/**
+ * @brief Extract AuxInfo substring embedded into a longer string
+ *
+ * @param buf Pointer to output buffer
+ * @param str Pointer to input string
+ * @param slen Length of the input string
+ */
 void extract_auxinfo_substring(char **buf, const char *str, size_t slen);
+
+/**
+ * @brief Parse AuxInfostring and get a list of original atom numbers orig[cano_num]
+ *
+ * @param saux Pointer to AuxInfo string
+ * @param orig Pointer to output array of original atom numbers
+ * @return int Status code
+ */
 int extract_orig_nums_from_auxinfo_string(char *saux, int *orig);
+
+/**
+ * @brief Parse AuxInfostring and get non-stereo equivalence classes
+ *
+ * @param saux Pointer to AuxInfo string
+ * @param nat Number of atoms
+ * @param orig Pointer to array of original atom numbers
+ * @param have_eclass_info Pointer to output flag indicating if equivalence class info is present
+ * @param eclass Pointer to output array of equivalence classes by canonical atom number
+ * @param eclass_by_origs Pointer to output array of equivalence classes by original atom number
+ * @return int Status code
+ */
 int extract_nonstereo_eq_classes_from_auxinfo_string(char *saux, int nat, int *orig, int *have_eclass_info, int *eclass, int *eclass_by_origs);
+
+/**
+ * @brief Extract stereo information from InChI string
+ *
+ * @param sinchi Pointer to InChI string
+ * @param nat Number of atoms
+ * @param orig Pointer to array of original atom numbers
+ * @param at_stereo_mark Pointer to output array of stereo marks for atoms
+ * @return int Status code
+ */
 int extract_stereo_info_from_inchi_string(char *sinchi, int nat, int *orig, int *at_stereo_mark);
+
+/**
+ * @brief Extract all backbone bonds from InChI string
+ *
+ * @param sinchi Pointer to InChI string
+ * @param n_all_bkb_orig Pointer to number of all backbone bonds
+ * @param orig Pointer to array of original atom numbers
+ * @param all_bkb_orig Pointer to output array of all backbone bonds by original atom numbers
+ * @return int Status code
+ */
 int extract_all_backbone_bonds_from_inchi_string(char *sinchi, int *n_all_bkb_orig, int *orig, int *all_bkb_orig);
 
+/**
+ * @brief Get the periodic table number object
+ *
+ * @param elname Pointer to element name
+ * @return int Periodic table number
+ */
 int get_periodic_table_number(const char *elname);
+
+/**
+ * @brief Check if an element is a metal
+ *
+ * @param nPeriodicNum Periodic table number
+ * @return int 1 if the element is a metal, 0 otherwise
+ */
 int is_el_a_metal(int nPeriodicNum);
+
+/**
+ * @brief Get reference value of atom valence at given charge
+ *
+ * @param nPeriodicNum Periodic table number
+ * @param charge Charge
+ * @param val_num Valence number
+ * @return int Reference valence value
+ */
 int get_el_valence(int nPeriodicNum, int charge, int val_num);
+
+/**
+ * @brief Output valence needed to unambiguosly reconstruct bonds
+ *
+ * @param nPeriodicNum Periodic table number
+ * @param charge Charge
+ * @param radical Radical
+ * @param bonds_valence Bonds valence
+ * @param num_H Number of hydrogens
+ * @param num_bonds Number of bonds
+ * @return int Valence needed to unambiguously reconstruct bonds
+ */
 int get_unusual_el_valence(int nPeriodicNum, int charge, int radical, int bonds_valence, int num_H, int num_bonds);
 
 /*  Output valence that does not fit any known valences */
+
+/**
+ * @brief Output valence that does not fit any known valences
+ *
+ * @param nPeriodicNum Periodic table number
+ * @param charge Charge
+ * @param radical Radical
+ * @param bonds_valence Bonds valence
+ * @param num_H Number of hydrogens
+ * @param num_bonds Number of bonds
+ * @return int Chemical valence if unusual, 0 otherwise
+ */
 int detect_unusual_el_valence(int nPeriodicNum, int charge, int radical, int bonds_valence, int num_H, int num_bonds);
+
+/**
+ * @brief Output valence needed to unambiguosly reconstruct number of H
+ *
+ * @param nPeriodicNum Periodic table number
+ * @param charge Charge
+ * @param radical Radical
+ * @param bonds_valence Bonds valence
+ * @param actual_bonds_val Actual bonds valence
+ * @param num_H Number of hydrogens
+ * @param num_bonds Number of bonds
+ * @return int Chemical valence needed to unambiguously reconstruct number of H
+ */
 int needed_unusual_el_valence(int nPeriodicNum, int charge, int radical, int bonds_valence, int actual_bonds_val, int num_H, int num_bonds);
+
+/**
+ * @brief Get the el type object
+ *
+ * @param nPeriodicNum Periodic table number
+ * @return int Element type
+ */
 int get_el_type(int nPeriodicNum);
+
+/**
+ * @brief Check if no H addition allowed
+ *
+ * @param nPeriodicNum Periodic table number
+ * @return int Non-zero if no H addition is allowed, zero otherwise
+ */
 int if_skip_add_H(int nPeriodicNum);
 int get_element_chemical_symbol(int nAtNum, char *szElement);
 int get_element_or_pseudoelement_symbol(int nAtNum, char *szElement);
