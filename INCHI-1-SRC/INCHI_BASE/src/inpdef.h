@@ -918,6 +918,17 @@ void FreeInfoAtomData(INF_ATOM_DATA *inf_at_data);
 */
 
 /* OAD_Edit */
+
+/**
+ * @brief Structure describing structure edits
+ *
+ * @param del_atom    Array of deleted atom indices
+ * @param del_bond    Array of deleted bond indices
+ * @param new_bond    Array of new bond indices
+ * @param mod_bond    Array of modified bond indices
+ * @param mod_coord   Array of modified coordinate indices
+ * @param del_side_chains Flag indicating whether to delete side chains
+ */
 typedef struct tagOAD_StructureEdits {
     INT_ARRAY *del_atom;
     INT_ARRAY *del_bond;
@@ -926,11 +937,39 @@ typedef struct tagOAD_StructureEdits {
     INT_ARRAY *mod_coord;
     int del_side_chains;
 } OAD_StructureEdits;
+
+/**
+ * @brief Initialize structure edits
+ *
+ * @param ed Pointer to structure edits
+ * @return int Error status code
+ */
 int OAD_StructureEdits_Init(OAD_StructureEdits *ed);
+
+/**
+ * @brief Clear structure edits
+ *
+ * @param ed Pointer to structure edits
+ */
 void OAD_StructureEdits_Clear(OAD_StructureEdits *ed);
+
+/**
+ * @brief Debug print structure edits
+ *
+ * @param ed Pointer to structure edits
+ */
 void OAD_StructureEdits_DebugPrint(OAD_StructureEdits *ed);
 
 #if (RING2CHAIN == 1)
+
+/**
+ * @brief Convert rings to chains in the original atom data
+ *
+ * @param ic Pointer to INCHI_CLOCK structure
+ * @param pCG Pointer to CANON_GLOBALS structure
+ * @param orig_inp_data Pointer to original atom data structure
+ * @return int Status code or the number of ring cuts made
+ */
 int Ring2Chain(struct tagINCHI_CLOCK *ic, struct tagCANON_GLOBALS *pCG, ORIG_ATOM_DATA *orig_inp_data);
 #endif
 
