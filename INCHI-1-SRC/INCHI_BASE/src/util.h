@@ -429,35 +429,190 @@ int get_el_type(int nPeriodicNum);
  * @return int Non-zero if no H addition is allowed, zero otherwise
  */
 int if_skip_add_H(int nPeriodicNum);
+
+/**
+ * @brief Finds chemical symbol for element of given number.
+ *
+ * @param nAtNum Atom number
+ * @param szElement Pointer to chemical symbol
+ * @return int Returns 0 if OK and -1 if element was not found.
+ */
 int get_element_chemical_symbol(int nAtNum, char *szElement);
+
+/**
+ * @brief Finds symbol for element of given number. Accounts for (translates)pseudoelements.
+ *
+ * @param nAtNum Atom number
+ * @param szElement Pointer to chemical symbol
+ * @return int Returns 0 if OK and -1 if element was not found.
+ */
 int get_element_or_pseudoelement_symbol(int nAtNum, char *szElement);
+
+/**
+ * @brief Creates a string from the removed protons (?)
+ *
+ * @param nNumRemovedProtons Number of removed protons
+ * @param nNumExchgIsotopicH Pointer to number of exchangeable isotopic hydrogens
+ * @param nNumRemovedProtonsIsotopic Pointer to array of removed protons
+ * @param bIsotopic Flag to handle isotopes
+ * @param szRemovedProtons Pointer to the removed protons
+ * @param num_removed_iso_H Pointer to the number of removed isotopic hydrogens
+ * @return int
+ */
 int MakeRemovedProtonsString(int nNumRemovedProtons, NUM_H *nNumExchgIsotopicH, NUM_H *nNumRemovedProtonsIsotopic, int bIsotopic, char *szRemovedProtons, int *num_removed_iso_H);
 
 /*
     Ion pairs and fixing bonds
 */
 
+/**
+ * @brief Get the number of hydrogens
+ *
+ * @param at Pointer to atom list
+ * @param iat Input atom id
+ * @return int Number of total hydrogens atoms
+ */
 int num_of_H(inp_ATOM *at, int iat);
+
+/**
+ * @brief Get the element group of an element. The base element rather than the periodic group is used to aid readability.
+ *
+ * @param el Element number
+ * @return U_CHAR Returns element group  (NitrogenGroup = 7 (EL_NUMBER_N), OxygenGroup = 8 (EL_NUMBER_O), Carbon = 6 (EL_NUMBER_C))
+ */
 U_CHAR ion_el_group(int el);
+
+/**
+ * @brief Check whether an atom has ion neighbors
+ *
+ * @param at Pointer to atom array
+ * @param iat Atom id
+ * @param iat_ion_neigh Atom id of ion neighbor
+ * @return int Returns 1 for having an ion neighbor, 0 for none
+ */
 int has_other_ion_neigh(inp_ATOM *at, int iat, int iat_ion_neigh);
+
+/**
+ * @brief Check whether an atom has ion neighbors within sphere (breath first search (BFS) up to  r=2)
+ *
+ * @param at Pointer to atom array
+ * @param iat Atom id
+ * @param iat_ion_neigh Atom id of ion neighbor
+ * @return int Number of ions in sphere
+ */
 int has_other_ion_in_sphere_2(inp_ATOM *at, int iat, int iat_ion_neigh);
+
+/**
+ * @brief Returns the number of non-metal bonds
+ *
+ * @param at Pointer to atom list
+ * @param at_no Atom number
+ * @return int Number of number of no metal bonds
+ */
 int nNoMetalNumBonds(inp_ATOM *at, int at_no);
+
+/**
+ * @brief Returns the number of non-metal bond valences
+ *
+ * @param at Pointer to atom list
+ * @param at_no Atom number
+ * @return int Number of non-metal bond valences
+ */
 int nNoMetalBondsValence(inp_ATOM *at, int at_no);
+
+/**
+ * @brief Get the index of the first element that is not a metal
+ *
+ * @param at Pointer to atom list
+ * @param at_no Atom number
+ * @return int Atom index, -1 if nothing found
+ */
 int nNoMetalNeighIndex(inp_ATOM *at, int at_no);
+
+/**
+ * @brief Get the index of an element that is not a metal excluding a given index
+ *
+ * @param at Pointer to atom list
+ * @param at_no Atom number
+ * @param cur_neigh Excluding atom number
+ * @return int Atom index, -1 if nothing found
+ */
 int nNoMetalOtherNeighIndex(inp_ATOM *at, int at_no, int cur_neigh);
+
+/**
+ * @brief Get the index of an element that is not a metal excluding a 2 given indexes
+ *
+ * @param at Pointer to atom list
+ * @param at_no Atom number
+ * @param cur_neigh Excluding atom number 1
+ * @param cur_neigh2 Excluding atom number 2
+ * @return int Atom index, -1 if nothing found
+ */
 int nNoMetalOtherNeighIndex2(inp_ATOM *at, int at_no, int cur_neigh, int cur_neigh2);
+
+/**
+ * @brief Gets the number of bond valences to a metal atom
+ *
+ * @param at Pointer to atom list
+ * @param iat Atom number
+ * @return int Number of bond valences, -1 if bond to metal order is not well defined
+ */
 int nBondsValToMetal(inp_ATOM *at, int iat);
+
+/**
+ * @brief Gets the number of bond valences
+ *
+ * @param at Pointer to atom list
+ * @param nNumAltBonds Pointer to the number of alternative bonds (4)
+ * @param nNumWrongBonds Pointer to the number of wrong bonds
+ * @return int The number of bond valences
+ */
 int nBondsValenceInpAt(const inp_ATOM *at, int *nNumAltBonds, int *nNumWrongBonds);
+
+/**
+ * @brief Checks whether a hetero atom may have exchangeable isotopic hydrogens
+ *
+ * @param atom Pointer to atom list
+ * @param iat Atom number
+ * @return int 2 if atom is hydrogen (?) ,1 if yes, 0 if no
+ */
 int bHeteroAtomMayHaveXchgIsoH(inp_ATOM *atom, int iat);
+
+/**
+ * @brief Get the endpoint valence object
+ *
+ * @param el_number Element number
+ * @return int 3 if No, 2 if O, S, SE, TE or 0 otherwise
+ */
 int get_endpoint_valence(U_CHAR el_number);
 #if (KETO_ENOL_TAUT == 1)
+
+/**
+ * @brief Get the endpoint valence KET object
+ *
+ * @param el_number Element number
+ * @return int 4 if C, 2 if O or 0 otherwise
+ */
 int get_endpoint_valence_KET(U_CHAR el_number);
 #endif
 
 /* Forward declaration */
 struct tagCANON_GLOBALS;
 
+/**
+ * @brief Frees bit string in canonicalisation data structure
+ *
+ * @param pCG Canonicalisation data structure
+ * @return int 1 if success, 0 if failed
+ */
 int SetBitFree(struct tagCANON_GLOBALS *pCG);
+
+/**
+ * @brief Write coordinate (double) to string
+ *
+ * @param str Pointer to output string
+ * @param x Input double
+ */
 void WriteCoord(char *str, double x);
 extern const int ERR_ELEM;
 extern const int nElDataLen;
