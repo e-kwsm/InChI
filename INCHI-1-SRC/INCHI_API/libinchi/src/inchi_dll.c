@@ -3277,7 +3277,7 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
             err = 9001;
             goto preexitf;
         }
-        /* iip = iip_tmp; */
+        /* *iip = iip_tmp; */
         iip_tmp->n = orp->n;
         iip_tmp->units = units_tmp;
         memset(units_tmp, 0, sizeof( *units_tmp) ); /* djb-rwth: memset_s C11/Annex K variant? */
@@ -3341,7 +3341,8 @@ int SetInChIExtInputByExtOrigAtData( OAD_Polymer     *orp,
         }
     /* djb-rwth: avoiding memory leak */
     preexitf:
-        if (iip_tmp)
+        /* djb-rwth: fixing GHI #165 */
+        if (iip_tmp && *iip) /* djb-rwth: fixing oss-fuzz issue #455987437 */
         {
             memcpy(*iip, iip_tmp, sizeof(inchi_Input_Polymer));
         }
