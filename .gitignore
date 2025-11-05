@@ -16,6 +16,7 @@ uftrace.data/
 uftrace.data.old/
 trace_*.json
 .vscode/
+.venv/
 doxygen/
 doxygen_doc/
 .vs/
