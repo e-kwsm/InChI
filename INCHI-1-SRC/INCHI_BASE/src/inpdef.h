@@ -1427,25 +1427,25 @@ extern "C"
     int FixUnkn0DStereoBonds(inp_ATOM *at, int num_at);
 
     /**
-     * @brief Create/allocate a Inf Atom object
+     * @brief Create/allocate a Inf Atom structure
      *
      * @param num_atoms Number of atoms
-     * @return inf_ATOM* Pointer to the created Inf Atom object
+     * @return inf_ATOM* Pointer to the created Inf Atom structure
      */
     inf_ATOM *CreateInfAtom(int num_atoms);
 
     /**
-     * @brief Create/allocate a Inp Atom object
+     * @brief Create/allocate a Inp Atom structure
      *
      * @param num_atoms Number of atoms
-     * @return inp_ATOM* Pointer to the created Inp Atom object
+     * @return inp_ATOM* Pointer to the created Inp Atom structure
      */
     inp_ATOM *CreateInpAtom(int num_atoms);
 
     /**
-     * @brief Create a Info Atom Data object
+     * @brief Create a Info Atom Data structure
      *
-     * @param inf_at_data Pointer to the Info Atom Data object
+     * @param inf_at_data Pointer to the Info Atom Data structure
      * @param num_atoms Number of atoms
      * @param num_components Number of components
      * @return int Status code (1 if successful, 0 otherwise)
@@ -1453,9 +1453,9 @@ extern "C"
     int CreateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
 
     /**
-     * @brief Allocate memory for Info Atom Data object
+     * @brief Allocate memory for Info Atom Data structure
      *
-     * @param inf_at_data Pointer to the Info Atom Data object
+     * @param inf_at_data Pointer to the Info Atom Data structure
      * @param num_atoms Number of atoms
      * @param num_components Number of components
      * @return int Status code (1 if successful, 0 otherwise)
@@ -1463,18 +1463,18 @@ extern "C"
     int AllocateInfoAtomData(INF_ATOM_DATA *inf_at_data, int num_atoms, int num_components);
 
     /**
-     * @brief Duplicate Info Atom Data object
+     * @brief Duplicate Info Atom Data structure
      *
-     * @param inf_at_data_to Pointer to the destination Info Atom Data object
-     * @param inf_at_data_from Pointer to the source Info Atom Data object
+     * @param inf_at_data_to Pointer to the destination Info Atom Data structure
+     * @param inf_at_data_from Pointer to the source Info Atom Data structure
      * @return int Status code (1 if successful, 0 otherwise)
      */
     int DuplicateInfoAtomData(INF_ATOM_DATA *inf_at_data_to, const INF_ATOM_DATA *inf_at_data_from);
 
     /**
-     * @brief Create a Inp Atom Data object
+     * @brief Create a Inp Atom Data structure
      *
-     * @param inp_at_data Pointer to the Inp Atom Data object
+     * @param inp_at_data Pointer to the Inp Atom Data structure
      * @param num_atoms Number of atoms
      * @param create_at_fixed_bonds Flag to create fixed bonds
      * @return int Status code (1 if successful, 0 otherwise)
@@ -1482,9 +1482,9 @@ extern "C"
     int CreateInpAtomData(INP_ATOM_DATA *inp_at_data, int num_atoms, int create_at_fixed_bonds);
 
     /**
-     * @brief Create a Comp Atom Data object
+     * @brief Create a Comp Atom Data structure
      *
-     * @param inp_at_data Pointer to the Comp Atom Data object
+     * @param inp_at_data Pointer to the Comp Atom Data structure
      * @param num_atoms Number of atoms
      * @param num_components Number of components
      * @param bIntermediateTaut Flag for intermediate tautomer
