@@ -464,7 +464,7 @@ typedef struct tagOrigAtom
 } ORIG_ATOM_DATA;
 
 /**
- * @brief Structure describing original structure
+ * @brief Structure describing the original structure
  *
  * @param num_atoms   Number of atoms
  * @param szAtoms     String representation of atoms
