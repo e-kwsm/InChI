@@ -5,6 +5,28 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/strutil.h"
 }
 
+TEST(strutil_testing, test_ExtractConnectedComponent)
+{
+
+    int num_atoms = 3;
+    int test_component_number = 23;
+    inp_ATOM *new_mol = CreateInpAtom(num_atoms);
+    inp_ATOM *cmp_mol = CreateInpAtom(num_atoms);
+
+    // int ExtractConnectedComponent(inp_ATOM *at, int num_at, int component_number, inp_ATOM *component_at)
+    EXPECT_EQ(ExtractConnectedComponent(nullptr, 0, test_component_number, nullptr), 0);
+
+    for (int i = 0; i < num_atoms; i++)
+    {
+        new_mol[i].component = test_component_number;
+    }
+
+    EXPECT_EQ(ExtractConnectedComponent(new_mol, num_atoms, test_component_number, cmp_mol), num_atoms);
+
+    FreeInpAtom(&new_mol);
+    FreeInpAtom(&cmp_mol);
+}
+
 TEST(strutil_testing, test_SetConnectedComponentNumber)
 {
 
@@ -13,7 +35,7 @@ TEST(strutil_testing, test_SetConnectedComponentNumber)
     inp_ATOM *new_mol = CreateInpAtom(num_atoms);
 
     // int SetConnectedComponentNumber( inp_ATOM *at, int num_at, int component_number )
-    EXPECT_EQ(SetConnectedComponentNumber(new_mol, 1, test_component_number), 0);
+    EXPECT_EQ(SetConnectedComponentNumber(new_mol, num_atoms, test_component_number), 0);
 
     for (int i = 0; i < num_atoms; i++)
     {
@@ -199,7 +221,6 @@ TEST(strutil_testing, test_CreateAndFreeInpAtom)
     EXPECT_EQ(new_mol2, nullptr);
 }
 
-// void FreeInpAtomData( INP_ATOM_DATA *inp_at_data )
 TEST(strutil_testing, test_CreateAndFreeInpAtomData)
 {
 

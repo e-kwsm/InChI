@@ -411,13 +411,46 @@ extern "C"
         int num_sc_undef_in2_only;
     } ICR; /* tagInChICompareResults */
 
+    /**
+     * @brief Compares two InChIs (2)
+     *
+     * @param i1 Pointer to first InChI (InChI from reversed struct)
+     * @param i2 Pointer to second InChI
+     * @param a1 Pointer to first InChI AuxInfo
+     * @param a2 Pointer to second InChI AuxInfo
+     * @param picr Pointer to comparison results
+     * @param err Pointer to error code
+     * @return INCHI_MODE Returns code from IDIF
+     */
     INCHI_MODE CompareReversedINChI2(INChI *i1 /* InChI from reversed struct */,
                                      INChI *i2 /* input InChI */,
                                      INChI_Aux *a1, INChI_Aux *a2,
                                      ICR *picr, int *err);
+
+    /**
+     * @brief Compares results from InChI comparison
+     *
+     * @param picr1 Pointer to first comparison results
+     * @param picr2 Pointer to second comparison results
+     * @param pin1 Pointer to first InChI mode (never used?)
+     * @param pin2 Pointer to second InChI mode (never used?)
+     * @param mask Either IDIFF_CONSTIT or IDIFF_STEREO
+     * @return * int 2 if undefined results, 1 if unequal, 0 if equal, -1 if unequal
+     */
     int CompareIcr(ICR *picr1, ICR *picr2, INCHI_MODE *pin1, INCHI_MODE *pin2, INCHI_MODE mask);
 
+    /**
+     * @brief Compares two InChIs (1)
+     *
+     * @param i1 Pointer to first InChI (InChI from reversed struct)
+     * @param i2 Pointer to second InChI
+     * @param a1 Pointer to first InChI AuxInfo
+     * @param a2 Pointer to second InChI AuxInfo
+     * @return int 0 if NULL, 1 if one is NULL, >1 if difference in structure
+     */
     int CompareReversedINChI(INChI *i1, INChI *i2, INChI_Aux *a1, INChI_Aux *a2);
+
+    // Where is this function?
     const char *CompareReversedInchiMsg(int code);
 
 #define EQL_EXISTS 1
@@ -425,18 +458,55 @@ extern "C"
 #define EQL_SP3_INV 4
 #define EQL_SP2 8
 
+    /**
+     * @brief Compares stereo information of two structures
+     *
+     * @param s1 Pointer to stereo information of first structure
+     * @param eql1 Flag for stereo information check
+     * @param s2 Pointer to stereo information of second structure
+     * @param eql2 Flag for stereo information check
+     * @param bRelRac Flag to compare racemic stereo information
+     * @return int 0 if unequal, 1 if equal
+     */
     int Eql_INChI_Stereo(INChI_Stereo *s1, int eql1, INChI_Stereo *s2, int eql2, int bRelRac);
+
+    /**
+     * @brief Compares isotopic information of two InChIs
+     *
+     * @param i1 Pointer to first InChI
+     * @param i2 Pointer to second InChI
+     * @return int 0 if unequal, 1 if equal
+     */
     int Eql_INChI_Isotopic(INChI *i1, INChI *i2);
 
 #define EQL_EQU 0
 #define EQL_EQU_TG 1
 #define EQL_EQU_ISO 2
 
+    /**
+     * @brief Compares two InChI AuxInfo objects
+     *
+     * @param a1 Pointer to first AuxInfo
+     * @param eql1 Flag to compare type 1
+     * @param a2 Pointer to second AuxInfo
+     * @param eql2 Flag to compare type 2
+     * @return int 0 if unequal or empty, 1 if equal
+     */
     int Eql_INChI_Aux_Equ(INChI_Aux *a1, int eql1, INChI_Aux *a2, int eql2);
 
 #define EQL_NUM 0
 #define EQL_NUM_INV 1
 #define EQL_NUM_ISO 2
+
+    /**
+     * @brief Compares two InChI AuxInfo objects in terms of numbering
+     *
+     * @param a1 Pointer to first AuxInfo
+     * @param eql1 Flag to compare type 1
+     * @param a2 Pointer to second AuxInfo
+     * @param eql2 Flag to compare type 2
+     * @return int 0 if unequal or empty, 1 if numbering matches
+     */
     int Eql_INChI_Aux_Num(INChI_Aux *a1, int eql1, INChI_Aux *a2, int eql2);
 
     /**
@@ -448,19 +518,43 @@ extern "C"
      */
     int bHasEquString(AT_NUMB *LinearCT, int nLenCT);
 
+    /**
+     * @brief Compare function for qsort (normal structure)
+     *
+     * @param p1 Pointer to first INCHI_SORT structure
+     * @param p2 Pointer to second INCHI_SORT structure
+     * @return int -1 if *p1 > *p2, return +1 if *p1 < *p2
+     */
     int CompINChINonTaut2(const void *p1, const void *p2);
+
+    /**
+     * @brief Compare function for qsort (tautomeric structures)
+     *
+     * @param p1 Pointer to first INCHI_SORT structure
+     * @param p2 Pointer to second INCHI_SORT structure
+     * @return int -1 if *p1 > *p2, return +1 if *p1 < *p2
+     */
     int CompINChITaut2(const void *p1, const void *p2);
 
     /**
-     * @brief Compares two INChI data structures
+     * @brief Compares two INChI data structures (qsort)
      *
-     * @param p1 Pointer to the first INChI data structure
-     * @param p2 Pointer to the second INChI data structure
+     * @param p1 Pointer to the first INCHI_SORT data structure
+     * @param p2 Pointer to the second INCHI_SORT data structure
      * @param bTaut Flag for tautomeric comparison
      * @param bCompareIsotopic Flag for isotopic comparison
-     * @return int Status code
+     * @return int -1 if *p1 > *p2, return +1 if *p1 < *p2
      */
     int CompINChI2(const INCHI_SORT *p1, const INCHI_SORT *p2, int bTaut, int bCompareIsotopic);
+
+    /**
+     * @brief Compare tautomeric vs non-tautomeric information
+     *
+     * @param p1 Pointer to the first INCHI_SORT data structure
+     * @param p2 Pointer to the second INCHI_SORT data structure
+     * @param bCompareIsotopic Flag for comparing isotopic non-tautomeric part
+     * @return int -1 if *p1 > *p2, return +1 if *p1 < *p2
+     */
     int CompINChITautVsNonTaut(const INCHI_SORT *p1, const INCHI_SORT *p2, int bCompareIsotopic);
 
     typedef enum tagDiffINChISegments
@@ -517,9 +611,32 @@ extern "C"
         INCHI_SEGM_EMPTY = 2 /* the value is used in str_LineEnd() */
     } INCHI_SEGM_ACTION;
 
+    /**
+     * @brief Compare InChI layers
+     *
+     * @param p1 Pointer to InChI component 1
+     * @param p2 Pointer to InChI component 2
+     * @param sDifSegs Array of different layers
+     * @param bFixTranspChargeBug Flag to fix charge bug (?)
+     * @return int -1 if *p1 > *p2, return +1 if *p1 < *p2
+     */
     int CompINChILayers(const INCHI_SORT *p1, const INCHI_SORT *p2,
                         char sDifSegs[][DIFS_LENGTH], int bFixTranspChargeBug);
+
+    /**
+     * @brief Mark unused and empty layers
+     *
+     * @param sDifSegs Array of different layers
+     * @return int returns 0
+     */
     int MarkUnusedAndEmptyLayers(char sDifSegs[][DIFS_LENGTH]);
+
+    /**
+     * @brief Action to take per segment (?)
+     *
+     * @param cDifSegs Segment bits
+     * @return int Type of segment action (INCHI_SEGM_OMIT, INCHI_SEGM_EMPTY, INCHI_SEGM_FILL)
+     */
     int INChI_SegmentAction(char cDifSegs);
 
 #define FLAG_SORT_PRINT_TRANSPOS_BAS 1   /* transposition in the main InChI layer */
@@ -532,6 +649,29 @@ extern "C"
 
     struct tagCANON_GLOBALS;
 
+    /**
+     * @brief Main actual worker which serializes InChI to string (called from OutputINChI2( ... ) and from itself)
+     *
+     * @param pCG Pointer to canonicalisation parameters
+     * @param strbuf Point to string buffer
+     * @param pINChISortTautAndNonTaut2
+     * @param iINChI InChI basic or InChI reconnect information (?)
+     * @param orig_inp_data Pointer to original atom data structure
+     * @param pOrigStruct Pointer to original stucture
+     * @param ip Pointer to input parameters
+     * @param bDisconnectedCoord Flag for disconnected coordinates
+     * @param bOutputType Flag for output type
+     * @param bINChIOutputOptions Flag for InChI output options
+     * @param num_components2 Pointer to number of components
+     * @param num_non_taut2 Pointer to number of non tautomeric units (?)
+     * @param num_taut2 Pointer to number of tautomeric units
+     * @param out_file Pointer to output file
+     * @param log_file Pointer to log file
+     * @param num_input_struct Number of input structures
+     * @param pSortPrintINChIFlags Pointer to sort and print InChI flags (?)
+     * @param save_opt_bits Flag to save optional bits (?)
+     * @return int 0 if error, 1 otherwise
+     */
     int OutputINChI1(struct tagCANON_GLOBALS *pCG,
                      INCHI_IOS_STRING *strbuf,
                      INCHI_SORT *pINChISortTautAndNonTaut2[][TAUT_NUM],
@@ -570,6 +710,18 @@ extern "C"
                      int *pSortPrintINChIFlags,
                      unsigned char save_opt_bits);
 
+    /**
+     * @brief Save equivalent components information and sort order (not used ?)
+     *
+     * @param iINChI Index to component
+     * @param pINChISort Pointer to InChI sort structure
+     * @param num_components Pointer to number of components
+     * @param orig_inp_data Pointer to original atom data
+     * @param prep_inp_data Pointer to prepared original atom data (?)
+     * @param composite_norm_data Pointer to composite data (?)
+     * @param bCompareComponents Type of comparisson: 1 default, 2 non-isotopic, 4 -non-tautomeric
+     * @return * int 0 if error, 1 if otherwise
+     */
     int SaveEquComponentsInfoAndSortOrder(int iINChI,
                                           INCHI_SORT *pINChISort[TAUT_NUM],
                                           int *num_components,
@@ -578,10 +730,40 @@ extern "C"
                                           COMP_ATOM_DATA composite_norm_data[TAUT_NUM + 1],
                                           int bCompareComponents); /* djb-rwth: matching composite_norm_data bounds */
 
+    /**
+     * @brief Print error message (plain text)
+     *
+     * @param out_file Pointer to output file
+     * @param pErrorText Pointer to error text
+     * @param bError Error type
+     * @return int Returns 1
+     */
     int OutputINChIPlainError(INCHI_IOSTREAM *out_file,
                               char *pErrorText,
                               int bError);
+
+    /**
+     * @brief Get the input struct error type
+     *
+     * @param ip Pointer to input parameters
+     * @param err Error code
+     * @param pStrErrStruct Pointer to error string
+     * @param num_inp_atoms Number of input atoms
+     * @return int Returns type of error
+     */
     int GetInpStructErrorType(INPUT_PARMS *ip, int err, char *pStrErrStruct, int num_inp_atoms);
+
+    /**
+     * @brief
+     *
+     * @param out_file Pointer to output file
+     * @param log_file Pointer to log file
+     * @param pStrErrStruct Pointer to error string
+     * @param nErrorType Error type
+     * @param num_inp Number of input structure (?)
+     * @param ip Pointer to input parameters
+     * @return int Retunrs error type
+     */
     int ProcessStructError(INCHI_IOSTREAM *out_file,
                            INCHI_IOSTREAM *log_file,
                            char *pStrErrStruct,
@@ -684,9 +866,24 @@ extern "C"
         int *seen;    /* nodes of found path(s)							*/
     } subgraf_pathfinder;
 
+    /**
+     * @brief Create graph from atom data
+     *
+     * @param orig_inp_data Pointer to original input data
+     * @param nnodes Number of nodes
+     * @param nodes Pointer to nodes
+     * @return subgraf* NULL if error, a new graph otherwise
+     */
     subgraf *subgraf_new(ORIG_ATOM_DATA *orig_inp_data,
                          int nnodes,
                          int *nodes);
+
+    /**
+     * @brief Free graph data structure
+     *
+     * @param sg Pointer to graph
+     * @return void Returns NULL (?)
+     */
     void subgraf_free(subgraf *sg);
     void subgraf_debug_trace(subgraf *sg);
     subgraf_pathfinder *subgraf_pathfinder_new(subgraf *sg,

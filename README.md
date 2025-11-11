@@ -79,6 +79,7 @@ int MolfileReadField(void *data,
      char **line_ptr);
 ```
 
+Please write your comments in the header files where possible.
 The Doxygen documentation syntax is quite powerful: you can include formulas, tables, and diagrams.
 For details see <https://www.doxygen.nl/manual>.
 
