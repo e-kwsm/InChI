@@ -582,9 +582,9 @@ int MolfileV3000ReadSGroup(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
-        if (p && !strcmp(p, "END SGROUP"))
+        if (p && !strcmp( p, "END SGROUP" ))
         {
             inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
             return 0;
@@ -799,14 +799,15 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     if (failed)
     {
         /*p = inchi_fgetsLf_V3000( line, inp_file );*/
-        inchi_strbuf_reset(pin);
+        inchi_strbuf_reset( pin );
+        line = NULL; /* Reset line pointer since buffer was freed */
 
         nc = get_V3000_input_line_to_strbuf(pin, inp_file);
 
@@ -817,8 +818,8 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     if (!p)
@@ -829,9 +830,11 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
     if (failed)
     {
         err = 7;
-        TREAT_ERR(err, 7, "Cannot interpret V3000 collection line(s)");
-        dotify_non_printable_chars(line);
-        AddErrorMessage(pStrErr, line);
+        TREAT_ERR( err, 7, "Cannot interpret V3000 collection line(s)" );
+        if (line) {
+            dotify_non_printable_chars( line );
+            AddErrorMessage( pStrErr, line );
+        }
         goto err_fin;
     }
 
@@ -1648,8 +1651,8 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     if (p && !strcmp(p, "BEGIN OBJ3D"))
@@ -1671,8 +1674,8 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     while (p && !strcmp(p, "LINKNODE"))
@@ -1689,8 +1692,8 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     /* Collections */
@@ -1714,8 +1717,8 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
+            remove_one_lf( line );
         }
-        remove_one_lf(line);
     }
 
     if (!p || strcmp(p, "END CTAB"))
