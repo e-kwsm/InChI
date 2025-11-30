@@ -49,13 +49,6 @@
 #include <ctype.h>
 #include <locale.h>
 
-#ifndef COMPILE_ANSI_ONLY
-#include <conio.h>
-#ifndef TARGET_LIB_FOR_WINCHI
-#include <windows.h>
-#endif
-#endif
-
 #include "mode.h"
 
 #if( BUILD_WITH_AMI == 1 && defined( _MSC_VER ) && MSC_AMI == 1 )
