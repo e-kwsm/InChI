@@ -2040,6 +2040,7 @@ exit_function:
     if (err)
     {
         DiylFrag_Free(pfrag);
+        inchi_free(pfrag); /* djb-rwth: addressing coverity CID #499507 */
         return NULL;
     }
     return pfrag;
@@ -2186,7 +2187,7 @@ int analyze_CRU_folding(ORIG_ATOM_DATA *orig_at_data,
     }
 
     OAD_PolymerUnit_DebugTrace(u);
-
+    /* djb-rwth: addressing coverity CID #499611 -- pStrErr is a dummy parameter in this function and is never used */
     OAD_CollectBackboneBonds(orig_at_data,
                             u->na, u->alist,
                             u->end_atom1, u->end_atom2,

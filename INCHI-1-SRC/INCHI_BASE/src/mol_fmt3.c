@@ -1490,6 +1490,11 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                             }
                         }
                     }
+                    if (num_list) /* djb-rwth: fixing coverity CID #499489 */
+                    {
+                        inchi_free(num_list);
+                        num_list = NULL;
+                    }
                 }
                 else if (!strcmp(field, "DISP"))
                 {

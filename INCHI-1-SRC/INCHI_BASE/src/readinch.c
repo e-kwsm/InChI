@@ -886,6 +886,7 @@ int InchiToInpAtom( INCHI_IOSTREAM *inp_file,
                     num_atoms = INCHI_INP_ERROR_RET; /* error */
                     *err = INCHI_INP_ERROR_ERR;
                     TREAT_ERR(*err, 0, "Wrong number of atoms");
+                    inchi_free(atom); /* djb-rwth: fixing coverity CID #499615 */
                     goto bypass_end_of_INChI_plain;
                 }
             }
@@ -1145,6 +1146,11 @@ int InchiToInpAtom( INCHI_IOSTREAM *inp_file,
                     num_atoms = INCHI_INP_ERROR_RET; /* error */
                     *err = INCHI_INP_ERROR_ERR;
                     TREAT_ERR(*err, 0, "Wrong number of bonds");
+                    if (atom) /* djb-rwth: fixing coverity CID #499615 */
+                    {
+                        inchi_free(atom);
+                        atom = NULL;
+                    }
                     goto bypass_end_of_INChI_plain;
                 }
         }
@@ -1377,6 +1383,11 @@ int InchiToInpAtom( INCHI_IOSTREAM *inp_file,
                                                 *err = -2;  /*  Program error */
                                                 TREAT_ERR(*err, 0, "Program error interpreting InChI aux");
                                                 num_atoms = INCHI_INP_FATAL_RET;
+                                                if (pszCoord) /* djb-rwth: fixing coverity CID #499571 */
+                                                {
+                                                    inchi_free(pszCoord);
+                                                    pszCoord = NULL;
+                                                }
                                                 goto bypass_end_of_INChI_plain; /*  no structure */
                                             }
                                         }

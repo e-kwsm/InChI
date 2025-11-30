@@ -292,6 +292,7 @@ int OrigAtData_Duplicate( ORIG_ATOM_DATA *new_orig_atom,
                 newp->pzz = (int *) inchi_calloc( newp->n_pzz, sizeof( int ) );
                 if (!newp->pzz)
                 {
+                    inchi_free(newp->units); /* djb-rwth: fixing coverity CID #499546 */
                     inchi_free(newp); /* djb-rwth: avoiding memory leak */
                     goto exit_function;
                 }
@@ -346,6 +347,9 @@ int OrigAtData_Duplicate( ORIG_ATOM_DATA *new_orig_atom,
                     lst = new_v3000->lists_haptic_bonds[m] = (int *) inchi_calloc( nn, sizeof( int ) );
                     if (!lst)
                     {
+                        inchi_free(new_v3000->lists_haptic_bonds); /* djb-rwth: fixing coverity CID #499504 */
+                        inchi_free(new_v3000->atom_index_orig); /* djb-rwth: fixing coverity CID #499540 */
+                        inchi_free(new_v3000->atom_index_fin); /* djb-rwth: fixing coverity CID #499613 */
                         inchi_free(new_v3000); /* djb-rwth: avoiding memory leak */
                         goto exit_function;
                     }
@@ -364,6 +368,10 @@ int OrigAtData_Duplicate( ORIG_ATOM_DATA *new_orig_atom,
                     lst = new_v3000->lists_steabs[m] = (int *) inchi_calloc( nn, sizeof( int ) );
                     if (!lst)
                     {
+                        inchi_free(new_v3000->lists_haptic_bonds); /* djb-rwth: fixing coverity CID #499504 */
+                        inchi_free(new_v3000->lists_steabs); /* djb-rwth: fixing coverity CID #499543 */
+                        inchi_free(new_v3000->atom_index_orig); /* djb-rwth: fixing coverity CID #499540 */
+                        inchi_free(new_v3000->atom_index_fin); /* djb-rwth: fixing coverity CID #499613 */
                         inchi_free(new_v3000); /* djb-rwth: avoiding memory leak */
                         goto exit_function;
                     }
@@ -388,6 +396,11 @@ int OrigAtData_Duplicate( ORIG_ATOM_DATA *new_orig_atom,
                         lst = new_v3000->lists_sterel[m] = (int *) inchi_calloc( nn, sizeof( int ) );
                     if (!lst)
                     {
+                        inchi_free(new_v3000->lists_haptic_bonds); /* djb-rwth: fixing coverity CID #499504 */
+                        inchi_free(new_v3000->lists_steabs); /* djb-rwth: fixing coverity CID #499543 */
+                        inchi_free(new_v3000->lists_sterel); /* djb-rwth: fixing coverity CID #499504 */
+                        inchi_free(new_v3000->atom_index_orig); /* djb-rwth: fixing coverity CID #499540 */
+                        inchi_free(new_v3000->atom_index_fin); /* djb-rwth: fixing coverity CID #499613 */
                         inchi_free(new_v3000); /* djb-rwth: avoiding memory leak */
                         goto exit_function;
                     }
@@ -408,6 +421,12 @@ int OrigAtData_Duplicate( ORIG_ATOM_DATA *new_orig_atom,
                         lst = new_v3000->lists_sterac[m] = (int*)inchi_calloc(nn, sizeof(int));
                         if (!lst)
                         {
+                            inchi_free(new_v3000->lists_haptic_bonds); /* djb-rwth: fixing coverity CID #499504 */
+                            inchi_free(new_v3000->lists_steabs); /* djb-rwth: fixing coverity CID #499543 */
+                            inchi_free(new_v3000->lists_sterel); /* djb-rwth: fixing coverity CID #499504 */
+                            inchi_free(new_v3000->lists_sterac); /* djb-rwth: fixing coverity CID #499575 */
+                            inchi_free(new_v3000->atom_index_orig); /* djb-rwth: fixing coverity CID #499540 */
+                            inchi_free(new_v3000->atom_index_fin); /* djb-rwth: fixing coverity CID #499613 */
                             inchi_free(new_v3000); /* djb-rwth: avoiding memory leak */
                             goto exit_function;
                         }
