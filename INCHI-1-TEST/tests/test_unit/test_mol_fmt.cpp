@@ -44,7 +44,7 @@ TEST(mol_fmt_testing, test_MolfileReadField)
 
     // MOL_FMT_CHAR_INT_DATA -128 to 127
     // char data_char[2];
-    int data_int_data;
+    int data_int_data = 0;
     char source_data2[] = "13";
     char *line_ptr2 = source_data2;
     int ret_val_char = MolfileReadField(&data_int_data, 2, MOL_FMT_CHAR_INT_DATA, &line_ptr2);
@@ -54,7 +54,7 @@ TEST(mol_fmt_testing, test_MolfileReadField)
     EXPECT_EQ(line_ptr2, source_data2 + 2);
 
     // MOL_FMT_SHORT_INT_DATA  -32,768 to 32,767
-    signed short data_s_int;
+    signed short data_s_int = 0;
     char source_data3[] = "12345";
     char *line_ptr3 = source_data3;
     int ret_val_s_int = MolfileReadField(&data_s_int, 5, MOL_FMT_SHORT_INT_DATA, &line_ptr3);
