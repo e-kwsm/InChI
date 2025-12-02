@@ -157,4 +157,7 @@ TEST(inpdef_testing, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][0], 2);  // n from "STERELn" tag
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][1], 1);  // number of members in collection
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][2], 14); // member atom numbers
+
+    inchi_ios_free_str(&input_stream);
+    FreeOrigAtData(&orig_at_data);
 }

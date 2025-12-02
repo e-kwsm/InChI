@@ -651,7 +651,8 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
 {
     char field[MOL_FMT_V3000_MAXFIELDLEN];
     const int max_field_len = sizeof(field);
-    int nread, len, n_coll;
+    int nread, len;
+    int n_coll = 0;
     int failed = 0;
     int nc;
     char *p = NULL, *line = NULL;
@@ -766,14 +767,17 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
                             if (stereo_kind == MOL_FMT_V3000_STEABS)
                             {
                                 ctab->v3000->n_steabs++;
+                                ctab->v3000->n_collections++;
                             }
                             else if (stereo_kind == MOL_FMT_V3000_STEREL)
                             {
                                 ctab->v3000->n_sterel++;
+                                ctab->v3000->n_collections++;
                             }
                             else if (stereo_kind == MOL_FMT_V3000_STERAC)
                             {
                                 ctab->v3000->n_sterac++;
+                                ctab->v3000->n_collections++;
                             }
                         }
                     }
