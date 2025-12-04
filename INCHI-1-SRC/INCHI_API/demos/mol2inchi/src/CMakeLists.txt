@@ -51,7 +51,7 @@ if(MATH_LIBRARY)
     target_link_libraries(mol2inchi PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(mol2inchi PRIVATE 
+target_compile_definitions(mol2inchi PRIVATE
 	BUILD_LINK_AS_DLL
 	TARGET_EXE_USING_API
 )
@@ -70,7 +70,7 @@ else()
 	set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 	set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 	find_package(Threads REQUIRED)
-	target_link_libraries(mol2inchi Threads::Threads)
+	target_link_libraries(mol2inchi PRIVATE Threads::Threads)
 	add_custom_command(TARGET mol2inchi POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:libinchi> $<TARGET_FILE_DIR:mol2inchi>
 		COMMAND_EXPAND_LISTS
