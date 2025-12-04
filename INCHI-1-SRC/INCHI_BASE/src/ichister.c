@@ -4561,6 +4561,7 @@ int set_stereo_parity( CANON_GLOBALS *pCG,
         cSource = (S_CHAR *) inchi_calloc( num_at, sizeof( cSource[0] ) );
         if (!q || !cSource || !nAtomLevel)
         {
+            q = QueueDelete(q); /* djb-rwth: fixing coverity CID #499562 */
             inchi_free(nAtomLevel); /* djb-rwth: avoiding memory leak */
             inchi_free(cSource); /* djb-rwth: avoiding memory leak */
             num_3D_stereo_atoms = CT_OUT_OF_RAM;

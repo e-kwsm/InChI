@@ -97,6 +97,8 @@ target_sources(inchi-1 PRIVATE
 	${P_BASE}/mol_fmt3.c
 	${P_BASE}/mol_fmt4.c
 	${P_BASE}/mol2atom.c
+	${P_BASE}/permutation_util.h
+	${P_BASE}/permutation_util.c
 	${P_BASE}/readinch.c
 	${P_BASE}/readinch.h
 	${P_BASE}/runichi.c

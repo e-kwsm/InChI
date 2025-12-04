@@ -3336,19 +3336,16 @@ int mark_atoms_deriv( inp_ATOM *at,
                       char cFlags,
                       int *pbFound )
 {
-    int i, nFound = 0, ret, j;
+    int i, nFound = 0, ret; /* djb-rwth: removing redundant variables */
     DERIV_AT da1;
     int      ret2;   /* moved from below 2024-09-01 DT */
     DERIV_AT da2;    /* moved from below 2024-09-01 DT */
     da1.other_atom = 0; /* djb-rwth: initialisation needed for if conditons */
 #if( defined(DERIV_RING_DMOX_DEOX_N) && defined(DERIV_RING_DMOX_DEOX_O) )
-    /* djb-rwth: initialisation needed to avoid garbage values in add_to_da function call */
-    for (j = 0; j < DERIV_AT_LEN; j++)
-    {
-        da->typ[j] = 0;
-        da->ord[j] = '\0';
-        da->num[j] = '\0';
-    }
+    /* djb-rwth: initialisation needed to avoid garbage values in add_to_da function call; fixing coverity CID #499492 */
+    memset(da2.typ, 0, DERIV_AT_LEN * sizeof(da2.typ[0]));
+    memset(da2.ord, '\0', DERIV_AT_LEN * sizeof(da2.ord[0]));
+    memset(da2.num, '\0', DERIV_AT_LEN * sizeof(da2.num[0]));
     da2.other_atom = 0; /* djb-rwth: initialisation needed for if conditons */
 #endif
     if (!( at[start].cFlags & cFlags ))

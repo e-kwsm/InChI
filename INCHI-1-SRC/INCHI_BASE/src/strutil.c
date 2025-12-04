@@ -787,13 +787,20 @@ int fix_odd_things(int num_atoms,
                     /* found both X(-) and X(+); change bonds and remove charges */
                     for (k1 = 0; k1 < at[c].valence && i1 != at[c].neighbor[k1]; k1++)
                         ;
-                    at[i1].charge = at[i2].charge = 0;
-                    at[i1].bond_type[i1_c] = at[c].bond_type[k1] = BOND_TYPE_SINGLE;
-                    at[i1].chem_bonds_valence--;
-                    at[i2].bond_type[i2_c] = at[c].bond_type[k2] = BOND_TYPE_DOUBLE;
-                    at[i2].chem_bonds_valence++;
-                    num_changes++;
-                    break;
+                    if ((i1_c >= 0) && (i2_c >= 0)) /* djb-rwth: fixing coverity CID #499537 */
+                    {
+                        at[i1].charge = at[i2].charge = 0;
+                        at[i1].bond_type[i1_c] = at[c].bond_type[k1] = BOND_TYPE_SINGLE;
+                        at[i1].chem_bonds_valence--;
+                        at[i2].bond_type[i2_c] = at[c].bond_type[k2] = BOND_TYPE_DOUBLE;
+                        at[i2].chem_bonds_valence++;
+                        num_changes++;
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             } /* k2 */
         }

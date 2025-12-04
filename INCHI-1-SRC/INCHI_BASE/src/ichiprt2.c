@@ -1367,18 +1367,50 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                 {
                     if (!OrigInfo[k].cCharge)
                     {
-                        szValue[len++] = '.';
+                        if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                        {
+                            len = 2047;
+                            szValue[len] = '\0';
+                        }
+                        else
+                        {
+                            szValue[len++] = '.';
+                        }
                     }
                     switch (OrigInfo[k].cRadical)
                     {
                         case 1:
-                            szValue[len++] = 'd';
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 'd';
+                            }
                             break;
                         case 2:
-                            szValue[len++] = 't';
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 't';
+                            }
                             break;
                         default:
-                            szValue[len++] = 'u';
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 'u';
+                            }
                             break;
                     }
                 }
@@ -1387,7 +1419,15 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                 {
                     if (OrigInfo[k].cCharge && !OrigInfo[k].cRadical)
                     {
-                        szValue[len++] = '.';
+                        if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                        {
+                            len = 2047;
+                            szValue[len] = '\0';
+                        }
+                        else
+                        {
+                            szValue[len++] = '.';
+                        }
                     }
                     len += MakeDecNumber( szValue + len, ( int )sizeof( szValue ) - len, NULL, OrigInfo[k].cUnusualValence );
                 }
@@ -1423,13 +1463,37 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                     switch (OrigInfo[k].cRadical)
                     {
                         case 1:
-                            szValue[len++] = 'd'; /* djb-rwth: GCC 14 false positive */
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 'd'; /* djb-rwth: GCC 14 false positive */
+                            }
                             break;
                         case 2:
-                            szValue[len++] = 't';
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 't';
+                            }
                             break;
                         default:
-                            szValue[len++] = 'u';
+                            if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                            {
+                                len = 2047;
+                                szValue[len] = '\0';
+                            }
+                            else
+                            {
+                                szValue[len++] = 'u';
+                            }
                             break;
                     }
                 }
@@ -1438,9 +1502,17 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                 {
                     if (!OrigInfo[k].cRadical)
                     {
-                        szValue[len++] = '.';
+                        if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
+                        {
+                            len = 2047;
+                            szValue[len] = '\0';
+                        }
+                        else
+                        {
+                            szValue[len++] = '.';
+                        }
                     }
-                    len += MakeDecNumber( szValue + len, ( int )sizeof( szValue ) - len, NULL, OrigInfo[k].cUnusualValence );
+                    len += MakeDecNumber(szValue + len, (int)sizeof(szValue) - len, NULL, OrigInfo[k].cUnusualValence);
                 }
             }
         }

@@ -582,9 +582,9 @@ int MolfileV3000ReadSGroup(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
-        if (p && !strcmp( p, "END SGROUP" ))
+        if (p && !strcmp(p, "END SGROUP"))
         {
             inchi_ios_close(&tmpin); /* ricrogz: fixing memory leak */
             return 0;
@@ -651,7 +651,8 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
 {
     char field[MOL_FMT_V3000_MAXFIELDLEN];
     const int max_field_len = sizeof(field);
-    int nread, len, n_coll;
+    int nread, len;
+    int n_coll = 0;
     int failed = 0;
     int nc;
     char *p = NULL, *line = NULL;
@@ -766,14 +767,17 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
                             if (stereo_kind == MOL_FMT_V3000_STEABS)
                             {
                                 ctab->v3000->n_steabs++;
+                                ctab->v3000->n_collections++;
                             }
                             else if (stereo_kind == MOL_FMT_V3000_STEREL)
                             {
                                 ctab->v3000->n_sterel++;
+                                ctab->v3000->n_collections++;
                             }
                             else if (stereo_kind == MOL_FMT_V3000_STERAC)
                             {
                                 ctab->v3000->n_sterac++;
+                                ctab->v3000->n_collections++;
                             }
                         }
                     }
@@ -799,14 +803,14 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
     if (failed)
     {
         /*p = inchi_fgetsLf_V3000( line, inp_file );*/
-        inchi_strbuf_reset( pin );
+        inchi_strbuf_reset(pin);
         line = NULL; /* Reset line pointer since buffer was freed */
 
         nc = get_V3000_input_line_to_strbuf(pin, inp_file);
@@ -818,7 +822,7 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
@@ -830,10 +834,11 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
     if (failed)
     {
         err = 7;
-        TREAT_ERR( err, 7, "Cannot interpret V3000 collection line(s)" );
-        if (line) {
-            dotify_non_printable_chars( line );
-            AddErrorMessage( pStrErr, line );
+        TREAT_ERR(err, 7, "Cannot interpret V3000 collection line(s)");
+        if (line)
+        {
+            dotify_non_printable_chars(line);
+            AddErrorMessage(pStrErr, line);
         }
         goto err_fin;
     }
@@ -1231,7 +1236,7 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
     /* (Nauman Ullah Khan_@nnuk) : condition below not needed anymore as Zz/star atom is not going to be ignored.*/
     /*if (ctab->v3000->n_star_atoms)
     {
-        AddErrorMessage( pStrErr, "V3000 star atoms ignored" );
+        AddErrorMessage(pStrErr, "V3000 star atoms ignored");
         ctab->n_atoms = ctab->v3000->n_non_star_atoms;
     }*/
 
@@ -1499,6 +1504,11 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                             }
                         }
                     }
+                    if (num_list) /* djb-rwth: fixing coverity CID #499489 */
+                    {
+                        inchi_free(num_list);
+                        num_list = NULL;
+                    }
                 }
                 else if (!strcmp(field, "DISP"))
                 {
@@ -1557,6 +1567,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
         /* (Nauman Ullah Khan_@nnuk) : Error message to ignore haptic bond not needed anymore
          *  as the haptic bond count is preserved now.
          */
+        /* AddErrorMessage(pStrErr, "V3000 haptic bonds read/stored but ignored"); */
         ctab->n_bonds = ctab->v3000->n_non_haptic_bonds;
     }
 
@@ -1651,7 +1662,7 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
@@ -1674,7 +1685,7 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
@@ -1692,7 +1703,7 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
@@ -1717,7 +1728,7 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         else
         {
             p = line = pin->pStr;
-            remove_one_lf( line );
+            remove_one_lf(line);
         }
     }
 
@@ -1927,6 +1938,9 @@ int get_V3000_input_line_to_strbuf(INCHI_IOS_STRING *buf,
 
         old_used = buf->nUsedLength;
     }
+
+    remove_trailing_spaces(buf->pStr);
+    buf->nUsedLength = strlen(buf->pStr);
 
     return buf->nUsedLength;
 }

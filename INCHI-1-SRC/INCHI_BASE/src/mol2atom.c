@@ -1198,7 +1198,13 @@ exit_function:;
 /****************************************************************************/
 inp_ATOM *CreateInpAtom(int num_atoms)
 {
-    void *p = inchi_calloc(num_atoms, sizeof(inp_ATOM));
+    void *p = NULL;
+    if (num_atoms >= 0)
+    {
+        p = inchi_calloc(num_atoms, sizeof(inp_ATOM));
+    }
+
+    // void *p = inchi_calloc(num_atoms, sizeof(inp_ATOM));
     return (inp_ATOM *)p;
 }
 

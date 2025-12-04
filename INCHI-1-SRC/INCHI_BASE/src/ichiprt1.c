@@ -2315,6 +2315,11 @@ int CleanOrigCoord( MOL_COORD szCoord, int delim )
             szBuf[len_buf++] = delim;
 #pragma warning (pop)
         }
+        if (len_buf >= (int)sizeof(MOL_COORD)) /* djb-rwth: fixing coverity CID #499520 */
+        {
+            len_buf = (int)sizeof(MOL_COORD) - 1;
+            len = 0;
+        }
         memcpy(szBuf + len_buf, szVal, len); /* does not copy zero termination*/
         len_buf += len;
     }

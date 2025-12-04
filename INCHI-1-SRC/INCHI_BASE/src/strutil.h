@@ -869,7 +869,7 @@ extern "C"
     /**
      * @brief Create graph from atom data
      *
-     * @param orig_inp_data Pointer to original input data
+     * @param orig_inp_data Pointer to original atom data
      * @param nnodes Number of nodes
      * @param nodes Pointer to nodes
      * @return subgraf* NULL if error, a new graph otherwise
@@ -885,17 +885,61 @@ extern "C"
      * @return void Returns NULL (?)
      */
     void subgraf_free(subgraf *sg);
+    /**
+     * @brief Debug graph data structure
+     *
+     * @param sg Pointer to graph
+     */
     void subgraf_debug_trace(subgraf *sg);
+
+    /**
+     * @brief Allocate new graph pathfinder data structure
+     *
+     * @param sg Pointer to graph
+     * @param orig_inp_data Pointer to original atom data
+     * @param start Starting node
+     * @param end End node
+     * @return subgraf_pathfinder* Returns pointer to graph pathfinder data structure
+     */
     subgraf_pathfinder *subgraf_pathfinder_new(subgraf *sg,
                                                ORIG_ATOM_DATA *orig_inp_data,
                                                int start,
                                                int end);
+
+    /**
+     * @brief Frees subgraph pathfinder data structure
+     *
+     * @param spf Pointer to graph pathfinder data structure
+     * @return * void
+     */
     void subgraf_pathfinder_free(subgraf_pathfinder *spf);
+
+    /**
+     * @brief Find path(s) from subgraf node spf->start to spf->end and fill bonds[nbonds] and atoms[natoms]. Does not traverse through supplied forbidden edges (if not zero/NULL)
+     *
+     * @param spf Pointer to graph pathfinder data structure
+     * @param nforbidden Number of forbidden edges
+     * @param forbidden_orig Pointer forbidden edges
+     * @param nbonds Number of bonds
+     * @param bonds Pointer to bonds
+     * @param natoms Number of atoms
+     * @param atoms Pointer to atoms
+     */
     void subgraf_pathfinder_run(subgraf_pathfinder *spf,
                                 int nforbidden,
                                 int *forbidden_orig,
                                 int *nbonds, int **bonds,
                                 int *natoms, int *atoms);
+
+    /**
+     * @brief Collects atom numbers along path
+     *
+     * @param spf Pointer to graph pathfinder data structure
+     * @param nforbidden Number of edges forbidden for traversal
+     * @param forbidden Pointer to forbidden edges
+     * @param atnums Pointer to atom numbers
+     * @return * int
+     */
     int subgraf_pathfinder_collect_all(subgraf_pathfinder *spf,
                                        int nforbidden,
                                        int *forbidden,

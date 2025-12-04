@@ -403,7 +403,7 @@ typedef struct OAD_V3000
     int n_sterac;
     int **lists_sterac; /* sterac[k][0] - n from "STERACn" tag                          */
                         /* sterac[k][1] -  number of members in collection              */
-                        /* sterac[k][0] - number from "STERACn" tag                     */
+                        /* sterac[k][2..] - member atom numbers                      */
 } OAD_V3000;
 
 /**

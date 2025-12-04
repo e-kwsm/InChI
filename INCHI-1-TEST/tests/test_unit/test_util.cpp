@@ -303,7 +303,7 @@ TEST(util_testing, test_read_upto_delim)
 
     char test_string1[] = "field1,field2,field3";
     char *test_string1_inp = test_string1;
-    char field[15];
+    char field[20];
     int maxlen = 10;
     char delims[] = ",";
 
@@ -325,19 +325,19 @@ TEST(util_testing, test_read_upto_delim)
     EXPECT_STREQ(field, "afdfs");
     EXPECT_STREQ(test_string3_inp, ",fdsfff323sd");
 
-    char test_string4[] = "afdfsfdsfff323sd";
+    char test_string4[] = "afdfsfdsfff323s";
     char *test_string4_inp = test_string4;
 
     EXPECT_EQ(read_upto_delim(&test_string4_inp, field, maxlen, delims), -1);
     // EXPECT_STREQ(field, "");
-    EXPECT_STREQ(test_string4_inp, "afdfsfdsfff323sd");
+    EXPECT_STREQ(test_string4_inp, "afdfsfdsfff323s");
 
-    char test_string5[] = "afdfsfdsfff323sd";
+    char test_string5[] = "afdfsfdsfff323s";
     maxlen = 50;
     char *test_string5_inp = test_string5;
 
-    EXPECT_EQ(read_upto_delim(&test_string5_inp, field, maxlen, delims), 16);
-    EXPECT_STREQ(field, "afdfsfdsfff323sd");
+    EXPECT_EQ(read_upto_delim(&test_string5_inp, field, maxlen, delims), 15);
+    EXPECT_STREQ(field, "afdfsfdsfff323s");
     EXPECT_STREQ(test_string5_inp, NULL);
 
     char test_string6[] = "field1,field2,field3";
@@ -505,11 +505,11 @@ TEST(util_testing, test_inchi_strdup)
     // char *inchi__strdup(const char *string)
     char *dup1 = inchi__strdup("Hello");
     EXPECT_STREQ(dup1, "Hello");
-    // free(dup1);
+    free(dup1);
 
     char *dup2 = inchi__strdup("");
     EXPECT_STREQ(dup2, "");
-    // free(dup2);
+    free(dup2);
 }
 
 TEST(util_testing, test_inchi_strtol)
@@ -555,7 +555,7 @@ TEST(util_testing, test_is_in_the_list)
 
     AT_NUMB pathAtom3[] = {};
     AT_NUMB nNextAtom3 = 6;
-    int nPathLen3 = 5;
+    int nPathLen3 = 0;
     EXPECT_FALSE(is_in_the_list(pathAtom3, nNextAtom3, nPathLen3));
 }
 
@@ -576,7 +576,7 @@ TEST(util_testing, test_is_in_the_ilist)
 
     int pathAtom3[] = {};
     int nNextAtom3 = -6;
-    int nPathLen3 = 5;
+    int nPathLen3 = 0;
     EXPECT_FALSE(is_in_the_ilist(pathAtom3, nNextAtom3, nPathLen3));
 }
 
@@ -936,7 +936,7 @@ TEST(util_testing, test_extract_stereo_info_from_inchi_string)
 
     int num_atoms1 = 4;
     int orig1[4] = {0, 1, 2, 3};
-    int at_stereo_mark_orig1[4] = {0, 0, 0, 0};
+    int at_stereo_mark_orig1[MAX_ATOMS]; // = {0, 0, 0, 0}
 
     int ret1 = extract_stereo_info_from_inchi_string(inchi1, num_atoms1, orig1, at_stereo_mark_orig1);
     EXPECT_EQ(ret1, 0);
@@ -960,7 +960,7 @@ TEST(util_testing, test_extract_stereo_info_from_inchi_string)
 
     int num_atoms2 = 2;
     int orig2[2] = {0, 1};
-    int at_stereo_mark_orig2[2] = {0, 0};
+    int at_stereo_mark_orig2[MAX_ATOMS]; //[2] = {0, 0};
 
     int ret2 = extract_stereo_info_from_inchi_string(inchi2, num_atoms2, orig2, at_stereo_mark_orig2);
     EXPECT_EQ(ret2, 0);
