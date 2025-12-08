@@ -45,7 +45,7 @@ TEST(strutil_testing, test_SetConnectedComponentNumber)
 }
 
 /* (NaumanUllahKhan :: @nnuk)
- * Test to validate the disconnection or non-disconnection of bond
+ * Test to validate the disconnection of bond(s)
  * between a Metal and a Non-Metal atom.
  */
 TEST(strutil_testing, test1_MolecularInorganicsPreprocessing)
@@ -86,11 +86,11 @@ TEST(strutil_testing, test1_MolecularInorganicsPreprocessing)
     atoms[0].bond_type[0] = 1;
     atoms[0].bond_type[1] = 1;
 
-    /* Non-Metal atom (Chlorine) */
-    atoms[1].el_number = 17;
+    /* Non-Metal atom (Fluorine) */
+    atoms[1].el_number = 9;
     atoms[1].valence = 1;
     atoms[1].chem_bonds_valence = 1;
-    strcpy(atoms[1].elname, "Cl");
+    strcpy(atoms[1].elname, "F");
     atoms[1].neighbor[0] = 0;
     atoms[1].bond_type[0] = 1;
 
@@ -108,13 +108,13 @@ TEST(strutil_testing, test1_MolecularInorganicsPreprocessing)
 
     int result = MolecularInorganicsPreprocessing(&orig_at_data, &ip);
 
-    /* Should disconnect only 1 bond, Fe-F (not Fe-Cl) */
-    EXPECT_EQ(result, 1);
-    EXPECT_TRUE(ip.bMolecularInorganicsReconnectedInChI);
+    /* Should disconnect both F bonds to Fe */
+    EXPECT_EQ(result, 2);
+    EXPECT_FALSE(ip.bMolecularInorganicsReconnectedInChI);
 
-    /* Charges: Fe -> +1, Cl -> unchanged, F -> -1 */
-    EXPECT_EQ(atoms[0].charge, 1);
-    EXPECT_EQ(atoms[1].charge, 0);
+    /* Charges: Fe -> +2, both F -> -1 */
+    EXPECT_EQ(atoms[0].charge, 2);
+    EXPECT_EQ(atoms[1].charge, -1);
     EXPECT_EQ(atoms[2].charge, -1);
 }
 

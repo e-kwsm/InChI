@@ -6439,7 +6439,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     /* Track number of disconnections */
     int num_disconnected = 0;
     /* variables declared */
-    int i, j, n, binaryValue;
+    int i, j, n, k, m, binaryValue;
     int disconnectDecision;
     int neighbor_idx;
 
@@ -6464,6 +6464,63 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             /* (@nnuk) : No disconnection if the metal atom bounding capacity is greater than
              * the limit set inside Molecular Inorganics elements array or if the metal atom is
              * isolated. */
+            ip->bMolecularInorganicsReconnectedInChI = 1;
+            continue;
+        }
+
+        int keep_all_ligand_for_this_metal = 0;
+
+        /* All metal bonds to be kept if a ligand atom links 2 metal atoms */
+        for (k = 0; k < at[i].valence && !keep_all_ligand_for_this_metal; k++)
+        {
+            int neigh_idx = at[i].neighbor[k];
+            int metal_neighbor_count = 0;
+
+            for (m = 0; m < at[neigh_idx].valence; m++)
+            {
+                int next_neighbor = at[neigh_idx].neighbor[m];
+                if (is_el_a_metal(at[next_neighbor].el_number))
+                {
+                    metal_neighbor_count++;
+                    if (metal_neighbor_count >= 2)
+                    {
+                        /* ligand is bridging two metals — keep all bonds */
+                        keep_all_ligand_for_this_metal = 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (keep_all_ligand_for_this_metal)
+        {
+            ip->bMolecularInorganicsReconnectedInChI = 1;
+            continue;
+        }
+
+        /* if any eligible ligand must be kept by ΔE, keep ALL */
+        for (k = 0; k < at[i].valence && !keep_all_ligand_for_this_metal; k++)
+        {
+            neighbor_idx = at[i].neighbor[k];
+            int neighbor_atomic_number = at[neighbor_idx].el_number;
+
+            if (at[i].bond_type[k] > 1 || is_el_a_metal(neighbor_atomic_number))
+            {
+                /* existing behavior: these bonds are kept */
+                continue;
+            }
+
+            binaryValue = shouldBondBeCut(at[i].el_number, neighbor_atomic_number);
+
+            if (binaryValue != 1)
+            {
+                keep_all_ligand_for_this_metal = 1;
+                break;
+            }
+        }
+
+        if (keep_all_ligand_for_this_metal)
+        {
             ip->bMolecularInorganicsReconnectedInChI = 1;
             continue;
         }
