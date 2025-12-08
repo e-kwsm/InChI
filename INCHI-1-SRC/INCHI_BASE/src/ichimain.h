@@ -2,7 +2,6 @@
  * International Chemical Identifier (InChI)
  * Version 1
  * Software version 1.07
- * April 30, 2024
  *
  * MIT License
  *
@@ -164,7 +163,7 @@ typedef struct tagINCHI_OUT_CTL
     char szTag2[PRINT_INCHI_MAX_TAG_LEN];
     char szTag3[PRINT_INCHI_MAX_TAG_LEN];
 
-    int n_pzz; 
+    int n_pzz;
     int n_zy;
 
     INCHI_SORT   **pINChISortTautAndNonTaut;
@@ -521,7 +520,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
                              OAD_StructureEdits *ed,
                              int *ret);
 void OAD_CollectFragmentBondsAndAtoms( ORIG_ATOM_DATA  *at_data,
-                                       int nforbidden,		
+                                       int nforbidden,
                                        int *forbidden_orig,
                                        int *n_fragbonds,
                                        int **fragbonds,
