@@ -24,6 +24,7 @@ build/
 Testing/
 googletest/
 *.egg-info/
+inchi_mol_test_*/
 .clang-format
 # Ignore core dump files
 core.*[0-9]

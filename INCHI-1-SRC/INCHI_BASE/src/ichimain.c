@@ -2,7 +2,6 @@
  * International Chemical Identifier (InChI)
  * Version 1
  * Software version 1.07
- * April 30, 2024
  *
  * MIT License
  *
