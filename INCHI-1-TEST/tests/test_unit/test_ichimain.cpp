@@ -19,33 +19,17 @@ static char* make_arg(const char* s) {
     return p;
 }
 
-// TEST(ichimain_testing, test_ProcessSingleInputFile)
-// {
+TEST(ichimain_testing, test_ProcessMultipleInputFiles)
+{
 
-
-//     const char *test_file_2mols = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/test_mol2.sdf";
-
-//     char tmpl[] = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
-//     char *tmpd = mkdtemp(tmpl);
-//     ASSERT_NE(tmpd, nullptr);
-
-//     std::string dst_path = std::string(tmpd) + "/caffeine.mol";
-//     std::ifstream src(test_file_caffeine, std::ios::binary);
-//     ASSERT_TRUE(src.is_open());
-//     std::ofstream dst(dst_path, std::ios::binary);
-//     ASSERT_TRUE(dst.is_open());
-//     dst << src.rdbuf();
-//     src.close();
-//     dst.close();
-
-//     int argc = 2;
-//     char *a0 = make_arg("test_ichimain");
-//     char *a1 = make_arg(dst_path.c_str());
-//     char* argv[] = { a0, a1 };
+    const char *test_file_mol1 = "caffeine.mol";
+    const char *test_file_mol2 = "naloxon.mol";
 
 
 
-// }
+
+
+}
 
 TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
 {
