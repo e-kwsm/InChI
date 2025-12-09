@@ -4550,6 +4550,10 @@ exit_function:
             {
                 inchi_free(t_group_info->nIsotopicEndpointAtomNumber);
             }
+            if (t_group_info->t_group)
+            {
+                inchi_free(t_group_info->t_group);
+            }
             memset(t_group_info, 0, sizeof(*t_group_info)); /* djb-rwth: memset_s C11/Annex K variant? */
         }
     }
