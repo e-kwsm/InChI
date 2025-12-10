@@ -48,9 +48,9 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     INCHI_IOSTREAM input_stream;
 
     const char *molblock =
-        "enhanc_stereo1									  \n"
+        "enhanc_stereo1									   \n"
         "  ACD/LABS08242216132D                            \n"
-        "												  \n"
+        "												   \n"
         "  0  0  0  0  0  0  0  0  0  0999 V3000           \n"
         "M  V30 BEGIN CTAB                                 \n"
         "M  V30 COUNTS 18 17 0 0 1                         \n"
@@ -147,6 +147,23 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     memset(ip, 0, sizeof(*ip));
     ip->last_struct_number = 1;
     ip->nInputType = INPUT_MOLFILE;
+    ip->bINChIOutputOptions = INCHI_OUT_PLAIN_TEXT;
+    // ip->bINChIOutputOptions2 = INCHI_OUT_PLAIN_TEXT;
+    // ip->nMode = REQ_MODE_TAUT; // REQ_MODE_BASIC;
+    // ip->bTautFlags |= (TG_FLAG_DISCONNECT_COORD | TG_FLAG_RECONNECT_COORD);
+    // ip->nMode |= (REQ_MODE_BASIC | REQ_MODE_TAUT | REQ_MODE_STEREO | REQ_MODE_ISO_STEREO | REQ_MODE_ISO);
+
+    int bReleaseVersion = bRELEASE_VERSION;
+    unsigned long  ulDisplTime = 0;    /*  infinite, milliseconds */
+    unsigned long  ulTotalProcessingTime = 0;
+
+    int argc = 0;
+    char *argv[1];
+    char *szSdfDataValue = nullptr;
+
+    ReadCommandLineParms(argc, (const char**)argv, ip,
+        szSdfDataValue, &ulDisplTime,
+        bReleaseVersion, plog);
 
     inchi_ios_init(pout, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_init(plog, INCHI_IOS_TYPE_STRING, stdout);
@@ -174,6 +191,9 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     EXPECT_EQ(ret, DO_NEXT_STEP);
 
+    EXPECT_EQ(orig_at_data.num_inp_atoms, 18);
+    EXPECT_EQ(orig_at_data.num_inp_bonds, 17);
+
     CANON_GLOBALS CG = {};
     // STRUCT_DATA* sd;
     // INPUT_PARMS* ip;
@@ -192,7 +212,10 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     // int have_err_in_GetOneStructure;
     // long* num_err;
     // int output_error_inchi;
-    INCHI_IOS_STRING* strbuf;
+    INCHI_IOS_STRING *strbuf = new INCHI_IOS_STRING;
+    memset(strbuf, 0, sizeof(*strbuf));
+    inchi_strbuf_init(strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
     unsigned long pulTotalProcessingTime = 0;
     char* pLF;
     char* pTAB;
@@ -200,6 +223,33 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     int silent;
 
     set_line_separators(ip->bINChIOutputOptions, &pLF, &pTAB);
+
+
+    // int CalcAndPrintINCHIAndINCHIKEY(struct tagINCHI_CLOCK* ic,
+    //     CANON_GLOBALS* CG,
+    //     STRUCT_DATA* sd,
+    //     INPUT_PARMS* ip,
+    //     char* szTitle,
+    //     PINChI2* pINChI[INCHI_NUM],
+    //     PINChI_Aux2* pINChI_Aux[INCHI_NUM],
+    //     INCHI_IOSTREAM* inp_file,
+    //     INCHI_IOSTREAM* plog,
+    //     INCHI_IOSTREAM* pout,
+    //     INCHI_IOSTREAM* pprb,
+    //     ORIG_ATOM_DATA* orig_inp_data,
+    //     ORIG_ATOM_DATA* prep_inp_data,
+    //     long* num_inp,
+    //     STRUCT_FPTRS* pStructPtrs,
+    //     int* nRet,
+    //     int have_err_in_GetOneStructure,
+    //     long* num_err,
+    //     int output_error_inchi,
+    //     INCHI_IOS_STRING* strbuf,
+    //     unsigned long* pulTotalProcessingTime,
+    //     char* pLF,
+    //     char* pTAB,
+    //     char* ikey,
+    //     int silent)
 
     ret = CalcAndPrintINCHIAndINCHIKEY(
         &ic,
@@ -229,11 +279,17 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         silent
     );
 
+    EXPECT_EQ(ret, DO_NEXT_STEP);
 
+    char *inchi = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s1";
+    //ios->s.pStr
+    EXPECT_STREQ(inchi, pout->s.pStr);
 
+    FreeAllINChIArrays(pINChI, pINChI_Aux, sd->num_components);
 
     inchi_ios_free_str(&input_stream);
     FreeOrigAtData(&orig_at_data);
+    FreeOrigAtData(&prep_inp_data);
 
     for (int i = 0; i < MAX_NUM_PATHS; i++)
     {
@@ -250,33 +306,6 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     delete pout;
     delete pprb;
     delete num_inp;
-
-
-    // int CalcAndPrintINCHIAndINCHIKEY(struct tagINCHI_CLOCK* ic,
-    //     CANON_GLOBALS* CG,
-    //     STRUCT_DATA* sd,
-    //     INPUT_PARMS* ip,
-    //     char* szTitle,
-    //     PINChI2* pINChI[INCHI_NUM],
-    //     PINChI_Aux2* pINChI_Aux[INCHI_NUM],
-    //     INCHI_IOSTREAM* inp_file,
-    //     INCHI_IOSTREAM* plog,
-    //     INCHI_IOSTREAM* pout,
-    //     INCHI_IOSTREAM* pprb,
-    //     ORIG_ATOM_DATA* orig_inp_data,
-    //     ORIG_ATOM_DATA* prep_inp_data,
-    //     long* num_inp,
-    //     STRUCT_FPTRS* pStructPtrs,
-    //     int* nRet,
-    //     int have_err_in_GetOneStructure,
-    //     long* num_err,
-    //     int output_error_inchi,
-    //     INCHI_IOS_STRING* strbuf,
-    //     unsigned long* pulTotalProcessingTime,
-    //     char* pLF,
-    //     char* pTAB,
-    //     char* ikey,
-    //     int silent)
 
 }
 
@@ -635,6 +664,9 @@ TEST(ichimain_testing, test_GetTheNextRecordOfInputFile)
         output_error_inchi);
 
     EXPECT_EQ(ret, DO_NEXT_STEP);
+
+    EXPECT_EQ(orig_at_data.num_inp_atoms, 18);
+    EXPECT_EQ(orig_at_data.num_inp_bonds, 17);
 
     inchi_ios_free_str(&input_stream);
     FreeOrigAtData(&orig_at_data);
