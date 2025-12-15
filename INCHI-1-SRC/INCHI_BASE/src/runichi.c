@@ -267,7 +267,6 @@ int ProcessOneStructure( INCHI_CLOCK            *ic,
     memset( composite_norm_data, 0, sizeof( composite_norm_data ) ); /* djb-rwth: memset_s C11/Annex K variant? */
     memset( pncFlags, 0, sizeof( *pncFlags ) ); /* djb-rwth: memset_s C11/Annex K variant? */
 
-        
     /* For experimental purposes only */
     /*ret1 = DoOneStructureEarlyPreprocessing( num_inp, sd, ip, inp_file,
                                              log_file, out_file, prb_file,
@@ -1156,7 +1155,7 @@ int CreateOneStructureINChI( CANON_GLOBALS          *pCG,
 
     /* allocate pINChI[iINChI] and pINChI_Aux2[iINChI] -- arrays of pointers to INChI and INChI_Aux */
     /* assign values to sd->num_components[]                                                  */
-    
+
     /* djb-rwth: MYREALLOC2 has been replaced and the whole block rewritten to address memory leaks and reading from freed memory locations */
     do {
         if( (sd->num_components[iINChI]) <= ((long long)cur_prep_inp_data->num_components) ) {
@@ -1327,7 +1326,7 @@ int CreateOneStructureINChI( CANON_GLOBALS          *pCG,
         }
 #endif
 
-        /*#ifndef COMPILE_ANSI_ONLY  
+        /*#ifndef COMPILE_ANSI_ONLY
         { */
 
         /*  b) Display the extracted original component structure */
@@ -2039,7 +2038,7 @@ int ProcessOneStructureEx( struct tagINCHI_CLOCK    *ic,
 {
     int ret = _IS_OKAY;
     char *sinchi_noedits=NULL, *saux_noedits=NULL;
-    
+
 
     /* PREPROCESS */
 
@@ -2048,7 +2047,7 @@ int ProcessOneStructureEx( struct tagINCHI_CLOCK    *ic,
     if (ip->bFilterSS)
     {
         int present, ok = 0;
-        
+
         present = OrigAtData_CheckForSubstructure(orig_inp_data);
 
         if (ip->bFilterSS == 1 && present)			ok = 1;
@@ -2073,11 +2072,11 @@ int ProcessOneStructureEx( struct tagINCHI_CLOCK    *ic,
                                     &sinchi_noedits, &saux_noedits); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
     /* CALCULATE INCHI */
-    
-    /* Perform calculation as usual either for untouched (modes POLYMERS_LEGACY and POLYMERS_LEGACY_PLUS) 
+
+    /* Perform calculation as usual either for untouched (modes POLYMERS_LEGACY and POLYMERS_LEGACY_PLUS)
        or just edited, probably (mode POLYMERS_MODERN) structure as passed in orig_inp_data
     */
-    ret = ProcessOneStructureExCore( ic, CG, sd, ip,  szTitle, 
+    ret = ProcessOneStructureExCore( ic, CG, sd, ip,  szTitle,
                                      pINChI2, pINChI_Aux2,
                                      inp_file, log_file, out_file, prb_file,
                                      orig_inp_data, prep_inp_data,
@@ -2118,7 +2117,7 @@ int ProcessOneStructureEx( struct tagINCHI_CLOCK    *ic,
     inchi_free(sinchi_noedits);
     inchi_free(saux_noedits);
 
-    
+
 #ifdef TARGET_LIB_FOR_WINCHI
 
     push_to_winchi_text_window(out_file);
@@ -2135,7 +2134,7 @@ int ProcessOneStructureEx( struct tagINCHI_CLOCK    *ic,
 
 
 /****************************************************************************
- Special treatment for polymers: perform CRU frame shift analysis 
+ Special treatment for polymers: perform CRU frame shift analysis
  and make related edits in orig_inp_data whenever applicable
 ****************************************************************************/
 int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
@@ -2161,7 +2160,7 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
     char *sinchi_105p = NULL, *saux_105p = NULL;
     OAD_StructureEdits edits_unit_frame_shift, *ed_fs = &edits_unit_frame_shift;
     OAD_StructureEdits edits_unit_folding, *ed_fold = &edits_unit_folding;
-    
+
     OAD_StructureEdits_Init(ed_fold);
     OAD_StructureEdits_Init(ed_fs);
 
@@ -2192,7 +2191,7 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                                                             sinchi_noedits, saux_noedits);
                     if (ret == _IS_FATAL || ret == _IS_ERROR)
                     {
-                        ret = _IS_WARNING; 
+                        ret = _IS_WARNING;
                         if (!ip->bNoWarnings)
                         {
                             AddErrorMessage(sd->pStrErrStruct, "CRU folding and frame shift analysis failed");
@@ -2205,10 +2204,10 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                         /* CRU having both caps of indefinite nature, Zz                        */
                         goto exit_function;
                     }
-                    
+
 
                     /* Prepare and perform CRU folding related edits */
-                    if (ip->bFoldPolymerSRU != 0) 
+                    if (ip->bFoldPolymerSRU != 0)
                     {
                         /*	Get interim 105+ flavour of InChI and AuxInfo and prepare */
                         int old_bFrameShiftScheme = ip->bFrameShiftScheme;
@@ -2228,7 +2227,7 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                                 /* AddErrorMessage(sd->pStrErrStruct, "CRU fold analysis failed");*/
                                 ;
                             }
-                            goto frame_shift; 
+                            goto frame_shift;
                         }
 
                         ret = OAD_Polymer_PrepareFoldCRUEdits( orig_inp_data, *sinchi_noedits, *saux_noedits, sinchi_105p, saux_105p, ed_fold);
@@ -2244,7 +2243,7 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
                         if (ret == _IS_WARNING)
                         {
                            /* inchi_ios_eprint(log_file, "Warning (CRU fold analysis failed) structure #%ld.%s%s%s%s\n",
-                                num_inp, SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));*/                            
+                                num_inp, SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));*/
                             ;
                         }
                         /* else */
@@ -2283,7 +2282,7 @@ int PreprocessPolymerCRUData(	struct tagINCHI_CLOCK    *ic,
 
 frame_shift:        ;
                     /* Prepare and perform frame shift related edits */
-                    if (ip->bFrameShiftScheme != FSS_NONE) 
+                    if (ip->bFrameShiftScheme != FSS_NONE)
                     {
                         /* Clear buffers */
                         if (sinchi_105p)
@@ -2314,7 +2313,7 @@ frame_shift:        ;
                         }
 
                         ret = OAD_Polymer_PrepareFrameShiftEdits( orig_inp_data, sinchi_105p, saux_105p, ed_fs);
-                     
+
                         if (ret == _IS_FATAL || ret == _IS_ERROR) /* djb-rwth: logical operator corrected */
                         {
                             ret = _IS_WARNING;
@@ -2386,7 +2385,7 @@ exit_function:
     OAD_StructureEdits_Clear(ed_fold);  /* Clear edits collection */
     OAD_StructureEdits_Clear(ed_fs);    /* Clear edits collection */
 
-    
+
     return ret;
 }
 
@@ -2395,17 +2394,17 @@ exit_function:
 void swap_atoms_xyz( ORIG_ATOM_DATA *orig_at_data, int ia1, int ia2 )
 {
     double x, y, z;
-    
+
     if (ia1 != ia2)
     {
-        x = orig_at_data->at[ia1].x; 
-        y = orig_at_data->at[ia1].y; 
+        x = orig_at_data->at[ia1].x;
+        y = orig_at_data->at[ia1].y;
         z = orig_at_data->at[ia1].z;
 
         orig_at_data->at[ia1].x = orig_at_data->at[ia2].x;
         orig_at_data->at[ia1].y = orig_at_data->at[ia2].y;
         orig_at_data->at[ia1].z = orig_at_data->at[ia2].z;
-        
+
         orig_at_data->at[ia2].x = x;
         orig_at_data->at[ia2].y = y;
         orig_at_data->at[ia2].z = z;
@@ -2418,10 +2417,10 @@ void swap_atoms_xyz( ORIG_ATOM_DATA *orig_at_data, int ia1, int ia2 )
 /****************************************************************************
  OAD_StructureEdits_Edit
 ****************************************************************************/
-int OAD_StructureEdits_Apply( STRUCT_DATA *sd, 
-                              INPUT_PARMS *ip, 
-                              ORIG_ATOM_DATA *orig_at_data, 
-                              OAD_StructureEdits *ed, 
+int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
+                              INPUT_PARMS *ip,
+                              ORIG_ATOM_DATA *orig_at_data,
+                              OAD_StructureEdits *ed,
                               int *ret)
 {
     int ok = 0, fail;
@@ -2469,7 +2468,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
             n_edits++;
         }
     }
-    
+
     /* Add bonds */
     if (n_new_bond)
     {
@@ -2488,7 +2487,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
             n_edits++;
         }
     }
-    
+
     /* Modify bonds */
     if (n_mod_bond)
     {
@@ -2551,7 +2550,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
         }
     }
 
-    
+
     /* Delete atoms */
     if (n_del_atom)
     {
@@ -2572,7 +2571,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
             goto exit_function;
         }
 
-        fail = mark_atoms_to_delete_or_renumber(orig_at_data, ed, at_renum); 
+        fail = mark_atoms_to_delete_or_renumber(orig_at_data, ed, at_renum);
         if (fail)
         {
             *ret = _IS_ERROR;
@@ -2594,20 +2593,20 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
             AT_NUMB nbr0[MAXVAL];
             U_CHAR btype0[MAXVAL];
             int m, macc, valen;
-            int new_num = at_renum[i];				
+            int new_num = at_renum[i];
             if (new_num == -1)
             {
                 /* Skip removed atom */
                 continue;
             }
 
-            /* Atom to keep; copy it */ 
+            /* Atom to keep; copy it */
             new_at0 = new_at + nacc;
             ++nacc;
             memcpy(new_at0, orig_at_data->at + i, sizeof(new_at[0]));
             /* Correct its own number(s) */
             new_at0->orig_at_number = new_num + 1;
-            
+
             /* Correct its nbr number(s) */
             valen = new_at0->valence;
             memcpy(nbr0, new_at0->neighbor, valen * sizeof(AT_NUMB));
@@ -2620,7 +2619,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
                 if (renum2 == num2)
                 {
                     /* keep old */
-                    new_at0->neighbor[macc++] = num2; 
+                    new_at0->neighbor[macc++] = num2;
                 }
                 else if (renum2 == -1)
                 {
@@ -2628,7 +2627,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
                     new_at0->chem_bonds_valence -= btype0[m];
                     new_at0->valence--;
                 }
-                else 
+                else
                 {
                     /* set renumbered */
                     new_at0->neighbor[macc++] = renum2;
@@ -2746,7 +2745,7 @@ int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
 
 
     } /* if (n_del_atom) */
-    
+
 
 exit_function:
     if (ibuf)
@@ -2759,7 +2758,7 @@ exit_function:
     }
     return n_edits;
 }
-                                
+
 
 /****************************************************************************
  Set each element of number to renum[element] or delete it if renum==(base -1)
@@ -2868,7 +2867,7 @@ int ProcessOneStructureExCore( struct tagINCHI_CLOCK *ic,
 
 
 /****************************************************************************
- Treat pseudoelement and polymers: parse, validate and set details 
+ Treat pseudoelement and polymers: parse, validate and set details
 ****************************************************************************/
 int ValidateAndPreparePolymerAndPseudoatoms( struct tagINCHI_CLOCK *ic,
                                              struct tagCANON_GLOBALS *CG,
@@ -2891,7 +2890,7 @@ int ValidateAndPreparePolymerAndPseudoatoms( struct tagINCHI_CLOCK *ic,
     int res = _IS_OKAY;
 
     int mind_pseudoelements = 0;
-    
+
     *mind_polymers = orig_inp_data && orig_inp_data->polymer && orig_inp_data->polymer->n > 0;
     *mind_polymers = *mind_polymers && orig_inp_data->valid_polymer &&
         (ip->nInputType == INPUT_MOLFILE || ip->nInputType == INPUT_SDFILE);
@@ -2923,8 +2922,8 @@ int ValidateAndPreparePolymerAndPseudoatoms( struct tagINCHI_CLOCK *ic,
             ip->bPolymers != POLYMERS_MODERN &&
             (ip->bFrameShiftScheme == FSS_STARS_CYCLED || ip->bFrameShiftScheme == FSS_STARS_CYCLED_SORTED))
         {
-            /*  Analyze and cyclize frame-shift eligible CRUs using InChI canonical numbers 
-                (do this only at older polymer treatment modes 1.05, 1.05+)					
+            /*  Analyze and cyclize frame-shift eligible CRUs using InChI canonical numbers
+                (do this only at older polymer treatment modes 1.05, 1.05+)
             */
             res = OAD_Polymer_CyclizeCloseableUnits( orig_inp_data,
                                                      ip->bPolymers,
@@ -2951,7 +2950,7 @@ exit_function:
 /****************************************************************************
  Get InChI and AuxInfo of totally unedited original structure.
  The intent is to preserve AuxInfo for the very original structure
- in order to keep a final ability to restore that structure. 
+ in order to keep a final ability to restore that structure.
 ****************************************************************************/
 int OAD_ProcessOneStructureNoEdits( struct tagINCHI_CLOCK    *ic,
                                     struct tagCANON_GLOBALS  *CG,
@@ -2970,7 +2969,7 @@ int OAD_ProcessOneStructureNoEdits( struct tagINCHI_CLOCK    *ic,
                                     INCHI_IOS_STRING         *strbuf,
                                     unsigned char            save_opt_bits,
                                     int                      *n_pzz,
-                                    char					 **sinchi, 
+                                    char					 **sinchi,
                                     char					 **saux)
 {
     size_t slen;
@@ -3013,7 +3012,7 @@ int OAD_ProcessOneStructureNoEdits( struct tagINCHI_CLOCK    *ic,
     {
         goto exit_function;
     }
-    
+
     *n_pzz = dup->orig_inp_data->polymer->n_pzz;
     /* Extract InChI */
     slen = dup->out_file->s.nUsedLength;
@@ -3150,9 +3149,9 @@ int mark_atoms_to_delete_or_renumber( ORIG_ATOM_DATA *orig_at_data,
     size_t *atnums = NULL; /* djb-rwth: needs to be size_t type */
     size_t max_atoms = orig_at_data->num_inp_atoms;
 
-    /* NB:	new/old ORIG_ATOM_DATA atom numbers are 0-based (==orig_number-1) 
+    /* NB:	new/old ORIG_ATOM_DATA atom numbers are 0-based (==orig_number-1)
             while those in ed->... are just 1-based orig_numbers */
-    
+
     for (i = 0; (size_t)i < max_atoms; i++)
     {
         at_renum[i] = i;
@@ -3219,7 +3218,7 @@ int mark_atoms_to_delete_or_renumber( ORIG_ATOM_DATA *orig_at_data,
     for (i = max_atoms - 1; i >= 0; i--)
     {
         int orig_num = i + 1;	/* NB: ed->del_atom->item contains orig# which are (OAD# + 1) */
-        if (is_in_the_ilist(ed->del_atom->item, orig_num, ed->del_atom->used)) 
+        if (is_in_the_ilist(ed->del_atom->item, orig_num, ed->del_atom->used))
         {
             /* mark as deleted atnum */
             at_renum[i] = -1;
@@ -3262,7 +3261,7 @@ int check_presence_of_the_encoded_substructure(ORIG_ATOM_DATA *oad)
     /* Place sub-structure filtering code below.
 
        Return 1 if structure matches some hard-coded pattern
-       
+
        In this example pattern is a presence of a pseudo atom.
     */
 
