@@ -175,7 +175,7 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         bReleaseVersion, plog);
 
 
-    const char* inchi_filename = "../../../INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
+    const char* inchi_filename = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
 
     FILE *file_inchi;
     file_inchi = fopen(inchi_filename, "w");
@@ -337,9 +337,9 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
     };
     // ../../../
     // /workspaces/InChI/
-    const char *path_fixtures = "../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
 
-    char tmpl[] = "../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
@@ -409,8 +409,8 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
 
     const char *filename_caffeine = "caffeine.mol";
 
-    const char *path_fixtures = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures";
-    char tmpl[] = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
@@ -471,8 +471,8 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
 
     const char *filename_2mols = "test_mols_2.sdf";
 
-    const char *path_fixtures = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures";
-    char tmpl[] = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
