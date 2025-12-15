@@ -35,6 +35,15 @@ char *read_inchi_from_file(const char *filename) {
         if (trimmed.rfind("InChI=", 0) == 0) {
             found_inchi = trimmed;
             break;
+        } else if (trimmed.find("InChI=", 0) != std::string::npos) {
+            size_t start_pos = trimmed.find("InChI=");
+            if(start_pos != 0) {
+                found_inchi = trimmed.substr(start_pos);
+            } else {
+                found_inchi = trimmed;
+            }
+
+            break;
         }
     }
     txt_in.close();
@@ -165,7 +174,13 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         szSdfDataValue, &ulDisplTime,
         bReleaseVersion, plog);
 
-    inchi_ios_init(pout, INCHI_IOS_TYPE_STRING, nullptr);
+
+    const char* inchi_filename = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
+
+    FILE *file_inchi;
+    file_inchi = fopen(inchi_filename, "w");
+
+    inchi_ios_init(pout, INCHI_IOS_TYPE_FILE, file_inchi); //nullptr INCHI_IOS_TYPE_STRING
     inchi_ios_init(plog, INCHI_IOS_TYPE_STRING, stdout);
     inchi_ios_init(pprb, INCHI_IOS_TYPE_STRING, nullptr);
 
@@ -195,23 +210,9 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     EXPECT_EQ(orig_at_data.num_inp_bonds, 17);
 
     CANON_GLOBALS CG = {};
-    // STRUCT_DATA* sd;
-    // INPUT_PARMS* ip;
-    // char* szTitle;
     PINChI2* pINChI[INCHI_NUM];
     PINChI_Aux2* pINChI_Aux[INCHI_NUM];
-    // INCHI_IOSTREAM* inp_file;
-    // INCHI_IOSTREAM* plog;
-    // INCHI_IOSTREAM* pout;
-    // INCHI_IOSTREAM* pprb;
-    // ORIG_ATOM_DATA* orig_inp_data;
     ORIG_ATOM_DATA prep_inp_data = {};
-    // long* num_inp;
-    // STRUCT_FPTRS* pStructPtrs;
-    // int* nRet;
-    // int have_err_in_GetOneStructure;
-    // long* num_err;
-    // int output_error_inchi;
     INCHI_IOS_STRING *strbuf = new INCHI_IOS_STRING;
     memset(strbuf, 0, sizeof(*strbuf));
     inchi_strbuf_init(strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
@@ -281,15 +282,25 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     EXPECT_EQ(ret, DO_NEXT_STEP);
 
-    char *inchi = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s1";
-    //ios->s.pStr
-    EXPECT_STREQ(inchi, pout->s.pStr);
+    fclose(file_inchi);
+
+    char *found_inchi = read_inchi_from_file(inchi_filename);
+
+    const char *inchi = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s1";
+
+    EXPECT_STREQ(inchi, found_inchi); //pout->s.pStr);
+
+    free(found_inchi);
+
+    remove(inchi_filename);
 
     FreeAllINChIArrays(pINChI, pINChI_Aux, sd->num_components);
 
+    inchi_strbuf_close(strbuf);
     inchi_ios_free_str(&input_stream);
     FreeOrigAtData(&orig_at_data);
     FreeOrigAtData(&prep_inp_data);
+    SetBitFree(&CG);
 
     for (int i = 0; i < MAX_NUM_PATHS; i++)
     {
@@ -306,6 +317,7 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     delete pout;
     delete pprb;
     delete num_inp;
+    delete strbuf;
 
 }
 
