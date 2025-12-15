@@ -18,6 +18,9 @@ jobs:
       - id: setup
         run: ./.devcontainer/post_create_commands.sh
 
+      - name: Fix file permissions
+        run: chmod -R +rw ${{ github.workspace }}
+
       - name: Run unit tests
         run: cd CMake_build/full_build/INCHI-1-TEST/tests/test_unit && ctest --output-on-failure
 
