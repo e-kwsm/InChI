@@ -210,8 +210,8 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     EXPECT_EQ(orig_at_data.num_inp_bonds, 17);
 
     CANON_GLOBALS CG = {};
-    PINChI2* pINChI[INCHI_NUM];
-    PINChI_Aux2* pINChI_Aux[INCHI_NUM];
+    PINChI2* pINChI[INCHI_NUM] = {};
+    PINChI_Aux2* pINChI_Aux[INCHI_NUM] = {};
     ORIG_ATOM_DATA prep_inp_data = {};
     INCHI_IOS_STRING *strbuf = new INCHI_IOS_STRING;
     memset(strbuf, 0, sizeof(*strbuf));
@@ -282,7 +282,9 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     EXPECT_EQ(ret, DO_NEXT_STEP);
 
-    fclose(file_inchi);
+    if (file_inchi != nullptr) {
+        fclose(file_inchi);
+    }
 
     char *found_inchi = read_inchi_from_file(inchi_filename);
 
