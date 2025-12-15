@@ -175,7 +175,7 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         bReleaseVersion, plog);
 
 
-    const char* inchi_filename = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
+    const char* inchi_filename = "../../../INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
 
     FILE *file_inchi;
     file_inchi = fopen(inchi_filename, "w");
