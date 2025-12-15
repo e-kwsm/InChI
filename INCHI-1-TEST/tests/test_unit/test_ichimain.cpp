@@ -335,10 +335,11 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
         "naloxon.mol",
         "caffeine.mol"
     };
+    // ../../../
+    // /workspaces/InChI/
+    const char *path_fixtures = "../../../INCHI-1-TEST/tests/test_unit/fixtures";
 
-    const char *path_fixtures = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures";
-
-    char tmpl[] = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    char tmpl[] = "../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
