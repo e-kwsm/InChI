@@ -115,27 +115,17 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    // int GetTheNextRecordOfInputFile( struct tagINCHI_CLOCK *ic,
-    //                              STRUCT_DATA *sd, INPUT_PARMS *ip,
-    //                              char *szTitle,
-    //                              INCHI_IOSTREAM *inp_file,
-    //                              INCHI_IOSTREAM *plog,
-    //                              INCHI_IOSTREAM *pout,
-    //                              INCHI_IOSTREAM *pprb,
-    //                              ORIG_ATOM_DATA *orig_inp_data,
-    //                              long *num_inp,
-    //                              STRUCT_FPTRS *pStructPtrs,
-    //                              int *nRet,
-    //                              int *have_err_in_GetOneStructure,
-    //                              long *num_err,
-    //                              int output_error_inchi );
-
     INCHI_CLOCK ic = {};
     memset(&ic, 0, sizeof(ic));
 
     STRUCT_DATA *sd = new STRUCT_DATA;
     // sd->ulStructTime = 0;
     INPUT_PARMS *ip = new INPUT_PARMS;
+
+    memset(ip, 0, sizeof(*ip));
+    ip->last_struct_number = 1;
+    ip->nInputType = INPUT_MOLFILE;
+    ip->bINChIOutputOptions = INCHI_OUT_PLAIN_TEXT;
 
     char *szTitle;
     INCHI_IOSTREAM *inp_file;
@@ -152,18 +142,8 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     long num_err = 0;
     int output_error_inchi;
 
-
-    memset(ip, 0, sizeof(*ip));
-    ip->last_struct_number = 1;
-    ip->nInputType = INPUT_MOLFILE;
-    ip->bINChIOutputOptions = INCHI_OUT_PLAIN_TEXT;
-    // ip->bINChIOutputOptions2 = INCHI_OUT_PLAIN_TEXT;
-    // ip->nMode = REQ_MODE_TAUT; // REQ_MODE_BASIC;
-    // ip->bTautFlags |= (TG_FLAG_DISCONNECT_COORD | TG_FLAG_RECONNECT_COORD);
-    // ip->nMode |= (REQ_MODE_BASIC | REQ_MODE_TAUT | REQ_MODE_STEREO | REQ_MODE_ISO_STEREO | REQ_MODE_ISO);
-
     int bReleaseVersion = bRELEASE_VERSION;
-    unsigned long  ulDisplTime = 0;    /*  infinite, milliseconds */
+    unsigned long  ulDisplTime = 0;
     unsigned long  ulTotalProcessingTime = 0;
 
     int argc = 0;
@@ -179,11 +159,10 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     file_inchi = fopen(inchi_filename, "w");
     EXPECT_NE(file_inchi, nullptr);
 
-    inchi_ios_init(pout, INCHI_IOS_TYPE_FILE, file_inchi); //nullptr INCHI_IOS_TYPE_STRING
+    inchi_ios_init(pout, INCHI_IOS_TYPE_FILE, file_inchi);
     inchi_ios_init(plog, INCHI_IOS_TYPE_STRING, stdout);
     inchi_ios_init(pprb, INCHI_IOS_TYPE_STRING, nullptr);
 
-    // PrintInputParms(plog, ip);
     inchi_ios_flush2(plog, stderr);
 
     int ret = GetTheNextRecordOfInputFile(
@@ -334,8 +313,7 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
         "naloxon.mol",
         "caffeine.mol"
     };
-    // ../../../
-    // /workspaces/InChI/
+
     const char *path_fixtures = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures";
 
     char tmpl[] = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
@@ -373,7 +351,6 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
 
     int ret = ProcessMultipleInputFiles(argc, argv);
 
-    // Assert the expected result
     ASSERT_EQ(ret, 0);
 
     for (int i = 0; i < expected_inchis.size(); i++) {
@@ -382,8 +359,6 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
         ASSERT_STREQ(inchi, expected_inchis[i].c_str());
         free(inchi);
     }
-
-    // Clean up
 
     for (auto p : dist_paths) {
 
@@ -432,18 +407,13 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
 
     int result = ProcessSingleInputFile(argc, argv);
 
-    // Assert the expected result
     EXPECT_EQ(result, 0);
-
-    free(inchi_filename);
-    free(input_file);
 
     std::string out_txt = dst_path + ".txt";
     std::string out_log = dst_path + ".log";
     std::string out_prb = dst_path + ".prb";
 
     struct stat st;
-    // check existence and non-zero size
     ASSERT_EQ(stat(out_txt.c_str(), &st), 0);
     EXPECT_GT(st.st_size, 0);
     ASSERT_EQ(stat(out_log.c_str(), &st), 0);
@@ -458,6 +428,8 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
     EXPECT_EQ(found_inchi, expected_inchi);
 
     // cleanup
+    free(inchi_filename);
+    free(input_file);
     free(found_inchi);
     remove(out_txt.c_str());
     remove(out_log.c_str());
@@ -492,27 +464,20 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
     char* argv[] = { inchi_filename, input_file };
 
     // int ProcessSingleInputFile(int argc, char* argv[])
-
     int result = ProcessSingleInputFile(argc, argv);
 
-    // Assert the expected result
     EXPECT_EQ(result, 0);
-
-    free(inchi_filename);
-    free(input_file);
 
     std::string out_txt = dst_path + ".txt";
     std::string out_log = dst_path + ".log";
     std::string out_prb = dst_path + ".prb";
 
     struct stat st;
-    // check existence and non-zero size
     ASSERT_EQ(stat(out_txt.c_str(), &st), 0);
     EXPECT_GT(st.st_size, 0);
     ASSERT_EQ(stat(out_log.c_str(), &st), 0);
     EXPECT_GT(st.st_size, 0);
     ASSERT_EQ(stat(out_prb.c_str(), &st), 0);
-    // EXPECT_GT(st.st_size, 0);
     EXPECT_EQ(st.st_size, 0);
 
     std::ifstream txt_in(out_txt);
@@ -520,7 +485,6 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
     std::string line;
     std::vector<std::string> found_inchis;
     while (std::getline(txt_in, line)) {
-        // trim leading/trailing whitespace
         size_t start = line.find_first_not_of(" \t\r\n");
         if (start == std::string::npos) continue;
         size_t end = line.find_last_not_of(" \t\r\n");
@@ -542,6 +506,8 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
     }
 
     // cleanup
+    free(inchi_filename);
+    free(input_file);
     remove(out_txt.c_str());
     remove(out_log.c_str());
     remove(out_prb.c_str());
@@ -649,7 +615,6 @@ TEST(ichimain_testing, test_GetTheNextRecordOfInputFile)
     long *num_err;
     int output_error_inchi;
 
-
     memset(ip, 0, sizeof(*ip));
     ip->last_struct_number = 1;
     ip->nInputType = INPUT_MOLFILE;
@@ -658,7 +623,6 @@ TEST(ichimain_testing, test_GetTheNextRecordOfInputFile)
     inchi_ios_init(plog, INCHI_IOS_TYPE_STRING, stdout);
     inchi_ios_init(pprb, INCHI_IOS_TYPE_STRING, nullptr);
 
-    // PrintInputParms(plog, ip);
     inchi_ios_flush2(plog, stderr);
 
     int ret = GetTheNextRecordOfInputFile(
