@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fstream>
+#include <filesystem>
 #include <vector>
 
 extern "C"
@@ -52,7 +53,6 @@ char *read_inchi_from_file(const char *filename) {
 }
 
 TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
-
 
     INCHI_IOSTREAM input_stream;
 
@@ -174,11 +174,10 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         szSdfDataValue, &ulDisplTime,
         bReleaseVersion, plog);
 
-
-    const char* inchi_filename = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
-
-    FILE *file_inchi;
+    const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/output.txt";
+    FILE *file_inchi = nullptr;
     file_inchi = fopen(inchi_filename, "w");
+    EXPECT_NE(file_inchi, nullptr);
 
     inchi_ios_init(pout, INCHI_IOS_TYPE_FILE, file_inchi); //nullptr INCHI_IOS_TYPE_STRING
     inchi_ios_init(plog, INCHI_IOS_TYPE_STRING, stdout);
@@ -205,7 +204,6 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
         output_error_inchi);
 
     EXPECT_EQ(ret, DO_NEXT_STEP);
-
     EXPECT_EQ(orig_at_data.num_inp_atoms, 18);
     EXPECT_EQ(orig_at_data.num_inp_bonds, 17);
 
@@ -224,7 +222,6 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
     int silent;
 
     set_line_separators(ip->bINChIOutputOptions, &pLF, &pTAB);
-
 
     // int CalcAndPrintINCHIAndINCHIKEY(struct tagINCHI_CLOCK* ic,
     //     CANON_GLOBALS* CG,
@@ -288,6 +285,8 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     char *found_inchi = read_inchi_from_file(inchi_filename);
 
+    EXPECT_NE(found_inchi, nullptr);
+
     const char *inchi = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s1";
 
     EXPECT_STREQ(inchi, found_inchi); //pout->s.pStr);
@@ -312,9 +311,9 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
             ip->path[i] = NULL;
         }
     }
+
     delete ip;
     delete sd;
-
     delete plog;
     delete pout;
     delete pprb;
@@ -337,9 +336,9 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
     };
     // ../../../
     // /workspaces/InChI/
-    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    const char *path_fixtures = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures";
 
-    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    char tmpl[] = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
@@ -409,8 +408,8 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
 
     const char *filename_caffeine = "caffeine.mol";
 
-    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
-    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    const char *path_fixtures = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    char tmpl[] = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
@@ -466,13 +465,14 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
     remove(dst_path.c_str());
     rmdir(tmpd);
 }
+
 TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
 {
 
     const char *filename_2mols = "test_mols_2.sdf";
 
-    const char *path_fixtures = "../../../../INCHI-1-TEST/tests/test_unit/fixtures";
-    char tmpl[] = "../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
+    const char *path_fixtures = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures";
+    char tmpl[] = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
     ASSERT_NE(tmpd, nullptr);
 
