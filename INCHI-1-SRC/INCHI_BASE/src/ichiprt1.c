@@ -150,11 +150,11 @@ static int OutputINCHI_PolymerLayer( CANON_GLOBALS *pCG, INCHI_IOSTREAM *out_fil
                                      INCHI_OUT_CTL *io, char *pLF, char *pTAB );
 static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
                                                 int bPolymers,
-                                                int total_star_atoms, 
+                                                int total_star_atoms,
                                                 int *n_used_stars,
-                                                OAD_AtProps *aprops, 
+                                                OAD_AtProps *aprops,
                                                 int *cano_nums,
-                                                ORIG_ATOM_DATA *orig_inp_data, 
+                                                ORIG_ATOM_DATA *orig_inp_data,
                                                 ORIG_STRUCT *pOrigStruct,
                                                 INCHI_IOS_STRING *strbuf );
 static int OutputAUXINFO_HeaderAndNormalization_type( CANON_GLOBALS *pCG,
@@ -1160,7 +1160,7 @@ int OutputINChI1( CANON_GLOBALS *pCG,
             io.n_pzz = orig_inp_data->polymer->n_pzz;
         }
     }
-    
+
 
     io.bPolymers = ip->bPolymers;
 
@@ -2640,7 +2640,7 @@ int WriteOrigBonds( CANON_GLOBALS *pCG,
             num_trans = 0; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
             nNeighOrder[0] = 0;
         }
-        for (kk = 0; kk < at[j].valence; kk++) 
+        for (kk = 0; kk < at[j].valence; kk++)
         {
             k = nNeighOrder[kk];
             j2 = at[j].neighbor[k];
@@ -3121,7 +3121,8 @@ void set_line_separators( int bINChIOutputOptions, char **pLF, char **pTAB )
         int  bPlainTabbedOutput = 0 != ( bINChIOutputOptions & INCHI_OUT_TABBED_OUTPUT ) &&
             bPlainText && !bPlainTextCommnts;
 
-        *pTAB = bPlainTabbedOutput ? "\t" : "\n";
+        const char* tab = bPlainTabbedOutput ? "\t" : "\n";
+        strcpy(*pTAB, tab);
     }
 #else
     *pTAB = "\n";
@@ -3908,7 +3909,7 @@ static int OutputINCHI_PolymerLayer( CANON_GLOBALS *pCG,
     nat = orig_inp_data->num_inp_atoms;
     num_inp_bonds = orig_inp_data->num_inp_bonds;
 
-    
+
     if (pOrigStruct && !pOrigStruct->polymer)
     {
         return 0;
@@ -4145,7 +4146,7 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
         a2 = u->blist[1];
         a3 = u->blist[2];
         a4 = u->blist[3];
-        
+
         if (is_in_the_ilist( u->alist, a1, u->na ))
         {
             tmp = a2;
@@ -4172,7 +4173,7 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
             /* The first printed is the crossing bond pointing to more senior CRU end ("head")    */
             swap = (OAD_Polymer_IsFirstAtomRankLower(a2, a4, aprops) == 1);
         }
-        
+
         if (swap)
         {
             inchi_strbuf_printf( strbuf, "(%-d-%-d,%-d-%-d)", a3, a4, a1, a2 );
@@ -4288,8 +4289,8 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
                         here
                         at1, at2 is the most senior bond, and at1 is more senior than at2
                         all other pairs at3,at4,  at5,at6, ... are sorted just in increasing
-                        order of first number in pair, then second one, e.g.: at3<at4; at3<=at5 
-                        (and if at3==at5 then at4<at6) 
+                        order of first number in pair, then second one, e.g.: at3<at4; at3<=at5
+                        (and if at3==at5 then at4<at6)
                     */
 
                     if (p->frame_shift_scheme != FSS_NONE && u->nbkbonds >= 1 && u->cap1 >= 1 && u->cap2 >= 1)
@@ -5046,7 +5047,7 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
         eol_was_consumed = 0, pre_eol = 0,
         nonprt_sym = 0, nonprt_prev = 0;
 
-    if (n_zy > 0) 
+    if (n_zy > 0)
     {
         /* We have some placeholder pseudo atoms which should not be removed below (if anyway they are allowed) */
         if (n_pzz == 0)
@@ -5131,7 +5132,7 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
                 AT_NUMB ia = (AT_NUMB) inchi_strtol(p, &q, 10); /* make compiler happy: */ /* djb-rwth: removing redundant code; ignoring LLVM warning: variable used to store function return value */
                 if (*q != '-')
                 {
-                    skip = 1; 
+                    skip = 1;
                 }
             }
         }
@@ -5283,7 +5284,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
     char prev = '/';
 
     /*
-        format is 
+        format is
         [sequence of] [.[int_mult[Zz[int_index]]]]
     */
 
@@ -5291,8 +5292,8 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
     {
         return 0;
     }
-    
-    p = s; 
+
+    p = s;
     while (*p)
     /*for (p = s ; *p; p++)*/
     {
@@ -5317,7 +5318,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
             {
                 mult = (int)inchi_strtol(p, &q, 10);
                 p = q;
-                prev = *q--; 
+                prev = *q--;
                 continue;
             }
             else
@@ -5326,7 +5327,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
             }
             if (!mult)
             {
-                break; 
+                break;
             }
         }
         else if (*p== pseudo[1] && prev== pseudo[0])
@@ -5446,7 +5447,7 @@ int MergeZzInHillFormula(INCHI_IOS_STRING *strbuf)
     {
         inchi_free(scopy); /* djb-rwth: avoiding memory leak */
         return -1; /* failed */
-    }    
+    }
     memcpy(scopy, strbuf->pStr, strbuf->nAllocatedLength);
     stmp = (char *)inchi_calloc((long long)strbuf->nAllocatedLength + 1, sizeof(char)); /* djb-rwth: cast operator added */
     if (!stmp)
@@ -5458,7 +5459,7 @@ int MergeZzInHillFormula(INCHI_IOS_STRING *strbuf)
     inchi_strbuf_reset(strbuf);
     p0 = scopy;
     p = p0;
-    do 
+    do
     {
         /* djb-rwth: removing redundant code */
         pend = strchr(p, '.');

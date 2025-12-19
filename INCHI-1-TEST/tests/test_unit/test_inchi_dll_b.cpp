@@ -88,5 +88,7 @@ TEST(inchi_dll_b_testing, test_MakeINCHIFromMolfileText)
     // Works with other V3000 molfile.
     ASSERT_EQ(MakeINCHIFromMolfileText(ethanol, options, poutput), 0);
 
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
     FreeINCHI(poutput);
 }
