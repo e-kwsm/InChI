@@ -3121,8 +3121,7 @@ void set_line_separators( int bINChIOutputOptions, char **pLF, char **pTAB )
         int  bPlainTabbedOutput = 0 != ( bINChIOutputOptions & INCHI_OUT_TABBED_OUTPUT ) &&
             bPlainText && !bPlainTextCommnts;
 
-        const char* tab = bPlainTabbedOutput ? "\t" : "\n";
-        strcpy(*pTAB, tab);
+        *pTAB = bPlainTabbedOutput ? (char*)"\t" : (char*)"\n";
     }
 #else
     *pTAB = "\n";
