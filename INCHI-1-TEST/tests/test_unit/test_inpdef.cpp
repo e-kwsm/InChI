@@ -7,7 +7,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inpdef.h"
 }
 
-TEST(inpdef_testing, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
+TEST(test_inpdef, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
 {
 
     INCHI_IOSTREAM input_stream;
