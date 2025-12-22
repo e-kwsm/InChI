@@ -3359,11 +3359,9 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
                              char             *pTAB )
 {
 
-    {
-        int i;
-        i = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-        /* djb-rwth: removing redundant code */
-    }
+    // int i;
+    // i = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
+    // /* djb-rwth: removing redundant code */
 
     if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
          INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
@@ -3432,7 +3430,10 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
         }
         else
         {
-            if (io->bPlainTextTags == 1) inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            }
         }
 
         /* bStereoAbsInverted[io->iCurTautMode]  */
@@ -3490,7 +3491,10 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
     }
     else
     {
-        if (io->bPlainTextTags == 1) inchi_ios_print_nodisplay( out_file, "////" ); /* sp3, sp2, abs-inv, stereo.type */
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "////" ); /* sp3, sp2, abs-inv, stereo.type */
+        }
     }
 
     return 0;

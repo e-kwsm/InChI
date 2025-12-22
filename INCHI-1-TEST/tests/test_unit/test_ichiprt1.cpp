@@ -8,8 +8,6 @@
 
 extern "C"
 {
-// #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichitime.h"
-// #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichicant.h"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichi_io.h"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichiprt1.c"
 }
@@ -47,6 +45,114 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
     // Clean up
     inchi_strbuf_close(&strbuf);
 
+}
+
+TEST(test_ichiprt1, OutputINCHI_StereoLayer_s1)
+{
+    // Prepare minimal input structures
+    CANON_GLOBALS cg = {0};
+    INCHI_IOSTREAM out_file = {0};
+    INCHI_IOS_STRING strbuf = {0};
+    INCHI_OUT_CTL io = {0};
+
+    // Set up io to trigger the /s (stereo type) segment
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
+
+
+    io.nCurINChISegment = 0;
+    io.iCurTautMode = 0;
+    io.bPlainTextTags = 1;
+    io.bRelativeStereo[0] = 0;
+    io.bRacemicStereo[0] = 0;
+    io.bAlways = 0;
+    io.nTag = 2; // plain text
+    io.bTag1 = IL_STER;
+    io.bTag2 = IL_STER | IL_TYPS;
+
+    // Allocate strbuf
+    char buf[16] = {0};
+    strbuf.pStr = buf;
+    strbuf.nAllocatedLength = sizeof(buf);
+    strbuf.nUsedLength = 0;
+
+    // Call function
+    int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
+
+    // The stereo type should be "s1" (plain tag + abs)
+    EXPECT_EQ(std::string(strbuf.pStr), "/s1");
+    EXPECT_EQ(ret, 0);
+}
+
+TEST(test_ichiprt1, OutputINCHI_StereoLayer_s2)
+{
+    // Prepare minimal input structures
+    CANON_GLOBALS cg = {0};
+    INCHI_IOSTREAM out_file = {0};
+    INCHI_IOS_STRING strbuf = {0};
+    INCHI_OUT_CTL io = {0};
+
+    // Set up io to trigger the /s (stereo type) segment
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
+
+
+    io.nCurINChISegment = 0;
+    io.iCurTautMode = 0;
+    io.bPlainTextTags = 1;
+    io.bRelativeStereo[0] = 1;
+    io.bRacemicStereo[0] = 0;
+    io.bAlways = 0;
+    io.nTag = 2; // plain text
+    io.bTag1 = IL_STER;
+    io.bTag2 = IL_STER | IL_TYPS;
+
+    // Allocate strbuf
+    char buf[16] = {0};
+    strbuf.pStr = buf;
+    strbuf.nAllocatedLength = sizeof(buf);
+    strbuf.nUsedLength = 0;
+
+    // Call function
+    int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
+
+    // The stereo type should be "s1" (plain tag + abs)
+    EXPECT_EQ(std::string(strbuf.pStr), "/s2");
+    EXPECT_EQ(ret, 0);
+}
+
+TEST(test_ichiprt1, OutputINCHI_StereoLayer_s3)
+{
+    // Prepare minimal input structures
+    CANON_GLOBALS cg = {0};
+    INCHI_IOSTREAM out_file = {0};
+    INCHI_IOS_STRING strbuf = {0};
+    INCHI_OUT_CTL io = {0};
+
+    // Set up io to trigger the /s (stereo type) segment
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
+
+
+    io.nCurINChISegment = 0;
+    io.iCurTautMode = 0;
+    io.bPlainTextTags = 1;
+    io.bRelativeStereo[0] = 0;
+    io.bRacemicStereo[0] = 1;
+    io.bAlways = 0;
+    io.nTag = 2; // plain text
+    io.bTag1 = IL_STER;
+    io.bTag2 = IL_STER | IL_TYPS;
+
+    // Allocate strbuf
+    char buf[16] = {0};
+    strbuf.pStr = buf;
+    strbuf.nAllocatedLength = sizeof(buf);
+    strbuf.nUsedLength = 0;
+
+    // Call function
+    int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
+
+    // The stereo type should be "s1" (plain tag + abs)
+    EXPECT_EQ(std::string(strbuf.pStr), "/s3");
+    EXPECT_EQ(ret, 0);
 }
 
 TEST(test_ichiprt1, test_set_line_separators)
