@@ -53,4 +53,6 @@ TEST(inchi_dll_b_testing, test_MakeINCHIFromMolfileText)
 
     ASSERT_EQ(MakeINCHIFromMolfileText(ferrocene, options, poutput), 1);
     ASSERT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
 }
