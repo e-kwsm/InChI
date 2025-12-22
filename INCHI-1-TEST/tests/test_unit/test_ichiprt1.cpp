@@ -15,7 +15,7 @@ extern "C"
 }
 
 
-TEST(ichiprt1_testing, test_OutputINCHI_StereoLayer)
+TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
 {
 
     // Prepare minimal dummy arguments
@@ -49,7 +49,7 @@ TEST(ichiprt1_testing, test_OutputINCHI_StereoLayer)
 
 }
 
-TEST(ichiprt1_testing, test_set_line_separators)
+TEST(test_ichiprt1, test_set_line_separators)
 {
 
     // void set_line_separators( int bINChIOutputOptions, char **pLF, char **pTAB )
