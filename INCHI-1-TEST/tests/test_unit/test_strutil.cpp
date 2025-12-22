@@ -5,7 +5,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/strutil.h"
 }
 
-TEST(strutil_testing, test_ExtractConnectedComponent)
+TEST(test_strutil, test_ExtractConnectedComponent)
 {
 
     int num_atoms = 3;
@@ -27,7 +27,7 @@ TEST(strutil_testing, test_ExtractConnectedComponent)
     FreeInpAtom(&cmp_mol);
 }
 
-TEST(strutil_testing, test_SetConnectedComponentNumber)
+TEST(test_strutil, test_SetConnectedComponentNumber)
 {
 
     int num_atoms = 1;
@@ -44,7 +44,7 @@ TEST(strutil_testing, test_SetConnectedComponentNumber)
     FreeInpAtom(&new_mol);
 }
 
-TEST(strutil_testing, test_UnMarkRingSystemsInp)
+TEST(test_strutil, test_UnMarkRingSystemsInp)
 {
 
     int num_atoms = 5;
@@ -65,7 +65,7 @@ TEST(strutil_testing, test_UnMarkRingSystemsInp)
     FreeInpAtom(&new_mol);
 }
 
-TEST(strutil_testing, test_CreateAndFreeInpAtom)
+TEST(test_strutil, test_CreateAndFreeInpAtom)
 {
 
     int num_atoms = 10;
@@ -96,7 +96,7 @@ TEST(strutil_testing, test_CreateAndFreeInpAtom)
     EXPECT_EQ(new_mol2, nullptr);
 }
 
-TEST(strutil_testing, test_CreateAndFreeInpAtomData)
+TEST(test_strutil, test_CreateAndFreeInpAtomData)
 {
 
     int num_atoms = 10;

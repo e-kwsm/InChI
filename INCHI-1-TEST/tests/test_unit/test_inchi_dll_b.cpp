@@ -5,7 +5,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inchi_api.h"
 }
 
-TEST(inchi_dll_b_testing, test_MakeINCHIFromMolfileText)
+TEST(test_inchi_dll_b, test_MakeINCHIFromMolfileText)
 {
     const char *ferrocene =
         "Ferrocene\n"

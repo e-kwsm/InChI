@@ -5,7 +5,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/util.h"
 }
 
-TEST(util_testing, test_get_chemical_symbols)
+TEST(test_util, test_get_chemical_symbols)
 {
 
     char szElement[4];
@@ -30,7 +30,7 @@ TEST(util_testing, test_get_chemical_symbols)
     EXPECT_STREQ(szElement, "??");
 }
 
-TEST(util_testing, test_get_element_or_pseudoelement_symbol)
+TEST(test_util, test_get_element_or_pseudoelement_symbol)
 {
 
     char szElement[4];
@@ -53,7 +53,7 @@ TEST(util_testing, test_get_element_or_pseudoelement_symbol)
     EXPECT_STREQ(szElement, "??");
 }
 
-TEST(util_testing, test_get_periodic_table_number)
+TEST(test_util, test_get_periodic_table_number)
 {
 
     char szElement[4];
@@ -69,7 +69,7 @@ TEST(util_testing, test_get_periodic_table_number)
     EXPECT_EQ(get_periodic_table_number("Zz"), 120);
 }
 
-TEST(util_testing, test_if_skip_add_H)
+TEST(test_util, test_if_skip_add_H)
 {
 
     EXPECT_EQ(if_skip_add_H(-1), 0);
@@ -80,7 +80,7 @@ TEST(util_testing, test_if_skip_add_H)
     // EXPECT_EQ(if_skip_add_H(300), 0); --> SEG FAULT
 }
 
-TEST(util_testing, test_get_el_valence)
+TEST(test_util, test_get_el_valence)
 {
     // nPeriodicNum, charge, val_num
     EXPECT_EQ(get_el_valence(0, -3, 0), 0);
@@ -98,7 +98,7 @@ TEST(util_testing, test_get_el_valence)
     EXPECT_EQ(get_el_valence(82, -2, 2), 6);
 }
 
-TEST(util_testing, test_get_atomic_mass)
+TEST(test_util, test_get_atomic_mass)
 {
     EXPECT_EQ(get_atomic_mass(""), 0);
     EXPECT_EQ(get_atomic_mass(" "), 0);
@@ -119,7 +119,7 @@ TEST(util_testing, test_get_atomic_mass)
     EXPECT_EQ(get_atomic_mass("Pb"), 207);
 }
 
-TEST(util_testing, test_get_atomic_mass_from_elnum)
+TEST(test_util, test_get_atomic_mass_from_elnum)
 {
     EXPECT_EQ(get_atomic_mass_from_elnum(-1), 0);
     EXPECT_EQ(get_atomic_mass_from_elnum(0), 0);
@@ -140,7 +140,7 @@ TEST(util_testing, test_get_atomic_mass_from_elnum)
     EXPECT_EQ(get_atomic_mass_from_elnum(23423423), 0);
 }
 
-TEST(util_testing, test_get_el_type)
+TEST(test_util, test_get_el_type)
 {
     EXPECT_EQ(get_el_type(-1), 0);
     EXPECT_EQ(get_el_type(0), 0);
@@ -163,7 +163,7 @@ TEST(util_testing, test_get_el_type)
     // EXPECT_EQ(get_el_type(23423423), 0); --> seg fault
 }
 
-TEST(util_testing, test_is_el_a_metal)
+TEST(test_util, test_is_el_a_metal)
 {
     EXPECT_EQ(is_el_a_metal(-1), false);
     EXPECT_EQ(is_el_a_metal(0), false);
@@ -187,7 +187,7 @@ TEST(util_testing, test_is_el_a_metal)
 // ---------------------------
 
 // lrtrim
-TEST(util_testing, test_lrtrim)
+TEST(test_util, test_lrtrim)
 {
 
     char test_string1[7] = " InChI";
@@ -209,7 +209,7 @@ TEST(util_testing, test_lrtrim)
 // ---------------------------
 
 // extract_H_atoms( char *elname, S_CHAR num_iso_H[] )
-TEST(util_testing, test_extract_H_atoms)
+TEST(test_util, test_extract_H_atoms)
 {
     S_CHAR num_iso_H[NUM_H_ISOTOPES] = {0};
 
@@ -247,7 +247,7 @@ TEST(util_testing, test_extract_H_atoms)
     EXPECT_EQ(extract_H_atoms(elname, num_iso_H), 0);
 }
 
-TEST(util_testing, test_get_num_H)
+TEST(test_util, test_get_num_H)
 {
     // const char *elname, int inp_num_H, S_CHAR *num_iso_H, int charge, int radical,
     // int chem_bonds_valence, int atom_input_valence, int bAliased, int bDoNotAddH, int bHasMetalNeighbor
@@ -257,7 +257,7 @@ TEST(util_testing, test_get_num_H)
     EXPECT_EQ(get_num_H("C", 0, num_iso_H, 0, 0, 0, 0, 0, 0, 0), 4);
 }
 
-TEST(util_testing, test_get_unusual_el_valence)
+TEST(test_util, test_get_unusual_el_valence)
 {
     EXPECT_EQ(get_unusual_el_valence(0, 0, 0, 0, 0, 0), 0);
     EXPECT_EQ(get_unusual_el_valence(6, 0, 0, 4, 0, 0), 0);
@@ -267,7 +267,7 @@ TEST(util_testing, test_get_unusual_el_valence)
     EXPECT_EQ(get_unusual_el_valence(82, -2, 2, 6, 3, 3), 9);
 }
 
-TEST(util_testing, test_detect_unusual_el_valence)
+TEST(test_util, test_detect_unusual_el_valence)
 {
     // nPeriodicNum, charge, radical, bonds_valence, num_H, num_bonds
     EXPECT_EQ(detect_unusual_el_valence(0, 0, 0, 0, 0, 0), 0);
@@ -278,7 +278,7 @@ TEST(util_testing, test_detect_unusual_el_valence)
     EXPECT_EQ(detect_unusual_el_valence(82, -2, 2, 6, 3, 3), 9);
 }
 
-TEST(util_testing, test_normalize_string)
+TEST(test_util, test_normalize_string)
 {
     char test_string1[7] = " InChI";
     EXPECT_EQ(normalize_string(test_string1), 5);
@@ -297,7 +297,7 @@ TEST(util_testing, test_normalize_string)
     EXPECT_STREQ(test_string4, "sdfds sfsfd ew");
 }
 
-TEST(util_testing, test_read_upto_delim)
+TEST(test_util, test_read_upto_delim)
 {
     // read_upto_delim(char **pstring, char *field, int maxlen, char *delims)
 
@@ -349,7 +349,7 @@ TEST(util_testing, test_read_upto_delim)
     EXPECT_STREQ(test_string6_inp, "field1,field2,field3");
 }
 
-TEST(util_testing, test_is_matching_any_delim)
+TEST(test_util, test_is_matching_any_delim)
 {
     char delims1[] = "abc";
 
@@ -366,7 +366,7 @@ TEST(util_testing, test_is_matching_any_delim)
     EXPECT_FALSE(is_matching_any_delim('a', delims2));
 }
 
-TEST(util_testing, test_dotify_non_printable_chars)
+TEST(test_util, test_dotify_non_printable_chars)
 {
     // dotify_non_printable_chars(char *line)
     char test_string1[] = "Hello\x01World";
@@ -382,7 +382,7 @@ TEST(util_testing, test_dotify_non_printable_chars)
     EXPECT_STREQ(test_string3, "NoChange");
 }
 
-TEST(util_testing, test_remove_trailing_spaces)
+TEST(test_util, test_remove_trailing_spaces)
 {
     // remove_trailing_spaces(char *p)
     char test_string1[] = "Hello World   ";
@@ -394,7 +394,7 @@ TEST(util_testing, test_remove_trailing_spaces)
     EXPECT_STREQ(test_string3, "NoTrailingSpaces");
 }
 
-TEST(util_testing, test_remove_one_lf)
+TEST(test_util, test_remove_one_lf)
 {
     // remove_one_lf(char *p)
     char test_string1[] = "Hello World\n";
@@ -422,7 +422,7 @@ TEST(util_testing, test_remove_one_lf)
     EXPECT_STREQ(test_string6, "");
 }
 
-TEST(util_testing, test_mystrncpy)
+TEST(test_util, test_mystrncpy)
 {
     // mystrncpy(char *target, const char *source, unsigned maxlen)
     char target[20];
@@ -440,7 +440,7 @@ TEST(util_testing, test_mystrncpy)
     EXPECT_EQ(mystrncpy(NULL, source, 10), 0); // target is NULL
 }
 
-TEST(util_testing, test_inchi_memicmp)
+TEST(test_util, test_inchi_memicmp)
 {
 
     // inchi_memicmp(const void *p1, const void *p2, size_t length)
@@ -471,7 +471,7 @@ TEST(util_testing, test_inchi_memicmp)
     EXPECT_TRUE(inchi_memicmp(str9, str10, 20) > 0);
 }
 
-TEST(util_testing, test_inchi_stricmp)
+TEST(test_util, test_inchi_stricmp)
 {
 
     // inchi_stricmp(const char *s1, const char *s2)
@@ -485,7 +485,7 @@ TEST(util_testing, test_inchi_stricmp)
     EXPECT_TRUE(inchi_stricmp("123", "12455454") < 0);
 }
 
-TEST(util_testing, test_inchi_strnset)
+TEST(test_util, test_inchi_strnset)
 {
 
     // char *inchi__strnset(char *s, int val, size_t length)
@@ -499,7 +499,7 @@ TEST(util_testing, test_inchi_strnset)
     EXPECT_STREQ(inchi__strnset(test_string3, 'Z', 0), "NoChange");
 }
 
-TEST(util_testing, test_inchi_strdup)
+TEST(test_util, test_inchi_strdup)
 {
 
     // char *inchi__strdup(const char *string)
@@ -512,7 +512,7 @@ TEST(util_testing, test_inchi_strdup)
     free(dup2);
 }
 
-TEST(util_testing, test_inchi_strtol)
+TEST(test_util, test_inchi_strtol)
 {
 
     // long inchi_strtol(const char *str, const char **p, int base)
@@ -525,7 +525,7 @@ TEST(util_testing, test_inchi_strtol)
     EXPECT_EQ(result2, 0);
 }
 
-TEST(util_testing, test_inchi_strtod)
+TEST(test_util, test_inchi_strtod)
 {
 
     // double inchi_strtod(const char *str, const char **p)
@@ -539,7 +539,7 @@ TEST(util_testing, test_inchi_strtod)
     EXPECT_EQ(*endptr, 'a');
 }
 
-TEST(util_testing, test_is_in_the_list)
+TEST(test_util, test_is_in_the_list)
 {
 
     // AT_NUMB *is_in_the_list(AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen)
@@ -559,7 +559,7 @@ TEST(util_testing, test_is_in_the_list)
     EXPECT_FALSE(is_in_the_list(pathAtom3, nNextAtom3, nPathLen3));
 }
 
-TEST(util_testing, test_is_in_the_ilist)
+TEST(test_util, test_is_in_the_ilist)
 {
 
     // int *is_in_the_ilist(int *pathAtom, int nNextAtom, int nPathLen)
@@ -580,7 +580,7 @@ TEST(util_testing, test_is_in_the_ilist)
     EXPECT_FALSE(is_in_the_ilist(pathAtom3, nNextAtom3, nPathLen3));
 }
 
-TEST(util_testing, test_is_ilist_inside)
+TEST(test_util, test_is_ilist_inside)
 {
 
     // int is_ilist_inside(int *ilist, int nlist, int *ilist2, int nlist2)
@@ -599,7 +599,7 @@ TEST(util_testing, test_is_ilist_inside)
     EXPECT_TRUE(is_ilist_inside(pathAtom4, 0, pathAtom5, 0));
 }
 
-TEST(util_testing, test_nBondsValToMetal)
+TEST(test_util, test_nBondsValToMetal)
 {
 
     // int nBondsValToMetal(inp_ATOM *at, int iat)
@@ -656,7 +656,7 @@ TEST(util_testing, test_nBondsValToMetal)
     FreeInpAtom(&atoms2);
 }
 
-TEST(util_testing, test_num_of_H)
+TEST(test_util, test_num_of_H)
 {
 
     // int num_of_H(inp_ATOM *at, int iat)
@@ -734,7 +734,7 @@ TEST(util_testing, test_num_of_H)
     FreeInpAtom(&atoms2);
 }
 
-TEST(util_testing, test_ion_el_group)
+TEST(test_util, test_ion_el_group)
 {
 
     // U_CHAR ion_el_group(int el)
@@ -744,7 +744,7 @@ TEST(util_testing, test_ion_el_group)
     EXPECT_EQ(ion_el_group(get_periodic_table_number("Mn")), 0);
 }
 
-TEST(util_testing, test_has_other_ion_neigh)
+TEST(test_util, test_has_other_ion_neigh)
 {
 
     // int has_other_ion_neigh(inp_ATOM *at, int iat, int iat_ion_neigh)
@@ -765,7 +765,7 @@ TEST(util_testing, test_has_other_ion_neigh)
     FreeInpAtom(&atoms1);
 }
 
-TEST(util_testing, test_extract_charges_and_radicals)
+TEST(test_util, test_extract_charges_and_radicals)
 {
 
     // int extract_charges_and_radicals(char *elname, int *pnRadical, int *pnCharge)
@@ -849,7 +849,7 @@ TEST(util_testing, test_extract_charges_and_radicals)
     EXPECT_EQ(nCharge, 0);
 }
 
-TEST(util_testing, test_extract_inchi_substring)
+TEST(test_util, test_extract_inchi_substring)
 {
 
     // void extract_inchi_substring(char **buf, const char *str, size_t slen)
@@ -882,7 +882,7 @@ TEST(util_testing, test_extract_inchi_substring)
     free(buf2);
 }
 
-TEST(util_testing, test_extract_auxinfo_substring)
+TEST(test_util, test_extract_auxinfo_substring)
 {
     // void extract_auxinfo_substring(char **buf, const char *str, size_t slen)
 
@@ -928,7 +928,7 @@ TEST(util_testing, test_extract_auxinfo_substring)
     free(buf4);
 }
 
-TEST(util_testing, test_extract_stereo_info_from_inchi_string)
+TEST(test_util, test_extract_stereo_info_from_inchi_string)
 {
     // int extract_stereo_info_from_inchi_string(char *sinchi, int nat, int *orig, int *at_stereo_mark);
 
@@ -979,7 +979,7 @@ TEST(util_testing, test_extract_stereo_info_from_inchi_string)
     EXPECT_EQ(found_stereo2, 0);
 }
 
-// TEST(util_testing, test_extract_all_backbone_bonds_from_inchi_string)
+// TEST(test_util, test_extract_all_backbone_bonds_from_inchi_string)
 // {
 
 //     // int extract_all_backbone_bonds_from_inchi_string(char *sinchi, int *n_all_bkb_orig, int *orig, int *all_bkb_orig);

@@ -52,7 +52,7 @@ char *read_inchi_from_file(const char *filename) {
     return make_arg(found_inchi.c_str());
 }
 
-TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
+TEST(test_ichimain, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     INCHI_IOSTREAM input_stream;
 
@@ -301,7 +301,7 @@ TEST(ichimain_testing, test_CalcAndPrintINCHIAndINCHIKEY) {
 
 }
 
-TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
+TEST(test_ichimain, test_ProcessMultipleInputFiles_2mol_files)
 {
 
     std::vector<std::string> expected_inchis = {
@@ -378,7 +378,7 @@ TEST(ichimain_testing, test_ProcessMultipleInputFiles_2mol_files)
     }
 }
 
-TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
+TEST(test_ichimain, test_ProcessSingleInputFile_caffeine)
 {
 
     const char *filename_caffeine = "caffeine.mol";
@@ -438,7 +438,7 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_caffeine)
     rmdir(tmpd);
 }
 
-TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
+TEST(test_ichimain, test_ProcessSingleInputFile_2mols_sdf)
 {
 
     const char *filename_2mols = "test_mols_2.sdf";
@@ -515,7 +515,7 @@ TEST(ichimain_testing, test_ProcessSingleInputFile_2mols_sdf)
     rmdir(tmpd);
 }
 
-TEST(ichimain_testing, test_GetTheNextRecordOfInputFile)
+TEST(test_ichimain, test_GetTheNextRecordOfInputFile)
 {
 
     INCHI_IOSTREAM input_stream;

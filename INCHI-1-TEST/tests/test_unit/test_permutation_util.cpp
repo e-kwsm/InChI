@@ -8,7 +8,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/permutation_util.h"
 }
 
-TEST(permutation_util_testing, test_OrigAtData_Permute)
+TEST(test_permutation_util, test_OrigAtData_Permute)
 {
 
     // 1. Populate atom data

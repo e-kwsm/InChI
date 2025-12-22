@@ -7,7 +7,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichi_io.h"
 }
 
-TEST(mol_fmt_testing, test_MolfileStrnread)
+TEST(test_mol_fmt, test_MolfileStrnread)
 {
     int string_len = 100;
     char dest[string_len];
@@ -26,7 +26,7 @@ TEST(mol_fmt_testing, test_MolfileStrnread)
     EXPECT_EQ(first_space[0], ' '); // space terminator
 }
 
-TEST(mol_fmt_testing, test_MolfileReadField)
+TEST(test_mol_fmt, test_MolfileReadField)
 {
     // int MolfileReadField(void *data, int field_len, int data_type,  char **line_ptr)
 
@@ -108,7 +108,7 @@ TEST(mol_fmt_testing, test_MolfileReadField)
     EXPECT_EQ(line_ptr8, source_data8 + 4);
 }
 
-TEST(mol_fmt_testing, test_MolfileV3000ReadField)
+TEST(test_mol_fmt, test_MolfileV3000ReadField)
 {
 
     // int MolfileV3000ReadField(void *data,
@@ -126,7 +126,7 @@ TEST(mol_fmt_testing, test_MolfileV3000ReadField)
     EXPECT_EQ(n_coll, 2);
 }
 
-TEST(mol_fmt_testing, test_MolfileExtractStrucNum)
+TEST(test_mol_fmt, test_MolfileExtractStrucNum)
 {
     // long MolfileExtractStrucNum(MOL_FMT_HEADER_BLOCK *pHdr);
 
@@ -181,7 +181,7 @@ TEST(mol_fmt_testing, test_MolfileExtractStrucNum)
     EXPECT_EQ(num, 0);
 }
 
-TEST(mol_fmt_testing, test_MolfileV3000ReadStereoCollection)
+TEST(test_mol_fmt, test_MolfileV3000ReadStereoCollection)
 {
 
     // int MolfileV3000ReadStereoCollection(MOL_FMT_CTAB *ctab,
@@ -228,7 +228,7 @@ TEST(mol_fmt_testing, test_MolfileV3000ReadStereoCollection)
     inchi_free(num_list);
 }
 
-TEST(mol_fmt_testing, test_MolfileV3000ReadCollections)
+TEST(test_mol_fmt, test_MolfileV3000ReadCollections)
 {
 
     INCHI_IOSTREAM input_stream;
@@ -316,7 +316,7 @@ TEST(mol_fmt_testing, test_MolfileV3000ReadCollections)
     inchi_ios_free_str(&input_stream);
 }
 
-TEST(mol_fmt_testing, test_MolfileHasNoChemStruc)
+TEST(test_mol_fmt, test_MolfileHasNoChemStruc)
 {
     MOL_FMT_DATA mfdata;
     MOL_FMT_CTAB ctab;
@@ -360,7 +360,7 @@ TEST(mol_fmt_testing, test_MolfileHasNoChemStruc)
     free(atoms);
 }
 
-TEST(mol_fmt_testing, test_FreeMolfileData)
+TEST(test_mol_fmt, test_FreeMolfileData)
 {
 
     MOL_FMT_DATA *mfdata;
@@ -407,7 +407,7 @@ TEST(mol_fmt_testing, test_FreeMolfileData)
     inchi_free(sgroups);
 }
 
-TEST(mol_fmt_testing, test_ReadMolfile_v2000)
+TEST(test_mol_fmt, test_ReadMolfile_v2000)
 {
 
     INCHI_IOSTREAM input_stream;
@@ -528,7 +528,7 @@ TEST(mol_fmt_testing, test_ReadMolfile_v2000)
     FreeMolfileData(result);
 }
 
-TEST(mol_fmt_testing, test_ReadMolfile_v3000)
+TEST(test_mol_fmt, test_ReadMolfile_v3000)
 {
 
     INCHI_IOSTREAM input_stream;
@@ -655,7 +655,7 @@ TEST(mol_fmt_testing, test_ReadMolfile_v3000)
     FreeMolfileData(result);
 }
 
-TEST(mol_fmt_testing, test_ReadMolfile_v3000_collection_1)
+TEST(test_mol_fmt, test_ReadMolfile_v3000_collection_1)
 {
 
     INCHI_IOSTREAM input_stream;
@@ -765,7 +765,7 @@ TEST(mol_fmt_testing, test_ReadMolfile_v3000_collection_1)
     FreeMolfileData(result);
 }
 
-TEST(mol_fmt_testing, test_ReadMolfile_v3000_collection_2)
+TEST(test_mol_fmt, test_ReadMolfile_v3000_collection_2)
 {
 
     INCHI_IOSTREAM input_stream;
