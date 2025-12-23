@@ -651,8 +651,7 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
 {
     char field[MOL_FMT_V3000_MAXFIELDLEN];
     const int max_field_len = sizeof(field);
-    int nread, len;
-    int n_coll = 0;
+    int nread, len, n_coll = 0;
     int failed = 0;
     int nc;
     char *p = NULL, *line = NULL;
@@ -1504,11 +1503,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                             }
                         }
                     }
-                    if (num_list) /* djb-rwth: fixing coverity CID #499489 */
-                    {
-                        inchi_free(num_list);
-                        num_list = NULL;
-                    }
+                    /* djb-rwth: addressing coverity CID #499489 -- false positive as num_atoms allocated in MolfileV3000ReadHapticBond and returns a value in this block */
                 }
                 else if (!strcmp(field, "DISP"))
                 {
