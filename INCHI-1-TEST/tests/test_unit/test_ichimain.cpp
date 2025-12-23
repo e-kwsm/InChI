@@ -191,7 +191,6 @@ TEST(test_ichimain, test_CalcAndPrintINCHIAndINCHIKEY) {
     PINChI_Aux2* pINChI_Aux[INCHI_NUM] = {};
     ORIG_ATOM_DATA prep_inp_data = {};
     INCHI_IOS_STRING *strbuf = new INCHI_IOS_STRING;
-    memset(strbuf, 0, sizeof(*strbuf));
     inchi_strbuf_init(strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
 
     unsigned long pulTotalProcessingTime = 0;
