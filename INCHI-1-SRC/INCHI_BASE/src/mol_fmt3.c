@@ -1038,19 +1038,10 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
 
             if (!strcmp(symbol, "*"))
             {
-                /* (Nauman Ullah Khan_@nnuk) : accept star atoms info */
+                /* ignore star atoms but save index info */
                 ctab->v3000->atom_index_orig[i] = index;
-                ctab->v3000->atom_index_fin[i] = ctab->v3000->n_non_star_atoms;
-                ii = ctab->v3000->n_non_star_atoms;
-                ctab->v3000->n_non_star_atoms++;
-
-                mystrncpy(ctab->atoms[ii].symbol, "Zz", sizeof(ctab->atoms[ii].symbol));
-                ctab->atoms[ii].fx = fx;
-                ctab->atoms[ii].fy = fy;
-                ctab->atoms[ii].fz = fz;
-                ctab->atoms[ii].charge = 0;
-                ctab->atoms[ii].radical = 0;
-
+                ctab->v3000->atom_index_fin[i] = -1;
+                ctab->v3000->n_star_atoms++;
                 continue;
             }
 
@@ -1232,12 +1223,11 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
         } /* if ( NULL != ctab->atoms )  */
     } /* for ( i = 0; i < ctab->n_atoms; i++ )  */
 
-    /* (Nauman Ullah Khan_@nnuk) : condition below not needed anymore as Zz/star atom is not going to be ignored.*/
-    /*if (ctab->v3000->n_star_atoms)
+    if (ctab->v3000->n_star_atoms)
     {
-        AddErrorMessage(pStrErr, "V3000 star atoms ignored");
+        AddErrorMessage(pStrErr, "V3000 star atoms ignored if MolecularInorganics or NPZz parameter not used");        /* @nnuk : when using /MolecularInorganics or /NPZz, star atoms will not be ignored */
         ctab->n_atoms = ctab->v3000->n_non_star_atoms;
-    }*/
+    }
 
     /* Check for proper finish */
 
@@ -1477,7 +1467,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                             existent_atom = atnum2;
                         }
                         if (existent_atom < 0) /* should not be here */
-                        {
+                         {
                             failed = 1;
                         }
                         else
@@ -1485,7 +1475,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
                             int k, nnum;
                             nnum = num_list[2];
                             num_list[1] = existent_atom;
-                            for (k = 3; k < nnum; k++)
+                            for (k = 3; k < nnum + 3; k++)              /* @nnuk : wrong mapping of endpoints (+3 added for full endpoints mapping for all haptic bonds) */
                             {
                                 num_list[k] = get_actual_atom_number(num_list[k],
                                                                      n_orig_at,
@@ -1539,9 +1529,8 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
 
             if (is_haptic)
             {
-                /* (Nauman Ullah Khan_@nnuk) : As haptic bonds are already stored in ctab->v3000->haptic_bonds,
-                 *  so, we just need to store in the haptic bonds list.
-                 */
+                int ii = ctab->v3000->n_haptic_bonds;
+                ctab->v3000->haptic_bonds->lists[ii][0] = bond_type;
                 ctab->v3000->n_haptic_bonds++;
                 continue;
             }
@@ -1559,10 +1548,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
 
     if (ctab->v3000->n_haptic_bonds)
     {
-        /* (Nauman Ullah Khan_@nnuk) : Error message to ignore haptic bond not needed anymore
-         *  as the haptic bond count is preserved now.
-         */
-        /* AddErrorMessage(pStrErr, "V3000 haptic bonds read/stored but ignored"); */
+        AddErrorMessage(pStrErr, "V3000 haptic bonds read/stored and ignored if MolecularInorganics or NPZz parameter is not used");    /* @nnuk : when using /MolecularInorganics or /NPZz, haptic bonds will not be ignored */
         ctab->n_bonds = ctab->v3000->n_non_haptic_bonds;
     }
 

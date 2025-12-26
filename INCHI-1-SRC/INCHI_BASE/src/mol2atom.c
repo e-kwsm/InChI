@@ -800,115 +800,55 @@ inp_ATOM *MakeInpAtomsFromMolfileData(MOL_FMT_DATA *mfdata,
     if (mfdata->ctab.v3000 && mfdata->ctab.v3000->n_haptic_bonds > 0 &&
         mfdata->ctab.v3000->haptic_bonds && mfdata->ctab.v3000->haptic_bonds->lists)
     {
-
         for (i = 0; i < mfdata->ctab.v3000->n_haptic_bonds; i++)
         {
-            int *list = mfdata->ctab.v3000->haptic_bonds->lists[i];
-            int central_atom = list[1] - 1;
-            int n_endpts = list[2];
-            int j;
-
-            for (j = 3; j < 3 + n_endpts; j++)
+            int* list = mfdata->ctab.v3000->haptic_bonds->lists[i];
+            if (!list)
             {
-                int endpoint = list[j] - 1;
+                TREAT_ERR(*err, 0, "Null haptic bond list");
+                continue;
+            }
 
-                int central_at_num = at[central_atom].valence;
-                int endpt_at_num = at[endpoint].valence;
+            int bond_type = list[0];
+            int central_atom = list[1];
+            int endpoint_count = list[2];
+            int central_idx = central_atom - 1;
 
-                if (central_at_num >= MAXVAL || endpt_at_num >= MAXVAL)
+            int endpoints_added = 0;
+
+            for (int j = 0; j < endpoint_count; j++)
+            {
+                int n_endpoint = list[3 + j];
+                int endpoint_idx = n_endpoint - 1;
+
+                int central_at_num = at[central_idx].valence;
+                int endpoint_at_num = at[endpoint_idx].valence;
+
+                p1 = is_in_the_list(at[central_idx].neighbor, (AT_NUMB)endpoint_idx, central_at_num);
+                p2 = is_in_the_list(at[endpoint_idx].neighbor, (AT_NUMB)central_idx, endpoint_at_num);
+
+                if (central_at_num >= MAXVAL || endpoint_at_num >= MAXVAL)
                 {
-                    fprintf(stderr, "Atom number exceeded when trying to add haptic bond between atoms %d and %d\n", central_atom, endpoint);
+                    fprintf(stderr, "Atom number exceeded when trying to add haptic bond between atoms %d and %d\n", central_idx, endpoint_idx);
                     continue;
                 }
 
-                at[central_atom].neighbor[central_at_num] = endpoint;
-                at[central_atom].bond_type[central_at_num] = COORDINATIVE_BOND;
-                at[central_atom].bond_stereo[central_at_num] = 0;
-                at[central_atom].valence++;
+                at[central_idx].neighbor[central_at_num] = endpoint_idx;
+                at[central_idx].bond_type[central_at_num] = COORDINATIVE_BOND;
+                at[central_idx].bond_stereo[central_at_num] = 0;
+                at[central_idx].valence++;
 
-                at[endpoint].neighbor[endpt_at_num] = central_atom;
-                at[endpoint].bond_type[endpt_at_num] = COORDINATIVE_BOND;
-                at[endpoint].bond_stereo[endpt_at_num] = 0;
-                at[endpoint].valence++;
+                at[endpoint_idx].neighbor[endpoint_at_num] = central_idx;
+                at[endpoint_idx].bond_type[endpoint_at_num] = COORDINATIVE_BOND;
+                at[endpoint_idx].bond_stereo[endpoint_at_num] = 0;
+                at[endpoint_idx].valence++;
+
+                bonds++;
+                endpoints_added++;
             }
         }
 
-        /* (@nnuk) : Clean up bonds to Zz atoms */
-        for (i = 0; i < *num_atoms; i++)
-        {
-            if (!strcmp(at[i].elname, "Zz"))
-            {
-                int index_Zz = i;
-                int j;
-
-                for (j = 0; j < *num_atoms; j++)
-                {
-                    if (j == index_Zz)
-                    {
-                        continue;
-                    }
-
-                    int new_at_num = 0;
-                    int k;
-
-                    for (k = 0; k < at[j].valence; k++)
-                    {
-                        if (at[j].neighbor[k] != index_Zz)
-                        {
-                            at[j].neighbor[new_at_num] = at[j].neighbor[k];
-                            at[j].bond_type[new_at_num] = at[j].bond_type[k];
-                            at[j].bond_stereo[new_at_num] = at[j].bond_stereo[k];
-                            new_at_num++;
-                        }
-                    }
-                    at[j].valence = new_at_num;
-                }
-            }
-        }
-
-        /* (@nnuk) : Remove Zz atoms and update neighbor indices */
-        int removed_atoms = 0;
-
-        for (i = 0; i < *num_atoms;)
-        {
-            if (strcmp(at[i].elname, "Zz") == 0)
-            {
-                int j;
-
-                for (j = 0; j < *num_atoms; j++)
-                {
-                    int k;
-
-                    for (k = 0; k < at[j].valence; k++)
-                    {
-                        if (at[j].neighbor[k] > i)
-                        {
-                            at[j].neighbor[k]--;
-                        }
-                    }
-                }
-
-                for (j = i + 1; j < *num_atoms; j++)
-                {
-                    at[j - 1] = at[j];
-                }
-                (*num_atoms)--;
-                removed_atoms++;
-            }
-            else
-            {
-                i++;
-            }
-        }
-
-        if (removed_atoms > 0)
-        {
-            /* (@nnuk) : Renumber original atom numbers */
-            for (i = 0; i < *num_atoms; i++)
-            {
-                at[i].orig_at_number = i;
-            }
-        }
+        *num_bonds = bonds;
     }
 
     /* special valences */
@@ -930,10 +870,10 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
     int bNonMetal;
     int a1, a2, n1, n2, valence;
     AT_NUMB *p1;
-    int *coord_bonds_count = NULL; /* (@nnuk) :: Array to track coordination bonds for non - metals */
+    int* coord_bonds_count = NULL; /* (@nnuk) :: Array to track coordination bonds for non - metals */
 
     /* (@nnuk) ::  Allocate memory for coordination bonds count */
-    coord_bonds_count = (int *)inchi_calloc(*num_atoms, sizeof(int));
+    coord_bonds_count = (int*)inchi_calloc(*num_atoms, sizeof(int));
     if (!coord_bonds_count)
     {
         *err = -1;
@@ -993,7 +933,7 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                 if (bond_type < 0 || bond_type > MAX_INPUT_BOND_TYPE - MIN_INPUT_BOND_TYPE)
                 {
                     bond_type = 0;
-                    TREAT_ERR(*err, 0, "Unknown bond type in MOLfile assigned as a single bond");
+                    TREAT_ERR(*err, 0, "Unknown bond type or a COORDINATIVE BOND (9) in MOLfile assigned as a single bond");        /* @nnuk : Coordinative bond is accepted now and is assigned as a single bond */
                 }
                 num_bond_type[bond_type]++;
                 /* -- too a radical solution -- removed from next to ver 1.12B --- */
@@ -1123,7 +1063,7 @@ void calculate_valences(MOL_FMT_DATA *mfdata,
                                          at[a1].charge, at[a1].radical,
                                          at[a1].chem_bonds_valence,
                                          /*mfdata->ctab.atoms[a1].valence,*/
-                                         newValence, /* instead of valence */ /* (@Felix Bänsch)(@Gerd Blanke)(@nnuk) : The valence stated in the mol file is considerd here. A value of 0 means use default value for this element. */
+                                         newValence,  /* instead of valence */ /* (@Felix Bänsch)(@Gerd Blanke)(@nnuk) : The valence stated in the mol file is considerd here. A value of 0 means use default value for this element. */
                                                      mfdata->ctab.atoms[a1].atom_aliased_flag,
                                          bDoNotAddH,
                                          bHasMetalNeighbor);
