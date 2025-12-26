@@ -122,7 +122,8 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI);
+    int* pbHideInChI,
+    int* pbMolecularInorganics);     /* @nnuk */
 
 
 /****************************************************************************
@@ -165,7 +166,8 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI
+    int* pbHideInChI,
+    int* pbMolecularInorganics     /*@nnuk*/
 )
 {
     int got = 0;
@@ -345,9 +347,8 @@ int set_common_options_by_parg(const char* pArg,
     */
     else if ( !inchi_stricmp(pArg, "MolecularInorganics") )
     {
-        /*printf("\n\nMolecular Inorganics Parameter Activated\n\n");*/
-
-        ip->bMolecularInorganics = 1;
+        *pbMolecularInorganics = 1;
+        *pbNPZz = 1;
         *pbStdFormat = 0;
         got = 1;
     }
@@ -456,6 +457,7 @@ int set_common_options_by_parg(const char* pArg,
     else if ( !inchi_stricmp(pArg, "NPZz") )
     {
         *pbNPZz = 1;
+        *pbMolecularInorganics = 1;
         got = 1;
     }
     else if ( !inchi_stricmp(pArg, "NoWarnings") )
@@ -694,7 +696,7 @@ int ReadCommandLineParms(int argc,
     int bNoWarnings = 0;
     int bMergeHash = 0;
     int bHideInChI = 0;
-
+    int bMolecularInorganics = 0;                   /* @nnuk */
     int bOutputStyle = INCHI_OUT_PLAIN_TEXT;
     int bDisplay = 0;
     int bNoStructLabels = 0;
@@ -806,7 +808,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI);
+                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);
             if ( got )
             {
                 ;
@@ -1254,7 +1256,7 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI);
+                &bNoWarnings, &bMergeHash, &bHideInChI, &bMolecularInorganics);
 
             if ( got )
             {
@@ -2100,7 +2102,7 @@ int ReadCommandLineParms(int argc,
 
     ip->bNPZz = bNPZz;
     ip->bStereoAtZz = bStereoAtZz;  /*STEREO_AT_ZZ;*/
-
+    ip->bMolecularInorganics = bMolecularInorganics;              /* @nnuk */
     ip->bNoWarnings = bNoWarnings;
     ip->bMergeHash = bMergeHash;
     ip->bHideInChI = bHideInChI;
@@ -2659,6 +2661,11 @@ int PrintInputParms(INCHI_IOSTREAM* log_file,
     if ( ip->bStereoAtZz == 1 )
     {
         inchi_ios_eprint(log_file, "Allowing stereo at atoms connected to Zz\n");
+    }
+    /* @nnuk */
+    if (ip->bMolecularInorganics == 1)
+    {
+        inchi_ios_eprint(log_file, "Molecular Inorganics mode enabled\n");
     }
 
     /*  Report debug modes */
