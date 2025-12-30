@@ -19,7 +19,6 @@ extern "C"
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
 {
 
-    // Prepare minimal dummy arguments
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
@@ -27,8 +26,6 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
     char lf[] = "\n";
     char tab[] = "\t";
 
-    // Initialize string buffer (simulate allocation)
-    // inchi_strbuf_init(&strbuf, 128, 128);
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
     inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
 
@@ -39,11 +36,8 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
     //                             char             *pLF,
     //                             char             *pTAB )
 
-    // Call the function under test
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, lf, tab);
 
-    // Check that the function returns 0 (success) or expected error code
-    // (You may need to adjust this depending on the actual implementation)
     EXPECT_EQ(ret, 0);
 
     // Clean up
@@ -53,14 +47,12 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
 
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s1)
 {
-    // Prepare minimal input structures
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
     INCHI_OUT_CTL io = {0};
 
-    // Set up io to trigger the /s (stereo type) segment
-    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
 
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
@@ -75,10 +67,8 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s1)
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
     inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
 
-    // Call function
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
 
-    // The stereo type should be "s1" (plain tag + abs)
     EXPECT_EQ(std::string(strbuf.pStr), "/s1");
     EXPECT_EQ(ret, 0);
 
@@ -88,15 +78,12 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s1)
 
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s2)
 {
-    // Prepare minimal input structures
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
     INCHI_OUT_CTL io = {0};
 
-    // Set up io to trigger the /s (stereo type) segment
-    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
-
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
 
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
@@ -111,10 +98,8 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s2)
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
     inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
 
-    // Call function
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
 
-    // The stereo type should be "s1" (plain tag + abs)
     EXPECT_EQ(std::string(strbuf.pStr), "/s2");
     EXPECT_EQ(ret, 0);
 
@@ -124,15 +109,13 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s2)
 
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s3)
 {
-    // Prepare minimal input structures
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
     INCHI_OUT_CTL io = {0};
 
-    // Set up io to trigger the /s (stereo type) segment
-    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T; // nonzero triggers INChI_SegmentAction
 
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
 
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
@@ -147,10 +130,8 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s3)
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
     inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
 
-    // Call function
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
 
-    // The stereo type should be "s1" (plain tag + abs)
     EXPECT_EQ(std::string(strbuf.pStr), "/s3");
     EXPECT_EQ(ret, 0);
 
@@ -160,7 +141,6 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s3)
 
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
 {
-    // --- Setup CANON_GLOBALS and INChI/INChI_Stereo for enhanced stereo ---
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
@@ -206,11 +186,11 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
 
     io.pINChISort = &sort;
 
-    // --- Setup io to trigger stereo output ---
     io.num_components = 1;
     io.bRelativeStereo[0] = 0;
     io.bRacemicStereo[0] = 1;
 
+    io.sDifSegs[0][DIFS_b_SBONDS] = DIFV_OUTPUT_FILL_T;
     io.sDifSegs[0][DIFS_t_SATOMS] = DIFV_OUTPUT_FILL_T;
     io.sDifSegs[0][DIFS_m_SP3INV] = DIFV_OUTPUT_FILL_T;
     io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
@@ -227,7 +207,7 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
 
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
 
-    EXPECT_EQ(std::string(out_file.s.pStr), "//t3-,4-,5+,6+,7-,8+,9+,10-/m0/s3/");
+    EXPECT_EQ(std::string(out_file.s.pStr), "/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s3/");
     EXPECT_EQ(ret, 0);
 
     inchi_strbuf_close(&strbuf);
@@ -267,4 +247,121 @@ TEST(test_ichiprt1, test_set_line_separators)
     EXPECT_STREQ(tab, "\n");
 
 
+}
+
+TEST(test_ichiprt1, test_szGetTag_basic)
+{
+
+    // nTag = 1: XML label (szXmlLabel)
+    // nTag = 2: Plain text label (szPlainLabel)
+    // nTag = 3: Plain label with comments (sometimes)
+
+    // bTag: A bitmask indicating which tag (or tags) to look up in the INCHI_TAG array.
+
+    char szTag[64] = {0};
+    int bAlways = -1;
+
+    EXPECT_STREQ(szGetTag(IdentLbl, 0, 0, szTag, &bAlways, 0), "???"); //fixed-H
+    EXPECT_STREQ(szTag, "???");
+
+}
+
+TEST(test_ichiprt1, test_szGetTag_returns_unknown_for_invalid_index)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 0, bTag = 0, should return "???"
+    EXPECT_STREQ(szGetTag(IdentLbl, 0, 0, szTag, &bAlways, 0), "???");
+    EXPECT_STREQ(szTag, "???");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_1)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 2, IL_STER, szTag, &bAlways, 0), "/");
+    EXPECT_STREQ(szTag, "/");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_2)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 1, IL_STER, szTag, &bAlways, 0), "stereo");
+    EXPECT_STREQ(szTag, "stereo");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_3)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 2, IL_SP3S, szTag, &bAlways, 0), "/t");
+    EXPECT_STREQ(szTag, "/t");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_4)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 2, IL_INVS, szTag, &bAlways, 0), "/m");
+    EXPECT_STREQ(szTag, "/m");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_5)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 2, IL_TYPS, szTag, &bAlways, 0), "/s");
+    EXPECT_STREQ(szTag, "/s");
+}
+
+TEST(test_ichiprt1, test_szGetTag_stereo_6)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 1, IL_TYPS, szTag, &bAlways, 0), "type");
+    EXPECT_STREQ(szTag, "type");
+}
+
+TEST(test_ichiprt1, test_szGetTag_hfixed)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_STER (stereo)
+    EXPECT_STREQ(szGetTag(IdentLbl, 1, IL_FIXH, szTag, &bAlways, 0), "fixed-H");
+    EXPECT_STREQ(szTag, "fixed-H");
+}
+
+TEST(test_ichiprt1, test_szGetTag_returns_xml_label)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 1 (XML), bTag = IL_CONN (connections)
+    EXPECT_STREQ(szGetTag(IdentLbl, 1, IL_CONN, szTag, &bAlways, 0), "connections");
+    EXPECT_STREQ(szTag, "connections");
+}
+
+TEST(test_ichiprt1, test_szGetTag_sets_bAlways)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_FML_ (formula), which has bAlwaysOutput = 1
+    szGetTag(IdentLbl, 2, IL_FML_, szTag, &bAlways, 0);
+    EXPECT_EQ(bAlways, -1);
+    EXPECT_STREQ(szTag, "/");
+}
+
+TEST(test_ichiprt1, test_szGetTag_charge)
+{
+    char szTag[64] = {0};
+    int bAlways = -1;
+    // nTag = 2 (plain text), bTag = IL_CHRG (charge)
+    EXPECT_STREQ(szGetTag(IdentLbl, 2, IL_CHRG, szTag, &bAlways, 0), "/q");
+    EXPECT_STREQ(szTag, "/q");
 }

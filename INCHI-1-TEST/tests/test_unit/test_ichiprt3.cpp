@@ -26,7 +26,6 @@ TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
         stereo->t_parity[i] = parities[i];
     }
 
-    // Prepare INChI and INCHI_SORT
     INChI inchi = {0};
     inchi.nNumberOfAtoms = 10;
     inchi.Stereo = stereo;
@@ -34,11 +33,10 @@ TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
     INCHI_SORT sort = {0};
     sort.pINChI[0] = &inchi;
 
-    // Prepare strbuf (empty)
     INCHI_IOS_STRING strbuf = {0};
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
 
-    // Call str_Sp3
+
     int bOverflow = 0;
     int ret = str_Sp3(&sort, NULL, &strbuf, &bOverflow, 0, 0, 1, 0, 0, 0, 0);
 

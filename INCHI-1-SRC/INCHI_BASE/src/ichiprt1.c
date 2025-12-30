@@ -3493,7 +3493,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
     {
         if (io->bPlainTextTags == 1)
         {
-            inchi_ios_print_nodisplay( out_file, "////" ); /* sp3, sp2, abs-inv, stereo.type */
+            inchi_ios_print_nodisplay( out_file, "////" ); /* sp2, sp3, abs-inv, stereo.type */
         }
     }
 

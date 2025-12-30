@@ -9,20 +9,16 @@ extern "C"
 
 TEST(test_ichiprt2, MakeStereoString_outputs_expected_sp3_string)
 {
-    // Prepare input arrays for 8 stereo centers
     AT_NUMB at1[8] = {3,4,5,6,7,8,9,10};
     S_CHAR parity[8] = {1,1,2,2,1,2,2,1};
 
-    // Prepare strbuf (empty)
     INCHI_IOS_STRING strbuf = {0};
 
     inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
 
-    // Call MakeStereoString
     int bOverflow = 0;
     int ret = MakeStereoString(at1, nullptr, parity, 0, 8, &strbuf, 0, &bOverflow);
 
-    // Check that strbuf contains the expected substring
     EXPECT_EQ(strbuf.nUsedLength, strlen(strbuf.pStr));
     EXPECT_NE(std::string(strbuf.pStr).find("3-,4-,5+,6+,7-,8+,9+,10-"), std::string::npos);
     EXPECT_EQ(strbuf.pStr[0], '3'); // Should start with 3-
