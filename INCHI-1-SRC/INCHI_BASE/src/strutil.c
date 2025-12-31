@@ -45,11 +45,12 @@
 #include <stdbool.h>
 
 #include "mode.h"
-
+#include "ichinorm.h"               /* @nnuk */
 #include "strutil.h"
 #include "ichister.h"
 #include "ichi_io.h"
 #include "ichimain.h"
+#include "ichidrp.h"                /* @nnuk */
 
 #include "bcf_s.h"
 
@@ -6404,14 +6405,17 @@ void updateNeighborListMolecularInorganics(inp_ATOM *at, int atom_idx, int neigh
 
 int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *ip)
 {
+    int ret_code = 0;
 
-    if (!ip->bMolecularInorganics)
+    if (!ip || !orig_at_data || !orig_at_data->at)
     {
-        fprintf(stderr, "Molecular Inorganics preprocessing failed\n");
         return -1;
     }
 
-    /*printf("Molecular Inorganics functionality is running\n\n");*/
+    if (!ip->bMolecularInorganics)
+    {
+        return -1;
+    }
 
     /* Pointer to the array of input atoms from the original atom data structure */
     inp_ATOM *at = orig_at_data->at;
@@ -6422,39 +6426,207 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     /* Pointer to the array storing the old component numbers for each atom, used for tracking connectivity */
     AT_NUMB *nOldCompNumber = orig_at_data->nOldCompNumber;
 
-    /* Allocate memory to store indices of metal atoms for further processing. */
-    /* The size of the array equals the total number of atoms to ensure sufficient capacity */
-    int *metal_atoms = (int *)inchi_malloc(num_at * sizeof(int));
-
-    /* Check if memory allocation for the metal_atoms array failed. */
-    /* If allocation fails, print an error message and return with an error code */
-    if (metal_atoms == NULL)
-    {
-        fprintf(stderr, "Error: Failed to allocate memory for metal_atoms\n");
-        return -1;
-    }
-
-    /* Track number of metals */
-    int num_metals = 0;
     /* Track number of disconnections */
     int num_disconnected = 0;
+
     /* variables declared */
-    int i, j, n, k, m, binaryValue;
+    int i, j, n, k, t;
+    int binaryValue;
     int disconnectDecision;
-    int neighbor_idx;
+    int neighbor_idx, neigh_pos;
+
+    /* memory allocation */
+    S_CHAR* dfs_visited = (S_CHAR*)inchi_calloc(num_at, sizeof(S_CHAR));
+    int* dfs_stack = (int*)inchi_malloc(num_at * sizeof(int));
+    int* ligand_elem_array = (int*)inchi_malloc(num_at * sizeof(int));
+    int* structure_id = (int*)inchi_malloc(num_at * sizeof(int));
+    int* structure_metal_count = (int*)inchi_calloc(num_at, sizeof(int));
+
+    if (!dfs_visited || !dfs_stack || !ligand_elem_array || !structure_id || !structure_metal_count)
+    {
+        ret_code = -1;
+        goto cleanup;
+    }
+
+    /* Function call to Mark ring systems */
+    MarkRingSystemsInp(at, num_at, 0);
+
+    /* Compute metal list */
+    int num_metals = 0;
+    for (i = 0; i < num_at; i++)
+    {
+        if (is_el_a_metal(at[i].el_number))
+        {
+            num_metals++;
+        }
+    }
+
+    /* 
+     * Precompute structure components (DFS RUN ONCE) to satisfy this rule below,
+     * (if there is a path from this metal to ANY other metal,
+     * keep all bonds for this metal)
+    */
+    for (i = 0; i < num_at; i++)
+    {
+        structure_id[i] = -1;
+    }
+
+    int current_component = 0;
+
+    for (i = 0; i < num_at; i++)
+    {
+        if (structure_id[i] >= 0)
+        {
+            continue;
+        }
+
+        int dfs_stack_size = 0;
+        dfs_stack[dfs_stack_size++] = i;
+        structure_id[i] = current_component;
+
+        while (dfs_stack_size)
+        {
+            int current_atom = dfs_stack[--dfs_stack_size];
+
+            if (is_el_a_metal(at[current_atom].el_number))
+            {
+                structure_metal_count[current_component]++;
+            }
+
+            for (neigh_pos = 0; neigh_pos < at[current_atom].valence; neigh_pos++)
+            {
+                int neighbor_atom = at[current_atom].neighbor[neigh_pos];
+
+                if (neighbor_atom < 0 || neighbor_atom >= num_at)
+                {
+                    continue;
+                }
+
+                if (structure_id[neighbor_atom] >= 0)
+                {
+                    continue;
+                }
+
+                structure_id[neighbor_atom] = current_component;
+
+                if (dfs_stack_size < num_at)
+                {
+                    dfs_stack[dfs_stack_size++] = neighbor_atom;
+                }
+            }
+        }
+
+        current_component++;
+    }
 
     for (i = 0; i < num_at; i++)
     {
         if (!is_el_a_metal(at[i].el_number))
         {
-            /* printf("\nNot a Metal atom\n"); */
             continue;
         }
 
-        /* printf("\nMetal Atom: %s, Index: %d, Connectivity: %d\n", at[i].elname, i + 1, at[i].valence); */
+       /*@nnuk
+        *If there exists any path between this metal and any other metal OR
+        *the atom belongs to a ring system containing at least one metal, then keep all bonds for this metal.
+       */
+        int keep_all_ligand_for_this_metal = 0;
 
-        /* Storing the indices for the metal atoms */
-        metal_atoms[num_metals++] = i;
+        /* @nnuk
+         *if this metal is part of a ring system that contains at least one metal,
+         *keep all bonds for this metal
+        */
+        if (at[i].nRingSystem)
+        {
+            /* scan atoms that are in same ring system and check for a metal */
+            AT_NUMB ring_id = at[i].nRingSystem;
+
+            for (k = 0; k < num_at; k++)
+            {
+                if (k != i && at[k].nRingSystem == ring_id && is_el_a_metal(at[k].el_number))
+                {
+                    keep_all_ligand_for_this_metal = 1;
+                    break;
+                }
+            }
+        }
+
+        /*@nnuk
+         *if there is a path from this metal to ANY other metal,
+         *keep all bonds for this metal.
+        */
+        if (!keep_all_ligand_for_this_metal && num_metals > 1)
+        {
+            int processed_structure = structure_id[i];
+
+            if (structure_metal_count[processed_structure] > 1)
+            {
+                keep_all_ligand_for_this_metal = 1;
+            }
+        }
+
+        if (keep_all_ligand_for_this_metal)
+        {
+            ip->bMolecularInorganicsReconnectedInChI = 1;
+            continue;
+        }
+
+        /*@nnuk
+         *If central metal is bound to different ligand atom element types
+         *AND at least one of the bonds must be kept according to existing bond rules,
+         *then keep ALL bonds
+        */
+        {
+            int ligand_type_count = 0;
+            int must_keep_neighbor = 0;
+
+            for (n = 0; n < at[i].valence; n++)
+            {
+                int neigh_idx = at[i].neighbor[n];
+
+                if (neigh_idx < 0 || neigh_idx >= num_at)
+                {
+                    continue;
+                }
+
+                int neigh_elem = at[neigh_idx].el_number;
+                int found = 0;
+
+                for (t = 0; t < ligand_type_count; t++)
+                {
+                    if (ligand_elem_array[t] == neigh_elem)
+                    {
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    ligand_elem_array[ligand_type_count++] = neigh_elem;
+                }
+
+                if (at[i].bond_type[n] > 1 || is_el_a_metal(at[neigh_idx].el_number))
+                {
+                    must_keep_neighbor = 1;
+                }
+                else
+                {
+                    binaryValue = shouldBondBeCut(at[i].el_number, neigh_elem);
+
+                    if (binaryValue != 1)
+                    {
+                        must_keep_neighbor = 1;
+                    }
+                }
+            }
+
+            if (ligand_type_count > 1 && must_keep_neighbor)
+            {
+                ip->bMolecularInorganicsReconnectedInChI = 1;
+                continue;
+            }
+        }
 
         /* Call the MolecularInorganicsIsMetalToDisconnect function */
         disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i);
@@ -6468,63 +6640,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             continue;
         }
 
-        int keep_all_ligand_for_this_metal = 0;
-
-        /* All metal bonds to be kept if a ligand atom links 2 metal atoms */
-        for (k = 0; k < at[i].valence && !keep_all_ligand_for_this_metal; k++)
-        {
-            int neigh_idx = at[i].neighbor[k];
-            int metal_neighbor_count = 0;
-
-            for (m = 0; m < at[neigh_idx].valence; m++)
-            {
-                int next_neighbor = at[neigh_idx].neighbor[m];
-                if (is_el_a_metal(at[next_neighbor].el_number))
-                {
-                    metal_neighbor_count++;
-                    if (metal_neighbor_count >= 2)
-                    {
-                        /* ligand is bridging two metals — keep all bonds */
-                        keep_all_ligand_for_this_metal = 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (keep_all_ligand_for_this_metal)
-        {
-            ip->bMolecularInorganicsReconnectedInChI = 1;
-            continue;
-        }
-
-        /* if any eligible ligand must be kept by ΔE, keep ALL */
-        for (k = 0; k < at[i].valence && !keep_all_ligand_for_this_metal; k++)
-        {
-            neighbor_idx = at[i].neighbor[k];
-            int neighbor_atomic_number = at[neighbor_idx].el_number;
-
-            if (at[i].bond_type[k] > 1 || is_el_a_metal(neighbor_atomic_number))
-            {
-                /* existing behavior: these bonds are kept */
-                continue;
-            }
-
-            binaryValue = shouldBondBeCut(at[i].el_number, neighbor_atomic_number);
-
-            if (binaryValue != 1)
-            {
-                keep_all_ligand_for_this_metal = 1;
-                break;
-            }
-        }
-
-        if (keep_all_ligand_for_this_metal)
-        {
-            ip->bMolecularInorganicsReconnectedInChI = 1;
-            continue;
-        }
-
         /* Proceed with electronegativity and disconnection logic */
         for (n = at[i].valence - 1; n >= 0; n--)
         {
@@ -6534,15 +6649,9 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
              * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
             if (at[i].bond_type[n] > 1 || is_el_a_metal(at[neighbor_idx].el_number))
             {
-                /*printf("Keeping bond between %s (Index: %d) and %s (Index: %d) because either the bond type is greater than single bond or it is a metal-metal bond.\n",
-                    at[i].elname, i + 1, at[neighbor_idx].elname, neighbor_idx + 1);*/
                 ip->bMolecularInorganicsReconnectedInChI = 1;
                 continue; /* Skip disconnection for this bond */
             }
-
-            /* Proceed with processing the neighbor */
-            /* printf("\nProcessing Metal Atom: %s (atomic number: %d & Index: %d)\n\n", at[i].elname, at[i].el_number, at[i].orig_at_number); */
-            /* printf("Neighbor Atom: %s (atomic number: %d & Index: %d)\n", at[neighbor_idx].elname, at[neighbor_idx].el_number, at[neighbor_idx].orig_at_number); */
 
             binaryValue = shouldBondBeCut(at[i].el_number, at[neighbor_idx].el_number);
 
@@ -6553,7 +6662,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
                 continue;
             }
 
-            /*printf("Disconnection: Electronegativity difference greater than threshold value between %s and %s\n", at[i].elname, at[neighbor_idx].elname);*/
             DisconnectInpAtBond(at, nOldCompNumber, i, n);
 
             /* Updating the metal as well as neighbor list */
@@ -6563,27 +6671,30 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             at[i].charge += 1;            /* Metal atom loses an electron -> +1 charge */
             at[neighbor_idx].charge -= 1; /* Neighbor atom gains an electron -> -1 charge */
 
-            /* printf("Atom %d: Element %s, Charge: %d, Valence: %d, Num_H: %d\n", i + 1, at[i].elname, at[i].charge, at[i].valence, at[i].num_H); */
-
             num_disconnected++;
-
-            /* After disconnection, invoke ammonium salt functions */
-            for (j = 0; j < num_at; j++)
-            {
-                int piO, pk;
-                S_CHAR num_explicit_H[NUM_H_ISOTOPES + 1];
-
-                if (bIsAmmoniumSalt(at, j, &piO, &pk, num_explicit_H))
-                {
-                    /*printf("Ammonium salt detected at atom %d, disconnecting...\n", j + 1);*/
-                    DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
-                }
-            }
         }
     }
 
-    free(metal_atoms);
-    return num_disconnected;
+    /* After disconnection, invoke ammonium salt functions !!!!!TO-DO!!!!! */
+    for (j = 0; j < num_at; j++)
+    {
+        int piO, pk;
+        S_CHAR num_explicit_H[NUM_H_ISOTOPES + 1];
+
+        if (bIsAmmoniumSalt(at, j, &piO, &pk, num_explicit_H))
+        {
+            DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
+        }
+    }
+
+cleanup:
+    if (dfs_visited) inchi_free(dfs_visited);
+    if (dfs_stack) inchi_free(dfs_stack);
+    if (ligand_elem_array) inchi_free(ligand_elem_array);
+    if (structure_id) inchi_free(structure_id);
+    if (structure_metal_count) inchi_free(structure_metal_count);
+
+    return (ret_code < 0) ? ret_code : num_disconnected;
 }
 
 #if (READ_INCHI_STRING == 1)
