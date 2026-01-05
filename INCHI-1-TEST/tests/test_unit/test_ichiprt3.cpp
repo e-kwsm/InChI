@@ -6,6 +6,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichiprt3.c"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/strutil.c"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichi_io.h"
+#include "../../../INCHI-1-SRC/INCHI_BASE/src/ichimake.h"
 }
 
 TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
@@ -52,4 +53,90 @@ TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
     inchi_strbuf_close(&strbuf);
 
     Free_INChI_Stereo(stereo);
+}
+
+TEST(test_ichiprt3, test_str_StereoAbsInv_1)
+{
+
+    int num_at = 2;
+    int num_bonds = 1;
+
+
+
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+    inp_ATOM *at = CreateInpAtom(num_at);
+    static INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
+    inchi->Stereo->nCompInv2Abs = -1;
+    inchi->nNumberOfAtoms = num_at;
+
+    INCHI_SORT *inchi_sort = (INCHI_SORT*)calloc(1, sizeof(INCHI_SORT));
+    inchi_sort->pINChI[TAUT_YES] = inchi;
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+    int bOverflow = 0;
+    int bOutType = OUT_TN;
+    int num_components = 1;
+
+    // int test_ret0 = HAS_T(inchi_sort);
+    // int test_ret1 = GET_II( bOutType, inchi_sort);
+
+    int ret = str_StereoAbsInv(inchi_sort, &strbuf, &bOverflow, bOutType, num_components);
+
+    EXPECT_EQ(ret, 1);
+    EXPECT_EQ(std::string(strbuf.pStr), "1");
+    EXPECT_EQ(bOverflow, 0);
+
+    inchi_strbuf_close(&strbuf);
+
+    Free_INChI(&inchi);
+
+    FreeInpAtom(&at);
+
+    free(inchi_sort);
+}
+
+TEST(test_ichiprt3, test_str_StereoAbsInv_2)
+{
+
+    int num_at = 2;
+    int num_bonds = 1;
+
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+    inp_ATOM *at = CreateInpAtom(num_at);
+    static INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
+
+    inchi->Stereo->nCompInv2Abs = 1;
+
+    inchi->nNumberOfAtoms = num_at;
+
+    INCHI_SORT *inchi_sort = (INCHI_SORT*)calloc(1, sizeof(INCHI_SORT));
+    inchi_sort->pINChI[TAUT_YES] = inchi;
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+    int bOverflow = 0;
+    int bOutType = OUT_TN;
+    int num_components = 1;
+
+    // int test_ret0 = HAS_T(inchi_sort);
+    // int test_ret1 = GET_II( bOutType, inchi_sort);
+
+    int ret = str_StereoAbsInv(inchi_sort, &strbuf, &bOverflow, bOutType, num_components);
+
+    EXPECT_EQ(ret, 1);
+    EXPECT_EQ(std::string(strbuf.pStr), "0");
+    EXPECT_EQ(bOverflow, 0);
+
+    inchi_strbuf_close(&strbuf);
+
+    Free_INChI(&inchi);
+
+    FreeInpAtom(&at);
+
+    free(inchi_sort);
 }

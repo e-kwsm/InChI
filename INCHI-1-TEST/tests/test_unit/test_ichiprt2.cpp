@@ -43,6 +43,21 @@ TEST(test_ichiprt2, MakeMult_mult_gt_1_appends_number_and_delim)
     inchi_strbuf_close(&strbuf);
 }
 
+TEST(test_ichiprt2, MakeMult_mult_2)
+{
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+    int bOverflow = 0;
+    int ret = MakeMult(10, "+", &strbuf, 0, &bOverflow);
+
+    EXPECT_EQ(std::string(strbuf.pStr), "10+");
+    EXPECT_EQ(ret, 3); // "3-".length() == 2, but MakeMult returns n (number of chars written)
+    EXPECT_EQ(bOverflow, 0);
+
+    inchi_strbuf_close(&strbuf);
+}
+
 TEST(test_ichiprt2, MakeMult_mult_eq_1_does_nothing)
 {
     INCHI_IOS_STRING strbuf = {0};

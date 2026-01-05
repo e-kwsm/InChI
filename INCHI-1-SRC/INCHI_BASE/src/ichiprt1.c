@@ -3375,7 +3375,6 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /*  sp2 */
 
-        /*if ( bStereoSp2[io->iCurTautMode]  )*/
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ))) /* djb-rwth: addressing LLVM warning */
         {
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_DBND, io->szTag2, &io->bAlways, 1 );
@@ -3406,7 +3405,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /*  sp3 */
 
-        /*if ( bStereoSp3[io->iCurTautMode]  )*/
+        /* t-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ))) /* djb-rwth: addressing LLVM warning */
         {
             io->bRelRac = io->bRelativeStereo[io->iCurTautMode] || io->bRacemicStereo[io->iCurTautMode];
@@ -3436,9 +3435,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             }
         }
 
-        /* bStereoAbsInverted[io->iCurTautMode]  */
-
-        /* if ( bStereoAbs[io->iCurTautMode]  ) */
+        /* m-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ))) /* djb-rwth: addressing LLVM warning */
         {
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_INVS, io->szTag2, &io->bAlways, 1 );
@@ -3466,7 +3463,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /* stereo type */
 
-        /*if ( io->bRacemicStereo[io->iCurTautMode] || io->bRelativeStereo[io->iCurTautMode] || bStereoAbs[io->iCurTautMode] )*/
+        /* s-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))) /* djb-rwth: addressing LLVM warning */
         {
             const char *p_stereo = io->bRelativeStereo[io->iCurTautMode] ? x_rel :

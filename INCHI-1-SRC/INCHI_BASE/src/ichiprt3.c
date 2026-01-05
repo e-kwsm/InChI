@@ -1184,10 +1184,15 @@ int str_Sp3( INCHI_SORT       *pINChISort,
     return ( strbuf->nUsedLength - nUsedLength0 );
 }
 
-
-/****************************************************************************
-  Output abs stero inversion substring of the whole structure InChI string
-****************************************************************************/
+/**
+ * @brief Output absolute stereo inversion substring of the whole structure InChI string
+ * @param pINChISort Pointer to INCHI_SORT array
+ * @param strbuf Pointer to string buffer
+ * @param bOverflow Overflow flag
+ * @param bOutType Output type
+ * @param num_components Number of connected components
+ * @return Length of the added substring (return value '0', '1', or '.' in strbuf)
+ */
 int str_StereoAbsInv( INCHI_SORT       *pINChISort,
                       INCHI_IOS_STRING *strbuf,
                       int              *bOverflow,
@@ -4131,7 +4136,7 @@ int bin_AuxTautTrans( INCHI_SORT *pINChISort,
             if (nTrans_n && nTrans_s)
             {
                 /* new ordering number for original non-tautomeric component number is->ord_number */
-                nTrans_n[is->ord_number] = i + 1; /*nTrans_t[is2->ord_number] =*/ 
+                nTrans_n[is->ord_number] = i + 1; /*nTrans_t[is2->ord_number] =*/
             }
         }
     }
