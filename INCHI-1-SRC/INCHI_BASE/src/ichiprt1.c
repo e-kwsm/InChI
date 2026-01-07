@@ -3347,10 +3347,17 @@ int OutputINCHI_ChargeAndRemovedAddedProtonsLayers( CANON_GLOBALS    *pCG,
     return 0;
 }
 
-
-/****************************************************************************
-Output InChI: stereo layer with sublayers
-****************************************************************************/
+/**
+ * @brief Output InChI: stereo layer with sublayers.
+ *
+ * @param pCG Pointer to the CANON_GLOBALS structure containing global canonicalization data.
+ * @param out_file Pointer to the INCHI_IOSTREAM output stream where the stereo layer will be written.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer used for string formatting and output.
+ * @param io Pointer to the INCHI_OUT_CTL structure containing output control and state information.
+ * @param pLF Pointer to a string used as the line feed (end-of-line) character(s).
+ * @param pTAB Pointer to a string used as the tab or separator character(s).
+ * @return Returns 0 on success, or a non-zero error code on failure.
+ */
 int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
                              INCHI_IOSTREAM   *out_file,
                              INCHI_IOS_STRING *strbuf,
@@ -3358,10 +3365,6 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
                              char             *pLF,
                              char             *pTAB )
 {
-
-    // int i;
-    // i = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    // /* djb-rwth: removing redundant code */
 
     if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
          INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
@@ -3375,7 +3378,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /*  sp2 */
 
-        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ))) /* djb-rwth: addressing LLVM warning */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] )))
         {
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_DBND, io->szTag2, &io->bAlways, 1 );
             inchi_strbuf_reset( strbuf );
@@ -3464,7 +3467,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
         /* stereo type */
 
         /* s-layer */
-        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))) /* djb-rwth: addressing LLVM warning */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
         {
             const char *p_stereo = io->bRelativeStereo[io->iCurTautMode] ? x_rel :
                 io->bRacemicStereo[io->iCurTautMode] ? x_rac : x_abs;
@@ -3499,7 +3502,8 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
 
 /****************************************************************************
-Output InChI: isotopic layer and sublayers  ****************************************************************************/
+Output InChI: isotopic layer and sublayers
+****************************************************************************/
 int OutputINCHI_IsotopicLayer( CANON_GLOBALS    *pCG,
                                INCHI_IOSTREAM   *out_file,
                                INCHI_IOS_STRING *strbuf,

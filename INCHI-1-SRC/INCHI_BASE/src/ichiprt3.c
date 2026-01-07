@@ -718,10 +718,21 @@ int str_FixedH_atoms( INCHI_SORT       *pINChISort,
     return ( strbuf->nUsedLength - nUsedLength0 );
 }
 
-
-/****************************************************************************
-  Produce double bond stereo substring of the whole structure InChI string.
-****************************************************************************/
+/**
+ * @brief Produce double bond stereo substring of the whole structure InChI string.
+ *
+ * @param pINChISort Pointer to the primary INCHI_SORT structure containing input data.
+ * @param pINChISort2 Pointer to the secondary INCHI_SORT structure, used for comparison or additional data.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer where the output string will be stored.
+ * @param bOverflow Pointer to an integer flag that will be set if the output overflows the buffer.
+ * @param bOutType Output type flag specifying the format or type of output.
+ * @param TAUT_MODE Tautomer mode flag indicating how tautomers are handled.
+ * @param num_components Number of components to process.
+ * @param bSecondNonTautPass Flag indicating if this is the second pass for non-tautomeric processing.
+ * @param bOmitRepetitions Flag to omit repeated entries in the output.
+ * @param bUseMulipliers Flag to use multipliers in the output representation.
+ * @return Returns number of characters written to strbuf
+ */
 int str_Sp2( INCHI_SORT       *pINChISort,
              INCHI_SORT       *pINChISort2,
              INCHI_IOS_STRING *strbuf,
