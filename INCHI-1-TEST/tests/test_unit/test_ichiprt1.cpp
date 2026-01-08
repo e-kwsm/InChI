@@ -45,6 +45,84 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer)
 
 }
 
+TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_b_1)
+{
+    int num_at = 2;
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+
+    CANON_GLOBALS cg = {0};
+    INCHI_IOSTREAM out_file = {0};
+    INCHI_IOS_STRING strbuf = {0};
+    INCHI_OUT_CTL io = {0};
+    INCHI_SORT inchi_sort = {0};
+    inp_ATOM *atoms = CreateInpAtom(num_at);
+
+    atoms[0].valence = 1;
+    // atoms[0].el_number = (U_CHAR)get_periodic_table_number("C");
+    // atoms[0].orig_at_number = 4;
+    // atoms[0].neighbor[0] = 3;
+    // atoms[0].bond_type[0] = 2;
+
+    atoms[1].valence = 1;
+    // atoms[1].el_number = (U_CHAR)get_periodic_table_number("C");
+    // atoms[1].orig_at_number = 3;
+    // atoms[1].neighbor[0] = 4;
+    // atoms[1].bond_type[0] = 2;
+
+    INChI *inchi = Alloc_INChI(atoms, num_at, &found_num_bonds, &found_num_isotopic, 0);
+
+    inchi->nNumberOfAtoms = num_at;
+
+    int bond_atom1[1] = {4};
+    int bond_atom2[1] = {3};
+    S_CHAR b_parity[1] = {1}; // 1 = -, 2 = +
+
+    for (int i = 0; i < found_num_bonds; i++) {
+        inchi->Stereo->nBondAtom1[i] = bond_atom1[i];
+        inchi->Stereo->nBondAtom2[i] = bond_atom2[i];
+        inchi->Stereo->b_parity[i] = b_parity[i];
+    }
+
+    // inchi->Stereo->nCompInv2Abs = 1;
+    inchi->Stereo->nNumberOfStereoBonds = 1;
+    // inchi->Stereo->nNumberOfStereoCenters = 0;
+
+    inchi_sort.pINChI[0] = inchi;
+
+    io.pINChISort = &inchi_sort;
+    io.num_components = 1;
+
+    // io.bRelativeStereo[0] = 0;
+    // io.bRacemicStereo[0] = 0;
+
+    io.sDifSegs[0][DIFS_b_SBONDS] = DIFV_OUTPUT_FILL_T; // b
+    // io.sDifSegs[0][DIFS_t_SATOMS] = DIFV_OUTPUT_FILL_T; // t
+    // io.sDifSegs[0][DIFS_m_SP3INV] = DIFV_OUTPUT_FILL_T; // m
+    // io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;  // s
+    io.nCurINChISegment = 0;
+    io.iCurTautMode = 0;
+    io.bPlainTextTags = 2;
+    io.nTag = 2;
+    io.bTag1 = IL_STER;
+    io.bTag2 = IL_STER | IL_TYPS;
+    io.bOutType = OUT_TN;
+
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
+
+    int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
+
+    EXPECT_EQ(std::string(out_file.s.pStr), "/b4-3-");
+    EXPECT_EQ(ret, 0);
+
+    inchi_strbuf_close(&strbuf);
+    inchi_ios_close(&out_file);
+
+    FreeInpAtom(&atoms);
+    Free_INChI(&inchi);
+}
+
 TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_m0)
 {
     CANON_GLOBALS cg = {0};
@@ -224,7 +302,6 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s3)
 
 
     io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
-
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
     io.bPlainTextTags = 1;
@@ -248,32 +325,26 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_s3)
 
 }
 
-TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
+TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_layers_t)
 {
+
+    int num_at = 8;
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+
     CANON_GLOBALS cg = {0};
     INCHI_IOSTREAM out_file = {0};
     INCHI_IOS_STRING strbuf = {0};
     INCHI_OUT_CTL io = {0};
-
-    int num_at = 8;
-    int num_bonds = 0;
-    static AT_NUMB numbers[8] = {3,4,5,6,7,8,9,10};
-    static S_CHAR parities[8] = {1,1,2,2,1,2,2,1};// -,-,+,+,-,+,+,-
-
-
-
-
-    // INChI *inchi = new INChI;
-    // inchi->nNumberOfAtoms = num_at;
-    // inchi->Stereo = stereo;
-
-    int found_num_bonds = 0;
-    int found_num_isotopic = 0;
+    INCHI_SORT inchi_sort = {0};
+    AT_NUMB numbers[8] = {3,4,5,6,7,8,9,10};
+    S_CHAR parities[8] = {1,1,2,2,1,2,2,1};// -,-,+,+,-,+,+,-
     inp_ATOM *at = CreateInpAtom(num_at);
-    static INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
+    INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
 
     inchi->nNumberOfAtoms = num_at;
-
+    inchi->Stereo->nCompInv2Abs = 1;
+    inchi->Stereo->nNumberOfStereoBonds = 0;
     inchi->Stereo->nNumberOfStereoCenters = num_at;
 
     for (int i = 0; i < num_at; i++) {
@@ -281,28 +352,19 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
         inchi->Stereo->t_parity[i] = parities[i];
     }
 
-    inchi->Stereo->nCompInv2Abs = 1;
-    inchi->Stereo->nNumberOfStereoBonds = 0;
-    inchi->Stereo->b_parity = NULL;
+    inchi_sort.pINChI[0] = inchi;
 
-
-
-    static INCHI_SORT sort = {0};
-    sort.pINChI[0] = inchi;
-
-    io.pINChISort = &sort;
-
+    io.pINChISort = &inchi_sort;
     io.num_components = 1;
     io.bRelativeStereo[0] = 0;
     io.bRacemicStereo[0] = 1;
-
-    io.sDifSegs[0][DIFS_b_SBONDS] = DIFV_OUTPUT_FILL_T;
-    io.sDifSegs[0][DIFS_t_SATOMS] = DIFV_OUTPUT_FILL_T;
-    io.sDifSegs[0][DIFS_m_SP3INV] = DIFV_OUTPUT_FILL_T;
-    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
+    // io.sDifSegs[0][DIFS_b_SBONDS] = DIFV_OUTPUT_FILL_T; // b
+    io.sDifSegs[0][DIFS_t_SATOMS] = DIFV_OUTPUT_FILL_T; // t
+    // io.sDifSegs[0][DIFS_m_SP3INV] = DIFV_OUTPUT_FILL_T; // m
+    // io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;  // s
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
-    io.bPlainTextTags = 1;
+    io.bPlainTextTags = 2; /* 0 => no plain tags, 1=> plain text tags, 2=>plaintext tags without consecutive // */
     io.nTag = 2;
     io.bTag1 = IL_STER;
     io.bTag2 = IL_STER | IL_TYPS;
@@ -313,7 +375,67 @@ TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_enh_stereo_1)
 
     int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
 
-    EXPECT_EQ(std::string(out_file.s.pStr), "/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s3/");
+    EXPECT_EQ(std::string(out_file.s.pStr), "/t3-,4-,5+,6+,7-,8+,9+,10-");
+    EXPECT_EQ(ret, 0);
+
+    inchi_strbuf_close(&strbuf);
+    inchi_ios_close(&out_file);
+
+    FreeInpAtom(&at);
+    Free_INChI(&inchi);
+}
+
+TEST(test_ichiprt1, test_OutputINCHI_StereoLayer_layers_t_m_s)
+{
+
+    int num_at = 8;
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+
+    CANON_GLOBALS cg = {0};
+    INCHI_IOSTREAM out_file = {0};
+    INCHI_IOS_STRING strbuf = {0};
+    INCHI_OUT_CTL io = {0};
+    INCHI_SORT inchi_sort = {0};
+    AT_NUMB numbers[8] = {3,4,5,6,7,8,9,10};
+    S_CHAR parities[8] = {1,1,2,2,1,2,2,1};// -,-,+,+,-,+,+,-
+    inp_ATOM *at = CreateInpAtom(num_at);
+    INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
+
+    inchi->nNumberOfAtoms = num_at;
+    inchi->Stereo->nCompInv2Abs = 1;
+    inchi->Stereo->nNumberOfStereoBonds = 0;
+    inchi->Stereo->nNumberOfStereoCenters = num_at;
+
+    for (int i = 0; i < num_at; i++) {
+        inchi->Stereo->nNumber[i] = numbers[i];
+        inchi->Stereo->t_parity[i] = parities[i];
+    }
+
+    inchi_sort.pINChI[0] = inchi;
+
+    io.pINChISort = &inchi_sort;
+    io.num_components = 1;
+    io.bRelativeStereo[0] = 0;
+    io.bRacemicStereo[0] = 1;
+    io.sDifSegs[0][DIFS_b_SBONDS] = DIFV_OUTPUT_FILL_T; // b
+    io.sDifSegs[0][DIFS_t_SATOMS] = DIFV_OUTPUT_FILL_T; // t
+    io.sDifSegs[0][DIFS_m_SP3INV] = DIFV_OUTPUT_FILL_T; // m
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;  // s
+    io.nCurINChISegment = 0;
+    io.iCurTautMode = 0;
+    io.bPlainTextTags = 2; /* 0 => no plain tags, 1=> plain text tags, 2=>plaintext tags without consecutive // */
+    io.nTag = 2;
+    io.bTag1 = IL_STER;
+    io.bTag2 = IL_STER | IL_TYPS;
+    io.bOutType = OUT_TN;
+
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    inchi_ios_init(&out_file, INCHI_IOS_TYPE_STRING, nullptr);
+
+    int ret = OutputINCHI_StereoLayer(&cg, &out_file, &strbuf, &io, (char*)"", (char*)"");
+
+    EXPECT_EQ(std::string(out_file.s.pStr), "/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s3");
     EXPECT_EQ(ret, 0);
 
     inchi_strbuf_close(&strbuf);

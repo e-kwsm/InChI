@@ -187,6 +187,7 @@ typedef struct tagInputParms {
     int             bNoWarnings;            /* v. 1.06+ suppress warning messages                                   */
     int             bHideInChI;             /* v. 1.06+ Do not print InChI itself                                   */
 
+    int             bEnhancedStereo;
 
     /* */
     INCHI_MODE      bTautFlags;

@@ -407,9 +407,9 @@ extern "C"
      * @brief Compares stereo information of two structures
      *
      * @param s1 Pointer to stereo information of first structure
-     * @param eql1 Flag for stereo information check
+     * @param eql1 Flag for stereo information check (EQL_EXISTS, EQL_SP3, EQL_SP3_INV, EQL_SP2)
      * @param s2 Pointer to stereo information of second structure
-     * @param eql2 Flag for stereo information check
+     * @param eql2 Flag for stereo information check (EQL_EXISTS, EQL_SP3, EQL_SP3_INV, EQL_SP2)
      * @param bRelRac Flag to compare racemic stereo information
      * @return int 0 if unequal, 1 if equal
      */

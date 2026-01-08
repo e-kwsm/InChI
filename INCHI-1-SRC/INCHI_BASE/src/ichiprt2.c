@@ -471,6 +471,49 @@ int MakeMult( int mult,
     return 0;
 }
 
+int MakeMult_EnhStereo( int mult,
+                        const char       *szTailingDelim,
+                        INCHI_IOS_STRING *buf,
+                        int              nCtMode,
+                        int              *bOverflow )
+{
+    char szValue[2048];
+    int  len = 0, len_delim, n;
+
+    if (*bOverflow)
+    {
+        return 0;
+    }
+    if (nCtMode & CT_MODE_ABC_NUMBERS)
+    {
+        len += MakeAbcNumber( szValue, ( int )sizeof( szValue ), NULL, mult );
+    }
+    else
+    {
+        len += MakeDecNumber( szValue, ( int )sizeof( szValue ), NULL, mult );
+    }
+    len_delim = (int) strlen( szTailingDelim );
+
+    if (len + len_delim < ( int )sizeof( szValue ))
+    {
+        strcpy(szValue + len, szTailingDelim);
+        n = inchi_strbuf_printf( buf, "%s", szValue );
+        if (-1 == n) *bOverflow |= 1;
+        return n;
+        /*
+        len += len_delim;
+        if ( len < nLen_szLinearCT )
+        {
+            strcpy( szLinearCT, szValue );
+            return len;
+        }*/
+    }
+
+    *bOverflow |= 1;
+
+    return 0;
+}
+
 
 /****************************************************************************/
 int MakeDelim( const char       *szTailingDelim,
@@ -1464,7 +1507,7 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                 }
                 /* radical */
                 if (OrigInfo[k].cRadical)
-                {                            
+                {
                     if (len >= 2047) /* djb-rwth: fixing coverity CID #499515 */
                     {
                         len = 2047;
@@ -2114,6 +2157,34 @@ int MakeStereoString( AT_NUMB          *at1,
     nLen = strbuf->nUsedLength - nUsedLength0;
 
     return nLen;
+}
+
+int MakeEnhStereoString( int              **enh_stereo,
+                         int              nof_units,
+                         INCHI_IOS_STRING *strbuf,
+                         int              nCtMode,
+                         int              *bOverflow )
+{
+    int tot_len = 0;
+
+    if (nof_units > 0) {
+        tot_len += MakeDelim( "(", strbuf, bOverflow );
+        for (int i = 0; i < nof_units; i++) {
+            for (int j = 0; j < enh_stereo[i][1]; j++)  {
+
+                MakeMult_EnhStereo( enh_stereo[i][2 + j], "", strbuf, nCtMode, bOverflow );
+
+                if ((j + 1) < enh_stereo[i][1]) {
+                    tot_len += MakeDelim( ",", strbuf, bOverflow );
+                }
+            }
+            if (i + 1 < nof_units) {
+                tot_len += MakeDelim( ";", strbuf, bOverflow );
+            }
+        }
+        tot_len += MakeDelim( ")", strbuf, bOverflow );
+    }
+    return tot_len;
 }
 
 

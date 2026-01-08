@@ -317,7 +317,8 @@ TEST(test_ichimain, test_ProcessMultipleInputFiles_2mol_files)
 
     char tmpl[] = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/inchi_mol_test_XXXXXX";
     char *tmpd = mkdtemp(tmpl);
-    ASSERT_NE(tmpd, nullptr);
+
+    EXPECT_NE(tmpd, nullptr);
 
     std::vector<std::string> dist_paths;
     for (auto cur_filename : input_mols) {

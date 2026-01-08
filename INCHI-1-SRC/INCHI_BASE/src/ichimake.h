@@ -208,6 +208,11 @@ const char *EquString( int EquVal );
                           INCHI_IOS_STRING *buf,
                           int nCtMode,
                           int *bOverflow );
+    int MakeEnhStereoString( int              **enh_stereo,
+                             int              nof_units,
+                             INCHI_IOS_STRING *strbuf,
+                             int              nCtMode,
+                             int              *bOverflow );
     int MakeCRVString( ORIG_INFO *OrigInfo,
                        int nLenCT,
                        int bAddDelim,

@@ -129,6 +129,13 @@ static int OutputINCHI_StereoLayer( CANON_GLOBALS *pCG,
                                     INCHI_OUT_CTL *io,
                                     char *pLF,
                                     char *pTAB );
+static int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS *pCG,
+                                                   INCHI_IOSTREAM *out_file,
+                                                   INCHI_IOS_STRING *strbuf,
+                                                   INCHI_OUT_CTL *io,
+                                                   ORIG_ATOM_DATA *orig_inp_data,
+                                                   char *pLF,
+                                                   char *pTAB );
 static int OutputINCHI_IsotopicLayer( CANON_GLOBALS *pCG,
                                       INCHI_IOSTREAM *out_file,
                                       INCHI_IOS_STRING *strbuf,
@@ -1032,14 +1039,29 @@ int OutputINChI2( CANON_GLOBALS     *pCG,
     return ret;
 }
 
-
-/*                                                          */
-/*    OutputINChI1( ... )                                   */
-/*                                                          */
-/*    Main actual worker which serializes InChI to string.  */
-/*                                                          */
-/*    Called from OutputINChI2( ... ) and from itself       */
-/*                                                          */
+/**
+ * @brief Main actual worker which serializes InChI to string. Called from OutputINChI2( ... ) and from itself.
+ *
+ * @param pCG Pointer to global canonicalization data.
+ * @param strbuf Pointer to the output string buffer.
+ * @param pINChISortTautAndNonTaut2 Array of pointers to INCHI_SORT structures for tautomeric and non-tautomeric forms.
+ * @param INCHI_basic_or_INCHI_reconnected Flag indicating basic or reconnected InChI output.
+ * @param orig_inp_data Pointer to original atom data.
+ * @param pOrigStruct Pointer to the original structure data.
+ * @param ip Pointer to input parameters.
+ * @param bDisconnectedCoord Flag for disconnected metal coordination.
+ * @param bOutputType Output type (tautomeric/non-tautomeric/both).
+ * @param bINChIOutputOptions Bitmask of output options.
+ * @param num_components2 Array of component counts for each structure type.
+ * @param num_non_taut2 Array of non-tautomeric component counts.
+ * @param num_taut2 Array of tautomeric component counts.
+ * @param out_file Output stream for InChI string.
+ * @param log_file Output stream for logging.
+ * @param num_input_struct Number of input structures.
+ * @param pSortPrintINChIFlags Pointer to flags controlling sorting and printing.
+ * @param save_opt_bits Encoded bits for saved InChI creation options.
+ * @return int
+ */
 int OutputINChI1( CANON_GLOBALS *pCG,
                   INCHI_IOS_STRING *strbuf,
                   INCHI_SORT *pINChISortTautAndNonTaut2[][TAUT_NUM],
@@ -1753,7 +1775,14 @@ repeat_INChI_output:
     }
 
     /* InChI output: stereo (non-isotopic) */
-    intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
+    // intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
+
+    if (ip->bEnhancedStereo) {
+        intermediate_result = OutputINCHI_StereoLayer_EnhancedStereo( pCG, out_file, strbuf, &io, orig_inp_data, pLF, pTAB );
+    } else {
+        intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
+    }
+
     if (intermediate_result != 0)
         goto exit_function;
 
@@ -3500,6 +3529,198 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
     return 0;
 }
 
+/**
+ * @brief Output InChI: stereo layer with sublayers.
+ *
+ * @param pCG Pointer to the CANON_GLOBALS structure containing global canonicalization data.
+ * @param out_file Pointer to the INCHI_IOSTREAM output stream where the stereo layer will be written.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer used for string formatting and output.
+ * @param io Pointer to the INCHI_OUT_CTL structure containing output control and state information.
+ * @param orig_inp_data Pointer to the ORIG_ATOM_DATA containing e.g. atom information.
+ * @param pLF Pointer to a string used as the line feed (end-of-line) character(s).
+ * @param pTAB Pointer to a string used as the tab or separator character(s).
+ * @return Returns 0 on success, or a non-zero error code on failure.
+ */
+int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS    *pCG,
+                             INCHI_IOSTREAM   *out_file,
+                             INCHI_IOS_STRING *strbuf,
+                             INCHI_OUT_CTL    *io,
+                             ORIG_ATOM_DATA   *orig_inp_data,
+                             char             *pLF,
+                             char             *pTAB )
+{
+
+    if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
+         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
+         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
+         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
+    {
+
+        /*  stereo */
+
+        szGetTag( IdentLbl, io->nTag, io->bTag1 = IL_STER | io->bFhTag, io->szTag1, &io->bAlways, 1 );
+
+        /*  sp2 */
+
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] )))
+        {
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_DBND, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_Sp2( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
+                                        io->bOutType, io->TAUT_MODE, io->num_components,
+                                        io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 1;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp2 */
+            }
+        }
+
+        /*  sp3 */
+
+        /* t-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ))) /* djb-rwth: addressing LLVM warning */
+        {
+            io->bRelRac = io->bRelativeStereo[io->iCurTautMode] || io->bRacemicStereo[io->iCurTautMode];
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_SP3S, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_Sp3( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
+                                       io->bOutType, io->TAUT_MODE, io->num_components, io->bRelRac,
+                                   io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 2;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            }
+        }
+
+        /* m-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ))) /* djb-rwth: addressing LLVM warning */
+        {
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_INVS, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_StereoAbsInv( io->pINChISort, strbuf,
+                                               &io->bOverflow, io->bOutType, io->num_components );
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 3;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* stereo-abs-inv */
+            }
+        }
+
+        /* stereo type */
+
+        /* s-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
+        {
+
+            const char *p_stereo;
+            if (io->bRelativeStereo[io->iCurTautMode]) {
+                p_stereo = x_rel;
+            } else if (io->bRacemicStereo[io->iCurTautMode]) {
+                p_stereo = x_rac;
+            } else {
+                p_stereo = x_abs;
+            }
+
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_TYPS, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len += MakeDelim( x_abs, strbuf, &io->bOverflow ); // s1
+                io->tot_len += MakeEnhStereoString(
+                                    orig_inp_data->v3000->lists_steabs,
+                                    orig_inp_data->v3000->n_steabs,
+                                    strbuf,
+                                    0,
+                                    &io->bOverflow
+                                );
+
+
+                io->tot_len += MakeDelim( x_rel, strbuf, &io->bOverflow ); // s2
+                io->tot_len += MakeEnhStereoString(
+                                    orig_inp_data->v3000->lists_sterel,
+                                    orig_inp_data->v3000->n_sterel,
+                                    strbuf,
+                                    0,
+                                    &io->bOverflow
+                                );
+
+
+                io->tot_len += MakeDelim( x_rac, strbuf, &io->bOverflow ); // s3
+                io->tot_len += MakeEnhStereoString(
+                                    orig_inp_data->v3000->lists_sterac,
+                                    orig_inp_data->v3000->n_sterac,
+                                    strbuf,
+                                    0,
+                                    &io->bOverflow
+                                );
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 1;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "/" );  /* no abs, inv or racemic stereo */
+        }
+    }
+    else
+    {
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "////" ); /* sp2, sp3, abs-inv, stereo.type */
+        }
+    }
+
+    return 0;
+}
 
 /****************************************************************************
 Output InChI: isotopic layer and sublayers
