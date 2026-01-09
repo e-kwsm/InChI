@@ -188,13 +188,10 @@ TEST(test_ichiprt3, test_str_StereoAbsInv_1)
 
     int num_at = 2;
     int num_bonds = 1;
-
-
-
     int found_num_bonds = 0;
     int found_num_isotopic = 0;
     inp_ATOM *at = CreateInpAtom(num_at);
-    static INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
+    INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
     inchi->Stereo->nCompInv2Abs = -1;
     inchi->nNumberOfAtoms = num_at;
 
@@ -231,7 +228,6 @@ TEST(test_ichiprt3, test_str_StereoAbsInv_2)
 
     int num_at = 2;
     int num_bonds = 1;
-
     int found_num_bonds = 0;
     int found_num_isotopic = 0;
     inp_ATOM *at = CreateInpAtom(num_at);

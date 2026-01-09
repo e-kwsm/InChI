@@ -2159,20 +2159,46 @@ int MakeStereoString( AT_NUMB          *at1,
     return nLen;
 }
 
-int MakeEnhStereoString( int              **enh_stereo,
+int MakeEnhStereoString( INCHI_SORT       *pINChISort,
+                         int              bOutType,
+                         int              num_components,
+                         int              **enh_stereo,
                          int              nof_units,
                          INCHI_IOS_STRING *strbuf,
                          int              nCtMode,
                          int              *bOverflow )
 {
     int tot_len = 0;
+    int          ii, nUsedLength0;
+    INCHI_SORT   *is, *is0;
+    INChI_Stereo *Stereo;
+    INChI        *pINChI;
+    INChI_Aux    *pAux;
 
-    if (nof_units > 0) {
+    if (nof_units <= 0) {
+        return 0;
+    }
+
+    is = NULL;
+    is0 = pINChISort;
+
+    /* For each connected component...    */
+    for (int cur_c = 0; !*bOverflow && cur_c < num_components; cur_c++)
+    {
+
+        is = is0 + cur_c;
+        // pINChI = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI[ii] : NULL;
+        pAux = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI_Aux[ii] : NULL;
+
         tot_len += MakeDelim( "(", strbuf, bOverflow );
         for (int i = 0; i < nof_units; i++) {
             for (int j = 0; j < enh_stereo[i][1]; j++)  {
 
-                MakeMult_EnhStereo( enh_stereo[i][2 + j], "", strbuf, nCtMode, bOverflow );
+                int orig_atom_num = enh_stereo[i][2 + j];
+                int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
+
+                //tot_len += MakeMult_EnhStereo( enh_stereo[i][2 + j], "", strbuf, nCtMode, bOverflow );
+                tot_len += MakeMult_EnhStereo( canon_atom_num, "", strbuf, nCtMode, bOverflow );
 
                 if ((j + 1) < enh_stereo[i][1]) {
                     tot_len += MakeDelim( ",", strbuf, bOverflow );
@@ -2183,7 +2209,9 @@ int MakeEnhStereoString( int              **enh_stereo,
             }
         }
         tot_len += MakeDelim( ")", strbuf, bOverflow );
+
     }
+
     return tot_len;
 }
 

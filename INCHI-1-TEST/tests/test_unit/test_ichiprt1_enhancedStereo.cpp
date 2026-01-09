@@ -29,7 +29,6 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     oad->v3000 = (OAD_V3000 *)inchi_calloc(1, sizeof(OAD_V3000));
 
     oad->v3000->n_collections = 5;
-
     oad->v3000->n_steabs = 1;
 
     oad->v3000->lists_steabs = (int **)inchi_calloc(1, sizeof(int*));
@@ -78,8 +77,41 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     oad->v3000->lists_sterel[1][1] = 1;  // number of members in collection
     oad->v3000->lists_sterel[1][2] = 14; // member atom numbers
 
-    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
+    INCHI_SORT *inchi_sort = (INCHI_SORT*)inchi_calloc(1, sizeof(INCHI_SORT));
 
+    int num_at = 8;
+    int num_iso_at = 1;
+    int alloc_mode = 0;
+    int bOrigatomflag = 0;
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+
+    inp_ATOM *atoms = CreateInpAtom(num_at);
+    INChI *inchi = Alloc_INChI(atoms, num_at, &found_num_bonds, &found_num_isotopic, 0);
+    inchi->nNumberOfAtoms = num_at;
+
+    INChI_Aux *pAux = Alloc_INChI_Aux(num_at, num_iso_at, alloc_mode, bOrigatomflag);
+
+    pAux->nNumberOfAtoms = num_at;
+    pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
+
+    // canonical atom i+1 maps to original atom i+1
+    pAux->nOrigAtNosInCanonOrd[0] = 4;
+    pAux->nOrigAtNosInCanonOrd[1] = 5;
+    pAux->nOrigAtNosInCanonOrd[2] = 1;
+    pAux->nOrigAtNosInCanonOrd[3] = 2;
+    pAux->nOrigAtNosInCanonOrd[4] = 3;
+    pAux->nOrigAtNosInCanonOrd[5] = 12;
+    pAux->nOrigAtNosInCanonOrd[6] = 13;
+    pAux->nOrigAtNosInCanonOrd[7] = 14;
+
+    inchi_sort->pINChI[0] = inchi;
+    inchi_sort->pINChI_Aux[0] = pAux;
+    io.pINChISort = inchi_sort;
+
+    io.bOutType = OUT_TN;
+    io.num_components = 1;
+    io.sDifSegs[0][DIFS_s_STYPE] = DIFV_OUTPUT_FILL_T;
     io.nCurINChISegment = 0;
     io.iCurTautMode = 0;
     io.bPlainTextTags = 1;
@@ -95,7 +127,8 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
 
     int ret = OutputINCHI_StereoLayer_EnhancedStereo(&cg, &out_file, &strbuf, &io, oad, (char*)"", (char*)"");
 
-    EXPECT_EQ(std::string(strbuf.pStr), "/s1(4,5)2(12,13;14)3(1;2,3)");
+    // EXPECT_EQ(std::string(strbuf.pStr), "/s1(4,5)2(12,13;14)3(1;2,3)");
+    EXPECT_EQ(std::string(strbuf.pStr), "/s1(1,2)2(6,7;8)3(3;4,5)");
     EXPECT_EQ(ret, 0);
 
     inchi_strbuf_close(&strbuf);

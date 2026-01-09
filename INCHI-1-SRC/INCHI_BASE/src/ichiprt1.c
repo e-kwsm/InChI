@@ -1637,6 +1637,11 @@ int OutputINChI1( CANON_GLOBALS *pCG,
                         io.bChargesRadVal[ii] |= 1;
                     }
                 }
+
+                if (ip->bEnhancedStereo)
+                {
+                    set_EnhancedStereo_t_m_layers(orig_inp_data, pINChI, pINChI_Aux);
+                }
             }
         }
         if (bCompExists)
@@ -1775,14 +1780,11 @@ repeat_INChI_output:
     }
 
     /* InChI output: stereo (non-isotopic) */
-    // intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
-
     if (ip->bEnhancedStereo) {
         intermediate_result = OutputINCHI_StereoLayer_EnhancedStereo( pCG, out_file, strbuf, &io, orig_inp_data, pLF, pTAB );
     } else {
         intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
     }
-
     if (intermediate_result != 0)
         goto exit_function;
 
@@ -3396,9 +3398,9 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 {
 
     if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
     {
 
         /*  stereo */
@@ -3415,8 +3417,8 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len = str_Sp2( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
-                                        io->bOutType, io->TAUT_MODE, io->num_components,
-                                        io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bOutType, io->TAUT_MODE, io->num_components,
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3448,7 +3450,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             {
                 io->tot_len = str_Sp3( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
                                        io->bOutType, io->TAUT_MODE, io->num_components, io->bRelRac,
-                                   io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3475,7 +3477,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len = str_StereoAbsInv( io->pINChISort, strbuf,
-                                            &io->bOverflow, io->bOutType, io->num_components );
+                                               &io->bOverflow, io->bOutType, io->num_components );
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
 
@@ -3541,19 +3543,20 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
  * @param pTAB Pointer to a string used as the tab or separator character(s).
  * @return Returns 0 on success, or a non-zero error code on failure.
  */
-int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS    *pCG,
-                             INCHI_IOSTREAM   *out_file,
-                             INCHI_IOS_STRING *strbuf,
-                             INCHI_OUT_CTL    *io,
-                             ORIG_ATOM_DATA   *orig_inp_data,
-                             char             *pLF,
-                             char             *pTAB )
+int OutputINCHI_StereoLayer_EnhancedStereo(
+        CANON_GLOBALS    *pCG,
+        INCHI_IOSTREAM   *out_file,
+        INCHI_IOS_STRING *strbuf,
+        INCHI_OUT_CTL    *io,
+        ORIG_ATOM_DATA   *orig_inp_data,
+        char             *pLF,
+        char             *pTAB )
 {
 
     if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
     {
 
         /*  stereo */
@@ -3570,8 +3573,8 @@ int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len = str_Sp2( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
-                                        io->bOutType, io->TAUT_MODE, io->num_components,
-                                        io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bOutType, io->TAUT_MODE, io->num_components,
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3603,7 +3606,7 @@ int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS    *pCG,
             {
                 io->tot_len = str_Sp3( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
                                        io->bOutType, io->TAUT_MODE, io->num_components, io->bRelRac,
-                                   io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3670,33 +3673,36 @@ int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len += MakeDelim( x_abs, strbuf, &io->bOverflow ); // s1
-                io->tot_len += MakeEnhStereoString(
-                                    orig_inp_data->v3000->lists_steabs,
-                                    orig_inp_data->v3000->n_steabs,
-                                    strbuf,
-                                    0,
-                                    &io->bOverflow
-                                );
+                io->tot_len += MakeEnhStereoString( io->pINChISort,
+                                                    io->bOutType,
+                                                    io->num_components,
+                                                    orig_inp_data->v3000->lists_steabs,
+                                                    orig_inp_data->v3000->n_steabs,
+                                                    strbuf,
+                                                    0,
+                                                    &io->bOverflow);
 
 
                 io->tot_len += MakeDelim( x_rel, strbuf, &io->bOverflow ); // s2
-                io->tot_len += MakeEnhStereoString(
-                                    orig_inp_data->v3000->lists_sterel,
-                                    orig_inp_data->v3000->n_sterel,
-                                    strbuf,
-                                    0,
-                                    &io->bOverflow
-                                );
+                io->tot_len += MakeEnhStereoString( io->pINChISort,
+                                                    io->bOutType,
+                                                    io->num_components,
+                                                    orig_inp_data->v3000->lists_sterel,
+                                                    orig_inp_data->v3000->n_sterel,
+                                                    strbuf,
+                                                    0,
+                                                    &io->bOverflow);
 
 
                 io->tot_len += MakeDelim( x_rac, strbuf, &io->bOverflow ); // s3
-                io->tot_len += MakeEnhStereoString(
-                                    orig_inp_data->v3000->lists_sterac,
-                                    orig_inp_data->v3000->n_sterac,
-                                    strbuf,
-                                    0,
-                                    &io->bOverflow
-                                );
+                io->tot_len += MakeEnhStereoString( io->pINChISort,
+                                                    io->bOutType,
+                                                    io->num_components,
+                                                    orig_inp_data->v3000->lists_sterac,
+                                                    orig_inp_data->v3000->n_sterac,
+                                                    strbuf,
+                                                    0,
+                                                    &io->bOverflow);
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }

@@ -1096,12 +1096,12 @@ int remove_ion_pairs( int num_atoms, inp_ATOM *at )
                         num_N_minus++;
                     }
 #ifdef FIX_P_IV_Plus_O_Minus
-                    num_P_IV_plus += a->el_number != EL_NUMBER_N && 
+                    num_P_IV_plus += a->el_number != EL_NUMBER_N &&
                                      chrg == 1 &&
-                                     a->valence == 4 && 
+                                     a->valence == 4 &&
                                      a->chem_bonds_valence == 4; /* added 2010-03-17 DT */
-#endif 
-                    break;                
+#endif
+                    break;
             }
         }
         else if (!chrg && a->chem_bonds_valence + NUMH( a, 0 ) == 2 &&
@@ -3674,7 +3674,7 @@ done:
 
         /* connect H to at[iat] */
         val = at[iat].valence;
-        
+
 #pragma warning (push)
 #pragma warning (disable: 6386)
         if (val < MAXVAL)
@@ -4269,6 +4269,70 @@ int cmp_components( const void *a1, const void *a2 )
     return ret;
 }
 
+int get_canonical_atom_number( INChI_Aux *aux,
+                               int orig_atom_num)
+{
+    for (int canon_num = 1; canon_num <= aux->nNumberOfAtoms; canon_num++) {
+        if (aux->nOrigAtNosInCanonOrd[canon_num - 1] == orig_atom_num) {
+            return canon_num; // Found canonical atom number
+        }
+    }
+    return -1; // Not found
+}
+
+
+int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
+                                   INChI *inchi,
+                                   INChI_Aux *aux)
+{
+    int ret = 0;
+
+    if (orig_inp_data->v3000->n_steabs > 0)
+    {
+
+        int **enh_stereo = orig_inp_data->v3000->lists_steabs;
+        for (int i = 0; i < orig_inp_data->v3000->n_steabs; i++) {
+            for (int j = 0; j < enh_stereo[i][1]; j++)  {
+                int orig_atom_num = enh_stereo[i][2 + j];
+                AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
+
+                const AT_NUMB *atom_idx_pos = is_in_the_list(inchi->Stereo->nNumber, canon_atom_num, inchi->Stereo->nNumberOfStereoCenters);
+                if (atom_idx_pos)
+                {
+                    int idx = (int)(*atom_idx_pos);
+                    if (inchi->Stereo->t_parity[idx] == 2)
+                    {
+                        inchi->Stereo->t_parity[idx] = 1;
+                        inchi->Stereo->nCompInv2Abs = -1;
+                    }
+                }
+            }
+        }
+    }
+    // orig_inp_data->v3000->n_steabs;
+    // orig_inp_data->v3000->lists_steabs;
+
+    // pINChI->Stereo->nCompInv2Abs;
+    // -1 --> 1
+    //  1 --> 0
+
+    // orig_inp_data->v3000->n_sterel;
+    // orig_inp_data->v3000->lists_sterel;
+
+    // orig_inp_data->v3000->n_sterac;
+    // orig_inp_data->v3000->lists_sterac;
+
+    // get_canonical_atom_number;
+
+
+    // pINChI->Stereo->nNumber;
+    // pINChI->Stereo->t_parity
+    // 1 --> -
+    // 2 --> +
+
+
+    return ret;
+}
 
 /****************************************************************************
 Set the (disconnected) component numbers in ORIG_ATOM_DATA 'at[*].component'
@@ -4324,7 +4388,7 @@ int MarkDisconnectedComponents( ORIG_ATOM_DATA *orig_at_data,
     nPrevAtom = (AT_NUMB*)inchi_calloc(num_at, sizeof(nPrevAtom[0]));
     iNeigh = (S_CHAR*)inchi_calloc(num_at, sizeof(iNeigh[0]));
 
-    if (!nNewCompNumber || !nPrevAtom || !iNeigh) /* nNewCompNumber: for non-recursive DFS only: */ 
+    if (!nNewCompNumber || !nPrevAtom || !iNeigh) /* nNewCompNumber: for non-recursive DFS only: */
     {
         goto exit_function;
     }
@@ -4333,7 +4397,7 @@ int MarkDisconnectedComponents( ORIG_ATOM_DATA *orig_at_data,
 
     /* Mark and count; avoid deep DFS recursion: it may make verifying software unhappy */
     /* nNewCompNumber[i] will contain new component number for atoms at[i], i=0..num_at-1 */
-    
+
     for (j = 0; j < num_at; j++)
     {
         if (!nNewCompNumber[j])
@@ -4709,7 +4773,7 @@ int Free_INChI_Members( INChI *pINChI )
         qzfree(pINChI->IsotopicAtom);
         qzfree(pINChI->IsotopicTGroup);
         qzfree(pINChI->nPossibleLocationsOfIsotopicH);
-        qzfree( pINChI->Stereo );       
+        qzfree( pINChI->Stereo );
         qzfree( pINChI->StereoIsotopic );
         qzfree( pINChI->szHillFormula );
     }
@@ -5004,7 +5068,7 @@ void CompAtomData_GetNumMapping( COMP_ATOM_DATA *adata, int *orig_num, int *curr
 ****************************************************************************/
 int imat_new( int m, int n, int ***a )
 {
-    int i;   
+    int i;
     if (m == 0 || n == 0)
     {
         return 0;
@@ -5106,7 +5170,7 @@ subgraf *subgraf_new( ORIG_ATOM_DATA *orig_inp_data,
         sg->orig2node[sg->nodes[i]] = i;
     }
 
-    /* Create and fill subgraph adjacency matrix based on nodes/orig atom numbers 
+    /* Create and fill subgraph adjacency matrix based on nodes/orig atom numbers
        and connections stored in orig_inp_data */
     sg->adj = (subgraf_edge **) inchi_calloc( nnodes, sizeof( subgraf_edge * ) );
     if (!sg->adj)
@@ -5266,7 +5330,7 @@ void subgraf_pathfinder_free( subgraf_pathfinder *spf )
 
 
 /****************************************************************************
- Find path(s) from subgraf node spf->start to spf->end 
+ Find path(s) from subgraf node spf->start to spf->end
  and fill bonds[nbonds] and atoms[natoms]
  Do not traverse through supplied forbidden edges (if not zero/NULL)
 ****************************************************************************/
@@ -5298,7 +5362,7 @@ void subgraf_pathfinder_run( subgraf_pathfinder *spf,
             continue;
         }
         if (nforbidden && forbidden)
-        {	
+        {
             skip = 0;
             for (f = 0; f < nforbidden; f++)
             {

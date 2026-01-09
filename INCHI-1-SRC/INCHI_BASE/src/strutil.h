@@ -58,6 +58,28 @@ extern "C"
     struct tagCANON_GLOBALS;
 
     /**
+     * @brief Set the enhanced stereochemistry for t- and m-layers
+     *
+     * @param orig_inp_data
+     * @param inchi
+     * @param aux
+     * @return int
+     */
+    int set_EnhancedStereo_t_m_layers(ORIG_ATOM_DATA *orig_inp_data,
+                                      INChI *inchi,
+                                      INChI_Aux *aux);
+
+    /**
+     * @brief Get the canonical atom number object
+     *
+     * @param aux Pointer to INChI_Aux data structure
+     * @param orig_atom_num Original atom number
+     * @return Returns canonical atom number if found, -1 if not
+     */
+    int get_canonical_atom_number(INChI_Aux *aux,
+                                  int orig_atom_num);
+
+    /**
      * @brief Extract one (connected) component
      *
      * @param at Pointer to atom array
