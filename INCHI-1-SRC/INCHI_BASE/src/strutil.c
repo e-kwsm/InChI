@@ -4274,12 +4274,17 @@ int get_canonical_atom_number( INChI_Aux *aux,
 {
     for (int canon_num = 1; canon_num <= aux->nNumberOfAtoms; canon_num++) {
         if (aux->nOrigAtNosInCanonOrd[canon_num - 1] == orig_atom_num) {
-            return canon_num; // Found canonical atom number
+            return canon_num;
         }
     }
-    return -1; // Not found
+    return -1;
 }
 
+int cmp_asc(const void *a, const void *b) {
+    AT_NUMB va = *(const AT_NUMB*)a;
+    AT_NUMB vb = *(const AT_NUMB*)b;
+    return (va > vb) - (va < vb); // returns -1, 0, or 1
+}
 
 int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
                                    INChI *inchi,
@@ -4292,11 +4297,16 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
 
         int **enh_stereo = orig_inp_data->v3000->lists_steabs;
         for (int i = 0; i < orig_inp_data->v3000->n_steabs; i++) {
-            for (int j = 0; j < enh_stereo[i][1]; j++)  {
-                int orig_atom_num = enh_stereo[i][2 + j];
+            int nof_atoms = enh_stereo[i][1];
+
+            if (nof_atoms == 1) {
+                // + >> -
+                // - >> - ?
+
+                int orig_atom_num = enh_stereo[i][2];
                 AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
 
-                const AT_NUMB *atom_idx_pos = is_in_the_list(inchi->Stereo->nNumber, canon_atom_num, inchi->Stereo->nNumberOfStereoCenters);
+                AT_NUMB *atom_idx_pos = is_in_the_list(inchi->Stereo->nNumber, canon_atom_num, inchi->Stereo->nNumberOfStereoCenters);
                 if (atom_idx_pos)
                 {
                     int idx = (int)(*atom_idx_pos);
@@ -4306,7 +4316,83 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
                         inchi->Stereo->nCompInv2Abs = -1;
                     }
                 }
+
+            } else if (nof_atoms == 2) {
+                // smaller atom number gets -
+                // -- >> --
+                // -+ >> -+
+                // +- >> -+
+                // ++ >> -+
+
+                int orig_atom_num_1 = enh_stereo[i][2];
+                AT_NUMB canon_atom_num_1 = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num_1);
+                AT_NUMB *atom_idx_pos_1 = is_in_the_list(inchi->Stereo->nNumber, canon_atom_num_1, inchi->Stereo->nNumberOfStereoCenters);
+                int idx_1 = -1;
+
+                int orig_atom_num_2 = enh_stereo[i][3];
+                AT_NUMB canon_atom_num_2 = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num_2);
+                AT_NUMB *atom_idx_pos_2 = is_in_the_list(inchi->Stereo->nNumber, canon_atom_num_2, inchi->Stereo->nNumberOfStereoCenters);
+                int idx_2 = -1;
+
+                if (atom_idx_pos_1 && atom_idx_pos_2)
+                {
+                    int idx_1 = (int)(*atom_idx_pos_1);
+                    int idx_2 = (int)(*atom_idx_pos_2);
+
+                    if (canon_atom_num_1 > canon_atom_num_2) {
+                        idx_2 = (int)(*atom_idx_pos_1);
+                        idx_1 = (int)(*atom_idx_pos_2);
+                    }
+
+                    if (inchi->Stereo->t_parity[idx_1] == 2)
+                    {
+                        inchi->Stereo->t_parity[idx_1] = 1;
+                        inchi->Stereo->nCompInv2Abs = -1;
+                    }
+                    if (inchi->Stereo->t_parity[idx_2] == 1)
+                    {
+                        inchi->Stereo->t_parity[idx_2] = 2;
+                        inchi->Stereo->nCompInv2Abs = -1;
+                    }
+                }
+            } else {
+                // ---, ----, ....?
+
+                // AT_NUMB *arr_cat = (AT_NUMB*)inchi_calloc(nof_atoms, sizeof(AT_NUMB));
+
+                // for (int j = 0; j < nof_atoms; j++)  {
+                //     int orig_atom_num = enh_stereo[i][2 + j];
+                //     AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
+
+                //     arr_cat[j] = canon_atom_num;
+                // }
+                // qsort(arr_cat, nof_atoms, sizeof(AT_NUMB), cmp_asc);
+
+                // AT_NUMB *arr_cat_idx = (AT_NUMB*)inchi_calloc(nof_atoms, sizeof(AT_NUMB));
+                // for (int j = 0; j < nof_atoms; j++)  {
+                //     AT_NUMB cur_atom = arr_cat[j];
+                //     AT_NUMB *atom_idx_pos = is_in_the_list(inchi->Stereo->nNumber, cur_atom, inchi->Stereo->nNumberOfStereoCenters);
+                //     arr_cat_idx[j] = -1;
+                //     if (atom_idx_pos)
+                //     {
+                //         arr_cat_idx[j] = atom_idx_pos[0];
+                //         printf("arr idx %d\n", arr_cat_idx[j]);
+                //     }
+                // }
+
+                // int idx = (int)(*atom_idx_pos);
+                // if (inchi->Stereo->t_parity[idx] == 2)
+                // {
+                //     inchi->Stereo->t_parity[idx] = 1;
+                //     inchi->Stereo->nCompInv2Abs = -1;
+                // }
+
+                // free(arr_cat_idx);
+                // free(arr_cat);
+
             }
+
+
         }
     }
     // orig_inp_data->v3000->n_steabs;

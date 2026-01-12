@@ -978,19 +978,3 @@ TEST(test_util, test_extract_stereo_info_from_inchi_string)
 
     EXPECT_EQ(found_stereo2, 0);
 }
-
-// TEST(test_util, test_extract_all_backbone_bonds_from_inchi_string)
-// {
-
-//     // int extract_all_backbone_bonds_from_inchi_string(char *sinchi, int *n_all_bkb_orig, int *orig, int *all_bkb_orig);
-
-//     char inchi1[] = "InChI=1S/C2H6/c1-2/h1-2H3";
-
-//     int n_all_bkb_orig[2] = {0, 0};
-//     int orig[2] = {0, 1};
-//     int all_bkb_orig[2] = {0, 0};
-
-//     int ret1 = extract_all_backbone_bonds_from_inchi_string(inchi1, n_all_bkb_orig, orig, all_bkb_orig);
-
-//     EXPECT_EQ(ret1, 0);
-// }
