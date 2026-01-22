@@ -2159,6 +2159,12 @@ int MakeStereoString( AT_NUMB          *at1,
     return nLen;
 }
 
+int compare_ints(const void *a, const void *b) {
+    int arg1 = *(const int *)a;
+    int arg2 = *(const int *)b;
+    return (arg1 > arg2) - (arg1 < arg2);
+}
+
 int MakeEnhStereoString( INCHI_SORT       *pINChISort,
                          int              bOutType,
                          int              num_components,
@@ -2192,20 +2198,34 @@ int MakeEnhStereoString( INCHI_SORT       *pINChISort,
 
         tot_len += MakeDelim( "(", strbuf, bOverflow );
         for (int i = 0; i < nof_units; i++) {
-            for (int j = 0; j < enh_stereo[i][1]; j++)  {
 
-                int orig_atom_num = enh_stereo[i][2 + j];
+            int *atom_numbers = &enh_stereo[i][2];
+            int nof_atoms = enh_stereo[i][1];
+            int c_atom_numbers[nof_atoms];
+            for (int j = 0; j < nof_atoms; j++)  {
+
+                int orig_atom_num = atom_numbers[j]; //enh_stereo[i][2 + j];
                 int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
+                c_atom_numbers[j] = canon_atom_num;
 
+            }
+
+            if (nof_atoms > 1) {
+                qsort(c_atom_numbers, nof_atoms, sizeof(int), compare_ints);
+            }
+
+            for (int j = 0; j < nof_atoms; j++)  {
                 //tot_len += MakeMult_EnhStereo( enh_stereo[i][2 + j], "", strbuf, nCtMode, bOverflow );
-                tot_len += MakeMult_EnhStereo( canon_atom_num, "", strbuf, nCtMode, bOverflow );
+                tot_len += MakeMult_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
 
                 if ((j + 1) < enh_stereo[i][1]) {
                     tot_len += MakeDelim( ",", strbuf, bOverflow );
                 }
             }
             if (i + 1 < nof_units) {
-                tot_len += MakeDelim( ";", strbuf, bOverflow );
+                // tot_len += MakeDelim( ";", strbuf, bOverflow );
+                tot_len += MakeDelim( ")", strbuf, bOverflow );
+                tot_len += MakeDelim( "(", strbuf, bOverflow );
             }
         }
         tot_len += MakeDelim( ")", strbuf, bOverflow );

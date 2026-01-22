@@ -4287,6 +4287,10 @@ int invert_parities(INChI *inchi,
                     int is_absolute)
 {
 
+    // parities
+    // 2 = +
+    // 1 = -
+
     if (nof_lists > 0)
     {
         for (int i = 0; i < nof_lists; i++) {
@@ -4300,9 +4304,11 @@ int invert_parities(INChI *inchi,
                     min_c_atom_num = canon_atom_num;
                 }
             }
+            int min_c_atom_parity = inchi->Stereo->t_parity[min_c_atom_num];
 
-            int needs_inversion = (inchi->Stereo->t_parity[min_c_atom_num] == 2);
-            if (needs_inversion) {
+            if ((is_absolute == 1) && (min_c_atom_parity == 1)) {
+                inchi->Stereo->nCompInv2Abs = 0;
+            } else if (min_c_atom_parity == 2) {
 
                 for (int j = 0; j < nof_atoms; j++) {
                     int orig_atom_num = list_atoms[i][2 + j];
@@ -4317,14 +4323,9 @@ int invert_parities(INChI *inchi,
                 if (is_absolute) {
                     inchi->Stereo->nCompInv2Abs = -1;
                 }
-            } else {
-                if(is_absolute && inchi->Stereo->t_parity[min_c_atom_num] == 1) {
-                    inchi->Stereo->nCompInv2Abs = 0;
-                }
             }
         }
     }
-
 }
 
 int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
@@ -4333,11 +4334,8 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
 {
     int ret = 0;
 
-
     int ret_abs = invert_parities(inchi, aux, orig_inp_data->v3000->lists_steabs, orig_inp_data->v3000->n_steabs, 1);
-
     int ret_rel = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterel, orig_inp_data->v3000->n_sterel, 0);
-
     int ret_rac = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterac, orig_inp_data->v3000->n_sterac, 0);
 
     return ret;
