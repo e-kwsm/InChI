@@ -2206,6 +2206,9 @@ int MakeEnhStereoString( INCHI_SORT       *pINChISort,
 
                 int orig_atom_num = atom_numbers[j]; //enh_stereo[i][2 + j];
                 int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
+                if (canon_atom_num == -1) {
+                    printf("Error: could not find canonical atom number for original atom number %d\n", orig_atom_num);
+                }
                 c_atom_numbers[j] = canon_atom_num;
 
             }

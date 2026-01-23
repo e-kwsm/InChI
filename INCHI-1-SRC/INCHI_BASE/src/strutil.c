@@ -4318,6 +4318,11 @@ int invert_parities(INChI *inchi,
                     min_c_atom_num = canon_atom_num;
                 }
             }
+            if (min_c_atom_num == (AT_NUMB)9999999) {
+                // return -1;
+                printf("ERROR %d: cannot find min canonical atom num\n", __LINE__);
+                continue;
+            }
             int min_c_parity_idx = get_parity_idx_from_canonical_atom_number(min_c_atom_num,
                                                                              inchi->Stereo->nNumber,
                                                                              inchi->Stereo->nNumberOfStereoCenters);
@@ -4325,6 +4330,18 @@ int invert_parities(INChI *inchi,
             if (min_c_parity_idx == -1) {
             //     return -1;
                 printf("ERROR %d: cannot find parity idx for atom %d %d\n", __LINE__, min_c_atom_num, min_c_parity_idx);
+                for (int j = 0; j < nof_atoms; j++) {
+                    int orig_atom_num = list_atoms[i][2 + j];
+                    AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
+                    int parity_idx = get_parity_idx_from_canonical_atom_number(canon_atom_num,
+                                                                               inchi->Stereo->nNumber,
+                                                                               inchi->Stereo->nNumberOfStereoCenters);
+                    printf("  atom %d -> canon %d -> parity idx %d -> parity %d\n",
+                           orig_atom_num,
+                           canon_atom_num,
+                           parity_idx,
+                           (parity_idx != -1) ? t_parity[parity_idx] : -1);
+                }
             }
             int min_c_atom_parity = t_parity[min_c_parity_idx];
 

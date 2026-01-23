@@ -842,13 +842,13 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
         goto err_fin;
     }
 
-    /* Error: No V3000 Collection end marker */
-    if (ctab->v3000->n_steabs ||
-        ctab->v3000->n_sterel ||
-        ctab->v3000->n_sterac)
-    {
-        AddErrorMessage(pStrErr, "V3000 enhanced stereo read/stored but ignored");
-    }
+    // /* Error: No V3000 Collection end marker */
+    // if (ctab->v3000->n_steabs ||
+    //     ctab->v3000->n_sterel ||
+    //     ctab->v3000->n_sterac)
+    // {
+    //     AddErrorMessage(pStrErr, "V3000 enhanced stereo read/stored but ignored");
+    // }
 
 err_fin:
 
