@@ -1337,6 +1337,15 @@ void FreeExtOrigAtData(OAD_Polymer *pd, OAD_V3000 *v3k)
 }
 
 /****************************************************************************/
+static int cmp_int_list_first_elem(const void *a, const void *b)
+{
+    int * const *list_a = (int * const *)a;
+    int * const *list_b = (int * const *)b;
+    int val_a = (*list_a)[0];
+    int val_b = (*list_b)[0];
+    return (val_a > val_b) - (val_a < val_b);
+}
+
 int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                                       OAD_Polymer **ppPolymer,
                                       OAD_V3000 **ppV3000,
@@ -1568,6 +1577,7 @@ int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                     lst[k] = mol_lst[k];
                 }
             }
+            qsort(pv->lists_sterac, mpv->n_sterac, sizeof(int *), cmp_int_list_first_elem);
         }
         if (mpv->n_sterel && mpv->sterel)
         {
@@ -1593,6 +1603,7 @@ int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                     lst[k] = mol_lst[k];
                 }
             }
+            qsort(pv->lists_sterel, mpv->n_sterel, sizeof(int *), cmp_int_list_first_elem);
         }
     }
 

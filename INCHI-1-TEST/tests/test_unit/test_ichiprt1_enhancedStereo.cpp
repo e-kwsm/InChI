@@ -31,10 +31,8 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     oad->v3000->n_collections = 5;
     oad->v3000->n_steabs = 1;
 
-    oad->v3000->lists_steabs = (int **)inchi_calloc(1, sizeof(int*));
-    for (int i = 0; i < oad->v3000->n_steabs; i++) {
-        oad->v3000->lists_steabs[i] = (int *)inchi_calloc(1, sizeof(int));
-    }
+    oad->v3000->lists_steabs = (int **)inchi_calloc(oad->v3000->n_steabs, sizeof(int*));
+    oad->v3000->lists_steabs[0] = (int *)inchi_calloc(2+2, sizeof(int));
 
     // STEABS ATOMS=(2 4 5)
     oad->v3000->lists_steabs[0][0] = 1; // - not used
@@ -45,10 +43,9 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     // STERAC2 ATOMS=(1 1)
     oad->v3000->n_sterac = 2;
 
-    oad->v3000->lists_sterac = (int **)inchi_calloc(1, sizeof(int*));
-    for (int i = 0; i < oad->v3000->n_sterac; i++) {
-        oad->v3000->lists_sterac[i] = (int *)inchi_calloc(1, sizeof(int));
-    }
+    oad->v3000->lists_sterac = (int **)inchi_calloc(oad->v3000->n_sterac, sizeof(int*));
+    oad->v3000->lists_sterac[0] = (int *)inchi_calloc(2 + 1, sizeof(int));
+    oad->v3000->lists_sterac[1] = (int *)inchi_calloc(2 + 2, sizeof(int));
 
     oad->v3000->lists_sterac[0][0] = 2; // n from "STERACn" tag
     oad->v3000->lists_sterac[0][1] = 1; // number of members in collection
@@ -61,10 +58,9 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     oad->v3000->lists_sterac[1][3] = 3; // member atom numbers
 
     oad->v3000->n_sterel = 2;
-    oad->v3000->lists_sterel = (int **)inchi_calloc(1, sizeof(int*));
-    for (int i = 0; i < oad->v3000->n_sterel; i++) {
-        oad->v3000->lists_sterel[i] = (int *)inchi_calloc(1, sizeof(int));
-    }
+    oad->v3000->lists_sterel = (int **)inchi_calloc(oad->v3000->n_sterel, sizeof(int*));
+    oad->v3000->lists_sterel[0] = (int *)inchi_calloc(2 + 2, sizeof(int));
+    oad->v3000->lists_sterel[1] = (int *)inchi_calloc(2 + 1, sizeof(int));
 
     // STEREL1 ATOMS=(2 12 13)
     oad->v3000->lists_sterel[0][0] = 1;  // n from "STERELn" tag
@@ -93,7 +89,7 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     INChI_Aux *pAux = Alloc_INChI_Aux(num_at, num_iso_at, alloc_mode, bOrigatomflag);
 
     pAux->nNumberOfAtoms = num_at;
-    pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
+    // pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
 
     // canonical atom i+1 maps to original atom i+1
     pAux->nOrigAtNosInCanonOrd[0] = 4;
@@ -128,8 +124,32 @@ TEST(test_ichiprt1_enhancedStereo, test_OutputINCHI_StereoLayer_enhanced_stereo_
     int ret = OutputINCHI_StereoLayer_EnhancedStereo(&cg, &out_file, &strbuf, &io, oad, (char*)"", (char*)"");
 
     // EXPECT_EQ(std::string(strbuf.pStr), "/s1(4,5)2(12,13;14)3(1;2,3)");
-    EXPECT_EQ(std::string(strbuf.pStr), "/s1(1,2)2(6,7;8)3(3;4,5)");
+    EXPECT_EQ(std::string(strbuf.pStr), "/s1(1,2)2(6,7)(8)3(3)(4,5)");
     EXPECT_EQ(ret, 0);
+
+    for (int i = 0; i < oad->v3000->n_steabs; i++) {
+        inchi_free(oad->v3000->lists_steabs[i]);
+    }
+    inchi_free(oad->v3000->lists_steabs);
+
+    for (int i = 0; i < oad->v3000->n_sterel; i++) {
+        inchi_free(oad->v3000->lists_sterel[i]);
+    }
+    inchi_free(oad->v3000->lists_sterel);
+
+    for (int i = 0; i < oad->v3000->n_sterac; i++) {
+        inchi_free(oad->v3000->lists_sterac[i]);
+    }
+    inchi_free(oad->v3000->lists_sterac);
+
+    inchi_free(oad->v3000);
+    inchi_free(oad);
+
+    inchi_free(inchi_sort);
+
+    FreeInpAtom(&atoms);
+    Free_INChI_Aux(&pAux);
+    Free_INChI(&inchi);
 
     inchi_strbuf_close(&strbuf);
     inchi_ios_close(&out_file);

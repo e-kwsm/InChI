@@ -72,7 +72,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    ORIG_ATOM_DATA orig_inp_data = {};
+    ORIG_ATOM_DATA *orig_inp_data = (ORIG_ATOM_DATA*)inchi_calloc(1, sizeof(ORIG_ATOM_DATA));
     int bMergeAllInputStructures = 0;
     int bGetOrigCoord = 0;
     int bDoNotAddH = 0;
@@ -89,7 +89,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
 
     int ret = CreateOrigInpDataFromMolfile(
         &input_stream,
-        &orig_inp_data,
+        orig_inp_data,
         bMergeAllInputStructures,
         bGetOrigCoord,
         bDoNotAddH,
@@ -106,7 +106,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
 
 
 
-    int num_at = orig_inp_data.num_inp_atoms;
+    int num_at = orig_inp_data->num_inp_atoms;
 
     int found_num_bonds = 0;
     int found_num_isotopic = 0;
@@ -114,13 +114,14 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     inp_ATOM *at = CreateInpAtom(num_at);
     INChI *inchi = Alloc_INChI(at, num_at, &found_num_bonds, &found_num_isotopic, 0);
 
+    AT_NUMB at_tmp[] = {0,1,2,3,4,5,6,7,8};
+    S_CHAR parity_tmp[] = {2,1,1,2,2,1,2,2,1};
+    for (int i = 0; i < 9; i++) {
+        inchi->Stereo->nNumber[i] = at_tmp[i];
+        inchi->Stereo->t_parity[i] = parity_tmp[i];
+    }
 
-    AT_NUMB at1[9] = {1,3,4,5,6,7,8,9,10};
-    S_CHAR parity[9] = {2,1,1,2,2,1,2,2,1};
-    inchi->Stereo->t_parity = parity;
-    inchi->Stereo->nNumber = at1;
     inchi->Stereo->nNumberOfStereoCenters = 9;
-
     inchi->Stereo->nCompInv2Abs = -1;
     inchi->nNumberOfAtoms = num_at;
 
@@ -135,7 +136,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
 
     pAux->nNumberOfAtoms = 9;
 
-    pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
+    // pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
 
     pAux->nOrigAtNosInCanonOrd[0] = 4;
     pAux->nOrigAtNosInCanonOrd[1] = 5;
@@ -147,10 +148,17 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     pAux->nOrigAtNosInCanonOrd[7] = 14;
 
     std::cout << "Test started\n";
-    ret = set_EnhancedStereo_t_m_layers(&orig_inp_data, inchi, pAux);
+    ret = set_EnhancedStereo_t_m_layers(orig_inp_data, inchi, pAux);
     std::cout << "Test finished\n";
 
     EXPECT_EQ(ret, 1);
 
+    FreeOrigAtData(orig_inp_data);
+    inchi_free(orig_inp_data);
+    Free_INChI_Aux(&pAux);
+    Free_INChI(&inchi);
+    FreeInpAtom(&at);
+
+    inchi_ios_free_str(&input_stream);
 
 }

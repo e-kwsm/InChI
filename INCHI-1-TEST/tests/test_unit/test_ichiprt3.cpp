@@ -68,6 +68,7 @@ TEST(test_ichiprt3, test_str_Sp2_outputs_expected_sp2_string_1)
 
     inchi_strbuf_close(&strbuf);
     Free_INChI_Stereo(stereo);
+    inchi_free(stereo);
 }
 
 TEST(test_ichiprt3, test_str_Sp2_outputs_expected_sp2_string_2)
@@ -129,6 +130,7 @@ TEST(test_ichiprt3, test_str_Sp2_outputs_expected_sp2_string_2)
 
     inchi_strbuf_close(&strbuf);
     Free_INChI_Stereo(stereo);
+    inchi_free(stereo);
 }
 
 TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)

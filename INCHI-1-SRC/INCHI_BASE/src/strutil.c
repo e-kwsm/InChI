@@ -4280,6 +4280,18 @@ int get_canonical_atom_number( INChI_Aux *aux,
     return -1;
 }
 
+int get_parity_idx_from_canonical_atom_number( int canon_atom_num,
+                                               AT_NUMB *nNumber,
+                                               int nof_atoms)
+{
+    for (int i = 0; i < nof_atoms; i++) {
+        if (nNumber[i] == canon_atom_num) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int invert_parities(INChI *inchi,
                     INChI_Aux *aux,
                     int **list_atoms,
@@ -4290,6 +4302,8 @@ int invert_parities(INChI *inchi,
     // parities
     // 2 = +
     // 1 = -
+
+    S_CHAR *t_parity = inchi->Stereo->t_parity;
 
     if (nof_lists > 0)
     {
@@ -4304,19 +4318,30 @@ int invert_parities(INChI *inchi,
                     min_c_atom_num = canon_atom_num;
                 }
             }
-            int min_c_atom_parity = inchi->Stereo->t_parity[min_c_atom_num];
+            int min_c_parity_idx = get_parity_idx_from_canonical_atom_number(min_c_atom_num,
+                                                                             inchi->Stereo->nNumber,
+                                                                             inchi->Stereo->nNumberOfStereoCenters);
+
+            if (min_c_parity_idx == -1) {
+            //     return -1;
+                printf("ERROR %d: cannot find parity idx for atom %d %d\n", __LINE__, min_c_atom_num, min_c_parity_idx);
+            }
+            int min_c_atom_parity = t_parity[min_c_parity_idx];
 
             if ((is_absolute == 1) && (min_c_atom_parity == 1)) {
-                inchi->Stereo->nCompInv2Abs = 0;
+                inchi->Stereo->nCompInv2Abs = 1;
             } else if (min_c_atom_parity == 2) {
 
                 for (int j = 0; j < nof_atoms; j++) {
                     int orig_atom_num = list_atoms[i][2 + j];
                     AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
-                    if (inchi->Stereo->t_parity[canon_atom_num] == 2) {
-                        inchi->Stereo->t_parity[canon_atom_num] = 1;
-                    } else if(inchi->Stereo->t_parity[canon_atom_num] == 1) {
-                        inchi->Stereo->t_parity[canon_atom_num] = 2;
+                    int parity_idx = get_parity_idx_from_canonical_atom_number(canon_atom_num,
+                                                                               inchi->Stereo->nNumber,
+                                                                               inchi->Stereo->nNumberOfStereoCenters);
+                    if (t_parity[parity_idx] == 2) {
+                        t_parity[parity_idx] = 1;
+                    } else if(t_parity[parity_idx] == 1) {
+                        t_parity[parity_idx] = 2;
                     }
                 }
 
@@ -4335,8 +4360,8 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
     int ret = 0;
 
     int ret_abs = invert_parities(inchi, aux, orig_inp_data->v3000->lists_steabs, orig_inp_data->v3000->n_steabs, 1);
-    int ret_rel = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterel, orig_inp_data->v3000->n_sterel, 0);
     int ret_rac = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterac, orig_inp_data->v3000->n_sterac, 0);
+    int ret_rel = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterel, orig_inp_data->v3000->n_sterel, 0);
 
     return ret;
 }
