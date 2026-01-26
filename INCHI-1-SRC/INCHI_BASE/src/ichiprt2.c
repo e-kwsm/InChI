@@ -2165,70 +2165,52 @@ int compare_ints(const void *a, const void *b) {
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
-int MakeEnhStereoString( INCHI_SORT       *pINChISort,
+int MakeEnhStereoString( INChI_Aux    *pAux,
                          int              bOutType,
-                         int              num_components,
                          int              **enh_stereo,
-                         int              nof_units,
+                         int              nof_stereo_groups,
                          INCHI_IOS_STRING *strbuf,
                          int              nCtMode,
                          int              *bOverflow )
 {
     int tot_len = 0;
-    int          ii, nUsedLength0;
-    INCHI_SORT   *is, *is0;
-    INChI_Stereo *Stereo;
-    INChI        *pINChI;
-    INChI_Aux    *pAux;
 
-    if (nof_units <= 0) {
+    if (nof_stereo_groups <= 0) {
         return 0;
     }
 
-    is = NULL;
-    is0 = pINChISort;
+    for (int i = 0; i < nof_stereo_groups; i++) {
+        int count_found_atoms = 0;
+        const int *atom_numbers = &enh_stereo[i][2];
+        int nof_atoms = enh_stereo[i][1];
+        int c_atom_numbers[nof_atoms];
+        for (int j = 0; j < nof_atoms; j++)  {
 
-    /* For each connected component...    */
-    for (int cur_c = 0; !*bOverflow && cur_c < num_components; cur_c++)
-    {
+            int orig_atom_num = atom_numbers[j];
+            int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
+            if (canon_atom_num != -1) {
+                count_found_atoms++;
+            }
+            c_atom_numbers[j] = canon_atom_num;
+        }
 
-        is = is0 + cur_c;
-        // pINChI = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI[ii] : NULL;
-        pAux = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI_Aux[ii] : NULL;
+        if (count_found_atoms == 0) {
+            continue;
+        }
+
+        if (nof_atoms > 1) {
+            qsort(c_atom_numbers, nof_atoms, sizeof(int), compare_ints);
+        }
 
         tot_len += MakeDelim( "(", strbuf, bOverflow );
-        for (int i = 0; i < nof_units; i++) {
-
-            int *atom_numbers = &enh_stereo[i][2];
-            int nof_atoms = enh_stereo[i][1];
-            int c_atom_numbers[nof_atoms];
-            for (int j = 0; j < nof_atoms; j++)  {
-
-                int orig_atom_num = atom_numbers[j]; //enh_stereo[i][2 + j];
-                int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
-                if (canon_atom_num == -1) {
-                    printf("Error: could not find canonical atom number for original atom number %d\n", orig_atom_num);
-                }
-                c_atom_numbers[j] = canon_atom_num;
-
+        for (int j = 0; j < nof_atoms; j++)  {
+            if (c_atom_numbers[j] == -1) {
+                continue;
             }
+            tot_len += MakeMult_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
 
-            if (nof_atoms > 1) {
-                qsort(c_atom_numbers, nof_atoms, sizeof(int), compare_ints);
-            }
-
-            for (int j = 0; j < nof_atoms; j++)  {
-                //tot_len += MakeMult_EnhStereo( enh_stereo[i][2 + j], "", strbuf, nCtMode, bOverflow );
-                tot_len += MakeMult_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
-
-                if ((j + 1) < enh_stereo[i][1]) {
-                    tot_len += MakeDelim( ",", strbuf, bOverflow );
-                }
-            }
-            if (i + 1 < nof_units) {
-                // tot_len += MakeDelim( ";", strbuf, bOverflow );
-                tot_len += MakeDelim( ")", strbuf, bOverflow );
-                tot_len += MakeDelim( "(", strbuf, bOverflow );
+            if ((j + 1) < enh_stereo[i][1]) {
+                tot_len += MakeDelim( ",", strbuf, bOverflow );
             }
         }
         tot_len += MakeDelim( ")", strbuf, bOverflow );
@@ -2238,6 +2220,113 @@ int MakeEnhStereoString( INCHI_SORT       *pINChISort,
     return tot_len;
 }
 
+int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
+                      INCHI_SORT       *pINChISort,
+                      int              bOutType,
+                      int              num_components,
+                      INCHI_IOS_STRING *strbuf,
+                      int              nCtMode,
+                      int              *bOverflow )
+{
+
+    int tot_len = 0;
+    int          ii, nUsedLength0;
+    INCHI_SORT   *is, *is0;
+    INChI_Stereo *Stereo;
+    INChI        *pINChI;
+    INChI_Aux    *pAux;
+
+    int DICT_SIZE = 100;
+    char *dictionary[DICT_SIZE]; // array of string pointers
+    int counts[DICT_SIZE];       // parallel array of counts
+
+    for (int i = 0; i < DICT_SIZE; i++) {
+        dictionary[i] = NULL;
+        counts[i] = 0;
+    }
+
+    is = NULL;
+    is0 = pINChISort;
+
+    INCHI_IOS_STRING tmpbuf  = {0};
+
+    for (int cur_c = 0; !*bOverflow && cur_c < num_components; cur_c++)
+    {
+
+        is = is0 + cur_c;
+        // pINChI = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI[ii] : NULL;
+        pAux = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI_Aux[ii] : NULL;
+
+        inchi_strbuf_init(&tmpbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+        tot_len += MakeDelim( "1", &tmpbuf, bOverflow ); // s1
+        tot_len += MakeEnhStereoString( pAux,
+                                        bOutType,
+                                        orig_inp_data->v3000->lists_steabs,
+                                        orig_inp_data->v3000->n_steabs,
+                                        &tmpbuf,
+                                        nCtMode,
+                                        bOverflow);
+
+        tot_len += MakeDelim( "2", &tmpbuf, bOverflow ); // s2
+        tot_len += MakeEnhStereoString( pAux,
+                                        bOutType,
+                                        orig_inp_data->v3000->lists_sterel,
+                                        orig_inp_data->v3000->n_sterel,
+                                        &tmpbuf,
+                                        0,
+                                        bOverflow);
+
+        tot_len += MakeDelim( "3", &tmpbuf, bOverflow ); // s3
+
+        tot_len += MakeEnhStereoString( pAux,
+                                        bOutType,
+                                        orig_inp_data->v3000->lists_sterac,
+                                        orig_inp_data->v3000->n_sterac,
+                                        &tmpbuf,
+                                        0,
+                                        bOverflow);
+
+
+
+        int found = 0;
+        for (int i = 0; i < DICT_SIZE; i++) {
+            if (dictionary[i] && strcmp(tmpbuf.pStr, dictionary[i]) == 0) {
+                counts[i]++;
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            for (int i = 0; i < DICT_SIZE; i++) {
+                if (dictionary[i] == NULL) {
+                    dictionary[i] = strdup(tmpbuf.pStr); // remember to free later
+                    counts[i] = 1;
+                    break;
+                }
+            }
+        }
+        inchi_strbuf_close(&tmpbuf);
+    }
+
+    int count = 0;
+    for (int i = 0; i < DICT_SIZE; i++) {
+        if (dictionary[i]) {
+            if (count > 0) {
+                tot_len += MakeDelim( ";", strbuf, bOverflow );
+            }
+            if (counts[i] > 1) {
+                tot_len += inchi_strbuf_printf(strbuf, "%d*%s", counts[i], dictionary[i]);
+            } else {
+                tot_len += inchi_strbuf_printf(strbuf, "%s", dictionary[i]);
+            }
+            inchi_free(dictionary[i]);
+            count++;
+        }
+    }
+
+    return tot_len;
+}
 
 #ifdef ALPHA_BASE
 #if ( ALPHA_BASE != 27 )

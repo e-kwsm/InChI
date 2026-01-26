@@ -8,8 +8,10 @@ target_compile_features(libinchi_compiler_flags INTERFACE c_std_11)
 set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>")
 set(msvc_cxx "$<COMPILE_LANG_AND_ID:C,MSVC>")
 target_compile_options(libinchi_compiler_flags INTERFACE
-	"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>>"
-	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O2>>"
+	# "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>>"
+	# "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O2>>"
+	"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O0;-c;-fno-strict-aliasing;-Wno-all>>"
+	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O0>>"
 )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/static")
@@ -151,7 +153,7 @@ if(MATH_LIBRARY)
     target_link_libraries(libinchi PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(libinchi PRIVATE 
+target_compile_definitions(libinchi PRIVATE
 	fPIC
 	COMPILE_ANSI_ONLY
 	TARGET_API_LIB

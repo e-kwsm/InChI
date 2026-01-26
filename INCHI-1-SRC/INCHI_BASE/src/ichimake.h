@@ -208,14 +208,20 @@ const char *EquString( int EquVal );
                           INCHI_IOS_STRING *buf,
                           int nCtMode,
                           int *bOverflow );
-    int MakeEnhStereoString( INCHI_SORT       *pINChISort,
+    int MakeEnhStereoString( INChI_Aux    *pAux,
                              int              bOutType,
-                             int              num_components,
                              int              **enh_stereo,
-                             int              nof_units,
+                             int              nof_stereo_groups,
                              INCHI_IOS_STRING *strbuf,
                              int              nCtMode,
                              int              *bOverflow );
+    int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
+                          INCHI_SORT       *pINChISort,
+                          int              bOutType,
+                          int              num_components,
+                          INCHI_IOS_STRING *strbuf,
+                          int              nCtMode,
+                          int              *bOverflow );
     int MakeCRVString( ORIG_INFO *OrigInfo,
                        int nLenCT,
                        int bAddDelim,

@@ -3658,51 +3658,30 @@ int OutputINCHI_StereoLayer_EnhancedStereo(
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
         {
 
-            const char *p_stereo;
-            if (io->bRelativeStereo[io->iCurTautMode]) {
-                p_stereo = x_rel;
-            } else if (io->bRacemicStereo[io->iCurTautMode]) {
-                p_stereo = x_rac;
-            } else {
-                p_stereo = x_abs;
-            }
+            // const char *p_stereo;
+            // if (io->bRelativeStereo[io->iCurTautMode]) {
+            //     p_stereo = x_rel;
+            // } else if (io->bRacemicStereo[io->iCurTautMode]) {
+            //     p_stereo = x_rac;
+            // } else {
+            //     p_stereo = x_abs;
+            // }
 
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_TYPS, io->szTag2, &io->bAlways, 1 );
             inchi_strbuf_reset( strbuf );
             io->tot_len = 0;
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
-                io->tot_len += MakeDelim( x_abs, strbuf, &io->bOverflow ); // s1
-                io->tot_len += MakeEnhStereoString( io->pINChISort,
-                                                    io->bOutType,
-                                                    io->num_components,
-                                                    orig_inp_data->v3000->lists_steabs,
-                                                    orig_inp_data->v3000->n_steabs,
-                                                    strbuf,
-                                                    0,
-                                                    &io->bOverflow);
 
-
-                io->tot_len += MakeDelim( x_rel, strbuf, &io->bOverflow ); // s2
-                io->tot_len += MakeEnhStereoString( io->pINChISort,
-                                                    io->bOutType,
-                                                    io->num_components,
-                                                    orig_inp_data->v3000->lists_sterel,
-                                                    orig_inp_data->v3000->n_sterel,
-                                                    strbuf,
-                                                    0,
-                                                    &io->bOverflow);
-
-
-                io->tot_len += MakeDelim( x_rac, strbuf, &io->bOverflow ); // s3
-                io->tot_len += MakeEnhStereoString( io->pINChISort,
-                                                    io->bOutType,
-                                                    io->num_components,
-                                                    orig_inp_data->v3000->lists_sterac,
-                                                    orig_inp_data->v3000->n_sterac,
-                                                    strbuf,
-                                                    0,
-                                                    &io->bOverflow);
+                io->tot_len += MakeSlayerString(
+                    orig_inp_data,
+                    io->pINChISort,
+                    io->bOutType,
+                    io->num_components,
+                    strbuf,
+                    0,
+                    &io->bOverflow
+                );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
