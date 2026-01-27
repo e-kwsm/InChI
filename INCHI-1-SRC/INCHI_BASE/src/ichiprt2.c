@@ -2165,7 +2165,8 @@ int compare_ints(const void *a, const void *b) {
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
-int MakeEnhStereoString( INChI_Aux    *pAux,
+int MakeEnhStereoString( INChI_Aux        *pAux,
+                         char*            conf_stereo_string,
                          int              bOutType,
                          int              **enh_stereo,
                          int              nof_stereo_groups,
@@ -2174,10 +2175,12 @@ int MakeEnhStereoString( INChI_Aux    *pAux,
                          int              *bOverflow )
 {
     int tot_len = 0;
-
-    if (nof_stereo_groups <= 0) {
+    int count_added = 0;
+    if (nof_stereo_groups < 1) {
         return 0;
     }
+
+    tot_len += MakeDelim( conf_stereo_string, strbuf, bOverflow );
 
     for (int i = 0; i < nof_stereo_groups; i++) {
         int count_found_atoms = 0;
@@ -2208,13 +2211,22 @@ int MakeEnhStereoString( INChI_Aux    *pAux,
                 continue;
             }
             tot_len += MakeMult_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
+            count_added++;
 
             if ((j + 1) < enh_stereo[i][1]) {
                 tot_len += MakeDelim( ",", strbuf, bOverflow );
             }
         }
         tot_len += MakeDelim( ")", strbuf, bOverflow );
+    }
 
+    if (count_added == 0) {
+        if (strbuf && strbuf->nUsedLength > 0) {
+            strbuf->nUsedLength--;
+            strbuf->pStr[strbuf->nUsedLength] = '\0';
+        }
+
+        tot_len = tot_len - 1;
     }
 
     return tot_len;
@@ -2232,7 +2244,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
     int tot_len = 0;
     int          ii, nUsedLength0;
     INCHI_SORT   *is, *is0;
-    INChI_Stereo *Stereo;
+    // INChI_Stereo *Stereo;
     INChI        *pINChI;
     INChI_Aux    *pAux;
 
@@ -2259,8 +2271,9 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
         inchi_strbuf_init(&tmpbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
 
-        tot_len += MakeDelim( "1", &tmpbuf, bOverflow ); // s1
+        // s1
         tot_len += MakeEnhStereoString( pAux,
+                                        "1",
                                         bOutType,
                                         orig_inp_data->v3000->lists_steabs,
                                         orig_inp_data->v3000->n_steabs,
@@ -2268,8 +2281,9 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                                         nCtMode,
                                         bOverflow);
 
-        tot_len += MakeDelim( "2", &tmpbuf, bOverflow ); // s2
+        // s2
         tot_len += MakeEnhStereoString( pAux,
+                                        "2",
                                         bOutType,
                                         orig_inp_data->v3000->lists_sterel,
                                         orig_inp_data->v3000->n_sterel,
@@ -2277,9 +2291,9 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                                         0,
                                         bOverflow);
 
-        tot_len += MakeDelim( "3", &tmpbuf, bOverflow ); // s3
-
+        // s3
         tot_len += MakeEnhStereoString( pAux,
+                                        "3",
                                         bOutType,
                                         orig_inp_data->v3000->lists_sterac,
                                         orig_inp_data->v3000->n_sterac,

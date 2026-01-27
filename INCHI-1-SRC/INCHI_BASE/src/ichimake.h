@@ -209,6 +209,7 @@ const char *EquString( int EquVal );
                           int nCtMode,
                           int *bOverflow );
     int MakeEnhStereoString( INChI_Aux    *pAux,
+                             char*            conf_stereo_string,
                              int              bOutType,
                              int              **enh_stereo,
                              int              nof_stereo_groups,

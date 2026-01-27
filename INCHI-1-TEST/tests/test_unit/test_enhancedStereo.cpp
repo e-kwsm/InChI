@@ -177,7 +177,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6-,7-,8-,9+,10-/m0/s1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1S/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(6,8)(4)3(7,9)(10)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -188,7 +188,288 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols)
     FreeINCHI(poutput);
 }
 
-TEST(test_enhancedStereo, test_EnhancedStereochemistry_3_mols_molblock_wrong)
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_3_mols)
+{
+    const char *molblock =
+        "test mol                                            \n"
+        "  -INDIGO-01272609172D                              \n"
+        "													 \n"
+        "  0  0  0  0  0  0  0  0  0  0  0 V3000             \n"
+        "M  V30 BEGIN CTAB                                   \n"
+        "M  V30 COUNTS 44 41 0 0 0                           \n"
+        "M  V30 BEGIN ATOM                                   \n"
+        "M  V30 1 C 5.48304 -3.77499 0.0 0 CFG=1             \n"
+        "M  V30 2 C 4.61702 -3.27499 0.0 0 CFG=1             \n"
+        "M  V30 3 C 3.75099 -3.77499 0.0 0 CFG=2             \n"
+        "M  V30 4 C 2.88496 -3.27499 0.0 0 CFG=1             \n"
+        "M  V30 5 C 2.01894 -3.77499 0.0 0 CFG=2             \n"
+        "M  V30 6 C 1.15292 -3.27499 0.0 0                   \n"
+        "M  V30 7 Br 2.01894 -4.77499 0.0 0                  \n"
+        "M  V30 8 Cl 2.88496 -2.27499 0.0 0                  \n"
+        "M  V30 9 Cl 3.75099 -4.77499 0.0 0                  \n"
+        "M  V30 10 Cl 4.61702 -2.27499 0.0 0                 \n"
+        "M  V30 11 Cl 5.48304 -4.77499 0.0 0                 \n"
+        "M  V30 12 C 6.34907 -3.27499 0.0 0 CFG=1            \n"
+        "M  V30 13 C 7.21509 -3.77499 0.0 0 CFG=1            \n"
+        "M  V30 14 C 8.08112 -3.275 0.0 0 CFG=2              \n"
+        "M  V30 15 C 8.94714 -3.77499 0.0 0                  \n"
+        "M  V30 16 Cl 8.08112 -2.275 0.0 0                   \n"
+        "M  V30 17 Cl 7.21509 -4.77499 0.0 0                 \n"
+        "M  V30 18 Cl 6.34907 -2.27499 0.0 0                 \n"
+        "M  V30 19 C 5.78305 -8.12502 0.0 0 CFG=2            \n"
+        "M  V30 20 C 4.91701 -7.62498 0.0 0 CFG=1            \n"
+        "M  V30 21 C 4.05104 -8.12502 0.0 0 CFG=2            \n"
+        "M  V30 22 C 3.18499 -7.62498 0.0 0 CFG=1            \n"
+        "M  V30 23 C 2.31894 -8.12502 0.0 0 CFG=2            \n"
+        "M  V30 24 C 6.64902 -7.62498 0.0 0 CFG=2            \n"
+        "M  V30 25 C 7.51507 -8.12502 0.0 0 CFG=2            \n"
+        "M  V30 26 C 8.38112 -7.62498 0.0 0 CFG=2            \n"
+        "M  V30 27 C 1.45298 -7.62498 0.0 0                  \n"
+        "M  V30 28 Br 2.31894 -9.12501 0.0 0                 \n"
+        "M  V30 29 Cl 3.18499 -6.62499 0.0 0                 \n"
+        "M  V30 30 Cl 4.05104 -9.12501 0.0 0                 \n"
+        "M  V30 31 Cl 4.91701 -6.62499 0.0 0                 \n"
+        "M  V30 32 Cl 5.78305 -9.12501 0.0 0                 \n"
+        "M  V30 33 C 9.24708 -8.12502 0.0 0                  \n"
+        "M  V30 34 Cl 8.38112 -6.62499 0.0 0                 \n"
+        "M  V30 35 Cl 7.51507 -9.12501 0.0 0                 \n"
+        "M  V30 36 Cl 6.64902 -6.62499 0.0 0                 \n"
+        "M  V30 37 C 14.367 -4.45 0.0 0 CFG=1                \n"
+        "M  V30 38 C 15.233 -3.95 0.0 0 CFG=2                \n"
+        "M  V30 39 C 16.099 -4.45 0.0 0                      \n"
+        "M  V30 40 C 15.233 -2.95 0.0 0                      \n"
+        "M  V30 41 C 13.501 -3.95 0.0 0 CFG=1                \n"
+        "M  V30 42 C 12.6349 -4.45 0.0 0                     \n"
+        "M  V30 43 C 13.501 -2.95 0.0 0                      \n"
+        "M  V30 44 C 14.367 -5.45 0.0 0                      \n"
+        "M  V30 END ATOM                                     \n"
+        "M  V30 BEGIN BOND                                   \n"
+        "M  V30 1 1 1 2                                      \n"
+        "M  V30 2 1 1 11 CFG=3                               \n"
+        "M  V30 3 1 1 12                                     \n"
+        "M  V30 4 1 2 3                                      \n"
+        "M  V30 5 1 2 10 CFG=1                               \n"
+        "M  V30 6 1 3 4                                      \n"
+        "M  V30 7 1 3 9 CFG=1                                \n"
+        "M  V30 8 1 4 5                                      \n"
+        "M  V30 9 1 4 8 CFG=1                                \n"
+        "M  V30 10 1 5 6                                     \n"
+        "M  V30 11 1 5 7 CFG=1                               \n"
+        "M  V30 12 1 12 13                                   \n"
+        "M  V30 13 1 12 18 CFG=3                             \n"
+        "M  V30 14 1 13 14                                   \n"
+        "M  V30 15 1 13 17 CFG=1                             \n"
+        "M  V30 16 1 14 15                                   \n"
+        "M  V30 17 1 14 16 CFG=1                             \n"
+        "M  V30 18 1 19 20                                   \n"
+        "M  V30 19 1 20 21                                   \n"
+        "M  V30 20 1 21 22                                   \n"
+        "M  V30 21 1 22 23                                   \n"
+        "M  V30 22 1 19 24                                   \n"
+        "M  V30 23 1 24 25                                   \n"
+        "M  V30 24 1 25 26                                   \n"
+        "M  V30 25 1 23 27                                   \n"
+        "M  V30 26 1 23 28 CFG=1                             \n"
+        "M  V30 27 1 22 29 CFG=1                             \n"
+        "M  V30 28 1 21 30 CFG=1                             \n"
+        "M  V30 29 1 20 31 CFG=1                             \n"
+        "M  V30 30 1 19 32 CFG=3                             \n"
+        "M  V30 31 1 26 33                                   \n"
+        "M  V30 32 1 26 34 CFG=1                             \n"
+        "M  V30 33 1 25 35 CFG=3                             \n"
+        "M  V30 34 1 24 36 CFG=1                             \n"
+        "M  V30 35 1 37 38                                   \n"
+        "M  V30 36 1 38 39                                   \n"
+        "M  V30 37 1 38 40 CFG=1                             \n"
+        "M  V30 38 1 37 41                                   \n"
+        "M  V30 39 1 41 42                                   \n"
+        "M  V30 40 1 41 43 CFG=1                             \n"
+        "M  V30 41 1 37 44 CFG=3                             \n"
+        "M  V30 END BOND                                     \n"
+        "M  V30 BEGIN COLLECTION                             \n"
+        "M  V30 MDLV30/STERAC2 ATOMS=(1 1)                   \n"
+        "M  V30 MDLV30/STERAC1 ATOMS=(2 2 3)                 \n"
+        "M  V30 MDLV30/STEABS ATOMS=(5 4 5 22 23 38)         \n"
+        "M  V30 MDLV30/STEREL1 ATOMS=(2 12 13)               \n"
+        "M  V30 MDLV30/STEREL2 ATOMS=(1 14)                  \n"
+        "M  V30 MDLV30/STERAC4 ATOMS=(1 19)                  \n"
+        "M  V30 MDLV30/STERAC3 ATOMS=(2 20 21)               \n"
+        "M  V30 MDLV30/STEREL3 ATOMS=(2 24 25)               \n"
+        "M  V30 MDLV30/STEREL4 ATOMS=(1 26)                  \n"
+        "M  V30 MDLV30/STERAC5 ATOMS=(2 37 41)               \n"
+        "M  V30 END COLLECTION                               \n"
+        "M  V30 END CTAB                                     \n"
+        "M  END                                              \n";
+
+
+    char options[] = "-EnhancedStereochemistry";
+    inchi_Output output;
+    inchi_Output *poutput = &output;
+    const char expected_inchi[] = "InChI=1S/2C10H14BrCl7.C8H18/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6(2)8(5)7(3)4/h2*3-10H,1-2H3;6-8H,1-5H3/t2*3-,4-,5+,6-,7-,8-,9+,10-;/m00./s2*1(3,5)2(6,8)(4)3(7,9)(10);1(6)3(7,8)";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_4_mols)
+{
+    const char *molblock =
+        "test_mol                                                              \n"
+        "  -INDIGO-01272609502D                                                \n"
+        "                                                                      \n"
+        "  0  0  0  0  0  0  0  0  0  0  0 V3000                               \n"
+        "M  V30 BEGIN CTAB                                                     \n"
+        "M  V30 COUNTS 57 53 0 0 0                                             \n"
+        "M  V30 BEGIN ATOM                                                     \n"
+        "M  V30 1 C 5.48304 -3.77499 0.0 0 CFG=1                               \n"
+        "M  V30 2 C 4.61702 -3.27499 0.0 0 CFG=1                               \n"
+        "M  V30 3 C 3.75099 -3.77499 0.0 0 CFG=2                               \n"
+        "M  V30 4 C 2.88496 -3.27499 0.0 0 CFG=1                               \n"
+        "M  V30 5 C 2.01894 -3.77499 0.0 0 CFG=2                               \n"
+        "M  V30 6 C 1.15292 -3.27499 0.0 0                                     \n"
+        "M  V30 7 Br 2.01894 -4.77499 0.0 0                                    \n"
+        "M  V30 8 Cl 2.88496 -2.27499 0.0 0                                    \n"
+        "M  V30 9 Cl 3.75099 -4.77499 0.0 0                                    \n"
+        "M  V30 10 Cl 4.61702 -2.27499 0.0 0                                   \n"
+        "M  V30 11 Cl 5.48304 -4.77499 0.0 0                                   \n"
+        "M  V30 12 C 6.34907 -3.27499 0.0 0 CFG=1                              \n"
+        "M  V30 13 C 7.21509 -3.77499 0.0 0 CFG=1                              \n"
+        "M  V30 14 C 8.08112 -3.275 0.0 0 CFG=2                                \n"
+        "M  V30 15 C 8.94714 -3.77499 0.0 0                                    \n"
+        "M  V30 16 Cl 8.08112 -2.275 0.0 0                                     \n"
+        "M  V30 17 Cl 7.21509 -4.77499 0.0 0                                   \n"
+        "M  V30 18 Cl 6.34907 -2.27499 0.0 0                                   \n"
+        "M  V30 19 C 5.78305 -8.12502 0.0 0 CFG=2                              \n"
+        "M  V30 20 C 4.91701 -7.62498 0.0 0 CFG=1                              \n"
+        "M  V30 21 C 4.05104 -8.12502 0.0 0 CFG=2                              \n"
+        "M  V30 22 C 3.18499 -7.62498 0.0 0 CFG=1                              \n"
+        "M  V30 23 C 2.31894 -8.12502 0.0 0 CFG=2                              \n"
+        "M  V30 24 C 6.64902 -7.62498 0.0 0 CFG=2                              \n"
+        "M  V30 25 C 7.51507 -8.12502 0.0 0 CFG=2                              \n"
+        "M  V30 26 C 8.38112 -7.62498 0.0 0 CFG=2                              \n"
+        "M  V30 27 C 1.45298 -7.62498 0.0 0                                    \n"
+        "M  V30 28 Br 2.31894 -9.12501 0.0 0                                   \n"
+        "M  V30 29 Cl 3.18499 -6.62499 0.0 0                                   \n"
+        "M  V30 30 Cl 4.05104 -9.12501 0.0 0                                   \n"
+        "M  V30 31 Cl 4.91701 -6.62499 0.0 0                                   \n"
+        "M  V30 32 Cl 5.78305 -9.12501 0.0 0                                   \n"
+        "M  V30 33 C 9.24708 -8.12502 0.0 0                                    \n"
+        "M  V30 34 Cl 8.38112 -6.62499 0.0 0                                   \n"
+        "M  V30 35 Cl 7.51507 -9.12501 0.0 0                                   \n"
+        "M  V30 36 Cl 6.64902 -6.62499 0.0 0                                   \n"
+        "M  V30 37 C 14.367 -4.45 0.0 0 CFG=1                                  \n"
+        "M  V30 38 C 15.233 -3.95 0.0 0 CFG=2                                  \n"
+        "M  V30 39 C 16.099 -4.45 0.0 0                                        \n"
+        "M  V30 40 C 15.233 -2.95 0.0 0                                        \n"
+        "M  V30 41 C 13.501 -3.95 0.0 0 CFG=1                                  \n"
+        "M  V30 42 C 12.6349 -4.45 0.0 0                                       \n"
+        "M  V30 43 C 13.501 -2.95 0.0 0                                        \n"
+        "M  V30 44 C 14.367 -5.45 0.0 0                                        \n"
+        "M  V30 45 C 11.7689 -3.95 0.0 0                                       \n"
+        "M  V30 46 C 11.417 -7.75 0.0 0                                        \n"
+        "M  V30 47 C 12.283 -7.25 0.0 0 CFG=2                                  \n"
+        "M  V30 48 C 13.149 -7.75 0.0 0                                        \n"
+        "M  V30 49 C 14.0151 -7.25 0.0 0 CFG=2                                 \n"
+        "M  V30 50 C 14.8811 -7.75 0.0 0                                       \n"
+        "M  V30 51 C 13.149 -8.75 0.0 0 CFG=2                                  \n"
+        "M  V30 52 C 12.283 -9.25 0.0 0                                        \n"
+        "M  V30 53 C 14.0151 -9.25 0.0 0 CFG=2                                 \n"
+        "M  V30 54 C 14.0151 -10.25 0.0 0                                      \n"
+        "M  V30 55 C 14.8811 -8.75 0.0 0                                       \n"
+        "M  V30 56 C 14.0151 -6.25 0.0 0                                       \n"
+        "M  V30 57 C 12.283 -6.25 0.0 0                                        \n"
+        "M  V30 END ATOM                                                       \n"
+        "M  V30 BEGIN BOND                                                     \n"
+        "M  V30 1 1 1 2                                                        \n"
+        "M  V30 2 1 1 11 CFG=3                                                 \n"
+        "M  V30 3 1 1 12                                                       \n"
+        "M  V30 4 1 2 3                                                        \n"
+        "M  V30 5 1 2 10 CFG=1                                                 \n"
+        "M  V30 6 1 3 4                                                        \n"
+        "M  V30 7 1 3 9 CFG=1                                                  \n"
+        "M  V30 8 1 4 5                                                        \n"
+        "M  V30 9 1 4 8 CFG=1                                                  \n"
+        "M  V30 10 1 5 6                                                       \n"
+        "M  V30 11 1 5 7 CFG=1                                                 \n"
+        "M  V30 12 1 12 13                                                     \n"
+        "M  V30 13 1 12 18 CFG=3                                               \n"
+        "M  V30 14 1 13 14                                                     \n"
+        "M  V30 15 1 13 17 CFG=1                                               \n"
+        "M  V30 16 1 14 15                                                     \n"
+        "M  V30 17 1 14 16 CFG=1                                               \n"
+        "M  V30 18 1 19 20                                                     \n"
+        "M  V30 19 1 20 21                                                     \n"
+        "M  V30 20 1 21 22                                                     \n"
+        "M  V30 21 1 22 23                                                     \n"
+        "M  V30 22 1 19 24                                                     \n"
+        "M  V30 23 1 24 25                                                     \n"
+        "M  V30 24 1 25 26                                                     \n"
+        "M  V30 25 1 23 27                                                     \n"
+        "M  V30 26 1 23 28 CFG=1                                               \n"
+        "M  V30 27 1 22 29 CFG=1                                               \n"
+        "M  V30 28 1 21 30 CFG=1                                               \n"
+        "M  V30 29 1 20 31 CFG=1                                               \n"
+        "M  V30 30 1 19 32 CFG=3                                               \n"
+        "M  V30 31 1 26 33                                                     \n"
+        "M  V30 32 1 26 34 CFG=1                                               \n"
+        "M  V30 33 1 25 35 CFG=3                                               \n"
+        "M  V30 34 1 24 36 CFG=1                                               \n"
+        "M  V30 35 1 37 38                                                     \n"
+        "M  V30 36 1 38 39                                                     \n"
+        "M  V30 37 1 38 40 CFG=1                                               \n"
+        "M  V30 38 1 37 41                                                     \n"
+        "M  V30 39 1 41 42                                                     \n"
+        "M  V30 40 1 41 43 CFG=1                                               \n"
+        "M  V30 41 1 37 44 CFG=3                                               \n"
+        "M  V30 42 1 42 45                                                     \n"
+        "M  V30 43 1 46 47                                                     \n"
+        "M  V30 44 1 47 48                                                     \n"
+        "M  V30 45 1 48 49                                                     \n"
+        "M  V30 46 1 49 50                                                     \n"
+        "M  V30 47 1 48 51                                                     \n"
+        "M  V30 48 1 51 52 CFG=1                                               \n"
+        "M  V30 49 1 51 53                                                     \n"
+        "M  V30 50 1 53 54                                                     \n"
+        "M  V30 51 1 53 55 CFG=1                                               \n"
+        "M  V30 52 1 49 56 CFG=1                                               \n"
+        "M  V30 53 1 47 57 CFG=1                                               \n"
+        "M  V30 END BOND                                                       \n"
+        "M  V30 BEGIN COLLECTION                                               \n"
+        "M  V30 MDLV30/STERAC2 ATOMS=(1 1)                                     \n"
+        "M  V30 MDLV30/STERAC1 ATOMS=(2 2 3)                                   \n"
+        "M  V30 MDLV30/STEABS ATOMS=(9 4 5 22 23 38 47 49 51 53)               \n"
+        "M  V30 MDLV30/STEREL1 ATOMS=(2 12 13)                                 \n"
+        "M  V30 MDLV30/STEREL2 ATOMS=(1 14)                                    \n"
+        "M  V30 MDLV30/STERAC4 ATOMS=(1 19)                                    \n"
+        "M  V30 MDLV30/STERAC3 ATOMS=(2 20 21)                                 \n"
+        "M  V30 MDLV30/STEREL3 ATOMS=(2 24 25)                                 \n"
+        "M  V30 MDLV30/STEREL4 ATOMS=(1 26)                                    \n"
+        "M  V30 MDLV30/STERAC5 ATOMS=(2 37 41)                                 \n"
+        "M  V30 END COLLECTION                                                 \n"
+        "M  V30 END CTAB                                                       \n"
+        "M  END                                                                \n";
+
+
+    char options[] = "-EnhancedStereochemistry";
+    inchi_Output output;
+    inchi_Output *poutput = &output;
+    const char expected_inchi[] = "InChI=1S/C12H26.2C10H14BrCl7.C9H20/c1-8(2)11(7)12(9(3)4)10(5)6;2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6-8(4)9(5)7(2)3/h8-12H,1-7H3;2*3-10H,1-2H3;7-9H,6H2,1-5H3/t11-;2*3-,4-,5+,6-,7-,8-,9+,10-;8-,9+/m1001/s1(8,9,10,11);2*1(3,5)2(6,8)(4)3(7,9)(10);1(7)3(8,9)";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_grps)
 {
     const char *molblock =
         "my_test_mol                                      \n"
@@ -284,10 +565,122 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_3_mols_molblock_wrong)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6-,7-,8-,9+,10-/m0/s1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1S/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(6,8)(4)3(7,9)(10)";
 
-    // EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    // EXPECT_STREQ(poutput->szInChI, expected_inchi);
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_different_mols_inter_enhstereo_grps)
+{
+    const char *molblock =
+        "test_mols                                                \n"
+        "  -INDIGO-01272610042D                                   \n"
+        "                                                         \n"
+        "  0  0  0  0  0  0  0  0  0  0  0 V3000                  \n"
+        "M  V30 BEGIN CTAB                                        \n"
+        "M  V30 COUNTS 37 35 0 0 0                                \n"
+        "M  V30 BEGIN ATOM                                        \n"
+        "M  V30 1 C 5.43304 -3.47499 0.0 0 CFG=1                  \n"
+        "M  V30 2 C 4.56702 -2.97499 0.0 0 CFG=1                  \n"
+        "M  V30 3 C 3.70099 -3.47499 0.0 0 CFG=2                  \n"
+        "M  V30 4 C 2.83496 -2.97499 0.0 0 CFG=1                  \n"
+        "M  V30 5 C 1.96894 -3.47499 0.0 0 CFG=2                  \n"
+        "M  V30 6 C 1.10292 -2.97499 0.0 0                        \n"
+        "M  V30 7 Br 1.96894 -4.47499 0.0 0                       \n"
+        "M  V30 8 Cl 2.83496 -1.97499 0.0 0                       \n"
+        "M  V30 9 Cl 3.70099 -4.47499 0.0 0                       \n"
+        "M  V30 10 Cl 4.56702 -1.97499 0.0 0                      \n"
+        "M  V30 11 Cl 5.43304 -4.47499 0.0 0                      \n"
+        "M  V30 12 C 6.29907 -2.97499 0.0 0 CFG=1                 \n"
+        "M  V30 13 C 7.16509 -3.47499 0.0 0 CFG=1                 \n"
+        "M  V30 14 C 8.03112 -2.975 0.0 0 CFG=2                   \n"
+        "M  V30 15 C 8.89714 -3.47499 0.0 0                       \n"
+        "M  V30 16 Cl 8.03112 -1.975 0.0 0                        \n"
+        "M  V30 17 Cl 7.16509 -4.47499 0.0 0                      \n"
+        "M  V30 18 Cl 6.29907 -1.97499 0.0 0                      \n"
+        "M  V30 19 C 5.73305 -7.82502 0.0 0 CFG=2                 \n"
+        "M  V30 20 C 4.86701 -7.32498 0.0 0 CFG=1                 \n"
+        "M  V30 21 C 4.00104 -7.82502 0.0 0 CFG=2                 \n"
+        "M  V30 22 C 3.13499 -7.32498 0.0 0 CFG=1                 \n"
+        "M  V30 23 C 2.26894 -7.82502 0.0 0 CFG=2                 \n"
+        "M  V30 24 C 6.59902 -7.32498 0.0 0 CFG=2                 \n"
+        "M  V30 25 C 7.46507 -7.82502 0.0 0 CFG=2                 \n"
+        "M  V30 26 C 8.33112 -7.32498 0.0 0 CFG=2                 \n"
+        "M  V30 27 C 1.40298 -7.32498 0.0 0                       \n"
+        "M  V30 28 Br 2.26894 -8.82501 0.0 0                      \n"
+        "M  V30 29 Cl 3.13499 -6.32499 0.0 0                      \n"
+        "M  V30 30 Cl 4.00104 -8.82501 0.0 0                      \n"
+        "M  V30 31 Cl 4.86701 -6.32499 0.0 0                      \n"
+        "M  V30 32 Cl 5.73305 -8.82501 0.0 0                      \n"
+        "M  V30 33 C 9.19708 -7.82502 0.0 0                       \n"
+        "M  V30 34 Cl 8.33112 -6.32499 0.0 0                      \n"
+        "M  V30 35 Cl 7.46507 -8.82501 0.0 0                      \n"
+        "M  V30 36 Cl 6.59902 -6.32499 0.0 0                      \n"
+        "M  V30 37 C 9.19702 -8.82502 0.0 0                       \n"
+        "M  V30 END ATOM                                          \n"
+        "M  V30 BEGIN BOND                                        \n"
+        "M  V30 1 1 1 2                                           \n"
+        "M  V30 2 1 1 11 CFG=3                                    \n"
+        "M  V30 3 1 1 12                                          \n"
+        "M  V30 4 1 2 3                                           \n"
+        "M  V30 5 1 2 10 CFG=1                                    \n"
+        "M  V30 6 1 3 4                                           \n"
+        "M  V30 7 1 3 9 CFG=1                                     \n"
+        "M  V30 8 1 4 5                                           \n"
+        "M  V30 9 1 4 8 CFG=1                                     \n"
+        "M  V30 10 1 5 6                                          \n"
+        "M  V30 11 1 5 7 CFG=1                                    \n"
+        "M  V30 12 1 12 13                                        \n"
+        "M  V30 13 1 12 18 CFG=3                                  \n"
+        "M  V30 14 1 13 14                                        \n"
+        "M  V30 15 1 13 17 CFG=1                                  \n"
+        "M  V30 16 1 14 15                                        \n"
+        "M  V30 17 1 14 16 CFG=1                                  \n"
+        "M  V30 18 1 19 20                                        \n"
+        "M  V30 19 1 20 21                                        \n"
+        "M  V30 20 1 21 22                                        \n"
+        "M  V30 21 1 22 23                                        \n"
+        "M  V30 22 1 19 24                                        \n"
+        "M  V30 23 1 24 25                                        \n"
+        "M  V30 24 1 25 26                                        \n"
+        "M  V30 25 1 23 27                                        \n"
+        "M  V30 26 1 23 28 CFG=1                                  \n"
+        "M  V30 27 1 22 29 CFG=1                                  \n"
+        "M  V30 28 1 21 30 CFG=1                                  \n"
+        "M  V30 29 1 20 31 CFG=1                                  \n"
+        "M  V30 30 1 19 32 CFG=3                                  \n"
+        "M  V30 31 1 26 33                                        \n"
+        "M  V30 32 1 26 34 CFG=1                                  \n"
+        "M  V30 33 1 25 35 CFG=3                                  \n"
+        "M  V30 34 1 24 36 CFG=1                                  \n"
+        "M  V30 35 1 33 37                                        \n"
+        "M  V30 END BOND                                          \n"
+        "M  V30 BEGIN COLLECTION                                  \n"
+        "M  V30 MDLV30/STERAC2 ATOMS=(2 1 19)                     \n"
+        "M  V30 MDLV30/STERAC1 ATOMS=(4 2 3 20 21)                \n"
+        "M  V30 MDLV30/STEABS ATOMS=(4 4 5 22 23)                 \n"
+        "M  V30 MDLV30/STEREL1 ATOMS=(4 12 13 24 25)              \n"
+        "M  V30 MDLV30/STEREL2 ATOMS=(2 14 26)                    \n"
+        "M  V30 END COLLECTION                                    \n"
+        "M  V30 END CTAB                                          \n"
+        "M  END                                                   \n";
+
+    char options[] = "-EnhancedStereochemistry";
+    inchi_Output output;
+    inchi_Output *poutput = &output;
+    const char expected_inchi[] = "InChI=1S/C11H16BrCl7.C10H14BrCl7/c1-3-5(13)7(15)9(17)11(19)10(18)8(16)6(14)4(2)12;1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h4-11H,3H2,1-2H3;3-10H,1-2H3/t4-,5-,6+,7-,8-,9-,10+,11-;3-,4-,5+,6-,7-,8-,9+,10-/m00/s1(4,6)2(7,9)(5)3(8,10)(11);1(3,5)2(6,8)(4)3(7,9)(10)";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
 
     FreeINCHI(poutput);
 }

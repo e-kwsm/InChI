@@ -8,10 +8,15 @@ target_compile_features(libinchi_compiler_flags INTERFACE c_std_11)
 set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>")
 set(msvc_cxx "$<COMPILE_LANG_AND_ID:C,MSVC>")
 target_compile_options(libinchi_compiler_flags INTERFACE
-	# "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>>"
-	# "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O2>>"
-	"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O0;-c;-fno-strict-aliasing;-Wno-all>>"
-	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O0>>"
+	# "$<$<CONFIG:Release>:<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>>"
+	# "$<$<CONFIG:Release>:<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O2>>"
+	# "$<$<CONFIG:Debug>:<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O0;-fsanitize=address;-c;-fno-strict-aliasing;-Wno-all>>"
+	# "$<$<CONFIG:Debug>:<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-g;-O0;-fsanitize=address>>"
+
+    "$<$<AND:$<CONFIG:Release>,$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>>:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>"
+    "$<$<AND:$<CONFIG:Release>,$<COMPILE_LANG_AND_ID:C,MSVC>>:-W3;-MT;-O2>"
+    "$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>>:-g;-O0;-fsanitize=address;-c;-fno-strict-aliasing;-Wno-all>"
+    "$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANG_AND_ID:C,MSVC>>:-W3;-MT;-g;-O0>"
 )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib/static")
@@ -166,6 +171,10 @@ string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAG
 
 set_target_properties(libinchi PROPERTIES PREFIX "")
 # set_target_properties(libinchi PROPERTIES SOVERSION 1.07 PREFIX "")
+
+target_link_options(libinchi PRIVATE
+    "$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>>:-fsanitize=address>"
+)
 
 if(UNIX AND NOT APPLE)
 	# set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--version-script=${P_LIBINCHI_MAP}/libinchi.map,-z,relro")

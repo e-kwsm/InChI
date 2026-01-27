@@ -151,7 +151,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     ret = set_EnhancedStereo_t_m_layers(orig_inp_data, inchi, pAux);
     std::cout << "Test finished\n";
 
-    EXPECT_EQ(ret, 1);
+    EXPECT_EQ(ret, 0);
 
     FreeOrigAtData(orig_inp_data);
     inchi_free(orig_inp_data);
