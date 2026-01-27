@@ -92,6 +92,7 @@ AT_NUMB *mark,
 AT_NUMB num_disconnected_components );
 */
 INChI_Stereo *Alloc_INChI_Stereo(int num_at, int num_bonds);
+static int is_only_HDT_neighbors(const inp_ATOM* at, int num_atoms, int metal_idx);
 int RemoveInpAtBond(inp_ATOM *at, int iat, int k);
 int DisconnectInpAtBond(inp_ATOM *at,
                         AT_NUMB *nOldCompNumber,
@@ -3716,6 +3717,41 @@ int add_DT_to_num_H(int num_atoms, inp_ATOM *at)
 }
 
 /****************************************************************************
+ **@nnuk
+ * @param at input atom array
+ * @param num_atoms number of atoms
+ * @param metal_idx index of the metal atom
+ * @return 1  all neighbors are H/D/T
+ * @return 0  at least one non-hydrogen neighbor is present
+****************************************************************************/
+static int is_only_HDT_neighbors(const inp_ATOM* at, int num_atoms, int metal_idx)
+{
+    int v;
+
+    if (!at || metal_idx < 0 || metal_idx >= num_atoms)
+    {
+        return 0;
+    }
+
+    for (v = 0; v < at[metal_idx].valence; v++)
+    {
+        int nb = at[metal_idx].neighbor[v];
+
+        if (nb < 0 || nb >= num_atoms)
+        {
+            continue;
+        }
+
+        if (!(at[nb].elname[0] == 'H' && at[nb].elname[1] == '\0'))
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+/****************************************************************************
 Return value: new number of atoms > 0 or -1=out of RAM
 ****************************************************************************/
 int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg)
@@ -3797,10 +3833,12 @@ int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg)
         {
             k = (at[i].elname[1] || NUMH(at, i)) ? kMax : (at[i].elname[0] == 'H') ? at[i].iso_atw_diff
                                                                                    : kMax;
+            n = (int)at[i].neighbor[0];
             if (k < kMax && at[i].valence == 1 && at[i].chem_bonds_valence == 1 &&
                 /*  the order of comparison is important */
-                ((n = (int)at[i].neighbor[0]) > i /* at[n] has not been encountered yet*/ ||
-                 (int)new_ord[n] < num_atoms - num_hydrogens) /* at[n] might have been encountered; it has not been moved */)
+                ((n > i) /* at[n] has not been encountered yet*/ ||
+                 (int)new_ord[n] < num_atoms - num_hydrogens) /* at[n] might have been encountered; it has not been moved */ &&
+                 (!is_el_a_metal(at[n].el_number) || is_only_HDT_neighbors(at, num_atoms, n))/*@nnuk*/ )
             {
                 /*  found an explicit terminal hydrogen */
                 num_hydrogens++;
@@ -6448,6 +6486,18 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         goto cleanup;
     }
 
+    /* Before disconnection, invoke ammonium salt functions */
+    for (j = 0; j < num_at; j++)
+    {
+        int piO, pk;
+        S_CHAR num_explicit_H[NUM_H_ISOTOPES + 1];
+
+        if (bIsAmmoniumSalt(at, j, &piO, &pk, num_explicit_H))
+        {
+            DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
+        }
+    }
+
     /* Function call to Mark ring systems */
     MarkRingSystemsInp(at, num_at, 0);
 
@@ -6461,7 +6511,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         }
     }
 
-    /* 
+    /*
      * Precompute structure components (DFS RUN ONCE) to satisfy this rule below,
      * (if there is a path from this metal to ANY other metal,
      * keep all bonds for this metal)
@@ -6672,18 +6722,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             at[neighbor_idx].charge -= 1; /* Neighbor atom gains an electron -> -1 charge */
 
             num_disconnected++;
-        }
-    }
-
-    /* After disconnection, invoke ammonium salt functions !!!!!TO-DO!!!!! */
-    for (j = 0; j < num_at; j++)
-    {
-        int piO, pk;
-        S_CHAR num_explicit_H[NUM_H_ISOTOPES + 1];
-
-        if (bIsAmmoniumSalt(at, j, &piO, &pk, num_explicit_H))
-        {
-            DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
         }
     }
 
