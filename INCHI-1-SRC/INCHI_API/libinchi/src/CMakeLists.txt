@@ -5,8 +5,8 @@ project(LibInChI_API VERSION 1.7)
 add_library(libinchi_compiler_flags INTERFACE)
 target_compile_features(libinchi_compiler_flags INTERFACE c_std_11)
 
-set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>")
-set(msvc_cxx "$<COMPILE_LANG_AND_ID:C,MSVC>")
+# set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:C,ARMClang,AppleClang,Clang,GNU,LCC>")
+# set(msvc_cxx "$<COMPILE_LANG_AND_ID:C,MSVC>")
 target_compile_options(libinchi_compiler_flags INTERFACE
 	# "$<$<CONFIG:Release>:<${gcc_like_cxx}:$<BUILD_INTERFACE:-g;-O1;-c;-fno-strict-aliasing;-Wno-all>>"
 	# "$<$<CONFIG:Release>:<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-MT;-O2>>"

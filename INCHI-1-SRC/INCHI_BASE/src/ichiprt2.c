@@ -2166,7 +2166,7 @@ int compare_ints(const void *a, const void *b) {
 }
 
 int MakeEnhStereoString( INChI_Aux        *pAux,
-                         char*            conf_stereo_string,
+                         const char*      conf_stereo_string,
                          int              bOutType,
                          int              **enh_stereo,
                          int              nof_stereo_groups,
@@ -2242,9 +2242,15 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 {
 
     int tot_len = 0;
-    int          ii, nUsedLength0;
-    INCHI_SORT   *is, *is0;
-    // INChI_Stereo *Stereo;
+    int          ii;
+
+    const char* x_abs = "1";
+    const char* x_rel = "2";
+    const char* x_rac = "3";
+
+    INCHI_SORT   *is = NULL;
+    INCHI_SORT  *is0 = pINChISort;
+
     INChI        *pINChI;
     INChI_Aux    *pAux;
 
@@ -2256,9 +2262,6 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
         dictionary[i] = NULL;
         counts[i] = 0;
     }
-
-    is = NULL;
-    is0 = pINChISort;
 
     INCHI_IOS_STRING tmpbuf  = {0};
 
@@ -2273,7 +2276,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
         // s1
         tot_len += MakeEnhStereoString( pAux,
-                                        "1",
+                                        x_abs,
                                         bOutType,
                                         orig_inp_data->v3000->lists_steabs,
                                         orig_inp_data->v3000->n_steabs,
@@ -2283,22 +2286,22 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
         // s2
         tot_len += MakeEnhStereoString( pAux,
-                                        "2",
+                                        x_rel,
                                         bOutType,
                                         orig_inp_data->v3000->lists_sterel,
                                         orig_inp_data->v3000->n_sterel,
                                         &tmpbuf,
-                                        0,
+                                        nCtMode,
                                         bOverflow);
 
         // s3
         tot_len += MakeEnhStereoString( pAux,
-                                        "3",
+                                        x_rac,
                                         bOutType,
                                         orig_inp_data->v3000->lists_sterac,
                                         orig_inp_data->v3000->n_sterac,
                                         &tmpbuf,
-                                        0,
+                                        nCtMode,
                                         bOverflow);
 
 
@@ -2314,7 +2317,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
         if (!found) {
             for (int i = 0; i < DICT_SIZE; i++) {
                 if (dictionary[i] == NULL) {
-                    dictionary[i] = strdup(tmpbuf.pStr); // remember to free later
+                    dictionary[i] = strdup(tmpbuf.pStr);
                     counts[i] = 1;
                     break;
                 }

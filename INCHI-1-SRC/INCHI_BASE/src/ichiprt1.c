@@ -3657,31 +3657,30 @@ int OutputINCHI_StereoLayer_EnhancedStereo(
         /* s-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
         {
-
-            // const char *p_stereo;
-            // if (io->bRelativeStereo[io->iCurTautMode]) {
-            //     p_stereo = x_rel;
-            // } else if (io->bRacemicStereo[io->iCurTautMode]) {
-            //     p_stereo = x_rac;
-            // } else {
-            //     p_stereo = x_abs;
-            // }
+            const char *p_stereo = io->bRelativeStereo[io->iCurTautMode] ? x_rel :
+                io->bRacemicStereo[io->iCurTautMode] ? x_rac : x_abs;
 
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_TYPS, io->szTag2, &io->bAlways, 1 );
-            inchi_strbuf_reset( strbuf );
+            inchi_strbuf_reset( strbuf ); io->tot_len = 0;
+
             io->tot_len = 0;
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
-
-                io->tot_len += MakeSlayerString(
-                    orig_inp_data,
-                    io->pINChISort,
-                    io->bOutType,
-                    io->num_components,
-                    strbuf,
-                    0,
-                    &io->bOverflow
-                );
+                if (orig_inp_data->v3000->n_steabs > 0 ||
+                    orig_inp_data->v3000->n_sterel > 0 ||
+                    orig_inp_data->v3000->n_sterac > 0) {
+                    io->tot_len += MakeSlayerString(
+                        orig_inp_data,
+                        io->pINChISort,
+                        io->bOutType,
+                        io->num_components,
+                        strbuf,
+                        io->TAUT_MODE,
+                        &io->bOverflow
+                    );
+                } else {
+                    ( io->tot_len ) += MakeDelim( p_stereo, strbuf, &io->bOverflow );
+                }
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
