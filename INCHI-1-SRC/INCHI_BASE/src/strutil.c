@@ -4386,6 +4386,12 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
     int ret_rac = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterac, orig_inp_data->v3000->n_sterac, 0);
     int ret_rel = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterel, orig_inp_data->v3000->n_sterel, 0);
 
+    if ((orig_inp_data->v3000->n_steabs == 0) &&
+        (orig_inp_data->v3000->n_sterel > 0 ||
+         orig_inp_data->v3000->n_sterac)) {
+        inchi->Stereo->nCompInv2Abs = 1;
+    }
+
     return ret;
 }
 
