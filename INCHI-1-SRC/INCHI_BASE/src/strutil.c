@@ -4307,6 +4307,10 @@ int invert_parities(INChI *inchi,
     // -1 = m0
     //  1 = m1
 
+    if (list_atoms == NULL) {
+        return 1;
+    }
+
     S_CHAR *t_parity = inchi->Stereo->t_parity;
 
     if (nof_lists > 0)
@@ -4385,6 +4389,11 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
                                    INChI_Aux *aux)
 {
     int ret = 0;
+
+    if (!orig_inp_data->v3000)
+    {
+        return 1;
+    }
 
     int ret_abs = invert_parities(inchi, aux, orig_inp_data->v3000->lists_steabs, orig_inp_data->v3000->n_steabs, 1);
     int ret_rac = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterac, orig_inp_data->v3000->n_sterac, 0);
