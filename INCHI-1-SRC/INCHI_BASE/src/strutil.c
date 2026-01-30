@@ -4303,6 +4303,10 @@ int invert_parities(INChI *inchi,
     // 2 = +
     // 1 = -
 
+    // m - layer
+    // -1 = m0
+    //  1 = m1
+
     S_CHAR *t_parity = inchi->Stereo->t_parity;
 
     if (nof_lists > 0)
@@ -4347,7 +4351,7 @@ int invert_parities(INChI *inchi,
             int min_c_atom_parity = t_parity[min_c_parity_idx];
 
             if ((is_absolute == 1) && (min_c_atom_parity == 1)) {
-                inchi->Stereo->nCompInv2Abs = 1;
+                // inchi->Stereo->nCompInv2Abs = 1;
             } else if (min_c_atom_parity == 2) {
 
                 for (int j = 0; j < nof_atoms; j++) {
@@ -4369,7 +4373,7 @@ int invert_parities(INChI *inchi,
                 }
 
                 if (is_absolute) {
-                    inchi->Stereo->nCompInv2Abs = -1;
+                    inchi->Stereo->nCompInv2Abs = -1; //m1
                 }
             }
         }
@@ -4389,7 +4393,7 @@ int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
     if ((orig_inp_data->v3000->n_steabs == 0) &&
         (orig_inp_data->v3000->n_sterel > 0 ||
          orig_inp_data->v3000->n_sterac)) {
-        inchi->Stereo->nCompInv2Abs = 1;
+        inchi->Stereo->nCompInv2Abs = 1; //m0
     }
 
     return ret;
