@@ -1728,6 +1728,10 @@ int OutputINChI1( CANON_GLOBALS *pCG,
         {
             is_beta = 1;
         }
+        else if (ip->bEnhancedStereo)
+        {
+            is_beta = 1;
+        }
 
         OutputINCHI_VersionAndKind( out_file, strbuf, bINChIOutputOptions, is_beta, pLF, pTAB );
     }
