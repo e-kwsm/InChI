@@ -810,9 +810,13 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
     EXPECT_EQ(nof_inchis, list_expected_inchis.size());
 
     char options[] = "-EnhancedStereochemistry";
+
+
     for (int i = 0; i < nof_inchis; ++i) {
+
         inchi_Output output;
         inchi_Output* poutput = &output;
+
         int ret = MakeINCHIFromMolfileText(molblocks[i].c_str(), options, poutput);
         // Use your expected return code and InChI string
         if (poutput->szLog && strlen(poutput->szLog) > 0) {
@@ -827,8 +831,23 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
         }
 
         EXPECT_STREQ(poutput->szInChI, list_expected_inchis[i].c_str());
+
+        if (poutput->szLog) {
+            free(poutput->szLog);
+            poutput->szLog = nullptr;
+        }
+        if (poutput->szMessage) {
+            free(poutput->szMessage);
+            poutput->szMessage = nullptr;
+        }
+        // poutput->szMessage = nullptr;
+        // poutput->szInChI = nullptr;
+
         FreeINCHI(poutput);
     }
+
+
+
 
     file_inchi.close();
 }
