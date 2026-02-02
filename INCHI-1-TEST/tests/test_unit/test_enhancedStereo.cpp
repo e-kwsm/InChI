@@ -816,9 +816,12 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
         int ret = MakeINCHIFromMolfileText(molblocks[i].c_str(), options, poutput);
         // Use your expected return code and InChI string
         if (poutput->szLog && strlen(poutput->szLog) > 0) {
-            printf("ret: %d %s\n", i, list_expected_inchis[i].c_str());
-            printf("%s\n", poutput->szLog);
-            EXPECT_EQ(ret, 1);
+            if (strstr(poutput->szLog, "Warning")) {
+                printf("log: %s", poutput->szLog);
+                EXPECT_EQ(ret, 1);
+            } else {
+                EXPECT_EQ(ret, 0);
+            }
         } else {
             EXPECT_EQ(ret, 0);
         }
