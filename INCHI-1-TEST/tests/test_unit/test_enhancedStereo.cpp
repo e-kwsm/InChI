@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <fstream>
 
 extern "C"
 {
@@ -49,7 +50,6 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_molfile_v2)
 
     FreeINCHI(poutput);
 }
-
 
 TEST(test_enhancedStereo, test_EnhancedStereochemistry_1)
 {
@@ -729,4 +729,103 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_different_mols_inter_en
     poutput->szMessage = nullptr;
 
     FreeINCHI(poutput);
+}
+
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
+{
+
+    const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
+    std::ifstream file_inchi(inchi_filename);
+
+    bool file_is_open = file_inchi.is_open();
+    EXPECT_EQ(true, file_is_open);
+
+    // Read the whole file into a string
+    std::stringstream buffer;
+    buffer << file_inchi.rdbuf();
+    std::string file_content = buffer.str();
+
+    // Split on "$$$$"
+    std::vector<std::string> molblocks;
+    size_t pos = 0;
+    size_t prev = 0;
+    const std::string delimiter = "$$$$";
+    while ((pos = file_content.find(delimiter, prev)) != std::string::npos) {
+        std::string mol = file_content.substr(prev, pos - prev);
+        // Optionally trim whitespace
+        size_t first_non_ws = mol.find_first_not_of(" \t\r\n");
+        if (first_non_ws != std::string::npos) {
+            mol = mol.substr(first_non_ws);
+            molblocks.push_back(mol);
+        }
+        prev = pos + delimiter.length();
+    }
+    // Add the last block if any
+    std::string mol = file_content.substr(prev);
+    size_t first_non_ws = mol.find_first_not_of(" \t\r\n");
+    if (first_non_ws != std::string::npos) {
+        mol = mol.substr(first_non_ws);
+        molblocks.push_back(mol);
+    }
+
+    std::vector<std::string> list_expected_inchis = {
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m1/s1",
+        "InChI=1B/C4H10O/c1-3-4(2)5/h4-5H,3H2,1-2H3/t4-/m0/s2(4)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m0/s2(4,5)",
+        "InChI=1B/C4H10O/c1-3-4(2)5/h4-5H,3H2,1-2H3/t4-/m1/s1",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m0/s2(4)(5)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m0/s3(4,5)",
+        "InChI=1B/C4H10O/c1-3-4(2)5/h4-5H,3H2,1-2H3/t4-/m0/s3(4)",
+        "InChI=1B/C4H10O/c1-3-4(2)5/h4-5H,3H2,1-2H3",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m0/s3(4)(5)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5+,6-/m0/s1(4,5)2(6)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5+,6?/m0/s1",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6+/m0/s1(4)2(5,6)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5?,6?/m0/s1",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(5,6)",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7+/m1/s1(6)2(5,7)",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5?,6-,7?/m1/s1",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7-/m1/s1(6)2(5,7)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(6)(5)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m1/s1(4)3(5)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m0/s3(4)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)3(5,6)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6+/m0/s1(4)3(5,6)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5?,6?/m0/s3(4)",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5?,6-,7?/m0/s3(6)",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7-/m1/s1(6)3(5,7)",
+        "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7+/m1/s1(6)3(5,7)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)3(6)(5)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(5)3(6)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m1/s1",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m0/s3(4)",
+        "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m0/s2(4)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2",
+    };
+
+    int nof_inchis = 33;
+
+    EXPECT_EQ(nof_inchis, molblocks.size());
+    EXPECT_EQ(nof_inchis, list_expected_inchis.size());
+
+    char options[] = "-EnhancedStereochemistry";
+    for (int i = 0; i < nof_inchis; ++i) {
+        inchi_Output output;
+        inchi_Output* poutput = &output;
+        int ret = MakeINCHIFromMolfileText(molblocks[i].c_str(), options, poutput);
+        // Use your expected return code and InChI string
+        if (poutput->szLog && strlen(poutput->szLog) > 0) {
+            printf("ret: %d %s\n", i, list_expected_inchis[i].c_str());
+            printf("%s\n", poutput->szLog);
+            EXPECT_EQ(ret, 1);
+        } else {
+            EXPECT_EQ(ret, 0);
+        }
+
+        EXPECT_STREQ(poutput->szInChI, list_expected_inchis[i].c_str());
+        FreeINCHI(poutput);
+    }
+
+    file_inchi.close();
 }

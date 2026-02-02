@@ -471,14 +471,26 @@ int MakeMult( int mult,
     return 0;
 }
 
-int MakeMult_EnhStereo( int mult,
-                        const char       *szTailingDelim,
-                        INCHI_IOS_STRING *buf,
-                        int              nCtMode,
-                        int              *bOverflow )
+/**
+ * @brief Adds the number to the string buffer.
+ *
+ * @param number Input number to be added
+ * @param szTailingDelim Pointer to the trailing delimiter string
+ * @param buf Pointer to the output string buffer
+ * @param nCtMode Mode flag for string representation
+ * @param bOverflow Pointer to overflow flag
+ * @return Returns the number of characters added to the buffer
+ */
+int MakeNumber_EnhStereo( int number,
+                          const char       *szTailingDelim,
+                          INCHI_IOS_STRING *buf,
+                          int              nCtMode,
+                          int              *bOverflow )
 {
     char szValue[2048];
-    int  len = 0, len_delim, n;
+    int  len = 0;
+    int len_delim;
+    int n;
 
     if (*bOverflow)
     {
@@ -486,11 +498,11 @@ int MakeMult_EnhStereo( int mult,
     }
     if (nCtMode & CT_MODE_ABC_NUMBERS)
     {
-        len += MakeAbcNumber( szValue, ( int )sizeof( szValue ), NULL, mult );
+        len += MakeAbcNumber( szValue, ( int )sizeof( szValue ), NULL, number );
     }
     else
     {
-        len += MakeDecNumber( szValue, ( int )sizeof( szValue ), NULL, mult );
+        len += MakeDecNumber( szValue, ( int )sizeof( szValue ), NULL, number );
     }
     len_delim = (int) strlen( szTailingDelim );
 
@@ -500,13 +512,6 @@ int MakeMult_EnhStereo( int mult,
         n = inchi_strbuf_printf( buf, "%s", szValue );
         if (-1 == n) *bOverflow |= 1;
         return n;
-        /*
-        len += len_delim;
-        if ( len < nLen_szLinearCT )
-        {
-            strcpy( szLinearCT, szValue );
-            return len;
-        }*/
     }
 
     *bOverflow |= 1;
@@ -2159,23 +2164,50 @@ int MakeStereoString( AT_NUMB          *at1,
     return nLen;
 }
 
+/**
+ * @brief Compares two integers for qsort.
+ *
+ * @param a First integer pointer.
+ * @param b Second integer pointer.
+ * @return Returns negative, zero, or positive value based on comparison.
+ */
 int compare_ints(const void *a, const void *b) {
     int arg1 = *(const int *)a;
     int arg2 = *(const int *)b;
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
+/**
+ * @brief Creates the enhanced stereochemistry string for the s - layer.
+ *
+ * @param pAux Pointer to the INCHI_AUX structure.
+ * @param conf_stereo_string Pointer to the configuration stereochemistry string (abs, rel, rac).
+ * @param enh_stereo Pointer to list of enhanced stereochemistry groups.
+ * @param nof_stereo_groups Number of enhanced stereochemistry groups.
+ * @param strbuf Pointer to the output string buffer.
+ * @param nCtMode Mode flag for string representation.
+ * @param bOverflow Pointer to overflow flag.
+ * @return Returns the length of the created string.
+ */
 int MakeEnhStereoString( INChI_Aux        *pAux,
+                         INCHI_IOS_STRING *strbuf,
                          const char*      conf_stereo_string,
-                         int              bOutType,
                          int              **enh_stereo,
                          int              nof_stereo_groups,
-                         INCHI_IOS_STRING *strbuf,
                          int              nCtMode,
                          int              *bOverflow )
 {
     int tot_len = 0;
     int count_added = 0;
+
+    if (pAux == NULL) {
+        return 0;
+    }
+
+    if (enh_stereo == NULL) {
+        return 0;
+    }
+
     if (nof_stereo_groups < 1) {
         return 0;
     }
@@ -2210,7 +2242,7 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
             if (c_atom_numbers[j] == -1) {
                 continue;
             }
-            tot_len += MakeMult_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
+            tot_len += MakeNumber_EnhStereo( c_atom_numbers[j], "", strbuf, nCtMode, bOverflow );
             count_added++;
 
             if ((j + 1) < enh_stereo[i][1]) {
@@ -2232,11 +2264,23 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
     return tot_len;
 }
 
+/**
+ * @brief Creates the string for the s - layer based on the enhanced stereochemistry information.
+ *
+ * @param orig_inp_data Pointer to the original atom data.
+ * @param pINChISort Pointer to the INCHI_SORT structure.
+ * @param bOutType Output type flag.
+ * @param num_components Number of components in the molecule.
+ * @param strbuf Pointer to the output string buffer.
+ * @param nCtMode Mode flag for string representation.
+ * @param bOverflow Pointer to overflow flag.
+ * @return Returns the length of the created string.
+ */
 int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                       INCHI_SORT       *pINChISort,
+                      INCHI_IOS_STRING *strbuf,
                       int              bOutType,
                       int              num_components,
-                      INCHI_IOS_STRING *strbuf,
                       int              nCtMode,
                       int              *bOverflow )
 {
@@ -2248,11 +2292,11 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
     const char* x_rel = "2";
     const char* x_rac = "3";
 
-    INCHI_SORT   *is = NULL;
-    INCHI_SORT  *is0 = pINChISort;
+    const INCHI_SORT   *is = NULL;
+    const INCHI_SORT  *is0 = pINChISort;
 
-    INChI        *pINChI;
-    INChI_Aux    *pAux;
+    // INChI        *pINChI = NULL;
+    INChI_Aux    *pAux = NULL;
 
     int DICT_SIZE = 100;
     char *dictionary[DICT_SIZE]; // array of string pointers
@@ -2276,35 +2320,30 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
         // s1
         tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
                                         x_abs,
-                                        bOutType,
                                         orig_inp_data->v3000->lists_steabs,
                                         orig_inp_data->v3000->n_steabs,
-                                        &tmpbuf,
                                         nCtMode,
                                         bOverflow);
 
         // s2
         tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
                                         x_rel,
-                                        bOutType,
                                         orig_inp_data->v3000->lists_sterel,
                                         orig_inp_data->v3000->n_sterel,
-                                        &tmpbuf,
                                         nCtMode,
                                         bOverflow);
 
         // s3
         tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
                                         x_rac,
-                                        bOutType,
                                         orig_inp_data->v3000->lists_sterac,
                                         orig_inp_data->v3000->n_sterac,
-                                        &tmpbuf,
                                         nCtMode,
                                         bOverflow);
-
-
 
         int found = 0;
         for (int i = 0; i < DICT_SIZE; i++) {
@@ -2326,6 +2365,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
         inchi_strbuf_close(&tmpbuf);
     }
 
+    // String deduplication based on dictionary and counts
     int count = 0;
     for (int i = 0; i < DICT_SIZE; i++) {
         if (dictionary[i]) {
@@ -2333,9 +2373,9 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                 tot_len += MakeDelim( ";", strbuf, bOverflow );
             }
             if (counts[i] > 1) {
-                tot_len += inchi_strbuf_printf(strbuf, "%d*%s", counts[i], dictionary[i]);
+                tot_len = inchi_strbuf_printf(strbuf, "%d*%s", counts[i], dictionary[i]);
             } else {
-                tot_len += inchi_strbuf_printf(strbuf, "%s", dictionary[i]);
+                tot_len = inchi_strbuf_printf(strbuf, "%s", dictionary[i]);
             }
             inchi_free(dictionary[i]);
             count++;

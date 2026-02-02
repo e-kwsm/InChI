@@ -4,9 +4,7 @@ extern "C"
 {
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/strutil.h"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/ichi_io.h"
-// #include "../../../INCHI-1-SRC/INCHI_BASE/src/inpdef.h"
 }
-
 
 TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
 {
@@ -104,7 +102,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
         pStrErr,
         bNoWarnings);
 
-
+    EXPECT_EQ(ret, orig_inp_data->num_inp_atoms);
 
     int num_at = orig_inp_data->num_inp_atoms;
 
@@ -162,3 +160,107 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     inchi_ios_free_str(&input_stream);
 
 }
+
+TEST(test_strutil_enhancedStereo, test_get_canonical_atom_number_1)
+{
+
+    INChI_Aux aux;
+    int n_atoms = 5;
+    AT_NUMB orig_atoms[] = {10, 20, 30, 40, 50};
+    aux.nNumberOfAtoms = n_atoms;
+    aux.nOrigAtNosInCanonOrd = orig_atoms;
+
+    // Should return 1-based canonical atom number for each original atom number
+    EXPECT_EQ(get_canonical_atom_number(&aux, 10), 1);
+    EXPECT_EQ(get_canonical_atom_number(&aux, 20), 2);
+    EXPECT_EQ(get_canonical_atom_number(&aux, 30), 3);
+    EXPECT_EQ(get_canonical_atom_number(&aux, 40), 4);
+    EXPECT_EQ(get_canonical_atom_number(&aux, 50), 5);
+
+    // Should return -1 for atom numbers not present
+    EXPECT_EQ(get_canonical_atom_number(&aux, 99), -1);
+    EXPECT_EQ(get_canonical_atom_number(&aux, 0), -1);
+
+}
+
+TEST(test_strutil_enhancedStereo, test_get_parity_idx_from_canonical_atom_number)
+{
+
+    // Example: canonical atom numbers for a molecule with 4 stereo centers
+    AT_NUMB nNumber[] = {3, 1, 4, 2};
+    int nof_atoms = 4;
+
+    // Should return the index where the canonical atom number is found
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(3, nNumber, nof_atoms), 0);
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(1, nNumber, nof_atoms), 1);
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(4, nNumber, nof_atoms), 2);
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(2, nNumber, nof_atoms), 3);
+
+    // Should return -1 for a canonical atom number not present
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(5, nNumber, nof_atoms), -1);
+    EXPECT_EQ(get_parity_idx_from_canonical_atom_number(0, nNumber, nof_atoms), -1);
+}
+
+TEST(test_strutil_enhancedStereo, invert_parities_basic)
+{
+    // Setup INChI_Stereo
+    INChI_Stereo stereo;
+    AT_NUMB nNumber[] = {1, 2, 3};
+    S_CHAR t_parity[] = {2, 1, 2}; // 2=+, 1=-
+    stereo.nNumber = nNumber;
+    stereo.t_parity = t_parity;
+    stereo.nNumberOfStereoCenters = 3;
+    stereo.nCompInv2Abs = 1;
+
+    // Setup INChI
+    INChI inchi = {0};
+    inchi.Stereo = &stereo;
+
+    // Setup INChI_Aux
+    INChI_Aux aux = {0};
+    AT_NUMB orig_atoms[] = {1, 2, 3};
+    aux.nNumberOfAtoms = 3;
+    aux.nOrigAtNosInCanonOrd = orig_atoms;
+
+    // Setup list_atoms: one group, 3 atoms (original numbers 1,2,3)
+    int group1[] = {0, 3, 1, 2, 3}; // [unused, n_atoms, orig_atom1, orig_atom2, orig_atom3]
+    int* lists[1] = {group1};
+
+    // Call invert_parities for absolute group
+    int ret = invert_parities(&inchi, &aux, lists, 1, 1);
+
+    EXPECT_EQ(ret, 0);
+
+    EXPECT_EQ(stereo.t_parity[0], 1);
+    EXPECT_EQ(stereo.t_parity[1], 2);
+    EXPECT_EQ(stereo.t_parity[2], 1);
+
+    EXPECT_EQ(stereo.nCompInv2Abs, -1);
+
+    t_parity[0] = 2;
+    t_parity[1] = 1;
+    t_parity[2] = 2;
+
+    stereo.nCompInv2Abs = 1;
+
+    ret = invert_parities(&inchi, &aux, lists, 1, 0);
+
+    EXPECT_EQ(ret, 0);
+
+    EXPECT_EQ(stereo.t_parity[0], 1);
+    EXPECT_EQ(stereo.t_parity[1], 2);
+    EXPECT_EQ(stereo.t_parity[2], 1);
+
+    EXPECT_EQ(stereo.nCompInv2Abs, 1);
+
+    ret = invert_parities(&inchi, &aux, lists, 1, 0);
+
+    EXPECT_EQ(ret, 0);
+
+    EXPECT_EQ(stereo.t_parity[0], 1);
+    EXPECT_EQ(stereo.t_parity[1], 2);
+    EXPECT_EQ(stereo.t_parity[2], 1);
+
+    EXPECT_EQ(stereo.nCompInv2Abs, 1);
+}
+

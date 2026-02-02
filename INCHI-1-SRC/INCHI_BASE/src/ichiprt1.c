@@ -3536,7 +3536,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 }
 
 /**
- * @brief Output InChI: stereo layer with sublayers.
+ * @brief Output InChI: stereo layer with sublayers for enhanced stereochemistry (absolute, relative, racemic).
  *
  * @param pCG Pointer to the CANON_GLOBALS structure containing global canonicalization data.
  * @param out_file Pointer to the INCHI_IOSTREAM output stream where the stereo layer will be written.
@@ -3676,9 +3676,9 @@ int OutputINCHI_StereoLayer_EnhancedStereo(
                     io->tot_len += MakeSlayerString(
                         orig_inp_data,
                         io->pINChISort,
+                        strbuf,
                         io->bOutType,
                         io->num_components,
-                        strbuf,
                         io->TAUT_MODE,
                         &io->bOverflow
                     );

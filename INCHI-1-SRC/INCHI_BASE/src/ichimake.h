@@ -209,18 +209,17 @@ const char *EquString( int EquVal );
                           int nCtMode,
                           int *bOverflow );
     int MakeEnhStereoString( INChI_Aux        *pAux,
+                             INCHI_IOS_STRING *strbuf,
                              const char*      conf_stereo_string,
-                             int              bOutType,
                              int              **enh_stereo,
                              int              nof_stereo_groups,
-                             INCHI_IOS_STRING *strbuf,
                              int              nCtMode,
                              int              *bOverflow );
     int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                           INCHI_SORT       *pINChISort,
+                          INCHI_IOS_STRING *strbuf,
                           int              bOutType,
                           int              num_components,
-                          INCHI_IOS_STRING *strbuf,
                           int              nCtMode,
                           int              *bOverflow );
     int MakeCRVString( ORIG_INFO *OrigInfo,

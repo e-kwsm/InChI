@@ -183,3 +183,204 @@ TEST(test_ichiprt2, Eql_INChI_Stereo_sp3_not_equal)
     EXPECT_EQ(Eql_INChI_Stereo(&s1, EQL_SP3, &s2, EQL_SP3, 0), 0);
 }
 
+TEST(test_ichiprt2, test_compare_ints_basic)
+{
+    int a = 5, b = 10, c = 5;
+
+    // a < b
+    EXPECT_LT(compare_ints(&a, &b), 0);
+
+    // b > a
+    EXPECT_GT(compare_ints(&b, &a), 0);
+
+    // a == c
+    EXPECT_EQ(compare_ints(&a, &c), 0);
+}
+
+TEST(test_ichiprt2, MakeNumber_EnhStereo_decimal)
+{
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+    int bOverflow = 0;
+    int nCtMode = 0; // decimal mode
+
+    int n = MakeNumber_EnhStereo(42, ",", &strbuf, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    EXPECT_EQ(std::string(strbuf.pStr), "42,");
+    EXPECT_EQ(n, 3);
+
+    inchi_strbuf_close(&strbuf);
+}
+
+TEST(test_ichiprt2, MakeNumber_EnhStereo_abc)
+{
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    int bOverflow = 0;
+    int nCtMode = CT_MODE_ABC_NUMBERS; // alphabetic mode
+
+    int n = MakeNumber_EnhStereo(28, ";", &strbuf, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    // 28 in base-27 is "aa", so expect "Aa;"
+    EXPECT_EQ(std::string(strbuf.pStr), "Aa;");
+    EXPECT_EQ(n, 3);
+
+    inchi_strbuf_close(&strbuf);
+}
+
+TEST(test_ichiprt2, MakeEnhStereoString_basic)
+{
+    // Setup INChI_Aux with 3 atoms, canonical numbers 1, 2, 3
+    INChI_Aux aux = {0};
+    AT_NUMB orig_atoms[] = {1, 2, 3};
+    aux.nNumberOfAtoms = 3;
+    aux.nOrigAtNosInCanonOrd = orig_atoms;
+
+    // Enhanced stereo group: one group, 3 atoms (original numbers 1,2,3)
+    int group1[] = {0, 3, 1, 2, 3}; // [unused, n_atoms, orig_atom1, orig_atom2, orig_atom3]
+    int* enh_stereo[1] = {group1};
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    int bOverflow = 0;
+    int nCtMode = 0;
+
+    int len = MakeEnhStereoString(&aux, &strbuf, "1", enh_stereo, 1, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    EXPECT_EQ(std::string(strbuf.pStr), "1(1,2,3)");
+    EXPECT_EQ(len, 8);
+
+    inchi_strbuf_close(&strbuf);
+}
+
+TEST(test_ichiprt2, MakeEnhStereoString_multiple_groups)
+{
+    INChI_Aux aux = {0};
+    AT_NUMB orig_atoms[] = {1, 2, 3, 4};
+    aux.nNumberOfAtoms = 4;
+    aux.nOrigAtNosInCanonOrd = orig_atoms;
+
+    int group1[] = {0, 2, 1, 2}; // [unused, n_atoms, orig_atom1, orig_atom2]
+    int group2[] = {0, 2, 3, 4}; // [unused, n_atoms, orig_atom3, orig_atom4]
+    int* enh_stereo[2] = {group1, group2};
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    int bOverflow = 0;
+    int nCtMode = 0;
+
+    int len = MakeEnhStereoString(&aux, &strbuf, "2", enh_stereo, 2, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    EXPECT_EQ(std::string(strbuf.pStr), "2(1,2)(3,4)");
+    EXPECT_EQ(len, 11);
+
+    inchi_strbuf_close(&strbuf);
+}
+
+TEST(test_ichiprt2, MakeEnhStereoString_empty_group)
+{
+    INChI_Aux aux = {0};
+    AT_NUMB orig_atoms[] = {1, 2, 3};
+    aux.nNumberOfAtoms = 3;
+    aux.nOrigAtNosInCanonOrd = orig_atoms;
+
+    // Group with no valid atoms
+    int group1[] = {0, 2, 99, 100}; // [unused, n_atoms, orig_atom99, orig_atom100]
+    int* enh_stereo[1] = {group1};
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    int bOverflow = 0;
+    int nCtMode = 0;
+
+    int len = MakeEnhStereoString(&aux, &strbuf, "3", enh_stereo, 1, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    EXPECT_EQ(std::string(strbuf.pStr), "");
+    EXPECT_EQ(len, 0);
+
+    inchi_strbuf_close(&strbuf);
+}
+
+TEST(test_ichiprt2, MakeSlayerString_basic)
+{
+    // Setup minimal ORIG_ATOM_DATA with V3000 stereo lists
+    ORIG_ATOM_DATA *oad;
+
+    oad = (ORIG_ATOM_DATA *)inchi_calloc(1, sizeof(ORIG_ATOM_DATA));
+
+    OAD_V3000 *v3000;
+
+    v3000 = (OAD_V3000 *)inchi_calloc(1, sizeof(OAD_V3000));
+
+    // One absolute group: 2 atoms (original numbers 1,2)
+    int group_abs[] = {0, 2, 1, 2};
+    v3000->n_steabs = 1;
+    v3000->lists_steabs = (int**)inchi_calloc(1, sizeof(int*));
+    v3000->lists_steabs[0] = group_abs;
+
+    // One relative group: 1 atom (original number 3)
+    int group_rel[] = {0, 1, 3};
+    v3000->n_sterel = 1;
+    v3000->lists_sterel = (int**)inchi_calloc(1, sizeof(int*));
+    v3000->lists_sterel[0] = group_rel;
+
+    // No racemic groups
+    v3000->n_sterac = 0;
+
+    oad->v3000 = v3000;
+
+    // Setup INCHI_SORT and INChI_Aux
+
+    INCHI_SORT *inchi_sort = (INCHI_SORT*)inchi_calloc(1, sizeof(INCHI_SORT));
+
+    int num_at = 8;
+    int num_iso_at = 1;
+    int alloc_mode = 0;
+    int bOrigatomflag = 0;
+    int found_num_bonds = 0;
+    int found_num_isotopic = 0;
+
+    inp_ATOM *atoms = CreateInpAtom(num_at);
+    INChI *inchi = Alloc_INChI(atoms, num_at, &found_num_bonds, &found_num_isotopic, 0);
+    inchi->nNumberOfAtoms = num_at;
+
+    INChI_Aux *pAux = Alloc_INChI_Aux(num_at, num_iso_at, alloc_mode, bOrigatomflag);
+    pAux->nNumberOfAtoms = 3;
+    pAux->nOrigAtNosInCanonOrd[0] = 1;
+    pAux->nOrigAtNosInCanonOrd[1] = 2;
+    pAux->nOrigAtNosInCanonOrd[2] = 3;
+
+    inchi_sort->pINChI_Aux[0] = pAux;
+    inchi_sort->pINChI[0] = inchi;
+
+    INCHI_IOS_STRING strbuf = {0};
+    inchi_strbuf_init(&strbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+    int bOverflow = 0;
+    int nCtMode = 0;
+
+    int len = MakeSlayerString(oad, inchi_sort, &strbuf, OUT_TN, 1, nCtMode, &bOverflow);
+
+    EXPECT_EQ(bOverflow, 0);
+    // Should produce: 1(1,2)2(3)
+    EXPECT_EQ(std::string(strbuf.pStr), "1(1,2)2(3)");
+    EXPECT_EQ(len, 10);
+
+    inchi_free(oad->v3000->lists_steabs);
+    inchi_free(oad->v3000->lists_sterel);
+    inchi_free(oad->v3000);
+    inchi_free(oad);
+
+    inchi_free(inchi_sort);
+
+    inchi_strbuf_close(&strbuf);
+
+    FreeInpAtom(&atoms);
+    Free_INChI_Aux(&pAux);
+    Free_INChI(&inchi);
+}
