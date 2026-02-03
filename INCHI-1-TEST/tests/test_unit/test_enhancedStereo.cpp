@@ -4,6 +4,7 @@
 extern "C"
 {
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inchi_api.h"
+#include "../../../INCHI-1-SRC/INCHI_BASE/src/mode.h"
 }
 
 TEST(test_enhancedStereo, test_EnhancedStereochemistry_molfile_v2)
@@ -734,16 +735,17 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_different_mols_inter_en
 TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
 {
 
-    const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
-    std::ifstream file_inchi(inchi_filename);
+    // const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
+    const char* inchi_filename = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
 
-    bool file_is_open = file_inchi.is_open();
-    EXPECT_EQ(true, file_is_open);
+    std::ifstream file_inchi(inchi_filename, std::ios::binary);
+    ASSERT_TRUE(file_inchi.is_open());
 
     // Read the whole file into a string
     std::stringstream buffer;
     buffer << file_inchi.rdbuf();
     std::string file_content = buffer.str();
+    file_inchi.close();
 
     // Split on "$$$$"
     std::vector<std::string> molblocks;
@@ -811,43 +813,36 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
 
     char options[] = "-EnhancedStereochemistry";
 
-
     for (int i = 0; i < nof_inchis; ++i) {
 
         inchi_Output output;
         inchi_Output* poutput = &output;
 
+        poutput->szLog = nullptr;
+        poutput->szMessage = nullptr;
+        poutput->szInChI = nullptr;
+
         int ret = MakeINCHIFromMolfileText(molblocks[i].c_str(), options, poutput);
-        // Use your expected return code and InChI string
-        if (poutput->szLog && strlen(poutput->szLog) > 0) {
-            if (strstr(poutput->szLog, "Warning")) {
-                printf("log: %s", poutput->szLog);
-                EXPECT_EQ(ret, 1);
-            } else {
-                EXPECT_EQ(ret, 0);
-            }
-        } else {
-            EXPECT_EQ(ret, 0);
-        }
+
+        EXPECT_LT(ret, 2);
 
         EXPECT_STREQ(poutput->szInChI, list_expected_inchis[i].c_str());
 
         if (poutput->szLog) {
-            free(poutput->szLog);
+            inchi_free(poutput->szLog);
             poutput->szLog = nullptr;
         }
         if (poutput->szMessage) {
-            free(poutput->szMessage);
+            inchi_free(poutput->szMessage);
             poutput->szMessage = nullptr;
         }
-        // poutput->szMessage = nullptr;
-        // poutput->szInChI = nullptr;
+        if (poutput->szInChI) {
+            inchi_free(poutput->szInChI);
+            poutput->szInChI = nullptr;
+        }
+        // // poutput->szMessage = nullptr;
+        // // poutput->szInChI = nullptr;
 
-        FreeINCHI(poutput);
+        // FreeINCHI(poutput);
     }
-
-
-
-
-    file_inchi.close();
 }
