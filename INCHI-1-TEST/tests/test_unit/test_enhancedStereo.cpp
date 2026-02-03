@@ -735,8 +735,8 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_different_mols_inter_en
 TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
 {
 
-    // const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
-    const char* inchi_filename = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
+    const char* inchi_filename = "../../../../../INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
+    // const char* inchi_filename = "/workspaces/InChI/INCHI-1-TEST/tests/test_unit/fixtures/enh_stereo_test_file_1.sdf";
 
     std::ifstream file_inchi(inchi_filename, std::ios::binary);
     ASSERT_TRUE(file_inchi.is_open());
@@ -840,9 +840,5 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
             inchi_free(poutput->szInChI);
             poutput->szInChI = nullptr;
         }
-        // // poutput->szMessage = nullptr;
-        // // poutput->szInChI = nullptr;
-
-        // FreeINCHI(poutput);
     }
 }
