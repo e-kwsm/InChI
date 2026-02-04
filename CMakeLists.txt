@@ -22,4 +22,3 @@ enable_testing()
 add_subdirectory(INCHI-1-SRC/INCHI_EXE/inchi-1/src)
 add_subdirectory(INCHI-1-SRC/INCHI_API/libinchi/src)
 add_subdirectory(INCHI-1-TEST/tests/test_unit)
-

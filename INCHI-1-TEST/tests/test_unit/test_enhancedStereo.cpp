@@ -516,7 +516,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_4_mols)
     FreeINCHI(poutput);
 }
 
-TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_grps)
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_grps_1)
 {
     const char *molblock =
         "my_test_mol                                      \n"
@@ -613,6 +613,75 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_gr
     inchi_Output output;
     inchi_Output *poutput = &output;
     const char expected_inchi[] = "InChI=1B/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(6,8)(4)3(7,9)(10)";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    poutput->szLog = nullptr;
+    poutput->szMessage = nullptr;
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_grps_2)
+{
+    const char *molblock =
+        "test_mol                                              \n"
+        "  -INDIGO-02042609012D                                \n"
+        "                                                      \n"
+        "  0  0  0  0  0  0  0  0  0  0  0 V3000               \n"
+        "M  V30 BEGIN CTAB                                     \n"
+        "M  V30 COUNTS 18 16 0 0 0                             \n"
+        "M  V30 BEGIN ATOM                                     \n"
+        "M  V30 1 C 3.06699 -3.575 0.0 0                       \n"
+        "M  V30 2 C 3.93301 -3.075 0.0 0                       \n"
+        "M  V30 3 C 4.79904 -3.575 0.0 0 CFG=1                 \n"
+        "M  V30 4 C 5.66506 -3.075 0.0 0 CFG=2                 \n"
+        "M  V30 5 C 6.53109 -3.575 0.0 0                       \n"
+        "M  V30 6 C 7.39711 -3.075 0.0 0                       \n"
+        "M  V30 7 C 4.79904 -4.575 0.0 0                       \n"
+        "M  V30 8 C 5.66506 -2.075 0.0 0                       \n"
+        "M  V30 9 C 3.06699 -8.475 0.0 0                       \n"
+        "M  V30 10 C 3.93301 -7.975 0.0 0 CFG=2                \n"
+        "M  V30 11 C 4.79904 -8.475 0.0 0 CFG=2                \n"
+        "M  V30 12 C 5.66506 -7.975 0.0 0                      \n"
+        "M  V30 13 C 6.53109 -8.475 0.0 0                      \n"
+        "M  V30 14 C 3.93301 -6.975 0.0 0                      \n"
+        "M  V30 15 C 4.79904 -9.475 0.0 0                      \n"
+        "M  V30 16 C 7.39711 -7.975 0.0 0                      \n"
+        "M  V30 17 C 8.26314 -8.475 0.0 0                      \n"
+        "M  V30 18 C 9.12916 -7.975 0.0 0                      \n"
+        "M  V30 END ATOM                                       \n"
+        "M  V30 BEGIN BOND                                     \n"
+        "M  V30 1 1 1 2                                        \n"
+        "M  V30 2 1 2 3                                        \n"
+        "M  V30 3 1 3 4                                        \n"
+        "M  V30 4 1 4 5                                        \n"
+        "M  V30 5 1 5 6                                        \n"
+        "M  V30 6 1 3 7 CFG=1                                  \n"
+        "M  V30 7 1 4 8 CFG=1                                  \n"
+        "M  V30 8 1 9 10                                       \n"
+        "M  V30 9 1 10 11                                      \n"
+        "M  V30 10 1 11 12                                     \n"
+        "M  V30 11 1 12 13                                     \n"
+        "M  V30 12 1 10 14 CFG=1                               \n"
+        "M  V30 13 1 11 15 CFG=3                               \n"
+        "M  V30 14 1 13 16                                     \n"
+        "M  V30 15 1 16 17                                     \n"
+        "M  V30 16 1 17 18                                     \n"
+        "M  V30 END BOND                                       \n"
+        "M  V30 BEGIN COLLECTION                               \n"
+        "M  V30 MDLV30/STEABS ATOMS=(2 3 11)                   \n"
+        "M  V30 MDLV30/STERAC1 ATOMS=(2 4 10)                  \n"
+        "M  V30 END COLLECTION                                 \n"
+        "M  V30 END CTAB                                       \n"
+        "M  END                                                \n";
+
+
+    char options[] = "-EnhancedStereochemistry";
+    inchi_Output output;
+    inchi_Output *poutput = &output;
+    const char expected_inchi[] = "InChI=1B/C10H22.C8H18/c1-5-6-7-8-10(4)9(2)3;1-5-7(3)8(4)6-2/h9-10H,5-8H2,1-4H3;7-8H,5-6H2,1-4H3/t10-;7-,8-/m00/s1(10)3(9);1(7)3(8)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
