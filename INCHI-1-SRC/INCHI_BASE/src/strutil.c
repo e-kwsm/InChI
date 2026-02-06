@@ -4353,11 +4353,6 @@ int invert_parities(const INChI *inchi,
         return 1;
     }
 
-    if (inchi->Stereo == NULL ||
-        inchi->Stereo->t_parity == NULL) {
-        return 1;
-    }
-
     if (nof_lists == 0)
     {
         return 1;
@@ -4429,14 +4424,31 @@ int invert_parities(const INChI *inchi,
  * @return Retruns 1 if not V3000, otherwise 0
  */
 
-int set_EnhancedStereo_t_m_layers( ORIG_ATOM_DATA *orig_inp_data,
-                                   INChI *inchi,
-                                   INChI_Aux *aux)
+int set_EnhancedStereo_t_m_layers( const ORIG_ATOM_DATA *orig_inp_data,
+                                   const INChI *inchi,
+                                   const INChI_Aux *aux)
 {
     int ret = 0;
 
     if (!orig_inp_data->v3000)
     {
+        return 1;
+    }
+
+    if (inchi == NULL || aux == NULL)
+    {
+        return 1;
+    }
+
+    if (inchi->Stereo == NULL ||
+        inchi->Stereo->t_parity == NULL ||
+        inchi->Stereo->nNumber == NULL ||
+        inchi->Stereo->nNumberOfStereoCenters <= 0) {
+        return 1;
+    }
+
+    if (aux->nOrigAtNosInCanonOrd == NULL ||
+        aux->nNumberOfAtoms <= 0) {
         return 1;
     }
 
