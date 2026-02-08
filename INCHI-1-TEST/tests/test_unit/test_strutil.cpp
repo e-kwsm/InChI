@@ -169,6 +169,129 @@ TEST(strutil_testing, test2_MolecularInorganicsPreprocessing)
     EXPECT_FALSE(ip.bMolecularInorganicsReconnectedInChI);
 }
 
+/* (NaumanUllahKhan :: @nnuk)
+ * Guard checks and basic functional validation for Molecular Inorganics valence lookup.
+ */
+
+TEST(strutil_testing, test_getElValenceforMolecularInorganics)
+{
+    EXPECT_EQ(getElValenceforMolecularInorganics(26, MIN_ATOM_CHARGE - 1, 0), 0);
+    EXPECT_EQ(getElValenceforMolecularInorganics(26, MAX_ATOM_CHARGE + 1, 0), 0);
+    EXPECT_EQ(getElValenceforMolecularInorganics(26, 0, MAX_NUM_VALENCES), 0);
+
+    const int nPeriodicNum = 26; /* Fe */
+    const int charge = 0;
+
+    int non_zero = 0;
+    int v;
+
+    for (v = 0; v < MAX_NUM_VALENCES; v++)
+    {
+        if (getElValenceforMolecularInorganics(nPeriodicNum, charge, v) != 0)
+        {
+            non_zero = 1;
+            break;
+        }
+    }
+    EXPECT_EQ(non_zero, 1);
+}
+
+/* (NaumanUllahKhan :: @nnuk)
+ * metal returns non-zero, non-metal returns 0 (based on the "type" value).
+ */
+TEST(strutil_testing, test_getElTypeforMolecularInorganics)
+{
+    EXPECT_NE(getElTypeforMolecularInorganics(26), 0);
+
+    EXPECT_EQ(getElTypeforMolecularInorganics(9), 0);
+}
+
+/* (NaumanUllahKhan :: @nnuk)
+ * Tests early-return cases and one valid disconnection case.
+ */
+TEST(strutil_testing, test_MolecularInorganicsIsMetalToDisconnect)
+{
+    inp_ATOM at[1];
+    memset(&at[0], 0, sizeof(inp_ATOM));
+
+    at[0].el_number = 26; /* Fe */
+    strcpy(at[0].elname, "Fe");
+
+    /* Case 1: at_valence == 0, returns 0 */
+    at[0].valence = 0;
+    at[0].chem_bonds_valence = 0;
+    at[0].charge = 0;
+    EXPECT_EQ(MolecularInorganicsIsMetalToDisconnect(at, 0), 0);
+
+    /* Case 2: abs(charge) > 1, returns 0 */
+    at[0].chem_bonds_valence = 1;
+    at[0].charge = 2;
+    EXPECT_EQ(MolecularInorganicsIsMetalToDisconnect(at, 0), 0);
+
+    /* Case 3: normal valence path, should return 1 */
+    at[0].charge = 0;
+    at[0].chem_bonds_valence = 0;
+
+    const int type = getElTypeforMolecularInorganics(at[0].el_number);
+
+    int found = 0;
+    int j;
+
+    for (j = 0; j < 4 && !found; j++)
+    {
+        const int bitmask = (1 << j);
+        const bool allowed = (bitmask & type) != 0;
+
+        if (allowed)
+        {
+            const int normal_val = getElValenceforMolecularInorganics(at[0].el_number, at[0].charge, j);
+
+            if (normal_val > 0)
+            {
+                at[0].chem_bonds_valence = normal_val;
+                EXPECT_EQ(MolecularInorganicsIsMetalToDisconnect(at, 0), 1);
+                found = 1;
+            }
+        }
+    }
+
+    /* Case 4: returns 0 when valence matches none of allowed ones */
+    int normal_val_used = 0;
+
+    for (j = 0; j < 4; j++)
+    {
+        const int bitmask = (1 << j);
+        const bool allowed = (bitmask & type) != 0;
+        if (allowed)
+        {
+            const int v = getElValenceforMolecularInorganics(at[0].el_number, at[0].charge, j);
+            if (v > 0)
+            {
+                normal_val_used = v;
+                break;
+            }
+        }
+    }
+
+    EXPECT_GT(normal_val_used, 0);
+
+    at[0].chem_bonds_valence = 1;
+    EXPECT_EQ(MolecularInorganicsIsMetalToDisconnect(at, 0), 0);
+
+    EXPECT_TRUE(found);
+}
+
+/* (NaumanUllahKhan :: @nnuk)
+ * verifies direct lookup mapping to the binary matrix.
+ */
+TEST(strutil_testing, test_shouldBondBeCut)
+{
+    const int atom1 = 26; /*Fe*/
+    const int atom2 = 9;  /*F*/
+
+     EXPECT_EQ(shouldBondBeCut(atom1, atom2), 1);
+}
+
 TEST(strutil_testing, test_UnMarkRingSystemsInp)
 {
 
