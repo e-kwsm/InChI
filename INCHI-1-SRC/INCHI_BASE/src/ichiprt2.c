@@ -2300,7 +2300,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
     int DICT_SIZE = 100;
     char *dictionary[DICT_SIZE]; // array of string pointers
-    int counts[DICT_SIZE];       // parallel array of counts
+    int counts[DICT_SIZE];       // array of counts
 
     for (int i = 0; i < DICT_SIZE; i++) {
         dictionary[i] = NULL;

@@ -4333,7 +4333,6 @@ int get_parity_idx_from_canonical_atom_number( int canon_atom_num,
  * @param is_absolute Flag indicating if processing absolute stereochemistry
  * @return Returns 0 on success, 1 if list_atoms is NULL
  */
-
 int invert_parities(const INChI *inchi,
                     const INChI_Aux *aux,
                     int **list_atoms,
@@ -4423,7 +4422,6 @@ int invert_parities(const INChI *inchi,
  * @param aux Pointer to INChI auxiliary data
  * @return Retruns 1 if not V3000, otherwise 0
  */
-
 int set_EnhancedStereo_t_m_layers( const ORIG_ATOM_DATA *orig_inp_data,
                                    const INChI *inchi,
                                    const INChI_Aux *aux)
