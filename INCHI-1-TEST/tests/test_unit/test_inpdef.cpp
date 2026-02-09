@@ -71,23 +71,6 @@ TEST(test_inpdef, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    // int ret = CreateOrigInpDataFromMolfile(
-    //     INCHI_IOSTREAM *inp_file,
-    //     ORIG_ATOM_DATA *orig_at_data,
-    //     int bMergeAllInputStructures,
-    //     int bGetOrigCoord,
-    //     int bDoNotAddH,
-    //     int treat_polymers,
-    //     int treat_NPZz,
-    //     const char *pSdfLabel,
-    //     char *pSdfValue,
-    //     unsigned long *lSdfId,
-    //     long *lMolfileNumber,
-    //     INCHI_MODE *pInpAtomFlags,
-    //     int *err,
-    //     char *pStrErr,
-    //     int bNoWarnings);
-
     ORIG_ATOM_DATA orig_at_data = {};
     int bMergeAllInputStructures = 0;
     int bGetOrigCoord = 0;

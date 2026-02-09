@@ -134,8 +134,6 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
 
     pAux->nNumberOfAtoms = 9;
 
-    // pAux->nOrigAtNosInCanonOrd = (AT_NUMB*)inchi_calloc(num_at, sizeof(AT_NUMB));
-
     pAux->nOrigAtNosInCanonOrd[0] = 4;
     pAux->nOrigAtNosInCanonOrd[1] = 5;
     pAux->nOrigAtNosInCanonOrd[2] = 1;
@@ -145,9 +143,7 @@ TEST(test_strutil_enhancedStereo, test_set_EnhancedStereo_t_m_layers_1)
     pAux->nOrigAtNosInCanonOrd[6] = 13;
     pAux->nOrigAtNosInCanonOrd[7] = 14;
 
-    std::cout << "Test started\n";
     ret = set_EnhancedStereo_t_m_layers(orig_inp_data, inchi, pAux);
-    std::cout << "Test finished\n";
 
     EXPECT_EQ(ret, 0);
 

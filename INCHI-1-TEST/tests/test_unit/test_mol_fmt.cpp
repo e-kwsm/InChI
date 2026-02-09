@@ -28,8 +28,6 @@ TEST(test_mol_fmt, test_MolfileStrnread)
 
 TEST(test_mol_fmt, test_MolfileReadField)
 {
-    // int MolfileReadField(void *data, int field_len, int data_type,  char **line_ptr)
-
     // SEG FAULT?
     // EXPECT_EQ(MolfileReadField(NULL, 0, MOL_FMT_STRING_DATA, NULL), 0); // no data, no line pointer
 
@@ -110,11 +108,6 @@ TEST(test_mol_fmt, test_MolfileReadField)
 
 TEST(test_mol_fmt, test_MolfileV3000ReadField)
 {
-
-    // int MolfileV3000ReadField(void *data,
-    //                           int data_type,
-    //                           char **line_ptr);
-
     int n_coll = 0;
 
     char source_data[] = "2 ATOMS=(1 1)";
@@ -362,31 +355,19 @@ TEST(test_mol_fmt, test_MolfileHasNoChemStruc)
 
 TEST(test_mol_fmt, test_FreeMolfileData)
 {
+    MOL_FMT_DATA *mfdata = (MOL_FMT_DATA *)calloc(1, sizeof(MOL_FMT_DATA));
 
-    MOL_FMT_DATA *mfdata;
+    MOL_FMT_HEADER_BLOCK *hdr = (MOL_FMT_HEADER_BLOCK *)calloc(1, sizeof(MOL_FMT_HEADER_BLOCK));
 
-    MOL_FMT_HEADER_BLOCK *hdr;
+    MOL_FMT_CTAB *ctab = (MOL_FMT_CTAB *)calloc(1, sizeof(MOL_FMT_CTAB));
+    MOL_FMT_ATOM *atoms = (MOL_FMT_ATOM *)calloc(1, sizeof(MOL_FMT_ATOM));
+    MOL_FMT_BOND *bonds = (MOL_FMT_BOND *)calloc(1, sizeof(MOL_FMT_BOND));
 
-    MOL_FMT_CTAB *ctab;
-    MOL_FMT_BOND *bonds;
-    MOL_FMT_ATOM *atoms;
+    MOL_FMT_SGROUPS *sgroups = (MOL_FMT_SGROUPS *)calloc(1, sizeof(MOL_FMT_SGROUPS));
 
-    MOL_FMT_SGROUPS *sgroups;
-    MOL_COORD *coords;
-    MOL_FMT_v3000 *v3000;
+    MOL_COORD *coords = (MOL_COORD *)calloc(1, sizeof(MOL_COORD));
 
-    mfdata = (MOL_FMT_DATA *)calloc(1, sizeof(MOL_FMT_DATA));
-
-    hdr = (MOL_FMT_HEADER_BLOCK *)calloc(1, sizeof(MOL_FMT_HEADER_BLOCK));
-
-    ctab = (MOL_FMT_CTAB *)calloc(1, sizeof(MOL_FMT_CTAB));
-    atoms = (MOL_FMT_ATOM *)calloc(1, sizeof(MOL_FMT_ATOM));
-    bonds = (MOL_FMT_BOND *)calloc(1, sizeof(MOL_FMT_BOND));
-
-    sgroups = (MOL_FMT_SGROUPS *)calloc(1, sizeof(MOL_FMT_SGROUPS));
-
-    coords = (MOL_COORD *)calloc(1, sizeof(MOL_COORD));
-    v3000 = (MOL_FMT_v3000 *)calloc(1, sizeof(MOL_FMT_v3000));
+    MOL_FMT_v3000 *v3000 = (MOL_FMT_v3000 *)calloc(1, sizeof(MOL_FMT_v3000));
 
     mfdata->hdr = *hdr;
 
@@ -471,21 +452,6 @@ TEST(test_mol_fmt, test_ReadMolfile_v2000)
 
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
-
-    // MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
-    //                         MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
-    //                         MOL_FMT_CTAB *OnlyCTab,
-    //                         int bGetOrigCoord,
-    //                         int treat_polymers,
-    //                         int treat_NPZz,
-    //                         char *pname,
-    //                         int lname,
-    //                         unsigned long *Id,
-    //                         const char *pSdfLabel,
-    //                         char *pSdfValue,
-    //                         int *err,
-    //                         char *pStrErr,
-    //                         int bNoWarnings)
 
     INCHI_IOSTREAM *inp_file = &input_stream;
     MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock = nullptr;
@@ -599,21 +565,6 @@ TEST(test_mol_fmt, test_ReadMolfile_v3000)
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    // MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
-    //                         MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
-    //                         MOL_FMT_CTAB *OnlyCTab,
-    //                         int bGetOrigCoord,
-    //                         int treat_polymers,
-    //                         int treat_NPZz,
-    //                         char *pname,
-    //                         int lname,
-    //                         unsigned long *Id,
-    //                         const char *pSdfLabel,
-    //                         char *pSdfValue,
-    //                         int *err,
-    //                         char *pStrErr,
-    //                         int bNoWarnings)
-
     INCHI_IOSTREAM *inp_file = &input_stream;
     MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock = nullptr;
     MOL_FMT_CTAB *OnlyCTab = nullptr;
@@ -695,21 +646,6 @@ TEST(test_mol_fmt, test_ReadMolfile_v3000_collection_1)
 
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
-
-    // MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
-    //                         MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
-    //                         MOL_FMT_CTAB *OnlyCTab,
-    //                         int bGetOrigCoord,
-    //                         int treat_polymers,
-    //                         int treat_NPZz,
-    //                         char *pname,
-    //                         int lname,
-    //                         unsigned long *Id,
-    //                         const char *pSdfLabel,
-    //                         char *pSdfValue,
-    //                         int *err,
-    //                         char *pStrErr,
-    //                         int bNoWarnings)
 
     INCHI_IOSTREAM *inp_file = &input_stream;
     MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock = nullptr;
@@ -828,21 +764,6 @@ TEST(test_mol_fmt, test_ReadMolfile_v3000_collection_2)
 
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
-
-    // MOL_FMT_DATA *ReadMolfile(INCHI_IOSTREAM *inp_file,
-    //                         MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock,
-    //                         MOL_FMT_CTAB *OnlyCTab,
-    //                         int bGetOrigCoord,
-    //                         int treat_polymers,
-    //                         int treat_NPZz,
-    //                         char *pname,
-    //                         int lname,
-    //                         unsigned long *Id,
-    //                         const char *pSdfLabel,
-    //                         char *pSdfValue,
-    //                         int *err,
-    //                         char *pStrErr,
-    //                         int bNoWarnings)
 
     INCHI_IOSTREAM *inp_file = &input_stream;
     MOL_FMT_HEADER_BLOCK *OnlyHeaderBlock = nullptr;

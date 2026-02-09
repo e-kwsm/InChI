@@ -57,7 +57,6 @@ TEST(test_ichiprt3, test_str_Sp2_outputs_expected_sp2_string_1)
         bUseMulipliers
     );
 
-    // The expected output is "1-2Z,3-4E"
     EXPECT_EQ(strbuf.nUsedLength, strlen(strbuf.pStr));
     EXPECT_EQ(std::string(strbuf.pStr), "4-3-");
     EXPECT_EQ(strbuf.pStr[0], '4');
@@ -119,7 +118,6 @@ TEST(test_ichiprt3, test_str_Sp2_outputs_expected_sp2_string_2)
         bUseMulipliers
     );
 
-    // The expected output is "1-2Z,3-4E"
     EXPECT_EQ(strbuf.nUsedLength, strlen(strbuf.pStr));
     EXPECT_EQ(std::string(strbuf.pStr), "1-2-,3-4+");
     EXPECT_EQ(strbuf.pStr[0], '1');
@@ -141,11 +139,6 @@ TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
     static INChI_Stereo *stereo = Alloc_INChI_Stereo( num_at, 0 );
     stereo->nNumberOfStereoCenters = num_at;
 
-    // INChI_Stereo stereo = {0};
-    // stereo.nNumberOfStereoCenters = 8;
-    // stereo.t_parity = (S_CHAR*)inchi_calloc((long long)stereo.nNumberOfStereoCenters, sizeof(S_CHAR));
-    // stereo.nNumber = (AT_NUMB*)inchi_calloc((long long)stereo.nNumberOfStereoCenters, sizeof(AT_NUMB));
-
     for (int i = 0; i < num_at; i++) {
         stereo->nNumber[i] = numbers[i];
         stereo->t_parity[i] = parities[i];
@@ -165,7 +158,6 @@ TEST(test_ichiprt3, test_str_Sp3_outputs_expected_sp3_string)
     int bOverflow = 0;
     int num_components = 1;
 
-    //io->bRelRac = io->bRelativeStereo[io->iCurTautMode] || io->bRacemicStereo[io->iCurTautMode];
     int bIsotopicRelativeStereo = 0; // INCHI_FLAG_REL_STEREO
     int bIsotopicRacemicStereo = 0; // INCHI_FLAG_RAC_STEREO
 

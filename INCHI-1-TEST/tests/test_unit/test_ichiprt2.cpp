@@ -22,7 +22,7 @@ TEST(test_ichiprt2, MakeStereoString_outputs_expected_sp3_string)
     EXPECT_EQ(strbuf.nUsedLength, strlen(strbuf.pStr));
     EXPECT_NE(std::string(strbuf.pStr).find("3-,4-,5+,6+,7-,8+,9+,10-"), std::string::npos);
     EXPECT_EQ(std::string(strbuf.pStr), "3-,4-,5+,6+,7-,8+,9+,10-");
-    EXPECT_EQ(strbuf.pStr[0], '3'); // Should start with 3-
+    EXPECT_EQ(strbuf.pStr[0], '3');
     EXPECT_EQ(bOverflow, 0);
     EXPECT_EQ(ret, 24);
 
@@ -38,7 +38,7 @@ TEST(test_ichiprt2, MakeMult_mult_gt_1_appends_number_and_delim)
     int ret = MakeMult(5, "-", &strbuf, 0, &bOverflow);
 
     EXPECT_EQ(std::string(strbuf.pStr), "5-");
-    EXPECT_EQ(ret, 2); // "3-".length() == 2, but MakeMult returns n (number of chars written)
+    EXPECT_EQ(ret, 2);
     EXPECT_EQ(bOverflow, 0);
 
     inchi_strbuf_close(&strbuf);
@@ -53,7 +53,7 @@ TEST(test_ichiprt2, MakeMult_mult_2)
     int ret = MakeMult(10, "+", &strbuf, 0, &bOverflow);
 
     EXPECT_EQ(std::string(strbuf.pStr), "10+");
-    EXPECT_EQ(ret, 3); // "3-".length() == 2, but MakeMult returns n (number of chars written)
+    EXPECT_EQ(ret, 3);
     EXPECT_EQ(bOverflow, 0);
 
     inchi_strbuf_close(&strbuf);
@@ -309,14 +309,10 @@ TEST(test_ichiprt2, MakeEnhStereoString_empty_group)
 
 TEST(test_ichiprt2, MakeSlayerString_basic)
 {
-    // Setup minimal ORIG_ATOM_DATA with V3000 stereo lists
-    ORIG_ATOM_DATA *oad;
 
-    oad = (ORIG_ATOM_DATA *)inchi_calloc(1, sizeof(ORIG_ATOM_DATA));
+    ORIG_ATOM_DATA *oad = (ORIG_ATOM_DATA *)inchi_calloc(1, sizeof(ORIG_ATOM_DATA));
 
-    OAD_V3000 *v3000;
-
-    v3000 = (OAD_V3000 *)inchi_calloc(1, sizeof(OAD_V3000));
+    OAD_V3000 *v3000 = (OAD_V3000 *)inchi_calloc(1, sizeof(OAD_V3000));
 
     // One absolute group: 2 atoms (original numbers 1,2)
     int group_abs[] = {0, 2, 1, 2};
@@ -336,7 +332,6 @@ TEST(test_ichiprt2, MakeSlayerString_basic)
     oad->v3000 = v3000;
 
     // Setup INCHI_SORT and INChI_Aux
-
     INCHI_SORT *inchi_sort = (INCHI_SORT*)inchi_calloc(1, sizeof(INCHI_SORT));
 
     int num_at = 8;
@@ -367,7 +362,6 @@ TEST(test_ichiprt2, MakeSlayerString_basic)
     int len = MakeSlayerString(oad, inchi_sort, &strbuf, OUT_TN, 1, nCtMode, &bOverflow);
 
     EXPECT_EQ(bOverflow, 0);
-    // Should produce: 1(1,2)2(3)
     EXPECT_EQ(std::string(strbuf.pStr), "1(1,2)2(3)");
     EXPECT_EQ(len, 10);
 
@@ -375,11 +369,9 @@ TEST(test_ichiprt2, MakeSlayerString_basic)
     inchi_free(oad->v3000->lists_sterel);
     inchi_free(oad->v3000);
     inchi_free(oad);
-
     inchi_free(inchi_sort);
 
     inchi_strbuf_close(&strbuf);
-
     FreeInpAtom(&atoms);
     Free_INChI_Aux(&pAux);
     Free_INChI(&inchi);
