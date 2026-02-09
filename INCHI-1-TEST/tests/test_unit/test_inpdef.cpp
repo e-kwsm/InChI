@@ -147,13 +147,13 @@ TEST(test_inpdef, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
 
     EXPECT_EQ(orig_at_data.v3000->n_sterel, 2);
 
-    // STEREL1 ATOMS=(2 12 13)
+    // STEREL1 ATOMS=(2 12 13) or1
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][0], 1);  // n from "STERELn" tag
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][1], 2);  // number of members in collection
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][2], 12); // member atom numbers
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][3], 13); // member atom numbers
 
-    // STEREL2 ATOMS=(1 14)
+    // STEREL2 ATOMS=(1 14) or2
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][0], 2);  // n from "STERELn" tag
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][1], 1);  // number of members in collection
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][2], 14); // member atom numbers
