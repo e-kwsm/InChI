@@ -202,32 +202,6 @@ TEST(test_ichimain, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     set_line_separators(ip->bINChIOutputOptions, &pLF, &pTAB);
 
-    // int CalcAndPrintINCHIAndINCHIKEY(struct tagINCHI_CLOCK* ic,
-    //     CANON_GLOBALS* CG,
-    //     STRUCT_DATA* sd,
-    //     INPUT_PARMS* ip,
-    //     char* szTitle,
-    //     PINChI2* pINChI[INCHI_NUM],
-    //     PINChI_Aux2* pINChI_Aux[INCHI_NUM],
-    //     INCHI_IOSTREAM* inp_file,
-    //     INCHI_IOSTREAM* plog,
-    //     INCHI_IOSTREAM* pout,
-    //     INCHI_IOSTREAM* pprb,
-    //     ORIG_ATOM_DATA* orig_inp_data,
-    //     ORIG_ATOM_DATA* prep_inp_data,
-    //     long* num_inp,
-    //     STRUCT_FPTRS* pStructPtrs,
-    //     int* nRet,
-    //     int have_err_in_GetOneStructure,
-    //     long* num_err,
-    //     int output_error_inchi,
-    //     INCHI_IOS_STRING* strbuf,
-    //     unsigned long* pulTotalProcessingTime,
-    //     char* pLF,
-    //     char* pTAB,
-    //     char* ikey,
-    //     int silent)
-
     ret = CalcAndPrintINCHIAndINCHIKEY(
         &ic,
         &CG,
@@ -268,7 +242,7 @@ TEST(test_ichimain, test_CalcAndPrintINCHIAndINCHIKEY) {
 
     const char *inchi = "InChI=1S/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6+,7-,8+,9+,10-/m0/s1";
 
-    EXPECT_STREQ(inchi, found_inchi); //pout->s.pStr);
+    EXPECT_STREQ(inchi, found_inchi);
 
     free(found_inchi);
 
@@ -347,8 +321,6 @@ TEST(test_ichimain, test_ProcessMultipleInputFiles_2mol_files)
     argv_vec.push_back(make_arg("-AMI"));
     char** argv = argv_vec.data();
 
-    //int ProcessMultipleInputFiles(int argc, char* argv[])
-
     int ret = ProcessMultipleInputFiles(argc, argv);
 
     ASSERT_EQ(ret, 0);
@@ -402,8 +374,6 @@ TEST(test_ichimain, test_ProcessSingleInputFile_caffeine)
     char *inchi_filename = make_arg("test_ichimain");
     char *input_file = make_arg(dst_path.c_str());
     char* argv[] = { inchi_filename, input_file };
-
-    // int ProcessSingleInputFile(int argc, char* argv[])
 
     int result = ProcessSingleInputFile(argc, argv);
 
@@ -463,7 +433,6 @@ TEST(test_ichimain, test_ProcessSingleInputFile_2mols_sdf)
     char *input_file = make_arg(dst_path.c_str());
     char* argv[] = { inchi_filename, input_file };
 
-    // int ProcessSingleInputFile(int argc, char* argv[])
     int result = ProcessSingleInputFile(argc, argv);
 
     EXPECT_EQ(result, 0);
@@ -579,21 +548,6 @@ TEST(test_ichimain, test_GetTheNextRecordOfInputFile)
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    // int GetTheNextRecordOfInputFile( struct tagINCHI_CLOCK *ic,
-    //                              STRUCT_DATA *sd, INPUT_PARMS *ip,
-    //                              char *szTitle,
-    //                              INCHI_IOSTREAM *inp_file,
-    //                              INCHI_IOSTREAM *plog,
-    //                              INCHI_IOSTREAM *pout,
-    //                              INCHI_IOSTREAM *pprb,
-    //                              ORIG_ATOM_DATA *orig_inp_data,
-    //                              long *num_inp,
-    //                              STRUCT_FPTRS *pStructPtrs,
-    //                              int *nRet,
-    //                              int *have_err_in_GetOneStructure,
-    //                              long *num_err,
-    //                              int output_error_inchi );
-
     INCHI_CLOCK ic = {};
     memset(&ic, 0, sizeof(ic));
 
@@ -601,7 +555,7 @@ TEST(test_ichimain, test_GetTheNextRecordOfInputFile)
     INPUT_PARMS *ip = new INPUT_PARMS;
 
     char *szTitle;
-    // INCHI_IOSTREAM *inp_file;
+
     INCHI_IOSTREAM *plog = new INCHI_IOSTREAM;
     INCHI_IOSTREAM *pout = new INCHI_IOSTREAM;
     INCHI_IOSTREAM *pprb = new INCHI_IOSTREAM;
@@ -654,7 +608,7 @@ TEST(test_ichimain, test_GetTheNextRecordOfInputFile)
     {
         if (ip->path[i])
         {
-            inchi_free((void*)ip->path[i]); /*  cast deliberately discards 'const' qualifier */
+            inchi_free((void*)ip->path[i]);
             ip->path[i] = NULL;
         }
     }
