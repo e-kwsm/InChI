@@ -759,7 +759,7 @@ int fix_odd_things( int num_atoms,
                     /* found both X(-) and X(+); change bonds and remove charges */
                     for (k1 = 0; k1 < at[c].valence && i1 != at[c].neighbor[k1]; k1++)
                         ;
-                    if ((i1_c >= 0) && (i2_c >= 0)) /* djb-rwth: fixing coverity CID #499537 */
+                    if ((i1_c >= 0) && (i2_c >= 0)) /* djb-rwth: fixing coverity ID #499537 */
                     {
                         at[i1].charge = at[i2].charge = 0;
                         at[i1].bond_type[i1_c] = at[c].bond_type[k1] = BOND_TYPE_SINGLE;
@@ -2747,7 +2747,7 @@ int bIsMetalToDisconnect( inp_ATOM *at, int i, int bCheckMetalValence )
 
         for (i = 0; i < 2 && ( i & type ); i++)
         {
-            if (at_valence == get_el_valence( at[i].el_number, at[i].charge, i ))
+            if (at_valence == get_el_valence( at[i].el_number, at[i].charge, i )) /* djb-rwth: fixing coverity ID #499532 -- unresolved issue -- revision required */
             {
                 return 2; /* atom has normal valence */
             }
@@ -5233,7 +5233,7 @@ void imat_free( int m, int **a )
     {
         for (i = 0; i < m; i++)
         {
-            if (NULL != a[i]) /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
+            if (NULL != a[i]) /* djb-rwth: unresolved issue -- revision required? -- false positive as this function just does the clean-up job */
             {
                 inchi_free( a[i] );
             }
@@ -5368,7 +5368,7 @@ void subgraf_free( subgraf *sg )
     {
         for (i = 0; i < sg->nnodes; i++)
         {
-            if (sg->adj[i]) /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
+            if (sg->adj[i]) /* djb-rwth: unresolved issue -- revision required? -- false positive as this function just does the clean-up job */
             {
                 inchi_free( sg->adj[i] );
             }
