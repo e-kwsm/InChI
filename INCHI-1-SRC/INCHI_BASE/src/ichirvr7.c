@@ -509,7 +509,7 @@ int MergeStructureComponents(ICHICONST INPUT_PARMS* ip,
         pStruct1 = pStruct[iInchiRec][iMobileH][k].num_atoms ? pStruct[iInchiRec][iMobileH] + k :
             iAlternH >= 0 &&
             pStruct[iInchiRec][iAlternH][k].num_atoms ? pStruct[iInchiRec][iAlternH] + k : NULL;
-        if ((len = nAtomOffs[k + 1] - nAtomOffs[k]) && pStruct1) /* djb-rwth: addressing LLVM warning; fixing coverity CID #499555 */ 
+        if ((len = nAtomOffs[k + 1] - nAtomOffs[k]) && pStruct1) /* djb-rwth: addressing LLVM warning; fixing coverity ID #499555 */ 
         {
             memcpy(at + nAtomOffs[k], pStruct1->at2, len * sizeof(at[0]));
             if ((len2 = nDelHOffs[k + 1] - nDelHOffs[k])) /* djb-rwth: addressing LLVM warning */
@@ -548,7 +548,7 @@ int MergeStructureComponents(ICHICONST INPUT_PARMS* ip,
             a->nBlockSystem = 0;
             a->nNumAtInRingSystem = 0;
             a->nRingSystem = 0;
-            /* djb-rwth: addressing coverity CID #499524 -- initialisation with at */
+            /* djb-rwth: addressing coverity ID #499524 -- initialisation with at */
 
             for (j = 0; j < a->valence; j++)
             {
@@ -1392,17 +1392,17 @@ void FreeStrFromINChI(StrFromINChI* pStruct[INCHI_NUM][TAUT_NUM],
                 }
                 if (pStruct1[k].pXYZ)
                 {
-                    inchi_free(pStruct1[k].pXYZ); /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
+                    inchi_free(pStruct1[k].pXYZ); /* djb-rwth: unresolved issue -- revision required? -- false positive as this function just does the clean-up job */
                 }
                 /*==== begin ====*/
                 free_t_group_info(&pStruct1[k].ti);
                 if (pStruct1[k].endpoint)
                 {
-                    inchi_free(pStruct1[k].endpoint); /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
+                    inchi_free(pStruct1[k].endpoint); /* djb-rwth: unresolved issue -- revision required? -- false positive as this function just does the clean-up job */
                 }
                 if (pStruct1[k].fixed_H)
                 {
-                    inchi_free(pStruct1[k].fixed_H); /* djb-rwth: ui_rr? -- false positive as this function just does the clean-up job */
+                    inchi_free(pStruct1[k].fixed_H); /* djb-rwth: unresolved issue -- revision required? -- false positive as this function just does the clean-up job */
                 }
                 for (j = 0; j < TAUT_NUM; j++)
                 {
@@ -2249,7 +2249,7 @@ int CompareOneOrigInchiToRevInChI(StrFromINChI* pStruct,
     int ret, err = 0;
     INCHI_MODE cmp;
 
-    if (pStruct) /* djb-rwth: fixing coverity CID #499601 */
+    if (pStruct) /* djb-rwth: fixing coverity ID #499601 */
     {
         ret = pStruct->RevInChI.nRetVal;
     }
