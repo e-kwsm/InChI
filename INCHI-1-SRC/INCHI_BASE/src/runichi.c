@@ -255,10 +255,15 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
 
     /*    1. Preliminary work */
 
-    int is_polymer = orig_inp_data
-        && orig_inp_data->valid_polymer
-        && orig_inp_data->polymer
-        && orig_inp_data->polymer->n;
+    /* djb-rwth: fixing coverity ID #499508 */
+    if (!orig_inp_data)
+    {
+        goto exit_function;
+    }
+
+    int is_polymer = orig_inp_data->valid_polymer
+                     && orig_inp_data->polymer
+                     && orig_inp_data->polymer->n ;
 
     int is_polymer2inchi = is_polymer && (ip->nInputType == INPUT_MOLFILE || ip->nInputType == INPUT_SDFILE);
 
@@ -712,7 +717,8 @@ void PrepareSaveOptBits(unsigned char* save_opt_bits, INPUT_PARMS* ip)
             {
                 (*save_opt_bits) |= SAVE_OPT_15T;
             }
-            if ( 0 != (ip->bTautFlags & TG_FLAG_PT_22_00) )
+            /* djb-rwth: addressing coverity ID #499536 -- despite different bit-sizes, works properly */
+            if (0 != (ip->bTautFlags & TG_FLAG_PT_22_00))
                 (*save_opt_bits) |= SAVE_OPT_PT_22_00;
             if ( 0 != (ip->bTautFlags & TG_FLAG_PT_16_00) )
                 (*save_opt_bits) |= SAVE_OPT_PT_16_00;
@@ -858,7 +864,7 @@ void SaveOkProcessedMolfile(int            nRet,
         0L <= sd->fPtrStart &&
         sd->fPtrStart < sd->fPtrEnd )
     {
-        MolfileSaveCopy(inp_file, sd->fPtrStart, sd->fPtrEnd, prb_file->f, 0);
+        MolfileSaveCopy( inp_file, sd->fPtrStart, sd->fPtrEnd, prb_file->f, 0 ); /* djb-rwth: addressing coverity ID #499510 -- return values handled properly */
     }
 
     return;
@@ -2960,8 +2966,14 @@ int ValidateAndPreparePolymerAndPseudoatoms(struct tagINCHI_CLOCK* ic,
     int res = _IS_OKAY;
 
     int mind_pseudoelements = 0;
+    
+    /* djb-rwth: fixing coverity ID #499512 */
+    if (!orig_inp_data)
+    {
+        goto exit_function;
+    }
 
-    *mind_polymers = orig_inp_data && orig_inp_data->polymer && orig_inp_data->polymer->n > 0;
+    *mind_polymers = orig_inp_data->polymer && orig_inp_data->polymer->n > 0;
     *mind_polymers = *mind_polymers && orig_inp_data->valid_polymer &&
         (ip->nInputType == INPUT_MOLFILE || ip->nInputType == INPUT_SDFILE);
     mind_pseudoelements = (ip->bNPZz == 1) || (ip->bPolymers != POLYMERS_NO);
@@ -2980,8 +2992,7 @@ int ValidateAndPreparePolymerAndPseudoatoms(struct tagINCHI_CLOCK* ic,
             sd->nErrorCode, sd->pStrErrStruct, num_inp,
             SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));
         res = _IS_ERROR;
-        if ( orig_inp_data ) /* djb-rwth: fixing a NULL pointer dereference */
-            orig_inp_data->num_inp_atoms = -1;
+        orig_inp_data->num_inp_atoms = -1; /* djb-rwth: fixing coverity ID #499522 */
         goto exit_function;
     }
 

@@ -2076,8 +2076,7 @@ char *szGetTag(const INCHI_TAG *Tag,
             strcpy_s(szTag, dstsz, nTag == 1 ? Tag[j].szXmlLabel : nTag == 2 ? Tag[j].szPlainLabel
                                                                              : "???"); /* djb-rwth: function replaced with its safe C11 variant */
 #else
-            strcpy(szTag, nTag == 1 ? Tag[j].szXmlLabel : nTag == 2 ? Tag[j].szPlainLabel
-                                                                    : "???");
+            strcpy(szTag, nTag == 1 ? Tag[j].szXmlLabel : nTag == 2 ? Tag[j].szPlainLabel : "???"); /* djb-rwth: addressing coverity ID #499488 -- when nTag == 2, the "???" is avoided, which is correct */
 #endif
             if (nTag != 2)
             {
@@ -2276,7 +2275,7 @@ int CleanOrigCoord(MOL_COORD szCoord, int delim)
             szBuf[len_buf++] = delim;
 #pragma warning(pop)
         }
-        if (len_buf >= (int)sizeof(MOL_COORD)) /* djb-rwth: fixing coverity CID #499520 */
+        if (len_buf >= (int)sizeof(MOL_COORD)) /* djb-rwth: fixing coverity ID #499520 */
         {
             len_buf = (int)sizeof(MOL_COORD) - 1;
             len = 0;
@@ -3950,7 +3949,7 @@ static int OutputINCHI_PolymerLayer(CANON_GLOBALS *pCG,
         for (i = 0; i < p->n; i++)
         {
             units2[i] = OAD_PolymerUnit_CreateCopy(p->units[i]);
-            if (NULL == units2[i]) /* djb-rwth: ui_rr? -- units2 properly allocated, and loop index well defined */
+            if (NULL == units2[i]) /* djb-rwth: unresolved issue -- revision required? -- units2 properly allocated, and loop index well defined */
             {
                 err = 4;
                 goto exit_function;
@@ -3986,7 +3985,7 @@ static int OutputINCHI_PolymerLayer(CANON_GLOBALS *pCG,
         {
             /* For each unit u ... */
             u = units2[unum[i]];
-
+            /* djb-rwth: addressing coverity ID #499574 -- all NULL checks already done above */
             err = OutputINCHI_PolymerLayer_SingleUnit(u,
                                                       io->bPolymers,
                                                       pOrigStruct->polymer->n_pzz,
