@@ -39,9 +39,6 @@ jobs:
     env:
       RELEASE_DIR: inchi-${{ matrix.slug }}-${{ github.sha }}
 
-    permissions:
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
 
