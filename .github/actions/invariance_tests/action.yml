@@ -1,4 +1,5 @@
 name: Invariance tests
+description: Run invariance tests and write summary.
 
 inputs:
   artifact-name:
@@ -18,12 +19,12 @@ runs:
       shell: bash
 
     - name: Write invariance summary
-      if: '!cancelled()'
+      if: ${{ !cancelled() }}
       run: python INCHI-1-TEST/tests/test_library/inchi_tests/parse_log.py --test=invariance --lib-path=${{ inputs.library-path}} --data-config=INCHI-1-TEST/tests/test_library/config/config_ci.py
       shell: bash
 
     - name: Upload invariance test results
-      if: '!cancelled()'
+      if: ${{ !cancelled() }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact-name }}
