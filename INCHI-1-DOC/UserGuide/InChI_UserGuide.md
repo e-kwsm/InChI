@@ -184,8 +184,6 @@ The InChI API calls are documented in the separate “InChI API Reference” doc
 
 **Introduction**
 
-Windows graphical program of  InChI generation is provided in a ‘zip’ file INCHI-1-BIN.zip. To
-
 To start the program, run the file winchi-1.exe that was extracted from the zip file. 
 
 Generating an InChI begins with the selection of an input structure file. The simplest way is to drag the input structure file from Windows Explorer directory list into the InChI window. Structures also may be copied from certain chemical structure editors (ISIS/Draw with “Copy Mol/Rxnfile to the Clipboard” option or from ACD/ChemSketch) and pasted into the InChI window (Select Edit -> Paste from winchi-1 menu). The input structure file pathname may be provided as a command line option when you start winchi-1. Selection of the input structure file may also be done by first clicking on the ‘Open’ button (top left corner) and then, in the dialog box that appears selecting a structure file using the ‘…’ button on the right of the ‘Input Structure File’ field. You may select any of the sample .mol or .sdf files for initial testing. In this dialog you may also enter “Text Header for ID”; this will simply add to the InChI header a structure ID if it is present in an input SDfile (from other input formats the header and ID are extracted automatically). 

@@ -1,6 +1,11 @@
 # Change log
 
-## v1.07.5 2026-02-04
+## v1.07.5 2025-??-??
+
+### Changed
+
+- The build artifacts are no longer shipped in `INCHI-1-BIN` (the latter directory has been removed). Instead, the build artifacts are distributed under <https://github.com/IUPAC-InChI/InChI/releases/>.
+- 32-bit artifacts are no longer shipped.
 
 ### Fixed
 
