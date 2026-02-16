@@ -1,7 +1,6 @@
 import ctypes
 import random
 from typing import Callable
-from pathlib import Path
 from sdf_pipeline import drivers, utils
 from inchi_tests.inchi_api import make_inchi_from_molfile_text, get_inchi_key_from_inchi
 
@@ -9,11 +8,10 @@ from inchi_tests.inchi_api import make_inchi_from_molfile_text, get_inchi_key_fr
 def regression_consumer(
     molfile: str,
     get_molfile_id: Callable,
-    inchi_lib_path: Path,
+    inchi_lib_path: str,
     inchi_api_parameters: str,
 ) -> drivers.ConsumerResult:
-
-    inchi_lib = ctypes.CDLL(str(inchi_lib_path))
+    inchi_lib = ctypes.CDLL(inchi_lib_path)
     exit_code, inchi_string, log, message, aux_info = make_inchi_from_molfile_text(
         inchi_lib, molfile, inchi_api_parameters
     )
@@ -38,12 +36,11 @@ def regression_consumer(
 def invariance_consumer(
     molfile: str,
     get_molfile_id: Callable,
-    inchi_lib_path: Path,
+    inchi_lib_path: str,
     inchi_api_parameters: str,
     n_invariance_runs: int,
 ) -> drivers.ConsumerResult:
-
-    inchi_lib = ctypes.CDLL(str(inchi_lib_path))
+    inchi_lib = ctypes.CDLL(inchi_lib_path)
     variants: list[dict[str, str | int]] = []
     inchi_string_variants = set()
     inchi_key_variants = set()
