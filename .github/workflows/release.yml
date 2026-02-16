@@ -20,11 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Define build matrix
-        id: define_matrix
+      - name: Verify build matrix
         # The build matrix is used to interpolate commands and inputs throughout the remainder of the workflow.
         # Since those interpolations are potentially security-sensitive, we verify the hash of the build matrix.
-        if: ${{ hashFiles('.github/workflows/build_matrix.json') == 'ae87ded543b131908cf5aed1502d0e39b2cb9374693598ef7f09c5c5a8be4e52' }}
+        if: ${{ hashFiles('.github/workflows/build_matrix.json') != 'ae87ded543b131908cf5aed1502d0e39b2cb9374693598ef7f09c5c5a8be4e52' }}
+        run: |
+          echo "CI run aborted due to unexpected changes to the build matrix."
+          exit 1
+
+      - name: Define build matrix
+        id: define_matrix
         run: |
           echo "matrix=$(cat .github/workflows/build_matrix.json| jq -c .)" >> $GITHUB_OUTPUT
 
