@@ -63,12 +63,6 @@ inchi-1       SUB-DIRECTORY
                       Contains Microsoft Visual Studio 2015 project 
                       to create inchi-1.exe
                       
-
-Precompiled inchi-1.exe created with Microsoft Visual Studio 2015 is in INCHI-1-BIN 
-section of this distribution.
-
-
-
 =========
   LINKS
 =========

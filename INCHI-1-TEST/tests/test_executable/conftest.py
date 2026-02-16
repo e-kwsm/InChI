@@ -1,5 +1,6 @@
 import pytest
 import subprocess
+from sys import platform
 from typing import Callable
 from pathlib import Path
 from dataclasses import dataclass
@@ -21,6 +22,16 @@ class InchiResult:
     output: str
     log: str
     problem: str
+
+
+def adapt_args_to_platform(args: str) -> list[str]:
+    args_platform_agnostic = [
+        arg[1:] if arg.startswith(("-", "/")) else arg for arg in args.split()
+    ]
+    if platform == "win32":
+        return [f"/{arg}" for arg in args_platform_agnostic]
+
+    return [f"-{arg}" for arg in args_platform_agnostic]
 
 
 @pytest.fixture
@@ -45,7 +56,7 @@ def run_inchi_exe(request, tmp_path: Path) -> Callable:
             [
                 exe_path,
                 *[input_path, output_path, log_path, problem_path],
-                *args.split(),
+                *adapt_args_to_platform(args),
             ],
             capture_output=True,
             text=True,
