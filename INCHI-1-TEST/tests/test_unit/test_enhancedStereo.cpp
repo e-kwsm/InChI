@@ -113,7 +113,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_1)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6-,7-,8-,9+,10-/m0/s1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1B/C10H14BrCl7/c1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h3-10H,1-2H3/t3-,4-,5+,6-,7-,8-,9+,10-/m0/s1(3,5)2(4)(6,8)3(7,9)(10)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -392,7 +392,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(4)(6,8)3(7,9)(10)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -520,7 +520,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_3_mols)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7.C8H18/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6(2)8(5)7(3)4/h2*3-10H,1-2H3;6-8H,1-5H3/t2*3-,4-,5+,6-,7-,8-,9+,10-;/m00./s2*1(3,5)2(6,8)(4)3(7,9)(10);1(6)3(7,8)";
+    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7.C8H18/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6(2)8(5)7(3)4/h2*3-10H,1-2H3;6-8H,1-5H3/t2*3-,4-,5+,6-,7-,8-,9+,10-;/m00./s2*1(3,5)2(4)(6,8)3(7,9)(10);1(6)3(7,8)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -673,7 +673,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_4_mols)
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/C12H26.2C10H14BrCl7.C9H20/c1-8(2)11(7)12(9(3)4)10(5)6;2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6-8(4)9(5)7(2)3/h8-12H,1-7H3;2*3-10H,1-2H3;7-9H,6H2,1-5H3/t11-;2*3-,4-,5+,6-,7-,8-,9+,10-;8-,9+/m1001/s1(8,9,10,11);2*1(3,5)2(6,8)(4)3(7,9)(10);1(7)3(8,9)";
+    const char expected_inchi[] = "InChI=1B/C12H26.2C10H14BrCl7.C9H20/c1-8(2)11(7)12(9(3)4)10(5)6;2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12;1-6-8(4)9(5)7(2)3/h8-12H,1-7H3;2*3-10H,1-2H3;7-9H,6H2,1-5H3/t11-;2*3-,4-,5+,6-,7-,8-,9+,10-;8-,9+/m1001/s1(8,9,10,11);2*1(3,5)2(4)(6,8)3(7,9)(10);1(7)3(8,9)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -780,7 +780,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_mols_inter_enhstereo_gr
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1B/2C10H14BrCl7/c2*1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h2*3-10H,1-2H3/t2*3-,4-,5+,6-,7-,8-,9+,10-/m00/s2*1(3,5)2(4)(6,8)3(7,9)(10)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -958,7 +958,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_different_mols_inter_en
     char options[] = "-EnhancedStereochemistry";
     inchi_Output output;
     inchi_Output *poutput = &output;
-    const char expected_inchi[] = "InChI=1B/C11H16BrCl7.C10H14BrCl7/c1-3-5(13)7(15)9(17)11(19)10(18)8(16)6(14)4(2)12;1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h4-11H,3H2,1-2H3;3-10H,1-2H3/t4-,5-,6+,7-,8-,9-,10+,11-;3-,4-,5+,6-,7-,8-,9+,10-/m00/s1(4,6)2(7,9)(5)3(8,10)(11);1(3,5)2(6,8)(4)3(7,9)(10)";
+    const char expected_inchi[] = "InChI=1B/C11H16BrCl7.C10H14BrCl7/c1-3-5(13)7(15)9(17)11(19)10(18)8(16)6(14)4(2)12;1-3(11)5(13)7(15)9(17)10(18)8(16)6(14)4(2)12/h4-11H,3H2,1-2H3;3-10H,1-2H3/t4-,5-,6+,7-,8-,9-,10+,11-;3-,4-,5+,6-,7-,8-,9+,10-/m00/s1(4,6)2(5)(7,9)3(8,10)(11);1(3,5)2(4)(6,8)3(7,9)(10)";
 
     EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
     EXPECT_STREQ(poutput->szInChI, expected_inchi);
@@ -1026,7 +1026,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7+/m1/s1(6)2(5,7)",
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5?,6-,7?/m1/s1",
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7-/m1/s1(6)2(5,7)",
-        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(6)(5)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(5)(6)",
         "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5-/m1/s1(4)3(5)",
         "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m0/s3(4)",
         "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)3(5,6)",
@@ -1035,7 +1035,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_test_file_1)
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5?,6-,7?/m0/s3(6)",
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7-/m1/s1(6)3(5,7)",
         "InChI=1B/C7H17NO/c1-4-5(2)7(8)6(3)9/h5-7,9H,4,8H2,1-3H3/t5-,6-,7+/m1/s1(6)3(5,7)",
-        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)3(6)(5)",
+        "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)3(5)(6)",
         "InChI=1B/C6H12O3/c7-4-1-2-5(8)6(9)3-4/h4-9H,1-3H2/t4-,5-,6-/m0/s1(4)2(5)3(6)",
         "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m1/s1",
         "InChI=1B/C5H13NO/c1-3-5(6)4(2)7/h4-5,7H,3,6H2,1-2H3/t4-,5?/m0/s3(4)",
