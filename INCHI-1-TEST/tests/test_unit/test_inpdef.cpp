@@ -118,15 +118,15 @@ TEST(test_inpdef, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
     // STERAC2 ATOMS=(1 1)
     EXPECT_EQ(orig_at_data.v3000->n_sterac, 2);
 
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][0], 2); // n from "STERACn" tag
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][1], 1); // number of members in collection
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][2], 1); // member atom numbers
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][0], 2); // n from "STERACn" tag
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][1], 1); // number of members in collection
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][2], 1); // member atom numbers
 
     // STERAC1 ATOMS=(2 2 3)
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][0], 1); // STERAC1 ATOMS=(2 2 3)
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][1], 2); // number of members in collection
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][2], 2); // member atom numbers
-    EXPECT_EQ(orig_at_data.v3000->lists_sterac[0][3], 3); // member atom numbers
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][0], 1); // STERAC1 ATOMS=(2 2 3)
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][1], 2); // number of members in collection
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][2], 2); // member atom numbers
+    EXPECT_EQ(orig_at_data.v3000->lists_sterac[1][3], 3); // member atom numbers
 
     EXPECT_EQ(orig_at_data.v3000->n_sterel, 2);
 
