@@ -2346,11 +2346,10 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
     // INChI        *pINChI = NULL;
     INChI_Aux    *pAux = NULL;
 
-    const int DICT_SIZE = 100;
-    char **dictionary = (char**)inchi_calloc(DICT_SIZE, sizeof(char*));
-    int *counts = (int*)inchi_calloc(DICT_SIZE, sizeof(int));
+    char **dictionary = (char**)inchi_calloc(ENH_STEREO_DICT_SIZE, sizeof(char*));
+    int *counts = (int*)inchi_calloc(ENH_STEREO_DICT_SIZE, sizeof(int));
 
-    for (int i = 0; i < DICT_SIZE; i++) {
+    for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
         dictionary[i] = NULL;
         counts[i] = 0;
     }
@@ -2394,7 +2393,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
                                         bOverflow);
 
         int found = 0;
-        for (int i = 0; i < DICT_SIZE; i++) {
+        for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
             if (dictionary[i] && strcmp(tmpbuf.pStr, dictionary[i]) == 0) {
                 counts[i]++;
                 found = 1;
@@ -2402,7 +2401,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
             }
         }
         if (!found) {
-            for (int i = 0; i < DICT_SIZE; i++) {
+            for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
                 if (dictionary[i] == NULL) {
                     dictionary[i] = strdup(tmpbuf.pStr);
                     counts[i] = 1;
@@ -2415,7 +2414,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
 
     // String deduplication based on dictionary and counts
     int count = 0;
-    for (int i = 0; i < DICT_SIZE; i++) {
+    for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
         if (dictionary[i]) {
             if (count > 0) {
                 tot_len += MakeDelim( ";", strbuf, bOverflow );

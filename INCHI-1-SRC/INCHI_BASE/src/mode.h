@@ -376,7 +376,7 @@ extern "C" {
                                         /* InChI and sometimes resulted in memory corruption on     */
                                         /* accessing array of len == NUM_H_ISOTOPES that is 3.      */
 
-#define FIX_OLEAN_SPIRO_CHIRALITY_DETECTION_BUG 1 
+#define FIX_OLEAN_SPIRO_CHIRALITY_DETECTION_BUG 1
                                         /* (2018-05-03) thanks, DT; fix for 'olean spiro chirality' */
 
 
@@ -438,7 +438,7 @@ extern "C" {
 
 
 #define FIX_NP_MINUS_BUG  1         /* 2010-03-11 DT Fix for bug reported by Timo Boehme						*/
-                                    /* in normalization procedure for some structures containing N2(+) fragment	*/ 
+                                    /* in normalization procedure for some structures containing N2(+) fragment	*/
                                     /* which may result in producing different InChI strings for the same		*/
                                     /* molecule, depending on original order of the atomic numbers				*/
 
@@ -478,7 +478,7 @@ extern "C" {
 #define TAUT_PT_06_00              1 /* tautomerism rule PT_06_00 */
 #define TAUT_PT_39_00              1 /* tautomerism rule PT_39_00 */
 #define TAUT_PT_13_00              1 /* tautomerism rule PT_13_00 */
-#define TAUT_PT_18_00              1 /* tautomerism rule PT_18_00 */  
+#define TAUT_PT_18_00              1 /* tautomerism rule PT_18_00 */
 
 #ifdef  BUILD_WITH_ENG_OPTIONS
 #define UNDERIVATIZE               1 /* split to possible underivatized fragments */
@@ -633,6 +633,8 @@ extern "C" {
 #define ONLY_DOUBLE_BOND_STEREO     0  /* 1=> no alt bond stereo, no taut. bond attachment to stereo bond */
                                        /* 0=> allow other definitions (below) to be active */
 #define ONE_BAD_SB_NEIGHBOR         1  /* 1 => allow 1 "bad" bond type neighbor to a stereobond atom. 2004-06-02 */
+
+#define ENH_STEREO_DICT_SIZE        100 /* 100 => size of the dictionary for enhanced stereo */
 
 /* more stereo settings */
 #define BREAK_ONE_MORE_SC_TIE       1   /* break one more tie when comparing possible stereocenter neighbors */
@@ -1245,8 +1247,8 @@ do {\
 #define POLYMERS_MODERN 1	/* v. 1.06+ way to treat polymers with Zz			*/
 #define POLYMERS_LEGACY 2	/* v. 1.05 mode, no explicit Zz (internally they are here) */
 #define POLYMERS_LEGACY_PLUS 3	/* v. 1.05 mode with an addition of that in all
-                                   frame-shiftable-bistar-CRUs their backbone bonds 
-                                   are reordered in descending seniority order. 
+                                   frame-shiftable-bistar-CRUs their backbone bonds
+                                   are reordered in descending seniority order.
                                    Used as hidden 1st pass in 1.06 treatment		*/
 
 
