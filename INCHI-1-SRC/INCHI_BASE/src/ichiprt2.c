@@ -2347,8 +2347,8 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
     INChI_Aux    *pAux = NULL;
 
     const int DICT_SIZE = 100;
-    char *dictionary[DICT_SIZE]; // array of string pointers
-    int counts[DICT_SIZE];       // array of counts
+    char **dictionary = (char**)inchi_calloc(DICT_SIZE, sizeof(char*));
+    int *counts = (int*)inchi_calloc(DICT_SIZE, sizeof(int));
 
     for (int i = 0; i < DICT_SIZE; i++) {
         dictionary[i] = NULL;
@@ -2429,6 +2429,9 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
             count++;
         }
     }
+
+    inchi_free(dictionary);
+    inchi_free(counts);
 
     return tot_len;
 }
