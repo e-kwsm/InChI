@@ -127,7 +127,7 @@ TEST(test_enhancedStereo, test_EnhancedStereochemistry_1)
 TEST(test_enhancedStereo, test_EnhancedStereochemistry_2_atropisomer)
 {
     const char *molblock =
-        "test_mol_atropismer_1                        \n"
+        "test_mol_atropisomer_1                        \n"
         "  -INDIGO-02052611532D                       \n"
         "                                             \n"
         "  0  0  0  0  0  0  0  0  0  0  0 V3000      \n"

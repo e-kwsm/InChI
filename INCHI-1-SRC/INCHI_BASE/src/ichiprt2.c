@@ -2271,7 +2271,7 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
 
     // Sorts the enhanced stereochemistry groups based on the canonical atom number of the first atom in the group.
     // This ensures that the groups are always in a consistent order in the string representation, regardless of the
-    // order they were added to the input data.
+    // order they were added to the input data (e.g. AND1, AND2, ... or OR1, OR2, ...).
     qsort(enh_stereo_canon, nof_stereo_groups, sizeof(int*), compare_third_value);
 
     // Creates the string for the stereo group based on the canonical atom numbers of the atoms in the group. If no
@@ -2346,7 +2346,7 @@ int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
     // INChI        *pINChI = NULL;
     INChI_Aux    *pAux = NULL;
 
-    int DICT_SIZE = 100;
+    const int DICT_SIZE = 100;
     char *dictionary[DICT_SIZE]; // array of string pointers
     int counts[DICT_SIZE];       // array of counts
 
