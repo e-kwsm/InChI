@@ -25,9 +25,10 @@ include_directories(${P_BASE} ${P_CURRENT})
 add_executable(inchi-1)
 
 target_sources(inchi-1 PRIVATE
-	dispstru.c
-	dispstru.h
-	ichimain.c
+	main.c
+	${P_BASE}/ichimain.c
+	${P_BASE}/dispstru.c
+	${P_BASE}/dispstru.h
 	${P_BASE}/bcf_s.h
 	${P_BASE}/bcf_s.c
 	${P_BASE}/extr_ct.h
@@ -132,8 +133,8 @@ if(MATH_LIBRARY)
     target_link_libraries(inchi-1 PUBLIC ${MATH_LIBRARY})
 endif()
 
-target_compile_definitions(inchi-1 PRIVATE 
-	COMPILE_ANSI_ONLY 
+target_compile_definitions(inchi-1 PRIVATE
+	COMPILE_ANSI_ONLY
 	TARGET_EXE_STANDALONE
 	ADD_AMI_MODE
 )

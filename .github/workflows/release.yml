@@ -119,7 +119,6 @@ jobs:
 
   release:
     needs: build_and_test
-    if: github.ref_type == 'tag'
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -151,6 +150,8 @@ jobs:
         run: zip -r cmake_configurations.zip cmake_configurations
 
       - name: Create release
+        # TODO: lift this guard to release job level
+        if: github.ref_type == 'tag'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
