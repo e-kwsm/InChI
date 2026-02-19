@@ -42,6 +42,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <limits.h>
 
 #include "mode.h"
 
@@ -4362,7 +4363,7 @@ int invert_parities(const INChI *inchi,
     for (int i = 0; i < nof_lists; i++) {
         int nof_atoms = list_atoms[i][1];
 
-        AT_NUMB min_c_atom_num = (AT_NUMB)9999999;
+        AT_NUMB min_c_atom_num = (AT_NUMB)INT_MAX;
         for (int j = 0; j < nof_atoms; j++) {
             int orig_atom_num = list_atoms[i][2 + j];
             AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
@@ -4370,9 +4371,7 @@ int invert_parities(const INChI *inchi,
                 min_c_atom_num = canon_atom_num;
             }
         }
-        if (min_c_atom_num == (AT_NUMB)9999999) {
-            // return -1;
-            // printf("ERROR %d: cannot find min canonical atom num\n", __LINE__);
+        if (min_c_atom_num == (AT_NUMB)INT_MAX) {
             continue;
         }
         int min_c_parity_idx = get_parity_idx_from_canonical_atom_number(min_c_atom_num,
@@ -4382,11 +4381,9 @@ int invert_parities(const INChI *inchi,
         if (min_c_parity_idx == -1) {
             continue;
         }
-        int min_c_atom_parity = t_parity[min_c_parity_idx];
 
-        if ((is_absolute == 1) && (min_c_atom_parity == 1)) {
-            // inchi->Stereo->nCompInv2Abs = 1;
-        } else if (min_c_atom_parity == 2) {
+        int min_c_atom_parity = t_parity[min_c_parity_idx];
+        if (min_c_atom_parity == 2) {
 
             for (int j = 0; j < nof_atoms; j++) {
                 int orig_atom_num = list_atoms[i][2 + j];

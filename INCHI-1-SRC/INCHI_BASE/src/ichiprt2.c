@@ -521,6 +521,14 @@ int MakeNumber_EnhStereo( int number,
 
 
 /****************************************************************************/
+/**
+ * @brief Adds the delimiter to the string buffer if it is not empty and there is no overflow.
+ *
+ * @param szTailingDelim Pointer to the trailing delimiter string
+ * @param buf Pointer to the output string buffer
+ * @param bOverflow Pointer to overflow flag
+ * @return Returns the number of characters added to the buffer, or 0 if the delimiter is empty or there is an overflow
+ */
 int MakeDelim( const char       *szTailingDelim,
                INCHI_IOS_STRING *buf,
                int              *bOverflow )
@@ -2177,6 +2185,13 @@ int compare_ints(const void *a, const void *b) {
     return (arg1 > arg2) - (arg1 < arg2);
 }
 
+/**
+ * @brief Compares the third value of two integer arrays for qsort. Used to sort enhanced stereochemistry groups based on the canonical atom number of the first atom in the group.
+ *
+ * @param a First integer array pointer.
+ * @param b Second integer array pointer.
+ * @return Returns negative, zero, or positive value based on comparison.
+ */
 int compare_third_value(const void *a, const void *b) {
     const int *arr1 = *(const int **)a;
     const int *arr2 = *(const int **)b;
@@ -2221,11 +2236,18 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
     tot_len += MakeDelim( conf_stereo_string, strbuf, bOverflow );
 
     int **enh_stereo_canon = (int**)inchi_calloc(nof_stereo_groups, sizeof(int*));
+
+    // Converts the original atom numbers in the enhanced stereochemistry groups to canonical atom numbers
+    // and sorts the atoms within each group based on their canonical atom numbers. This ensures that the order of
+    // atoms in the string representation is consistent and does not depend on the order of atoms in the input data.
+    // enh_stereo_canon is a 2D array where each row corresponds to an enhanced stereochemistry group. The first element
+    // of each row (index 0) stores the number of atoms in the group, the second element (index 1) stores the count of found
+    // atoms, and the remaining elements (starting from index 2) store the canonical atom numbers of the atoms in the group.
     for (int i = 0; i < nof_stereo_groups; i++) {
         const int *atom_numbers = &enh_stereo[i][2];
         int count_found_atoms = 0;
         int nof_atoms = enh_stereo[i][1];
-        // int c_atom_numbers[nof_atoms];
+
         enh_stereo_canon[i] = (int*)inchi_calloc(nof_atoms + 2, sizeof(int));
         enh_stereo_canon[i][0] = nof_atoms;
         for (int j = 0; j < nof_atoms; j++)  {
@@ -2237,33 +2259,34 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
             } else {
                 canon_atom_num = INT_MAX;
             }
-            // c_atom_numbers[j] = canon_atom_num;
+
             enh_stereo_canon[i][j + 2] = canon_atom_num;
         }
         enh_stereo_canon[i][1] = count_found_atoms;
 
         if (nof_atoms > 1) {
-            // qsort(c_atom_numbers, nof_atoms, sizeof(int), compare_ints);
             qsort(&enh_stereo_canon[i][2], nof_atoms, sizeof(int), compare_ints);
         }
     }
 
+    // Sorts the enhanced stereochemistry groups based on the canonical atom number of the first atom in the group.
+    // This ensures that the groups are always in a consistent order in the string representation, regardless of the
+    // order they were added to the input data.
     qsort(enh_stereo_canon, nof_stereo_groups, sizeof(int*), compare_third_value);
 
+    // Creates the string for the stereo group based on the canonical atom numbers of the atoms in the group. If no
+    // atoms were found for the group, it will not be added to the string.
     for (int i = 0; i < nof_stereo_groups; i++) {
         int nof_atoms = enh_stereo_canon[i][0];
         int nof_found_atoms = enh_stereo_canon[i][1];
 
         if (nof_found_atoms > 0) {
             tot_len += MakeDelim( "(", strbuf, bOverflow );
-            for (int j = 0; j < nof_found_atoms; j++)  { //nof_atoms
-                // if (enh_stereo_canon[i][j + 2] == INT_MAX) {
-                //     continue;
-                // }
+            for (int j = 0; j < nof_found_atoms; j++)  {
                 tot_len += MakeNumber_EnhStereo( enh_stereo_canon[i][j + 2], "", strbuf, nCtMode, bOverflow );
                 count_added++;
 
-                if ((j + 1) < nof_found_atoms) { //enh_stereo[i][1]
+                if ((j + 1) < nof_found_atoms) {
                     tot_len += MakeDelim( ",", strbuf, bOverflow );
                 }
             }
@@ -2276,6 +2299,7 @@ int MakeEnhStereoString( INChI_Aux        *pAux,
     }
     inchi_free(enh_stereo_canon);
 
+    // Removes the last value for the stereo group (1,2,3) if no atoms were added to the string
     if (count_added == 0) {
         if (strbuf && strbuf->nUsedLength > 0) {
             strbuf->nUsedLength--;
