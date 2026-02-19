@@ -1679,7 +1679,7 @@ int inchi_strbuf_addline(INCHI_IOS_STRING* buf,
 /****************************************************************************/
 /* djb-rwth: placed as a global variable to avoid function buffer issues */
 char it_buffer[32767];
-int _inchi_trace(char* format, ...)
+int _inchi_trace(const char* format, ...)
 {
     /*
     TCHAR buffer[32767];

@@ -59,7 +59,8 @@ def test_executable_rejects_more_than_999_atoms(
     result = run_inchi_exe(molfile_v3000_more_than_999_atoms_and_bonds)
 
     assert (
-        "Error 170 (no InChI; V3000 enhanced stereo read/stored but ignored; Too many atoms [did you forget 'LargeMolecules' switch?])"
+        # "Error 170 (no InChI; V3000 enhanced stereo read/stored but ignored; Too many atoms [did you forget 'LargeMolecules' switch?])"
+        "Error 170 (no InChI; Too many atoms [did you forget 'LargeMolecules' switch?])"
         in result.stderr
     )
 
@@ -72,7 +73,8 @@ def test_executable_accepts_more_than_999_atoms_with_flag(
     )
 
     assert (
-        "Error 170 (no InChI; V3000 enhanced stereo read/stored but ignored; Too many atoms [did you forget 'LargeMolecules' switch?])"
+        # "Error 170 (no InChI; V3000 enhanced stereo read/stored but ignored; Too many atoms [did you forget 'LargeMolecules' switch?])"
+        "Error 170 (no InChI; Too many atoms [did you forget 'LargeMolecules' switch?])"
         not in result.stderr
     )
     assert "Experimental mode: Up to 32766 atoms per structure" in result.stderr

@@ -608,22 +608,21 @@ int GetSp3RelRacAbs(const INChI* pINChI, INChI_Stereo* Stereo)
                 nRet = SP3_REL;
 #endif
             }
-            else
-                if (pINChI->nFlags & INCHI_FLAG_RAC_STEREO)
-                {
+            else if (pINChI->nFlags & INCHI_FLAG_RAC_STEREO)
+            {
 #if ( REL_RAC_STEREO_IGN_1_SC == 1 )
-                    if (1 < Stereo->nNumberOfStereoCenters)
-                    {
-                        nRet = SP3_REL;
-                    }
-#else
-                    nRet = SP3_RAC;
-#endif
-                }
-                else
+                if (1 < Stereo->nNumberOfStereoCenters)
                 {
-                    nRet = SP3_ABS;
+                    nRet = SP3_REL;
                 }
+#else
+                nRet = SP3_RAC;
+#endif
+            }
+            else
+            {
+                nRet = SP3_ABS;
+            }
         }
         else
 #if ( REL_RAC_STEREO_IGN_1_SC == 1 )

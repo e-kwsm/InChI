@@ -263,10 +263,10 @@ const ELDATA ElData[] =
 { "Zy",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,},       {0,},       {0,}       }},
 { "Zz",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,},       {0,},       {0,}       }},
 #ifdef INCHI_ZFRAG
-{ "Zu",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,},       {0,},       {0,}       }}, 
-{ "Zv",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {2,},       {0,},       {0,}       }}, 
-{ "Zw",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {3,},       {0,},       {0,}       }}, 
-{ "Zx",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,2,},     {0,},       {0,}       }}, 
+{ "Zu",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,},       {0,},       {0,}       }},
+{ "Zv",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {2,},       {0,},       {0,}       }},
+{ "Zw",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {3,},       {0,},       {0,}       }},
+{ "Zx",   0,   0,   0.000000000,     0 ,  0,  1, {{0,},       {0,},       {1,2,},     {0,},       {0,}       }},
 #endif
 
 { "",     0,   0,   0.000000000,     0 ,  0,  0, {{0,},       {0,},       {0,},       {0,},       {0,}       }},
@@ -376,36 +376,36 @@ int get_periodic_table_number( const char* elname )
     }
 
     /* the single letter (common) elements */
-    if (!elname[1]) 
+    if (!elname[1])
     {
-        switch (elname[0]) 
+        switch (elname[0])
         {
-            case 'H': 
-                return EL_NUMBER_H; 
+            case 'H':
+                return EL_NUMBER_H;
                 break;
-            case 'B': 
-                return EL_NUMBER_B; 
+            case 'B':
+                return EL_NUMBER_B;
                 break;
-            case 'C': 
-                return EL_NUMBER_C; 
+            case 'C':
+                return EL_NUMBER_C;
                 break;
-            case 'N': 
-                return EL_NUMBER_N; 
+            case 'N':
+                return EL_NUMBER_N;
                 break;
-            case 'O': 
-                return EL_NUMBER_O; 
+            case 'O':
+                return EL_NUMBER_O;
                 break;
-            case 'P': 
-                return EL_NUMBER_P; 
+            case 'P':
+                return EL_NUMBER_P;
                 break;
-            case 'S': 
-                return EL_NUMBER_S; 
+            case 'S':
+                return EL_NUMBER_S;
                 break;
-            case 'F': 
-                return EL_NUMBER_F; 
+            case 'F':
+                return EL_NUMBER_F;
                 break;
-            case 'I': 
-                return EL_NUMBER_I; 
+            case 'I':
+                return EL_NUMBER_I;
                 break;
         }
     }
@@ -1065,7 +1065,6 @@ AT_NUMB *is_in_the_list( AT_NUMB *pathAtom, AT_NUMB nNextAtom, int nPathLen )
     return nPathLen ? pathAtom : NULL;
 }
 
-
 /****************************************************************************
   Check if integer is in the list
 ****************************************************************************/
@@ -1150,12 +1149,12 @@ int num_of_H( inp_ATOM *at, int iat )
 /****************************************************************************/
 U_CHAR ion_el_group( int el )
 {
-    switch ( el ) 
+    switch ( el )
     {
         case EL_NUMBER_C: /* fallthrough */
-#if ( FIX_REM_ION_PAIRS_Si_BUG == 1 )        
+#if ( FIX_REM_ION_PAIRS_Si_BUG == 1 )
         case EL_NUMBER_SI:
-#endif        
+#endif
             return EL_NUMBER_C;
         case EL_NUMBER_N: /* fallthrough */
         case EL_NUMBER_P:
@@ -1507,17 +1506,17 @@ int MakeRemovedProtonsString( int nNumRemovedProtons,
 
 /****************************************************************************/
 int get_endpoint_valence( U_CHAR el_number )
-{   
-    switch (el_number) 
+{
+    switch (el_number)
     {
         case EL_NUMBER_O:  /* fallthrough */
-        case EL_NUMBER_S:  
-        case EL_NUMBER_SE: 
-        case EL_NUMBER_TE: 
+        case EL_NUMBER_S:
+        case EL_NUMBER_SE:
+        case EL_NUMBER_TE:
             return 2;
-        case EL_NUMBER_N:  
+        case EL_NUMBER_N:
             return 3;
-        default: 
+        default:
             return 0;
     }
 }
@@ -1529,13 +1528,13 @@ int get_endpoint_valence( U_CHAR el_number )
 /****************************************************************************/
 int get_endpoint_valence_KET( U_CHAR el_number )
 {
-    switch (el_number) 
+    switch (el_number)
     {
-        case EL_NUMBER_C: 
+        case EL_NUMBER_C:
             return 4;
-        case EL_NUMBER_O: 
+        case EL_NUMBER_O:
             return 2;
-        default: 
+        default:
             return 0;
     }
 }
@@ -1768,7 +1767,7 @@ int mystrncpy( char *target, const char *source, unsigned maxlen )
     }
 
     /* giallu: PR #163 */
-    /* Find actual source length first to limit memchr search */ 
+    /* Find actual source length first to limit memchr search */
     source_len = (unsigned)strlen(source);
 
     if (source_len < maxlen)
@@ -1777,12 +1776,12 @@ int mystrncpy( char *target, const char *source, unsigned maxlen )
         len = source_len;
     }
     else if ((p = (const char*)memchr(source, 0, maxlen))) /* djb-rwth: addressing LLVM warning */
-    {    
+    {
         /* maxlen does not include the found zero termination */
         len = (int) ( p - source );
     }
     else
-    {    
+    {
         /*  reduced length does not include one more byte for zero termination */
         len = maxlen - 1;
     }
@@ -1816,7 +1815,7 @@ char* lrtrim( char *p, int* nLen )
             len -= i; /* djb-rwth: variable has to be decreased before memmove */
             (memmove)(p, p + i, ((long long)len + 1)); /* djb-rwth: now cast operator can be added */
         }
-            
+
         for (; 0 < len && is_ascii( p[len - 1] ) && isspace( p[len - 1] ); len--)
         {
             ;

@@ -129,6 +129,13 @@ static int OutputINCHI_StereoLayer( CANON_GLOBALS *pCG,
                                     INCHI_OUT_CTL *io,
                                     char *pLF,
                                     char *pTAB );
+static int OutputINCHI_StereoLayer_EnhancedStereo( CANON_GLOBALS *pCG,
+                                                   INCHI_IOSTREAM *out_file,
+                                                   INCHI_IOS_STRING *strbuf,
+                                                   INCHI_OUT_CTL *io,
+                                                   ORIG_ATOM_DATA *orig_inp_data,
+                                                   char *pLF,
+                                                   char *pTAB );
 static int OutputINCHI_IsotopicLayer( CANON_GLOBALS *pCG,
                                       INCHI_IOSTREAM *out_file,
                                       INCHI_IOS_STRING *strbuf,
@@ -150,11 +157,11 @@ static int OutputINCHI_PolymerLayer( CANON_GLOBALS *pCG, INCHI_IOSTREAM *out_fil
                                      INCHI_OUT_CTL *io, char *pLF, char *pTAB );
 static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
                                                 int bPolymers,
-                                                int total_star_atoms, 
+                                                int total_star_atoms,
                                                 int *n_used_stars,
-                                                OAD_AtProps *aprops, 
+                                                OAD_AtProps *aprops,
                                                 int *cano_nums,
-                                                ORIG_ATOM_DATA *orig_inp_data, 
+                                                ORIG_ATOM_DATA *orig_inp_data,
                                                 ORIG_STRUCT *pOrigStruct,
                                                 INCHI_IOS_STRING *strbuf );
 static int OutputAUXINFO_HeaderAndNormalization_type( CANON_GLOBALS *pCG,
@@ -1032,14 +1039,29 @@ int OutputINChI2( CANON_GLOBALS     *pCG,
     return ret;
 }
 
-
-/*                                                          */
-/*    OutputINChI1( ... )                                   */
-/*                                                          */
-/*    Main actual worker which serializes InChI to string.  */
-/*                                                          */
-/*    Called from OutputINChI2( ... ) and from itself       */
-/*                                                          */
+/**
+ * @brief Main actual worker which serializes InChI to string. Called from OutputINChI2( ... ) and from itself.
+ *
+ * @param pCG Pointer to global canonicalization data.
+ * @param strbuf Pointer to the output string buffer.
+ * @param pINChISortTautAndNonTaut2 Array of pointers to INCHI_SORT structures for tautomeric and non-tautomeric forms.
+ * @param INCHI_basic_or_INCHI_reconnected Flag indicating basic or reconnected InChI output.
+ * @param orig_inp_data Pointer to original atom data.
+ * @param pOrigStruct Pointer to the original structure data.
+ * @param ip Pointer to input parameters.
+ * @param bDisconnectedCoord Flag for disconnected metal coordination.
+ * @param bOutputType Output type (tautomeric/non-tautomeric/both).
+ * @param bINChIOutputOptions Bitmask of output options.
+ * @param num_components2 Array of component counts for each structure type.
+ * @param num_non_taut2 Array of non-tautomeric component counts.
+ * @param num_taut2 Array of tautomeric component counts.
+ * @param out_file Output stream for InChI string.
+ * @param log_file Output stream for logging.
+ * @param num_input_struct Number of input structures.
+ * @param pSortPrintINChIFlags Pointer to flags controlling sorting and printing.
+ * @param save_opt_bits Encoded bits for saved InChI creation options.
+ * @return int
+ */
 int OutputINChI1( CANON_GLOBALS *pCG,
                   INCHI_IOS_STRING *strbuf,
                   INCHI_SORT *pINChISortTautAndNonTaut2[][TAUT_NUM],
@@ -1160,7 +1182,7 @@ int OutputINChI1( CANON_GLOBALS *pCG,
             io.n_pzz = orig_inp_data->polymer->n_pzz;
         }
     }
-    
+
 
     io.bPolymers = ip->bPolymers;
 
@@ -1615,6 +1637,11 @@ int OutputINChI1( CANON_GLOBALS *pCG,
                         io.bChargesRadVal[ii] |= 1;
                     }
                 }
+
+                if (ip->bEnhancedStereo)
+                {
+                    set_EnhancedStereo_t_m_layers(orig_inp_data, pINChI, pINChI_Aux);
+                }
             }
         }
         if (bCompExists)
@@ -1701,6 +1728,10 @@ int OutputINChI1( CANON_GLOBALS *pCG,
         {
             is_beta = 1;
         }
+        else if (ip->bEnhancedStereo)
+        {
+            is_beta = 1;
+        }
 
         OutputINCHI_VersionAndKind( out_file, strbuf, bINChIOutputOptions, is_beta, pLF, pTAB );
     }
@@ -1753,7 +1784,11 @@ repeat_INChI_output:
     }
 
     /* InChI output: stereo (non-isotopic) */
-    intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
+    if (ip->bEnhancedStereo) {
+        intermediate_result = OutputINCHI_StereoLayer_EnhancedStereo( pCG, out_file, strbuf, &io, orig_inp_data, pLF, pTAB );
+    } else {
+        intermediate_result = OutputINCHI_StereoLayer( pCG, out_file, strbuf, &io, pLF, pTAB );
+    }
     if (intermediate_result != 0)
         goto exit_function;
 
@@ -2640,7 +2675,7 @@ int WriteOrigBonds( CANON_GLOBALS *pCG,
             num_trans = 0; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
             nNeighOrder[0] = 0;
         }
-        for (kk = 0; kk < at[j].valence; kk++) 
+        for (kk = 0; kk < at[j].valence; kk++)
         {
             k = nNeighOrder[kk];
             j2 = at[j].neighbor[k];
@@ -3121,7 +3156,7 @@ void set_line_separators( int bINChIOutputOptions, char **pLF, char **pTAB )
         int  bPlainTabbedOutput = 0 != ( bINChIOutputOptions & INCHI_OUT_TABBED_OUTPUT ) &&
             bPlainText && !bPlainTextCommnts;
 
-        *pTAB = bPlainTabbedOutput ? "\t" : "\n";
+        *pTAB = bPlainTabbedOutput ? (char*)"\t" : (char*)"\n";
     }
 #else
     *pTAB = "\n";
@@ -3347,10 +3382,17 @@ int OutputINCHI_ChargeAndRemovedAddedProtonsLayers( CANON_GLOBALS    *pCG,
     return 0;
 }
 
-
-/****************************************************************************
-Output InChI: stereo layer with sublayers
-****************************************************************************/
+/**
+ * @brief Output InChI: stereo layer with sublayers.
+ *
+ * @param pCG Pointer to the CANON_GLOBALS structure containing global canonicalization data.
+ * @param out_file Pointer to the INCHI_IOSTREAM output stream where the stereo layer will be written.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer used for string formatting and output.
+ * @param io Pointer to the INCHI_OUT_CTL structure containing output control and state information.
+ * @param pLF Pointer to a string used as the line feed (end-of-line) character(s).
+ * @param pTAB Pointer to a string used as the tab or separator character(s).
+ * @return Returns 0 on success, or a non-zero error code on failure.
+ */
 int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
                              INCHI_IOSTREAM   *out_file,
                              INCHI_IOS_STRING *strbuf,
@@ -3359,16 +3401,10 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
                              char             *pTAB )
 {
 
-    {
-        int i;
-        i = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-        /* djb-rwth: removing redundant code */
-    }
-
     if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
-         INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
     {
 
         /*  stereo */
@@ -3377,8 +3413,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /*  sp2 */
 
-        /*if ( bStereoSp2[io->iCurTautMode]  )*/
-        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ))) /* djb-rwth: addressing LLVM warning */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] )))
         {
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_DBND, io->szTag2, &io->bAlways, 1 );
             inchi_strbuf_reset( strbuf );
@@ -3386,8 +3421,8 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len = str_Sp2( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
-                                        io->bOutType, io->TAUT_MODE, io->num_components,
-                                        io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bOutType, io->TAUT_MODE, io->num_components,
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3408,7 +3443,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /*  sp3 */
 
-        /*if ( bStereoSp3[io->iCurTautMode]  )*/
+        /* t-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ))) /* djb-rwth: addressing LLVM warning */
         {
             io->bRelRac = io->bRelativeStereo[io->iCurTautMode] || io->bRacemicStereo[io->iCurTautMode];
@@ -3419,7 +3454,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             {
                 io->tot_len = str_Sp3( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
                                        io->bOutType, io->TAUT_MODE, io->num_components, io->bRelRac,
-                                   io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
 
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
@@ -3432,12 +3467,13 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
         }
         else
         {
-            if (io->bPlainTextTags == 1) inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            }
         }
 
-        /* bStereoAbsInverted[io->iCurTautMode]  */
-
-        /* if ( bStereoAbs[io->iCurTautMode]  ) */
+        /* m-layer */
         if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ))) /* djb-rwth: addressing LLVM warning */
         {
             szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_INVS, io->szTag2, &io->bAlways, 1 );
@@ -3445,7 +3481,7 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
             if (INCHI_SEGM_FILL == io->nSegmAction)
             {
                 io->tot_len = str_StereoAbsInv( io->pINChISort, strbuf,
-                                            &io->bOverflow, io->bOutType, io->num_components );
+                                               &io->bOverflow, io->bOutType, io->num_components );
                 io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
             }
 
@@ -3465,8 +3501,8 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
 
         /* stereo type */
 
-        /*if ( io->bRacemicStereo[io->iCurTautMode] || io->bRelativeStereo[io->iCurTautMode] || bStereoAbs[io->iCurTautMode] )*/
-        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))) /* djb-rwth: addressing LLVM warning */
+        /* s-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
         {
             const char *p_stereo = io->bRelativeStereo[io->iCurTautMode] ? x_rel :
                 io->bRacemicStereo[io->iCurTautMode] ? x_rac : x_abs;
@@ -3490,15 +3526,193 @@ int OutputINCHI_StereoLayer( CANON_GLOBALS    *pCG,
     }
     else
     {
-        if (io->bPlainTextTags == 1) inchi_ios_print_nodisplay( out_file, "////" ); /* sp3, sp2, abs-inv, stereo.type */
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "////" ); /* sp2, sp3, abs-inv, stereo.type */
+        }
     }
 
     return 0;
 }
 
+/**
+ * @brief Output InChI: stereo layer with sublayers for enhanced stereochemistry (absolute, relative, racemic).
+ *
+ * @param pCG Pointer to the CANON_GLOBALS structure containing global canonicalization data.
+ * @param out_file Pointer to the INCHI_IOSTREAM output stream where the stereo layer will be written.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer used for string formatting and output.
+ * @param io Pointer to the INCHI_OUT_CTL structure containing output control and state information.
+ * @param orig_inp_data Pointer to the ORIG_ATOM_DATA containing e.g. atom information.
+ * @param pLF Pointer to a string used as the line feed (end-of-line) character(s).
+ * @param pTAB Pointer to a string used as the tab or separator character(s).
+ * @return Returns 0 on success, or a non-zero error code on failure.
+ */
+int OutputINCHI_StereoLayer_EnhancedStereo(
+        CANON_GLOBALS    *pCG,
+        INCHI_IOSTREAM   *out_file,
+        INCHI_IOS_STRING *strbuf,
+        INCHI_OUT_CTL    *io,
+        ORIG_ATOM_DATA   *orig_inp_data,
+        char             *pLF,
+        char             *pTAB )
+{
+
+    if (INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ) ||
+        INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] ))
+    {
+
+        /*  stereo */
+
+        szGetTag( IdentLbl, io->nTag, io->bTag1 = IL_STER | io->bFhTag, io->szTag1, &io->bAlways, 1 );
+
+        /*  sp2 */
+
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_b_SBONDS] )))
+        {
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_DBND, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_Sp2( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
+                                       io->bOutType, io->TAUT_MODE, io->num_components,
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 1;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp2 */
+            }
+        }
+
+        /*  sp3 */
+
+        /* t-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_t_SATOMS] ))) /* djb-rwth: addressing LLVM warning */
+        {
+            io->bRelRac = io->bRelativeStereo[io->iCurTautMode] || io->bRacemicStereo[io->iCurTautMode];
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_SP3S, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_Sp3( io->pINChISort, io->pINChISort2, strbuf, &io->bOverflow,
+                                       io->bOutType, io->TAUT_MODE, io->num_components, io->bRelRac,
+                                       io->bSecondNonTautPass, io->bOmitRepetitions, io->bUseMulipliers );
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 2;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* sp3 */
+            }
+        }
+
+        /* m-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_m_SP3INV] ))) /* djb-rwth: addressing LLVM warning */
+        {
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_INVS, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf );
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                io->tot_len = str_StereoAbsInv( io->pINChISort, strbuf,
+                                               &io->bOverflow, io->bOutType, io->num_components );
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 3;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        else
+        {
+            if (io->bPlainTextTags == 1)
+            {
+                inchi_ios_print_nodisplay( out_file, "/" ); /* stereo-abs-inv */
+            }
+        }
+
+        /* stereo type */
+
+        /* s-layer */
+        if ((io->nSegmAction = INChI_SegmentAction( io->sDifSegs[io->nCurINChISegment][DIFS_s_STYPE] )))
+        {
+            const char *p_stereo = io->bRelativeStereo[io->iCurTautMode] ? x_rel :
+                io->bRacemicStereo[io->iCurTautMode] ? x_rac : x_abs;
+
+            szGetTag( IdentLbl, io->nTag, io->bTag2 = io->bTag1 | IL_TYPS, io->szTag2, &io->bAlways, 1 );
+            inchi_strbuf_reset( strbuf ); io->tot_len = 0;
+
+            io->tot_len = 0;
+            if (INCHI_SEGM_FILL == io->nSegmAction)
+            {
+                if (orig_inp_data->v3000->n_steabs > 0 ||
+                    orig_inp_data->v3000->n_sterel > 0 ||
+                    orig_inp_data->v3000->n_sterac > 0) {
+                    io->tot_len += MakeSlayerString(
+                        orig_inp_data,
+                        io->pINChISort,
+                        strbuf,
+                        io->bOutType,
+                        io->num_components,
+                        io->TAUT_MODE,
+                        &io->bOverflow
+                    );
+                } else {
+                    ( io->tot_len ) += MakeDelim( p_stereo, strbuf, &io->bOverflow );
+                }
+
+                io->bNonTautNonIsoIdentifierNotEmpty += io->bSecondNonTautPass;
+            }
+            if (str_LineEnd( io->szTag2, &io->bOverflow, strbuf, -io->nSegmAction, io->bPlainTextTags ))
+            {
+                return 1;
+            }
+            inchi_ios_print_nodisplay( out_file, "%s%s", strbuf->pStr, pLF );
+        }
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "/" );  /* no abs, inv or racemic stereo */
+        }
+    }
+    else
+    {
+        if (io->bPlainTextTags == 1)
+        {
+            inchi_ios_print_nodisplay( out_file, "////" ); /* sp2, sp3, abs-inv, stereo.type */
+        }
+    }
+
+    return 0;
+}
 
 /****************************************************************************
-Output InChI: isotopic layer and sublayers  ****************************************************************************/
+Output InChI: isotopic layer and sublayers
+****************************************************************************/
 int OutputINCHI_IsotopicLayer( CANON_GLOBALS    *pCG,
                                INCHI_IOSTREAM   *out_file,
                                INCHI_IOS_STRING *strbuf,
@@ -3908,7 +4122,7 @@ static int OutputINCHI_PolymerLayer( CANON_GLOBALS *pCG,
     nat = orig_inp_data->num_inp_atoms;
     num_inp_bonds = orig_inp_data->num_inp_bonds;
 
-    
+
     if (pOrigStruct && !pOrigStruct->polymer)
     {
         return 0;
@@ -4145,7 +4359,7 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
         a2 = u->blist[1];
         a3 = u->blist[2];
         a4 = u->blist[3];
-        
+
         if (is_in_the_ilist( u->alist, a1, u->na ))
         {
             tmp = a2;
@@ -4172,7 +4386,7 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
             /* The first printed is the crossing bond pointing to more senior CRU end ("head")    */
             swap = (OAD_Polymer_IsFirstAtomRankLower(a2, a4, aprops) == 1);
         }
-        
+
         if (swap)
         {
             inchi_strbuf_printf( strbuf, "(%-d-%-d,%-d-%-d)", a3, a4, a1, a2 );
@@ -4288,8 +4502,8 @@ static int OutputINCHI_PolymerLayer_SingleUnit( OAD_PolymerUnit *u,
                         here
                         at1, at2 is the most senior bond, and at1 is more senior than at2
                         all other pairs at3,at4,  at5,at6, ... are sorted just in increasing
-                        order of first number in pair, then second one, e.g.: at3<at4; at3<=at5 
-                        (and if at3==at5 then at4<at6) 
+                        order of first number in pair, then second one, e.g.: at3<at4; at3<=at5
+                        (and if at3==at5 then at4<at6)
                     */
 
                     if (p->frame_shift_scheme != FSS_NONE && u->nbkbonds >= 1 && u->cap1 >= 1 && u->cap2 >= 1)
@@ -5046,7 +5260,7 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
         eol_was_consumed = 0, pre_eol = 0,
         nonprt_sym = 0, nonprt_prev = 0;
 
-    if (n_zy > 0) 
+    if (n_zy > 0)
     {
         /* We have some placeholder pseudo atoms which should not be removed below (if anyway they are allowed) */
         if (n_pzz == 0)
@@ -5131,7 +5345,7 @@ void EditINCHI_HidePolymerZz(INCHI_IOSTREAM *out, int n_pzz, int n_zy)
                 AT_NUMB ia = (AT_NUMB) inchi_strtol(p, &q, 10); /* make compiler happy: */ /* djb-rwth: removing redundant code; ignoring LLVM warning: variable used to store function return value */
                 if (*q != '-')
                 {
-                    skip = 1; 
+                    skip = 1;
                 }
             }
         }
@@ -5283,7 +5497,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
     char prev = '/';
 
     /*
-        format is 
+        format is
         [sequence of] [.[int_mult[Zz[int_index]]]]
     */
 
@@ -5291,8 +5505,8 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
     {
         return 0;
     }
-    
-    p = s; 
+
+    p = s;
     while (*p)
     /*for (p = s ; *p; p++)*/
     {
@@ -5317,7 +5531,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
             {
                 mult = (int)inchi_strtol(p, &q, 10);
                 p = q;
-                prev = *q--; 
+                prev = *q--;
                 continue;
             }
             else
@@ -5326,7 +5540,7 @@ int CountPseudoElementInFormula( const char *pseudo, char *s ) /* djb-rwth: igno
             }
             if (!mult)
             {
-                break; 
+                break;
             }
         }
         else if (*p== pseudo[1] && prev== pseudo[0])
@@ -5446,7 +5660,7 @@ int MergeZzInHillFormula(INCHI_IOS_STRING *strbuf)
     {
         inchi_free(scopy); /* djb-rwth: avoiding memory leak */
         return -1; /* failed */
-    }    
+    }
     memcpy(scopy, strbuf->pStr, strbuf->nAllocatedLength);
     stmp = (char *)inchi_calloc((long long)strbuf->nAllocatedLength + 1, sizeof(char)); /* djb-rwth: cast operator added */
     if (!stmp)
@@ -5458,7 +5672,7 @@ int MergeZzInHillFormula(INCHI_IOS_STRING *strbuf)
     inchi_strbuf_reset(strbuf);
     p0 = scopy;
     p = p0;
-    do 
+    do
     {
         /* djb-rwth: removing redundant code */
         pend = strchr(p, '.');

@@ -122,7 +122,8 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI);
+    int* pbHideInChI,
+    int* pbEnhancedStereochemistry);
 
 
 /****************************************************************************
@@ -165,7 +166,8 @@ int set_common_options_by_parg(const char* pArg,
     int* pbNPZz,
     int* pbNoWarnings,
     int* pbMergeHash,
-    int* pbHideInChI
+    int* pbHideInChI,
+    int* pbEnhancedStereochemistry
 )
 {
     int got = 0;
@@ -264,6 +266,11 @@ int set_common_options_by_parg(const char* pArg,
     else if (!inchi_stricmp(pArg, "LooseTSACheck"))
     {
         (*pbLooseTSACheck) = 1;
+        got = 1;
+    }
+    else if (!inchi_stricmp(pArg, "EnhancedStereochemistry"))
+    {
+        *pbEnhancedStereochemistry = 1;
         got = 1;
     }
 
@@ -643,6 +650,7 @@ int ReadCommandLineParms(int argc,
     int bAcidTautomerism = (DISCONNECT_SALTS == 1) ? (TEST_REMOVE_S_ATOMS == 1 ? 2 : 1) : 0;
     int bUnchargedAcidTaut = (CHARGED_SALTS_ONLY == 0);
     int bMergeSaltTGroups = (DISCONNECT_SALTS == 1);
+    int bEnhancedStereochemistry = 0;
 #if ( MIN_SB_RING_SIZE > 0 )
     int nMinDbRinSize = MIN_SB_RING_SIZE, mdbr = 0;
 #endif
@@ -795,7 +803,8 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI);
+                &bNoWarnings, &bMergeHash, &bHideInChI,
+                &bEnhancedStereochemistry);
             if (got)
             {
                 ;
@@ -1243,7 +1252,8 @@ int ReadCommandLineParms(int argc,
                 &bLargeMolecules, &bPolymers,
                 &bFoldPolymerSRU, &bFrameShiftScheme,
                 &bStereoAtZz, &bNPZz,
-                &bNoWarnings, &bMergeHash, &bHideInChI);
+                &bNoWarnings, &bMergeHash, &bHideInChI,
+                &bEnhancedStereochemistry);
 
             if (got)
             {
@@ -2119,6 +2129,8 @@ int ReadCommandLineParms(int argc,
 #endif
 
     ip->bINChIOutputOptions2 = bINChIOutputOptions2;
+
+    ip->bEnhancedStereo = bEnhancedStereochemistry;
 
     return 0;
 }

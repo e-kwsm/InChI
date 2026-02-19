@@ -125,7 +125,7 @@ typedef struct tagINCHI_OUT_CTL
     int iCurTautMode;
 
     int num_components;
-    int  nNumRemovedProtons;
+    int nNumRemovedProtons;
     int nTag;
     int bTag1;
     int bTag2;
