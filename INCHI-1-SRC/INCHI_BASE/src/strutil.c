@@ -6473,6 +6473,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     int binaryValue;
     int disconnectDecision;
     int neighbor_idx, neigh_pos;
+    int num_metals, current_component;
 
     /* memory allocation */
     S_CHAR* dfs_visited = (S_CHAR*)inchi_calloc(num_at, sizeof(S_CHAR));
@@ -6503,7 +6504,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     MarkRingSystemsInp(at, num_at, 0);
 
     /* Compute metal list */
-    int num_metals = 0;
+    num_metals = 0;
     for (i = 0; i < num_at; i++)
     {
         if (is_el_a_metal(at[i].el_number))
@@ -6522,7 +6523,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         structure_id[i] = -1;
     }
 
-    int current_component = 0;
+    current_component = 0;
 
     for (i = 0; i < num_at; i++)
     {
