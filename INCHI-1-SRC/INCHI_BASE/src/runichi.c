@@ -273,6 +273,7 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
     memset(pncFlags, 0, sizeof(*pncFlags)); /* djb-rwth: memset_s C11/Annex K variant? */
 
 
+
     /* For experimental purposes only */
     /*ret1 = DoOneStructureEarlyPreprocessing( num_inp, sd, ip, inp_file,
                                              log_file, out_file, prb_file,
@@ -2113,7 +2114,7 @@ int ProcessOneStructureEx(struct tagINCHI_CLOCK* ic,
     unsigned char            save_opt_bits)
 {
     int ret = _IS_OKAY;
-    char* sinchi_noedits = NULL, * saux_noedits = NULL;
+    char *sinchi_noedits=NULL, *saux_noedits=NULL;
 
 
     /* PREPROCESS */
@@ -2152,11 +2153,11 @@ int ProcessOneStructureEx(struct tagINCHI_CLOCK* ic,
     /* Perform calculation as usual either for untouched (modes POLYMERS_LEGACY and POLYMERS_LEGACY_PLUS)
        or just edited, probably (mode POLYMERS_MODERN) structure as passed in orig_inp_data
     */
-    ret = ProcessOneStructureExCore(ic, CG, sd, ip, szTitle,
-        pINChI2, pINChI_Aux2,
-        inp_file, log_file, out_file, prb_file,
-        orig_inp_data, prep_inp_data,
-        num_inp, strbuf, save_opt_bits);
+    ret = ProcessOneStructureExCore( ic, CG, sd, ip,  szTitle,
+                                     pINChI2, pINChI_Aux2,
+                                     inp_file, log_file, out_file, prb_file,
+                                     orig_inp_data, prep_inp_data,
+                                     num_inp, strbuf, save_opt_bits );
 
     if ( ip->bINChIOutputOptions2 & INCHI_OUT_INCHI_GEN_ERROR )
     {
@@ -2233,9 +2234,9 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
     char** saux_noedits)
 {
     int ret = _IS_OKAY;
-    char* sinchi_105p = NULL, * saux_105p = NULL;
-    OAD_StructureEdits edits_unit_frame_shift, * ed_fs = &edits_unit_frame_shift;
-    OAD_StructureEdits edits_unit_folding, * ed_fold = &edits_unit_folding;
+    char *sinchi_105p = NULL, *saux_105p = NULL;
+    OAD_StructureEdits edits_unit_frame_shift, *ed_fs = &edits_unit_frame_shift;
+    OAD_StructureEdits edits_unit_folding, *ed_fold = &edits_unit_folding;
 
     OAD_StructureEdits_Init(ed_fold);
     OAD_StructureEdits_Init(ed_fs);
@@ -2268,7 +2269,7 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
                     if ( ret == _IS_FATAL || ret == _IS_ERROR )
                     {
                         ret = _IS_WARNING;
-                        if ( !ip->bNoWarnings )
+                        if (!ip->bNoWarnings)
                         {
                             AddErrorMessage(sd->pStrErrStruct, "CRU folding and frame shift analysis failed");
                         }
@@ -2283,7 +2284,7 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
 
 
                     /* Prepare and perform CRU folding related edits */
-                    if ( ip->bFoldPolymerSRU != 0 )
+                    if (ip->bFoldPolymerSRU != 0)
                     {
                         /*	Get interim 105+ flavour of InChI and AuxInfo and prepare */
                         int old_bFrameShiftScheme = ip->bFrameShiftScheme;
@@ -2318,8 +2319,8 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
                         }
                         if ( ret == _IS_WARNING )
                         {
-                            /* inchi_ios_eprint(log_file, "Warning (CRU fold analysis failed) structure #%ld.%s%s%s%s\n",
-                                 num_inp, SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));*/
+                           /* inchi_ios_eprint(log_file, "Warning (CRU fold analysis failed) structure #%ld.%s%s%s%s\n",
+                                num_inp, SDF_LBL_VAL(ip->pSdfLabel, ip->pSdfValue));*/
                             ;
                         }
                         /* else */
@@ -2358,7 +2359,7 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
 
                 frame_shift:;
                     /* Prepare and perform frame shift related edits */
-                    if ( ip->bFrameShiftScheme != FSS_NONE )
+                    if (ip->bFrameShiftScheme != FSS_NONE)
                     {
                         /* Clear buffers */
                         if ( sinchi_105p )
@@ -2388,9 +2389,9 @@ int PreprocessPolymerCRUData(struct tagINCHI_CLOCK* ic,
                             goto exit_function;
                         }
 
-                        ret = OAD_Polymer_PrepareFrameShiftEdits(orig_inp_data, sinchi_105p, saux_105p, ed_fs);
+                        ret = OAD_Polymer_PrepareFrameShiftEdits( orig_inp_data, sinchi_105p, saux_105p, ed_fs);
 
-                        if ( ret == _IS_FATAL || ret == _IS_ERROR ) /* djb-rwth: logical operator corrected */
+                        if (ret == _IS_FATAL || ret == _IS_ERROR) /* djb-rwth: logical operator corrected */
                         {
                             ret = _IS_WARNING;
                             /*inchi_ios_eprint(log_file, "Warning (Frame shift analysis failed) structure #%ld.%s%s%s%s\n",
@@ -2471,7 +2472,7 @@ void swap_atoms_xyz(ORIG_ATOM_DATA* orig_at_data, int ia1, int ia2)
 {
     double x, y, z;
 
-    if ( ia1 != ia2 )
+    if (ia1 != ia2)
     {
         x = orig_at_data->at[ia1].x;
         y = orig_at_data->at[ia1].y;
@@ -2493,11 +2494,11 @@ void swap_atoms_xyz(ORIG_ATOM_DATA* orig_at_data, int ia1, int ia2)
 /****************************************************************************
  OAD_StructureEdits_Edit
 ****************************************************************************/
-int OAD_StructureEdits_Apply(STRUCT_DATA* sd,
-    INPUT_PARMS* ip,
-    ORIG_ATOM_DATA* orig_at_data,
-    OAD_StructureEdits* ed,
-    int* ret)
+int OAD_StructureEdits_Apply( STRUCT_DATA *sd,
+                              INPUT_PARMS *ip,
+                              ORIG_ATOM_DATA *orig_at_data,
+                              OAD_StructureEdits *ed,
+                              int *ret)
 {
     int ok = 0, fail;
     int i, j, old_a1, old_a2, new_a1, new_a2, n_edits = 0;
@@ -2648,7 +2649,7 @@ int OAD_StructureEdits_Apply(STRUCT_DATA* sd,
         }
 
         fail = mark_atoms_to_delete_or_renumber(orig_at_data, ed, at_renum);
-        if ( fail )
+        if (fail)
         {
             *ret = _IS_ERROR;
             goto exit_function;
@@ -2670,7 +2671,7 @@ int OAD_StructureEdits_Apply(STRUCT_DATA* sd,
             U_CHAR btype0[MAXVAL];
             int m, macc, valen;
             int new_num = at_renum[i];
-            if ( new_num == -1 )
+            if (new_num == -1)
             {
                 /* Skip removed atom */
                 continue;
@@ -2966,7 +2967,7 @@ int ValidateAndPreparePolymerAndPseudoatoms(struct tagINCHI_CLOCK* ic,
     int res = _IS_OKAY;
 
     int mind_pseudoelements = 0;
-    
+
     /* djb-rwth: fixing coverity ID #499512 */
     if (!orig_inp_data)
     {
@@ -3033,25 +3034,25 @@ exit_function:
  The intent is to preserve AuxInfo for the very original structure
  in order to keep a final ability to restore that structure.
 ****************************************************************************/
-int OAD_ProcessOneStructureNoEdits(struct tagINCHI_CLOCK* ic,
-    struct tagCANON_GLOBALS* CG,
-    STRUCT_DATA* sd,
-    INPUT_PARMS* ip,
-    char* szTitle,
-    PINChI2* pINChI2[INCHI_NUM],
-    PINChI_Aux2* pINChI_Aux2[INCHI_NUM],
-    INCHI_IOSTREAM* inp_file,
-    INCHI_IOSTREAM* log_file,
-    INCHI_IOSTREAM* out_file,
-    INCHI_IOSTREAM* prb_file,
-    ORIG_ATOM_DATA* orig_inp_data,
-    ORIG_ATOM_DATA* prep_inp_data,
-    long                     num_inp,
-    INCHI_IOS_STRING* strbuf,
-    unsigned char            save_opt_bits,
-    int* n_pzz,
-    char** sinchi,
-    char** saux)
+int OAD_ProcessOneStructureNoEdits( struct tagINCHI_CLOCK    *ic,
+                                    struct tagCANON_GLOBALS  *CG,
+                                    STRUCT_DATA              *sd,
+                                    INPUT_PARMS              *ip,
+                                    char                     *szTitle,
+                                    PINChI2                  *pINChI2[INCHI_NUM],
+                                    PINChI_Aux2              *pINChI_Aux2[INCHI_NUM],
+                                    INCHI_IOSTREAM           *inp_file,
+                                    INCHI_IOSTREAM           *log_file,
+                                    INCHI_IOSTREAM           *out_file,
+                                    INCHI_IOSTREAM           *prb_file,
+                                    ORIG_ATOM_DATA           *orig_inp_data,
+                                    ORIG_ATOM_DATA           *prep_inp_data,
+                                    long                     num_inp,
+                                    INCHI_IOS_STRING         *strbuf,
+                                    unsigned char            save_opt_bits,
+                                    int                      *n_pzz,
+                                    char					 **sinchi,
+                                    char					 **saux)
 {
     size_t slen;
     int ret = _IS_OKAY, dup_fail = 0;
@@ -3233,7 +3234,7 @@ int mark_atoms_to_delete_or_renumber(ORIG_ATOM_DATA* orig_at_data,
     /* NB:	new/old ORIG_ATOM_DATA atom numbers are 0-based (==orig_number-1)
             while those in ed->... are just 1-based orig_numbers */
 
-    for ( i = 0; (size_t)i < max_atoms; i++ )
+    for (i = 0; (size_t)i < max_atoms; i++)
     {
         at_renum[i] = i;
     }
@@ -3300,7 +3301,7 @@ int mark_atoms_to_delete_or_renumber(ORIG_ATOM_DATA* orig_at_data,
     for ( i = max_atoms - 1; i >= 0; i-- )
     {
         int orig_num = i + 1;	/* NB: ed->del_atom->item contains orig# which are (OAD# + 1) */
-        if ( is_in_the_ilist(ed->del_atom->item, orig_num, ed->del_atom->used) )
+        if (is_in_the_ilist(ed->del_atom->item, orig_num, ed->del_atom->used))
         {
             /* mark as deleted atnum */
             at_renum[i] = -1;

@@ -5,7 +5,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inchi_api.h"
 }
 
-TEST(inchi_dll_b_testing, test_MakeINCHIFromMolfileText)
+TEST(test_inchi_dll_b, test_MakeINCHIFromMolfileText)
 {
     const char *ferrocene =
         "Ferrocene\n"
@@ -53,4 +53,6 @@ TEST(inchi_dll_b_testing, test_MakeINCHIFromMolfileText)
 
     ASSERT_EQ(MakeINCHIFromMolfileText(ferrocene, options, poutput), 1);
     ASSERT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
 }

@@ -718,10 +718,21 @@ int str_FixedH_atoms( INCHI_SORT       *pINChISort,
     return ( strbuf->nUsedLength - nUsedLength0 );
 }
 
-
-/****************************************************************************
-  Produce double bond stereo substring of the whole structure InChI string.
-****************************************************************************/
+/**
+ * @brief Produce double bond stereo substring of the whole structure InChI string.
+ *
+ * @param pINChISort Pointer to the primary INCHI_SORT structure containing input data.
+ * @param pINChISort2 Pointer to the secondary INCHI_SORT structure, used for comparison or additional data.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer where the output string will be stored.
+ * @param bOverflow Pointer to an integer flag that will be set if the output overflows the buffer.
+ * @param bOutType Output type flag specifying the format or type of output.
+ * @param TAUT_MODE Tautomer mode flag indicating how tautomers are handled.
+ * @param num_components Number of components to process.
+ * @param bSecondNonTautPass Flag indicating if this is the second pass for non-tautomeric processing.
+ * @param bOmitRepetitions Flag to omit repeated entries in the output.
+ * @param bUseMulipliers Flag to use multipliers in the output representation.
+ * @return Returns number of characters written to strbuf
+ */
 int str_Sp2( INCHI_SORT       *pINChISort,
              INCHI_SORT       *pINChISort2,
              INCHI_IOS_STRING *strbuf,
@@ -950,10 +961,22 @@ int str_Sp2( INCHI_SORT       *pINChISort,
     return ( strbuf->nUsedLength - nUsedLength0 );
 }
 
-
-/****************************************************************************
-  Produce tetrahedral stereo substring of the whole structure InChI string.
-****************************************************************************/
+/**
+ * @brief Produce tetrahedral stereo substring of the whole structure InChI string.
+ *
+ * @param pINChISort Pointer to the primary INCHI_SORT structure containing input data.
+ * @param pINChISort2 Pointer to the secondary INCHI_SORT structure, used for comparison or additional data.
+ * @param strbuf Pointer to an INCHI_IOS_STRING buffer where the output string will be stored.
+ * @param bOverflow Pointer to an integer flag that will be set if the output overflows the buffer.
+ * @param bOutType Output type flag specifying the format or type of output.
+ * @param TAUT_MODE Tautomer mode flag indicating how tautomers are handled.
+ * @param num_components The number of components to process.
+ * @param bRelRac Flag for relative or racemic stereochemistry.
+ * @param bSecondNonTautPass Flag indicating if this is the second pass for non-tautomeric processing.
+ * @param bOmitRepetitions Flag to omit repeated entries in the output.
+ * @param bUseMulipliers Flag to use multipliers in the output representation.
+ * @return int
+ */
 int str_Sp3( INCHI_SORT       *pINChISort,
              INCHI_SORT       *pINChISort2,
              INCHI_IOS_STRING *strbuf,
@@ -1184,10 +1207,15 @@ int str_Sp3( INCHI_SORT       *pINChISort,
     return ( strbuf->nUsedLength - nUsedLength0 );
 }
 
-
-/****************************************************************************
-  Output abs stero inversion substring of the whole structure InChI string
-****************************************************************************/
+/**
+ * @brief Output absolute stereo inversion substring of the whole structure InChI string
+ * @param pINChISort Pointer to INCHI_SORT array
+ * @param strbuf Pointer to string buffer
+ * @param bOverflow Overflow flag
+ * @param bOutType Output type
+ * @param num_components Number of connected components
+ * @return Length of the added substring (return value '0', '1', or '.' in strbuf)
+ */
 int str_StereoAbsInv( INCHI_SORT       *pINChISort,
                       INCHI_IOS_STRING *strbuf,
                       int              *bOverflow,
@@ -4131,7 +4159,7 @@ int bin_AuxTautTrans( INCHI_SORT *pINChISort,
             if (nTrans_n && nTrans_s)
             {
                 /* new ordering number for original non-tautomeric component number is->ord_number */
-                nTrans_n[is->ord_number] = i + 1; /*nTrans_t[is2->ord_number] =*/ 
+                nTrans_n[is->ord_number] = i + 1; /*nTrans_t[is2->ord_number] =*/
             }
         }
     }

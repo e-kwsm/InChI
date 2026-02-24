@@ -113,6 +113,57 @@ extern "C"
     int getElTypeforMolecularInorganics(int nPeriodicNum);
   
     /**
+     * @brief Set the enhanced stereochemistry for t- and m-layers
+     *
+     * @param orig_inp_data
+     * @param inchi
+     * @param aux
+     * @return int
+     */
+    int set_EnhancedStereo_t_m_layers(const ORIG_ATOM_DATA *orig_inp_data,
+                                      const INChI *inchi,
+                                      const INChI_Aux *aux);
+
+    /**
+     * @brief Get the canonical atom number object
+     *
+     * @param aux Pointer to INChI_Aux data structure
+     * @param orig_atom_num Original atom number
+     * @return Returns canonical atom number if found, -1 if not
+     */
+    int get_canonical_atom_number( const INChI_Aux *aux,
+                                   int orig_atom_num);
+
+    /**
+     * @brief Get the parity index from canonical atom number
+     *
+     * @param canon_atom_num Canonical atom number
+     * @param nNumber Pointer to atom number array
+     * @param nof_atoms Number of atoms
+     * @return Returns parity index if found, -1 if not
+     */
+    int get_parity_idx_from_canonical_atom_number( int canon_atom_num,
+                                                   const AT_NUMB *nNumber,
+                                                   int nof_atoms);
+
+    /**
+     * @brief Invert the parities for enhanced stereochemistry t- and m-layers
+     *
+     * @param inchi Pointer to INChI structure
+     * @param aux Pointer to INChI auxiliary data
+     * @param list_atoms Pointer to list of atom lists for abs, rel or rac information
+     * @param nof_lists Number of lists
+     * @param is_absolute Flag indicating if processing absolute stereochemistry
+     * @return Returns 0 on success, 1 if list_atoms is NULL
+     */
+
+    int invert_parities(const INChI *inchi,
+                        const INChI_Aux *aux,
+                        int **list_atoms,
+                        int nof_lists,
+                        int is_absolute);
+
+    /**
      * @brief Extract one (connected) component
      *
      * @param at Pointer to atom array
@@ -462,9 +513,9 @@ extern "C"
      * @brief Compares stereo information of two structures
      *
      * @param s1 Pointer to stereo information of first structure
-     * @param eql1 Flag for stereo information check
+     * @param eql1 Flag for stereo information check (EQL_EXISTS, EQL_SP3, EQL_SP3_INV, EQL_SP2)
      * @param s2 Pointer to stereo information of second structure
-     * @param eql2 Flag for stereo information check
+     * @param eql2 Flag for stereo information check (EQL_EXISTS, EQL_SP3, EQL_SP3_INV, EQL_SP2)
      * @param bRelRac Flag to compare racemic stereo information
      * @return int 0 if unequal, 1 if equal
      */

@@ -43,6 +43,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #include "mode.h"
 #include "ichinorm.h"               /* @nnuk */
@@ -1124,12 +1125,12 @@ int remove_ion_pairs(int num_atoms, inp_ATOM *at)
                     num_N_minus++;
                 }
 #ifdef FIX_P_IV_Plus_O_Minus
-                num_P_IV_plus += a->el_number != EL_NUMBER_N &&
-                                 chrg == 1 &&
-                                 a->valence == 4 &&
-                                 a->chem_bonds_valence == 4; /* added 2010-03-17 DT */
+                    num_P_IV_plus += a->el_number != EL_NUMBER_N &&
+                                     chrg == 1 &&
+                                     a->valence == 4 &&
+                                     a->chem_bonds_valence == 4; /* added 2010-03-17 DT */
 #endif
-                break;
+                    break;
             }
         }
         else if (!chrg && a->chem_bonds_valence + NUMH(a, 0) == 2 &&
@@ -3676,8 +3677,8 @@ done:
         /* connect H to at[iat] */
         val = at[iat].valence;
 
-#pragma warning(push)
-#pragma warning(disable : 6386)
+#pragma warning (push)
+#pragma warning (disable: 6386)
         if (val < MAXVAL)
         {
             at[iat].neighbor[val] = iat_H;
@@ -6955,6 +6956,196 @@ int cmp_components(const void *a1, const void *a2)
     n2 = ((const AT_NUMB *)a2)[1];
 
     ret = (int)n1 - (int)n2;
+
+    return ret;
+}
+
+/**
+ * @brief Get the canonical atom number from original atom number
+ *
+ * @param aux Pointer to INChI auxiliary data
+ * @param orig_atom_num Original atom number
+ * @return Returns the canonical atom number, or -1 if not found
+ */
+int get_canonical_atom_number( const INChI_Aux *aux,
+                               int orig_atom_num)
+{
+    if (aux == NULL) {
+        return -1;
+    }
+
+    if (aux->nOrigAtNosInCanonOrd == NULL) {
+        return -1;
+    }
+
+    for (int canon_num = 1; canon_num <= aux->nNumberOfAtoms; canon_num++) {
+        if (aux->nOrigAtNosInCanonOrd[canon_num - 1] == orig_atom_num) {
+            return canon_num;
+        }
+    }
+    return -1;
+}
+
+/**
+ * @brief Get the parity idx from canonical atom number object
+ *
+ * @param canon_atom_num Canonical atom number
+ * @param nNumber Pointer to array of canonical atom numbers
+ * @param nof_atoms Number of atoms
+ * @return Returns the parity index, or -1 if not found
+ */
+int get_parity_idx_from_canonical_atom_number( int canon_atom_num,
+                                               const AT_NUMB *nNumber,
+                                               int nof_atoms)
+{
+    if (nNumber == NULL) {
+        return -1;
+    }
+
+    if (nof_atoms <= 0) {
+        return -1;
+    }
+
+    for (int i = 0; i < nof_atoms; i++) {
+        if (nNumber[i] == canon_atom_num) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/**
+ * @brief Invert the parities for enhanced stereochemistry t- and m-layers
+ *
+ * @param inchi Pointer to INChI structure
+ * @param aux Pointer to INChI auxiliary data
+ * @param list_atoms Pointer to list of atom lists for abs, rel or rac information
+ * @param nof_lists Number of lists
+ * @param is_absolute Flag indicating if processing absolute stereochemistry
+ * @return Returns 0 on success, 1 if list_atoms is NULL
+ */
+int invert_parities(const INChI *inchi,
+                    const INChI_Aux *aux,
+                    int **list_atoms,
+                    int nof_lists,
+                    int is_absolute)
+{
+
+    // t - layer: parities
+    // 2 = +
+    // 1 = -
+
+    // m - layer
+    // -1 = m0
+    //  1 = m1
+
+    if (list_atoms == NULL) {
+        return 1;
+    }
+
+    if (nof_lists == 0)
+    {
+        return 1;
+    }
+
+    S_CHAR *t_parity = inchi->Stereo->t_parity;
+
+    for (int i = 0; i < nof_lists; i++) {
+        int nof_atoms = list_atoms[i][1];
+
+        AT_NUMB min_c_atom_num = (AT_NUMB)INT_MAX;
+        for (int j = 0; j < nof_atoms; j++) {
+            int orig_atom_num = list_atoms[i][2 + j];
+            AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
+            if (canon_atom_num < min_c_atom_num) {
+                min_c_atom_num = canon_atom_num;
+            }
+        }
+        if (min_c_atom_num == (AT_NUMB)INT_MAX) {
+            continue;
+        }
+        int min_c_parity_idx = get_parity_idx_from_canonical_atom_number(min_c_atom_num,
+                                                                         inchi->Stereo->nNumber,
+                                                                         inchi->Stereo->nNumberOfStereoCenters);
+
+        if (min_c_parity_idx == -1) {
+            continue;
+        }
+
+        int min_c_atom_parity = t_parity[min_c_parity_idx];
+        if (min_c_atom_parity == 2) {
+
+            for (int j = 0; j < nof_atoms; j++) {
+                int orig_atom_num = list_atoms[i][2 + j];
+                AT_NUMB canon_atom_num = (AT_NUMB)get_canonical_atom_number(aux, orig_atom_num);
+                int parity_idx = get_parity_idx_from_canonical_atom_number(canon_atom_num,
+                                                                            inchi->Stereo->nNumber,
+                                                                            inchi->Stereo->nNumberOfStereoCenters);
+
+                if (parity_idx == -1) {
+                    continue;
+                }
+
+                if (t_parity[parity_idx] == 2) {
+                    t_parity[parity_idx] = 1;
+                } else if(t_parity[parity_idx] == 1) {
+                    t_parity[parity_idx] = 2;
+                }
+            }
+
+            if (is_absolute) {
+                inchi->Stereo->nCompInv2Abs = -1; //m1
+            }
+        }
+    }
+    return 0;
+}
+
+/**
+ * @brief Set the enhanced stereochemistry information for t- and m-layers
+ *
+ * @param orig_inp_data Pointer to original input atom data
+ * @param inchi Pointer to INChI structure
+ * @param aux Pointer to INChI auxiliary data
+ * @return Retruns 1 if not V3000, otherwise 0
+ */
+int set_EnhancedStereo_t_m_layers( const ORIG_ATOM_DATA *orig_inp_data,
+                                   const INChI *inchi,
+                                   const INChI_Aux *aux)
+{
+    int ret = 0;
+
+    if (!orig_inp_data->v3000)
+    {
+        return 1;
+    }
+
+    if (inchi == NULL || aux == NULL)
+    {
+        return 1;
+    }
+
+    if (inchi->Stereo == NULL ||
+        inchi->Stereo->t_parity == NULL ||
+        inchi->Stereo->nNumber == NULL ||
+        inchi->Stereo->nNumberOfStereoCenters <= 0) {
+        return 1;
+    }
+
+    if (aux->nOrigAtNosInCanonOrd == NULL ||
+        aux->nNumberOfAtoms <= 0) {
+        return 1;
+    }
+
+    int ret_abs = invert_parities(inchi, aux, orig_inp_data->v3000->lists_steabs, orig_inp_data->v3000->n_steabs, 1);
+    int ret_rac = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterac, orig_inp_data->v3000->n_sterac, 0);
+    int ret_rel = invert_parities(inchi, aux, orig_inp_data->v3000->lists_sterel, orig_inp_data->v3000->n_sterel, 0);
+
+    if ((orig_inp_data->v3000->n_steabs == 0) &&
+        (orig_inp_data->v3000->n_sterel > 0 ||
+         orig_inp_data->v3000->n_sterac)) {
+        inchi->Stereo->nCompInv2Abs = 1; //m0
+    }
 
     return ret;
 }

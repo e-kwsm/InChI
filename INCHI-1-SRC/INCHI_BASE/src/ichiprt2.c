@@ -471,8 +471,64 @@ int MakeMult( int mult,
     return 0;
 }
 
+/**
+ * @brief Adds the number to the string buffer.
+ *
+ * @param number Input number to be added
+ * @param szTailingDelim Pointer to the trailing delimiter string
+ * @param buf Pointer to the output string buffer
+ * @param nCtMode Mode flag for string representation
+ * @param bOverflow Pointer to overflow flag
+ * @return Returns the number of characters added to the buffer
+ */
+int MakeNumber_EnhStereo( int number,
+                          const char       *szTailingDelim,
+                          INCHI_IOS_STRING *buf,
+                          int              nCtMode,
+                          int              *bOverflow )
+{
+    char szValue[2048];
+    int  len = 0;
+    int len_delim;
+    int n;
+
+    if (*bOverflow)
+    {
+        return 0;
+    }
+    if (nCtMode & CT_MODE_ABC_NUMBERS)
+    {
+        len += MakeAbcNumber( szValue, ( int )sizeof( szValue ), NULL, number );
+    }
+    else
+    {
+        len += MakeDecNumber( szValue, ( int )sizeof( szValue ), NULL, number );
+    }
+    len_delim = (int) strlen( szTailingDelim );
+
+    if (len + len_delim < ( int )sizeof( szValue ))
+    {
+        strcpy(szValue + len, szTailingDelim);
+        n = inchi_strbuf_printf( buf, "%s", szValue );
+        if (-1 == n) *bOverflow |= 1;
+        return n;
+    }
+
+    *bOverflow |= 1;
+
+    return 0;
+}
+
 
 /****************************************************************************/
+/**
+ * @brief Adds the delimiter to the string buffer if it is not empty and there is no overflow.
+ *
+ * @param szTailingDelim Pointer to the trailing delimiter string
+ * @param buf Pointer to the output string buffer
+ * @param bOverflow Pointer to overflow flag
+ * @return Returns the number of characters added to the buffer, or 0 if the delimiter is empty or there is an overflow
+ */
 int MakeDelim( const char       *szTailingDelim,
                INCHI_IOS_STRING *buf,
                int              *bOverflow )
@@ -1464,7 +1520,7 @@ int MakeCRVString( ORIG_INFO        *OrigInfo,
                 }
                 /* radical */
                 if (OrigInfo[k].cRadical)
-                {                            
+                {
                     if (len >= 2047) /* djb-rwth: fixing coverity ID #499515 */
                     {
                         len = 2047;
@@ -2116,6 +2172,268 @@ int MakeStereoString( AT_NUMB          *at1,
     return nLen;
 }
 
+/**
+ * @brief Compares two integers for qsort.
+ *
+ * @param a First integer pointer.
+ * @param b Second integer pointer.
+ * @return Returns negative, zero, or positive value based on comparison.
+ */
+int compare_ints(const void *a, const void *b) {
+    int arg1 = *(const int *)a;
+    int arg2 = *(const int *)b;
+    return (arg1 > arg2) - (arg1 < arg2);
+}
+
+/**
+ * @brief Compares the third value of two integer arrays for qsort. Used to sort enhanced stereochemistry groups based on the canonical atom number of the first atom in the group.
+ *
+ * @param a First integer array pointer.
+ * @param b Second integer array pointer.
+ * @return Returns negative, zero, or positive value based on comparison.
+ */
+int compare_third_value(const void *a, const void *b) {
+    const int *arr1 = *(const int **)a;
+    const int *arr2 = *(const int **)b;
+    return arr1[2] - arr2[2];
+}
+
+/**
+ * @brief Creates the enhanced stereochemistry string for the s - layer.
+ *
+ * @param pAux Pointer to the INCHI_AUX structure.
+ * @param conf_stereo_string Pointer to the configuration stereochemistry string (abs, rel, rac).
+ * @param enh_stereo Pointer to list of enhanced stereochemistry groups.
+ * @param nof_stereo_groups Number of enhanced stereochemistry groups.
+ * @param strbuf Pointer to the output string buffer.
+ * @param nCtMode Mode flag for string representation.
+ * @param bOverflow Pointer to overflow flag.
+ * @return Returns the length of the created string.
+ */
+int MakeEnhStereoString( INChI_Aux        *pAux,
+                         INCHI_IOS_STRING *strbuf,
+                         const char*      conf_stereo_string,
+                         int              **enh_stereo,
+                         int              nof_stereo_groups,
+                         int              nCtMode,
+                         int              *bOverflow )
+{
+    int tot_len = 0;
+    int count_added = 0;
+
+    if (pAux == NULL) {
+        return 0;
+    }
+
+    if (enh_stereo == NULL) {
+        return 0;
+    }
+
+    if (nof_stereo_groups < 1) {
+        return 0;
+    }
+
+    tot_len += MakeDelim( conf_stereo_string, strbuf, bOverflow );
+
+    int **enh_stereo_canon = (int**)inchi_calloc(nof_stereo_groups, sizeof(int*));
+
+    // Converts the original atom numbers in the enhanced stereochemistry groups to canonical atom numbers
+    // and sorts the atoms within each group based on their canonical atom numbers. This ensures that the order of
+    // atoms in the string representation is consistent and does not depend on the order of atoms in the input data.
+    // enh_stereo_canon is a 2D array where each row corresponds to an enhanced stereochemistry group. The first element
+    // of each row (index 0) stores the number of atoms in the group, the second element (index 1) stores the count of found
+    // atoms, and the remaining elements (starting from index 2) store the canonical atom numbers of the atoms in the group.
+    for (int i = 0; i < nof_stereo_groups; i++) {
+        const int *atom_numbers = &enh_stereo[i][2];
+        int count_found_atoms = 0;
+        int nof_atoms = enh_stereo[i][1];
+
+        enh_stereo_canon[i] = (int*)inchi_calloc(nof_atoms + 2, sizeof(int));
+        enh_stereo_canon[i][0] = nof_atoms;
+        for (int j = 0; j < nof_atoms; j++)  {
+
+            int orig_atom_num = atom_numbers[j];
+            int canon_atom_num = get_canonical_atom_number(pAux, orig_atom_num);
+            if (canon_atom_num != -1) {
+                count_found_atoms++;
+            } else {
+                canon_atom_num = INT_MAX;
+            }
+
+            enh_stereo_canon[i][j + 2] = canon_atom_num;
+        }
+        enh_stereo_canon[i][1] = count_found_atoms;
+
+        if (nof_atoms > 1) {
+            qsort(&enh_stereo_canon[i][2], nof_atoms, sizeof(int), compare_ints);
+        }
+    }
+
+    // Sorts the enhanced stereochemistry groups based on the canonical atom number of the first atom in the group.
+    // This ensures that the groups are always in a consistent order in the string representation, regardless of the
+    // order they were added to the input data (e.g. AND1, AND2, ... or OR1, OR2, ...).
+    qsort(enh_stereo_canon, nof_stereo_groups, sizeof(int*), compare_third_value);
+
+    // Creates the string for the stereo group based on the canonical atom numbers of the atoms in the group. If no
+    // atoms were found for the group, it will not be added to the string.
+    for (int i = 0; i < nof_stereo_groups; i++) {
+        int nof_atoms = enh_stereo_canon[i][0];
+        int nof_found_atoms = enh_stereo_canon[i][1];
+
+        if (nof_found_atoms > 0) {
+            tot_len += MakeDelim( "(", strbuf, bOverflow );
+            for (int j = 0; j < nof_found_atoms; j++)  {
+                tot_len += MakeNumber_EnhStereo( enh_stereo_canon[i][j + 2], "", strbuf, nCtMode, bOverflow );
+                count_added++;
+
+                if ((j + 1) < nof_found_atoms) {
+                    tot_len += MakeDelim( ",", strbuf, bOverflow );
+                }
+            }
+            tot_len += MakeDelim( ")", strbuf, bOverflow );
+        }
+    }
+
+    for (int i = 0; i < nof_stereo_groups; i++) {
+        inchi_free(enh_stereo_canon[i]);
+    }
+    inchi_free(enh_stereo_canon);
+
+    // Removes the last value for the stereo group (1,2,3) if no atoms were added to the string
+    if (count_added == 0) {
+        if (strbuf && strbuf->nUsedLength > 0) {
+            strbuf->nUsedLength--;
+            strbuf->pStr[strbuf->nUsedLength] = '\0';
+        }
+
+        tot_len = tot_len - 1;
+    }
+
+    return tot_len;
+}
+
+/**
+ * @brief Creates the string for the s - layer based on the enhanced stereochemistry information.
+ *
+ * @param orig_inp_data Pointer to the original atom data.
+ * @param pINChISort Pointer to the INCHI_SORT structure.
+ * @param bOutType Output type flag.
+ * @param num_components Number of components in the molecule.
+ * @param strbuf Pointer to the output string buffer.
+ * @param nCtMode Mode flag for string representation.
+ * @param bOverflow Pointer to overflow flag.
+ * @return Returns the length of the created string.
+ */
+int MakeSlayerString( ORIG_ATOM_DATA   *orig_inp_data,
+                      INCHI_SORT       *pINChISort,
+                      INCHI_IOS_STRING *strbuf,
+                      int              bOutType,
+                      int              num_components,
+                      int              nCtMode,
+                      int              *bOverflow )
+{
+
+    int tot_len = 0;
+    int          ii;
+
+    const char* x_abs = "1";
+    const char* x_rel = "2";
+    const char* x_rac = "3";
+
+    const INCHI_SORT   *is = NULL;
+    const INCHI_SORT  *is0 = pINChISort;
+
+    // INChI        *pINChI = NULL;
+    INChI_Aux    *pAux = NULL;
+
+    char **dictionary = (char**)inchi_calloc(ENH_STEREO_DICT_SIZE, sizeof(char*));
+    int *counts = (int*)inchi_calloc(ENH_STEREO_DICT_SIZE, sizeof(int));
+
+    for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
+        dictionary[i] = NULL;
+        counts[i] = 0;
+    }
+
+    INCHI_IOS_STRING tmpbuf  = {0};
+
+    for (int cur_c = 0; !*bOverflow && cur_c < num_components; cur_c++)
+    {
+
+        is = is0 + cur_c;
+        // pINChI = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI[ii] : NULL;
+        pAux = ( 0 <= ( ii = GET_II( bOutType, is ) ) ) ? is->pINChI_Aux[ii] : NULL;
+
+        inchi_strbuf_init(&tmpbuf, INCHI_STRBUF_INITIAL_SIZE, INCHI_STRBUF_SIZE_INCREMENT);
+
+        // s1
+        tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
+                                        x_abs,
+                                        orig_inp_data->v3000->lists_steabs,
+                                        orig_inp_data->v3000->n_steabs,
+                                        nCtMode,
+                                        bOverflow);
+
+        // s2
+        tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
+                                        x_rel,
+                                        orig_inp_data->v3000->lists_sterel,
+                                        orig_inp_data->v3000->n_sterel,
+                                        nCtMode,
+                                        bOverflow);
+
+        // s3
+        tot_len += MakeEnhStereoString( pAux,
+                                        &tmpbuf,
+                                        x_rac,
+                                        orig_inp_data->v3000->lists_sterac,
+                                        orig_inp_data->v3000->n_sterac,
+                                        nCtMode,
+                                        bOverflow);
+
+        int found = 0;
+        for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
+            if (dictionary[i] && strcmp(tmpbuf.pStr, dictionary[i]) == 0) {
+                counts[i]++;
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
+                if (dictionary[i] == NULL) {
+                    dictionary[i] = strdup(tmpbuf.pStr);
+                    counts[i] = 1;
+                    break;
+                }
+            }
+        }
+        inchi_strbuf_close(&tmpbuf);
+    }
+
+    // String deduplication based on dictionary and counts
+    int count = 0;
+    for (int i = 0; i < ENH_STEREO_DICT_SIZE; i++) {
+        if (dictionary[i]) {
+            if (count > 0) {
+                tot_len += MakeDelim( ";", strbuf, bOverflow );
+            }
+            if (counts[i] > 1) {
+                tot_len = inchi_strbuf_printf(strbuf, "%d*%s", counts[i], dictionary[i]);
+            } else {
+                tot_len = inchi_strbuf_printf(strbuf, "%s", dictionary[i]);
+            }
+            inchi_free(dictionary[i]);
+            count++;
+        }
+    }
+
+    inchi_free(dictionary);
+    inchi_free(counts);
+
+    return tot_len;
+}
 
 #ifdef ALPHA_BASE
 #if ( ALPHA_BASE != 27 )

@@ -7,7 +7,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inpdef.h"
 }
 
-TEST(inpdef_testing, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
+TEST(test_inpdef, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
 {
 
     INCHI_IOSTREAM input_stream;
@@ -71,23 +71,6 @@ TEST(inpdef_testing, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
     inchi_ios_init(&input_stream, INCHI_IOS_TYPE_STRING, nullptr);
     inchi_ios_print_nodisplay(&input_stream, molblock);
 
-    // int ret = CreateOrigInpDataFromMolfile(
-    //     INCHI_IOSTREAM *inp_file,
-    //     ORIG_ATOM_DATA *orig_at_data,
-    //     int bMergeAllInputStructures,
-    //     int bGetOrigCoord,
-    //     int bDoNotAddH,
-    //     int treat_polymers,
-    //     int treat_NPZz,
-    //     const char *pSdfLabel,
-    //     char *pSdfValue,
-    //     unsigned long *lSdfId,
-    //     long *lMolfileNumber,
-    //     INCHI_MODE *pInpAtomFlags,
-    //     int *err,
-    //     char *pStrErr,
-    //     int bNoWarnings);
-
     ORIG_ATOM_DATA orig_at_data = {};
     int bMergeAllInputStructures = 0;
     int bGetOrigCoord = 0;
@@ -147,13 +130,13 @@ TEST(inpdef_testing, test_CreateOrigInpDataFromMolfile_v3000_sgroup)
 
     EXPECT_EQ(orig_at_data.v3000->n_sterel, 2);
 
-    // STEREL1 ATOMS=(2 12 13)
+    // STEREL1 ATOMS=(2 12 13) or1
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][0], 1);  // n from "STERELn" tag
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][1], 2);  // number of members in collection
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][2], 12); // member atom numbers
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[0][3], 13); // member atom numbers
 
-    // STEREL2 ATOMS=(1 14)
+    // STEREL2 ATOMS=(1 14) or2
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][0], 2);  // n from "STERELn" tag
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][1], 1);  // number of members in collection
     EXPECT_EQ(orig_at_data.v3000->lists_sterel[1][2], 14); // member atom numbers

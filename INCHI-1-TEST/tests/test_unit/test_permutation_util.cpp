@@ -8,7 +8,7 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/permutation_util.h"
 }
 
-TEST(permutation_util_testing, test_OrigAtData_Permute)
+TEST(test_permutation_util, test_OrigAtData_Permute)
 {
 
     // 1. Populate atom data
@@ -107,4 +107,11 @@ TEST(permutation_util_testing, test_OrigAtData_Permute)
 
     EXPECT_STREQ(molblock, output_file->s.pStr);
     EXPECT_STRNE(output_file->s.pStr, permuted_output_file->s.pStr);
+
+    inchi_ios_free_str(&input_stream);
+    inchi_ios_free_str(&output_stream);
+    inchi_ios_free_str(&permuted_output_stream);
+
+    FreeOrigAtData(&atom_data);
+    FreeOrigAtData(&permuted_atom_data);
 }

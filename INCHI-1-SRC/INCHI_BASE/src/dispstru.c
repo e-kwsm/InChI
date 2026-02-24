@@ -40,7 +40,7 @@
 
 /* Draw input atom -- Win32 specific */
 
-#include "../../../INCHI_BASE/src/mode.h"
+#include "mode.h"
 
 #ifndef COMPILE_ANSI_ONLY
 
@@ -347,13 +347,13 @@ BOOL TextOutVert( HDC     pDC,         /* handle to DC                      */
 
     GetTextMetrics( pDC, &TextMetric );
     dy = TextMetric.tmHeight;
-    
+
     for (i = 0, ret = 1; ret && i < cbString; nYStart += dy, i++)
     {
         char_width = GetOneCharInStringWidth( pDC, lpString + i );
         ret = TextOut( pDC, nXStart + ( cell_width - char_width ) / 2, nYStart, lpString + i, 1 );
     }
-    
+
     return ret;
 }
 
@@ -366,8 +366,8 @@ BOOL TextOutHoriz( HDC     pDC,        /* handle to DC                     */
                    int     cbString,   /* number of characters             */
                    int     cell_width )
 {
-    int dX = ( cell_width && cbString == 1 ) 
-                ? ( cell_width - GetOneCharInStringWidth( pDC, lpString ) ) / 2 
+    int dX = ( cell_width && cbString == 1 )
+                ? ( cell_width - GetOneCharInStringWidth( pDC, lpString ) ) / 2
                 : 0;
 
     return TextOut( pDC, nXStart + dX, nYStart, lpString, cbString );
@@ -663,7 +663,7 @@ int DrawBond( HDC      pDC,
     {
         DrawBondParity( pDC, x1, y1, x2, y2, b_parity );
     }
-    
+
     if (xCRU)
     {
         DrawBondCrossingCRU(pDC, x1, y1, x2, y2);
@@ -726,7 +726,7 @@ void DrawPenColorFilledPolygon( HDC pDC, const POINT *pnt, int num )
 
     ret = GetObject( penOld, sizeof( LogPen ), &LogPen );
     SelectObject( pDC, penOld );
-    
+
     /* do not need to delete stock object penNew */
     if (ret)
     {
@@ -829,7 +829,7 @@ int DrawBondStereo( HDC      pDC,
 
 
     POINT           pnt[4];
-    
+
     if (b_highlight)
     {
         hHighlightPen = CreatePen( PS_SOLID, nPenWidth, clrHighlight );
@@ -1012,27 +1012,27 @@ int DrawBondParity( HDC pDC,
         parity_mark = parity_mark0;
     }
 
-    if (parity_mark == BOND_MARK_ODD)  
+    if (parity_mark == BOND_MARK_ODD)
     {
-        p = "(-)"; 
+        p = "(-)";
     }
-    else if (parity_mark == BOND_MARK_EVEN)  
+    else if (parity_mark == BOND_MARK_EVEN)
     {
         p = "(+)"; /*" |"; */
     }
-    else if (parity_mark == BOND_MARK_UNDF)  
+    else if (parity_mark == BOND_MARK_UNDF)
     {
-        p = "(?)"; 
+        p = "(?)";
     }
-    else if (parity_mark == BOND_MARK_UNKN)  
+    else if (parity_mark == BOND_MARK_UNKN)
     {
-        p = "(u)"; 
+        p = "(u)";
     }
-    else if (parity_mark == BOND_MARK_ERR) 
+    else if (parity_mark == BOND_MARK_ERR)
     {
-        p = "(!)"; 
+        p = "(!)";
     }
-    else 
+    else
     {
         return 0;
     }
@@ -1084,7 +1084,7 @@ int DrawBondCrossingCRU(HDC pDC, int x1, int y1, int x2, int y2)
     char *p;
 
     p = " //"; /*"(+)"; */
-    
+
     if (abs(x2 - x1) > 10 * abs(y2 - y1))
     {
         /* almost horizontal bond; draw parity closer (1:2) to the right end */
@@ -1137,7 +1137,7 @@ int DrawBondNoStereo( HDC      pDC,
     COLORREF        clr = clrPen;
 
     switch (b_type)
-    {   
+    {
         /* c=center, l=left, r=right */
         case 0:
             c = 'D';
@@ -1240,8 +1240,8 @@ int DrawBondNoStereo( HDC      pDC,
         DrawLine( pDC, x1, y1, x2, y2 );
         hLongDashedPen = (HPEN) SelectObject( pDC, hSolidPen );
     }
-        
-    
+
+
 
     /* draw lines parallel to line between bonds */
     if (l || r)
@@ -1252,14 +1252,14 @@ int DrawBondNoStereo( HDC      pDC,
             bond_sep = hfont / 12.0;
             if (( x1 == x2 ) || ( y1 == y2 ))
             {
-                if (bond_sep < 1.0) 
+                if (bond_sep < 1.0)
                 {
                     bond_sep = 1.0;
                 }
             }
             else
             {
-                if (bond_sep < 2.0) 
+                if (bond_sep < 2.0)
                 {
                     bond_sep = 2.0;
                 }
@@ -1270,14 +1270,14 @@ int DrawBondNoStereo( HDC      pDC,
             bond_sep = hfont / 6.0;
             if (( x1 == x2 ) || ( y1 == y2 ))
             {
-                if (bond_sep < 2.0) 
+                if (bond_sep < 2.0)
                 {
                     bond_sep = 2.0;
                 }
             }
             else
             {
-                if (bond_sep < 4.0) 
+                if (bond_sep < 4.0)
                 {
                     bond_sep = 4.0;
                 }
@@ -1397,9 +1397,9 @@ int MyTextOutABC( const char *p, int iFst, int iLst, HDC pDC )
     {
         return 0;
     }
-    
+
     GetCurrentPositionEx( pDC, &pt );
-    
+
     if (GetCharABCWidths(   pDC,            /* handle to DC             */
                             (int) p[iFst],  /* first character in range */
                             (int) p[iFst],  /* last character in range  */
@@ -1411,7 +1411,7 @@ int MyTextOutABC( const char *p, int iFst, int iLst, HDC pDC )
     }
 
     TextOut( pDC, pt.x, pt.y, p + iFst, iLst - iFst + 1 );
-    
+
     if (GetCharABCWidths(   pDC,            /* handle to DC */
                             (int) p[iLst],  /* first character in range */
                             (int) p[iLst],  /* last character in range  */
@@ -1422,7 +1422,7 @@ int MyTextOutABC( const char *p, int iFst, int iLst, HDC pDC )
         pt.x -= abc.abcC;
         MoveToEx( pDC, pt.x, pt.y, NULL );
     }
-    
+
     return 1;
 }
 
@@ -1438,15 +1438,15 @@ int DrawColorString( HDC pDC,const char *st, int xs, int ys, int bHighlightTheAt
     COLORREF  NewBkColor=0;
     int       bWritingAtomStringColored = 0;
 
-    /* 
-    Draw the string character by character. 
-    For each character within the first part of the string 
-    make a decision if it is a subscript or a superscript 
-    The first part ends with '/'=start of the canonical number or '(' = start of the parity mark 
-    The superscript first character is ^ or + or - or . (. initiates double shift) 
-    The the superscript ends with not the first character and not a digit or the end of the first part 
-    The first character of a subscript (if it is not in the superscript) is a digit 
-    The subscript ends  a non-digit 
+    /*
+    Draw the string character by character.
+    For each character within the first part of the string
+    make a decision if it is a subscript or a superscript
+    The first part ends with '/'=start of the canonical number or '(' = start of the parity mark
+    The superscript first character is ^ or + or - or . (. initiates double shift)
+    The the superscript ends with not the first character and not a digit or the end of the first part
+    The first character of a subscript (if it is not in the superscript) is a digit
+    The subscript ends  a non-digit
     */
     const char *p = st;
     UINT uPrevTextAlign = SetTextAlign( pDC, TA_UPDATECP );
@@ -1672,11 +1672,11 @@ int DrawColorString( HDC pDC,const char *st, int xs, int ys, int bHighlightTheAt
 
 
 /****************************************************************************/
-int DrawPreparedString( HDC pDC, 
-                        char *st1, 
-                        int  shift, 
-                        int  x, 
-                        int  y, 
+int DrawPreparedString( HDC pDC,
+                        char *st1,
+                        int  shift,
+                        int  x,
+                        int  y,
                         int  bHighlightTheAtom )
 {
     DrawColorString( pDC, st1, x + shift, y - GetFontAscent( pDC ) / 2, bHighlightTheAtom );
@@ -1705,7 +1705,7 @@ int DrawString( HDC pDC, char *st1, int shift, int x, int y )
     ys = y - afont / 2;
 
     /* Single element */
-    if (strlen( st ) == 1) 
+    if (strlen( st ) == 1)
     {
         goto draw;
     }
@@ -1719,7 +1719,7 @@ int DrawString( HDC pDC, char *st1, int shift, int x, int y )
         start = MoveHydrogenAtomToTheLeft(st, start, 'D');
         start = MoveHydrogenAtomToTheLeft(st, start, 'H');
         /* determine the position */
-        if (( strlen( st ) == 2 ) && islower( st[1] )) 
+        if (( strlen( st ) == 2 ) && islower( st[1] ))
         {
             goto draw;
         }
@@ -1918,7 +1918,7 @@ void CalcTblParms( HDC            hMemoryDC,
         tp->tblRows = inchi_max( tp->tblRows, n );
     }
     if (tdp->nOrientation)
-    { 
+    {
         /* here are tp->tblCols columns and tp->tblRows rows. */
         tp->tblHeight = tp->thdrHeight + ( 2 * tp->tblRows + 2 )*tp->tcellHeight; /* empty lines above the header and around each cell */
         tp->thdrWidth = tp->tcellWidth = inchi_max( tp->tcellWidth, tp->thdrWidth );
@@ -1930,7 +1930,7 @@ void CalcTblParms( HDC            hMemoryDC,
         tp->ytblOffs = yoffs1;
     }
     else
-    {  
+    {
         /* Do not believe your eyes: here are tp->tblCols rows and tp->tblRows columns. */
         tp->thdrHeight = tp->tcellHeight = inchi_max( tp->thdrHeight, tp->tcellHeight );
         tp->tblWidth = tp->thdrWidth + ( 2 * tp->tblRows + 2 )*tp->tcellWidth;
@@ -1956,7 +1956,7 @@ int DrawTheTable( HDC            hDC,
     int dx = tp->tcellWidth / 2;
     int dy = tp->tcellHeight / 2;
     int x1, y1, x2, y2;
-    
+
     /* draw frame around the table */
     ret = Rectangle( hDC, tp->xtblOffs + dx + x_offs, tp->ytblOffs + dy + y_offs, tp->xtblOffs + tp->tblWidth - dx + x_offs, tp->ytblOffs + tp->tblHeight - dy + y_offs ); /* djb-rwth: removing redundant variable *//* djb-rwth: ignoring LLVM warning: variable used to store function return value */
 
@@ -1979,7 +1979,7 @@ int DrawTheTable( HDC            hDC,
         }
         DrawLine( hDC, x1 + x_offs, y1 + y_offs, x2 + x_offs, y2 + y_offs );
     }
-    
+
     /* draw lines between requested/Shown/Found types */
     for (i = 0; i < tp->tblRows; i++)
     {
@@ -2604,7 +2604,7 @@ int CreateInputStructPicture( HDC            hDC,
         /* Calculate requested/Shown/Found table sizes */
         /***********************************************/
         memset(&tp, 0, sizeof(tp)); /* djb-rwth: memset_s C11/Annex K variant? */
-        
+
 #ifdef TARGET_LIB_FOR_WINCHI
         bDrawTbl = 0;
 #else
@@ -2760,15 +2760,15 @@ int CreateInputStructPicture( HDC            hDC,
                 {
                     strcat(str, ":");
                 }
-                if (bTaut) 
+                if (bTaut)
                 {
                     strcat(str, " Mobile H");
                 }
-                if (bIso) 
+                if (bIso)
                 {
                     strcat(str, " Isotopic");
                 }
-                if (bSter) 
+                if (bSter)
                 {
                     strcat(str, " Stereo");
                 }
@@ -2776,7 +2776,7 @@ int CreateInputStructPicture( HDC            hDC,
             }
             if (pWinData->inf_at_data.szRemovedProtons[0])
             {
-                if (str[0]) 
+                if (str[0])
                     strcat( str, ";    " ); /* djb-rwth: function replaced with its safe C11 variant */
                 strcat(str, pWinData->inf_at_data.szRemovedProtons);
             }
@@ -3297,7 +3297,7 @@ int DisplayInputStructure( char          *szOutputString,
     UnregisterClass( szWindowClassName,    /* address of class name string */
                     hInstance             /* handle of application instance */
     );
-    
+
     /* Save window size and position */
     if (WinData.rc.bottom > WinData.rc.top && WinData.rc.right > WinData.rc.left)
     {
@@ -3306,12 +3306,12 @@ int DisplayInputStructure( char          *szOutputString,
         dp->pdp->rcPict[2] = WinData.rc.right - WinData.rc.left;
         dp->pdp->rcPict[3] = WinData.rc.bottom - WinData.rc.top;
     }
-    
+
     if (WinData.bEsc)
     {
         dp->rdp.bEsc = 1;
     }
-    
+
     return WinData.bEsc ? 27 : 1;
 }
 #endif

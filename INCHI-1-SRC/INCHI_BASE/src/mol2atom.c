@@ -1443,6 +1443,7 @@ void FreeExtOrigAtData(OAD_Polymer *pd, OAD_V3000 *v3k)
 }
 
 /****************************************************************************/
+
 int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                                       OAD_Polymer **ppPolymer,
                                       OAD_V3000 **ppV3000,

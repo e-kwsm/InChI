@@ -189,6 +189,7 @@ typedef struct tagInputParms {
     int             bMolecularInorganics;       /* (@nnuk : Nauman Ullah Khan) :: Varaible for Molecular Inorganics parameter */
     int             bMolecularInorganicsReconnectedInChI;  /* (@nnuk : Nauman Ullah Khan) :: Custom flag to indicate reconnected InChI requirement */
 
+    int             bEnhancedStereo;
 
     /* */
     INCHI_MODE      bTautFlags;
