@@ -242,7 +242,7 @@ typedef struct tagProtonRemovalMaskAndType
 #define TREE_IS_S_REACHABLE(X) (Tree[X] >= TREE_IN_2BLOSS)
 #define TREE_IS_ON_SCANQ TREE_IS_S_REACHABLE
 /* #define TREE_IS_ON_SCANQ(X)    (Tree[X] != TREE_NOT_IN_M) */
-#define TREE_MARK(X, MARK)           do{ if( Tree[X] < MARK ) Tree[X]=MARK; }while(0)
+#define TREE_MARK(X, MARK)           do{ if( Tree[X] < (MARK) ) Tree[X]=MARK; }while(0)
 
 
 /*****************************************************************************

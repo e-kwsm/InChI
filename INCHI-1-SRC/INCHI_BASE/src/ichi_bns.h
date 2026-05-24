@@ -115,8 +115,8 @@ typedef enum tagAltPathConst {
 #define Vertex_s 0
 #define Vertex_t 1
 
-#define NO_VERTEX    -2
-#define BLOSSOM_BASE -1
+#define NO_VERTEX    (-2)
+#define BLOSSOM_BASE (-1)
 
 #define ADD_CAPACITY_RADICAL        1   /* add capacity to radical */
 

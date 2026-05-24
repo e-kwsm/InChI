@@ -50,7 +50,7 @@
 
 #define SB_PARITY_MASK  0x07
 
-#define SB_PARITY_1(X) (X & SB_PARITY_MASK)  /* refers to connected structure */
+#define SB_PARITY_1(X) ((X) & SB_PARITY_MASK)  /* refers to connected structure */
 
 #define SB_PARITY_2(X) (((X) >> SB_PARITY_SHFT) & SB_PARITY_MASK) /* refers to connected structure */
 
@@ -506,7 +506,7 @@ char *LoadLine( INCHI_IOSTREAM *inp_file,
 #define NUM_ISO_Hk(AT,I,K)  AT[I].num_iso_H[K]
 #define inchi_NUMH2(AT,N)   NUMH(AT,N)
 #define AT_NUM_BONDS(AT)    (AT).valence
-#define IS_METAL_ATOM(AT,I) is_el_a_metal( AT[I].el_number )
+#define IS_METAL_ATOM(AT,I) is_el_a_metal( (AT)[I].el_number )
 
 
 /****************************************************************************/

@@ -2936,7 +2936,7 @@ int MarkSaltChargeGroups2( CANON_GLOBALS *pCG,
 #define ALT_PATH_FOUND    (MAX_ATOMS+1)
 #define NO_ENDPOINT       (MAX_ATOMS+2)  /* the two defines must be different */
 #define DISABLE_CANDIDATE 10
-#define cPAIR(a,b) cPair[a+b*nNumLeftCandidates]
+#define cPAIR(a,b) cPair[(a)+(b)*nNumLeftCandidates]
 #define ACCEPTOR_PAIR 1
 #define DONOR_PAIR    2
 

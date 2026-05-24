@@ -544,7 +544,7 @@ int is_element_a_metal( char szEl[] )
 
 /*****************************************************************************/
 
-#define inchi_NUMH2(AT,CUR_AT) ((AT[CUR_AT].num_iso_H[0]>0?AT[CUR_AT].num_iso_H[0]:0) +AT[CUR_AT].num_iso_H[1]+AT[CUR_AT].num_iso_H[2]+AT[CUR_AT].num_iso_H[3])
+#define inchi_NUMH2(AT,CUR_AT) (((AT)[CUR_AT].num_iso_H[0]>0?(AT)[CUR_AT].num_iso_H[0]:0) +(AT)[CUR_AT].num_iso_H[1]+(AT)[CUR_AT].num_iso_H[2]+(AT)[CUR_AT].num_iso_H[3])
 
 #define AT_NUM_BONDS(AT)    (AT).num_bonds
 #define ATOM_NUMBER         AT_NUM
@@ -552,8 +552,8 @@ int is_element_a_metal( char szEl[] )
 #define Create_Atom         CreateInchi_Atom
 #define AT_BONDS_VAL(AT,I)  AT[I].num_iso_H[0]
 #define ISOLATED_ATOM       (-15)
-#define NUM_ISO_Hk(AT,I,K)  AT[I].num_iso_H[K+1]
-#define IS_METAL_ATOM(AT,I) is_element_a_metal( AT[I].elname )
+#define NUM_ISO_Hk(AT,I,K)  AT[I].num_iso_H[(K)+1]
+#define IS_METAL_ATOM(AT,I) is_element_a_metal( (AT)[I].elname )
 
 /*****************************************************************************/
 

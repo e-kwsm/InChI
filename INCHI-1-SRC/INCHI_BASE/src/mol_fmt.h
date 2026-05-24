@@ -75,7 +75,7 @@
 #define MOL_FMT_M_CONN_EU 3
 
 /* V3000 specific constants */
-#define MOL_FMT_V3000_STENON -1
+#define MOL_FMT_V3000_STENON (-1)
 #define MOL_FMT_V3000_STEABS 1
 #define MOL_FMT_V3000_STEREL 2
 #define MOL_FMT_V3000_STERAC 3
