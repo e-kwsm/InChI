@@ -137,7 +137,7 @@ int el_number_in_internal_ref_table( const char* elname )
     int i;
     const char* p;
 
-    for (i = 0; ( p = ElData[i].szElName )[0] && strcmp( p, elname ); i++)
+    for (i = 0; ( p = ElData[i].szElName )[0] && strcmp( p, elname ) != 0; i++)
     {
         ;
     }

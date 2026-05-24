@@ -598,7 +598,7 @@ int SetHillFormFromInChI(InpInChI* OneInput)
                 }
                 szHillFormulaOld = pINChI->szHillFormula;
                 pINChI->szHillFormula = AllocateAndFillHillFormula(pINChI);
-                num_diff += !pINChI->szHillFormula || !pINChI->szHillFormula[0] || strcmp(pINChI->szHillFormula, szHillFormulaOld);
+                num_diff += !pINChI->szHillFormula || !pINChI->szHillFormula[0] || strcmp(pINChI->szHillFormula, szHillFormulaOld) != 0;
                 inchi_free(szHillFormulaOld);
             }
         }
@@ -3868,7 +3868,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "N:", 2))
+        if (memcmp(str, "N:", 2) != 0)
         {
             return 0;
         }
@@ -3878,7 +3878,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "F:", 2))
+        if (memcmp(str, "F:", 2) != 0)
         {
             return 0;
         }
@@ -3888,7 +3888,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "I:", 2))
+        if (memcmp(str, "I:", 2) != 0)
         {
             return 0;
         }
@@ -3899,7 +3899,7 @@ int ParseAuxSegmentNumbers(const char* str,               /* AuxInfo string     
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "I:", 2))
+        if (memcmp(str, "I:", 2) != 0)
         {
             return 0;
         }
@@ -4164,7 +4164,7 @@ int ParseAuxSegmentAtomEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "E:", 2))
+        if (memcmp(str, "E:", 2) != 0)
         {
             return 0;
         }
@@ -4174,7 +4174,7 @@ int ParseAuxSegmentAtomEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "E:", 2))
+        if (memcmp(str, "E:", 2) != 0)
         {
             return 0;
         }
@@ -4184,7 +4184,7 @@ int ParseAuxSegmentAtomEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "E:", 2))
+        if (memcmp(str, "E:", 2) != 0)
         {
             return 0;
         }
@@ -4194,7 +4194,7 @@ int ParseAuxSegmentAtomEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "E:", 2))
+        if (memcmp(str, "E:", 2) != 0)
         {
             return 0;
         }
@@ -4223,7 +4223,7 @@ int ParseAuxSegmentGroupEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "gE:", 3))
+        if (memcmp(str, "gE:", 3) != 0)
         {
             return 0;
         }
@@ -4233,7 +4233,7 @@ int ParseAuxSegmentGroupEqu(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "gE:", 3))
+        if (memcmp(str, "gE:", 3) != 0)
         {
             return 0;
         }
@@ -4262,7 +4262,7 @@ int ParseAuxSegmentSp3Inv(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "it:", 3))
+        if (memcmp(str, "it:", 3) != 0)
         {
             return 0;
         }
@@ -4272,7 +4272,7 @@ int ParseAuxSegmentSp3Inv(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "it:", 3))
+        if (memcmp(str, "it:", 3) != 0)
         {
             return 0;
         }
@@ -4282,7 +4282,7 @@ int ParseAuxSegmentSp3Inv(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "it:", 3))
+        if (memcmp(str, "it:", 3) != 0)
         {
             return 0;
         }
@@ -4292,7 +4292,7 @@ int ParseAuxSegmentSp3Inv(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "it:", 3))
+        if (memcmp(str, "it:", 3) != 0)
         {
             return 0;
         }
@@ -4322,7 +4322,7 @@ int ParseAuxSegmentSp3InvNumbers(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "iN:", 3))
+        if (memcmp(str, "iN:", 3) != 0)
         {
             return 0;
         }
@@ -4332,7 +4332,7 @@ int ParseAuxSegmentSp3InvNumbers(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "iN:", 3))
+        if (memcmp(str, "iN:", 3) != 0)
         {
             return 0;
         }
@@ -4342,7 +4342,7 @@ int ParseAuxSegmentSp3InvNumbers(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "iN:", 3))
+        if (memcmp(str, "iN:", 3) != 0)
         {
             return 0;
         }
@@ -4352,7 +4352,7 @@ int ParseAuxSegmentSp3InvNumbers(const char* str,
         {
             return RI_ERR_PROGR;
         }
-        if (memcmp(str, "iN:", 3))
+        if (memcmp(str, "iN:", 3) != 0)
         {
             return 0;
         }
@@ -4373,7 +4373,7 @@ int ParseAuxSegmentReverseCRV(const char* str, int state)
     switch (state)
     {
     case AST_REVERSE_INFO_CRV:
-        if (memcmp(str, "CRV:", 4))
+        if (memcmp(str, "CRV:", 4) != 0)
         {
             return 0;
         }
@@ -4394,7 +4394,7 @@ int ParseAuxSegmentReverseAtoms(const char* str, int state)
     switch (state)
     {
     case AST_REVERSE_INFO_ATOMS:
-        if (memcmp(str, "rA:", 3))
+        if (memcmp(str, "rA:", 3) != 0)
         {
             return 0;
         }
@@ -4415,7 +4415,7 @@ int ParseAuxSegmentReverseBonds(const char* str, int state)
     switch (state)
     {
     case AST_REVERSE_INFO_BONDS:
-        if (memcmp(str, "rB:", 3))
+        if (memcmp(str, "rB:", 3) != 0)
         {
             return 0;
         }
@@ -4440,7 +4440,7 @@ int ParseAuxSegmentReverseXYZ(const char* str,
     switch (state)
     {
     case AST_REVERSE_INFO_XYZ:
-        if (memcmp(str, "rC:", 3))
+        if (memcmp(str, "rC:", 3) != 0)
         {
             return 0;
         }
@@ -4725,7 +4725,7 @@ int ReadInChICoord(INCHI_IOSTREAM* pInp,
         ret = RI_ERR_PROGR;
         goto exit_error;
     }
-    if (memcmp(pLine->str, "AuxInfo=", 8))
+    if (memcmp(pLine->str, "AuxInfo=", 8) != 0)
     {
         *pState = -1;
         return c;
@@ -8442,7 +8442,7 @@ int ParseSegmentMobileH(const char* str,
                     if (pInChI[iComponent + i].nAtom && len2)
                     {
                         /* check */
-                        if (memcmp(pInChI[iComponent + i].nAtom, pAltInChI[iComponent + i].nAtom, len2 * sizeof(pInChI[0].nAtom[0])))
+                        if (memcmp(pInChI[iComponent + i].nAtom, pAltInChI[iComponent + i].nAtom, len2 * sizeof(pInChI[0].nAtom[0])) != 0)
                         {
                             ret = RI_ERR_SYNTAX; /* syntax error */
                             goto exit_function;

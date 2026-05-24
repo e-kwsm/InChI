@@ -2127,7 +2127,7 @@ int CompareAllDisconnectedOrigInchiToRevInChI(StrFromINChI* pStruct[INCHI_NUM][T
                         sizeof(nNumRemovedIsotopicH1));
                 }
             compare_iso_H:
-                if (memcmp(nNumRemovedIsotopicH1, nNumRemovedIsotopicH2, sizeof(nNumRemovedIsotopicH1)))
+                if (memcmp(nNumRemovedIsotopicH1, nNumRemovedIsotopicH2, sizeof(nNumRemovedIsotopicH1)) != 0)
                 {
                     CompareInchiFlags[TAUT_YES] |= INCHIDIFF_REM_ISO_H;
                 }
@@ -2144,7 +2144,7 @@ int CompareAllDisconnectedOrigInchiToRevInChI(StrFromINChI* pStruct[INCHI_NUM][T
         }
         if (memcmp(pOneInput->nNumProtons[INCHI_BAS][TAUT_YES].nNumRemovedIsotopicH,
             nNumRemovedProtons_R.nNumRemovedIsotopicH,
-            sizeof(nNumRemovedProtons_R.nNumRemovedIsotopicH)))
+            sizeof(nNumRemovedProtons_R.nNumRemovedIsotopicH)) != 0)
         {
             CompareInchiFlags[TAUT_YES] |= INCHIDIFF_REM_ISO_H;
         }
@@ -2179,7 +2179,7 @@ int CompareAllDisconnectedOrigInchiToRevInChI(StrFromINChI* pStruct[INCHI_NUM][T
     }
     if (memcmp(nNumRemovedProtons_R.nNumRemovedIsotopicH,
         nNumRemovedProtons_D.nNumRemovedIsotopicH,
-        sizeof(nNumRemovedProtons_D.nNumRemovedIsotopicH)))
+        sizeof(nNumRemovedProtons_D.nNumRemovedIsotopicH)) != 0)
     {
         CompareInchiFlags[TAUT_YES] |= INCHIDIFF_REM_ISO_H;
     }
@@ -2377,8 +2377,8 @@ INCHI_MODE CompareReversedStereoINChI3(INChI_Stereo* s1,
 
     if ((nNumSc1 || nNumSc2) &&
         (nNumSc1 != nNumSc2 ||
-            memcmp(s1->nNumber, s2->nNumber, nNumSc1 * sizeof(s1->nNumber[0])) ||
-            memcmp(s1->t_parity, s2->t_parity, nNumSc1 * sizeof(s1->t_parity[0])))) /* djb-rwth: condition corrected */
+            memcmp(s1->nNumber, s2->nNumber, nNumSc1 * sizeof(s1->nNumber[0])) != 0 ||
+            memcmp(s1->t_parity, s2->t_parity, nNumSc1 * sizeof(s1->t_parity[0])) != 0)) /* djb-rwth: condition corrected */
     {
 
         num_dif = num_extra_undf = num_miss_undf = num_in1_only = num_in2_only = 0; /* djb-rwth: removing redundant code */
@@ -2508,9 +2508,9 @@ INCHI_MODE CompareReversedStereoINChI3(INChI_Stereo* s1,
 
     if ((nNumSb1 || nNumSb2) &&
         (nNumSb1 != nNumSb2 ||
-            memcmp(s1->nBondAtom1, s2->nBondAtom1, nNumSb1 * sizeof(s1->nBondAtom1[0])) ||
-            memcmp(s1->nBondAtom2, s2->nBondAtom2, nNumSb1 * sizeof(s1->nBondAtom2[0])) ||
-            memcmp(s1->b_parity, s2->b_parity, nNumSb1 * sizeof(s1->b_parity[0]))))
+            memcmp(s1->nBondAtom1, s2->nBondAtom1, nNumSb1 * sizeof(s1->nBondAtom1[0])) != 0 ||
+            memcmp(s1->nBondAtom2, s2->nBondAtom2, nNumSb1 * sizeof(s1->nBondAtom2[0])) != 0 ||
+            memcmp(s1->b_parity, s2->b_parity, nNumSb1 * sizeof(s1->b_parity[0])) != 0))
     {
 
         num_dif = num_extra_undf = num_miss_undf = num_in1_only = num_in2_only = 0; /* djb-rwth: removing redundant code */
@@ -2688,13 +2688,13 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
     }
     if (i1->nNumberOfAtoms > 0)
     {
-        if (memcmp(i1->nAtom, i2->nAtom, i1->nNumberOfAtoms * sizeof(i1->nAtom[0])))
+        if (memcmp(i1->nAtom, i2->nAtom, i1->nNumberOfAtoms * sizeof(i1->nAtom[0])) != 0)
         {
             ret |= INCHIDIFF_ATOMS;
             goto exit_function;
         }
         /* INCHIDIFF_NON_TAUT_H,  INCHIDIFF_MORE_FH, INCHIDIFF_LESS_FH */
-        if (memcmp(i1->nNum_H, i2->nNum_H, i1->nNumberOfAtoms * sizeof(i1->nNum_H[0])))
+        if (memcmp(i1->nNum_H, i2->nNum_H, i1->nNumberOfAtoms * sizeof(i1->nNum_H[0])) != 0)
         {
             ret |= INCHIDIFF_POSITION_H;
             for (j1 = 0; j1 < i1->nNumberOfAtoms; j1++)
@@ -2770,7 +2770,7 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
                 else
                 {
                     if (bHasFixedH1 && bHasFixedH2 &&
-                        memcmp(i1->nNum_H_fixed, i2->nNum_H_fixed, i1->nNumberOfAtoms * sizeof(i1->nNum_H_fixed[0])))
+                        memcmp(i1->nNum_H_fixed, i2->nNum_H_fixed, i1->nNumberOfAtoms * sizeof(i1->nNum_H_fixed[0])) != 0)
                     {
                         for (i = j1 = j2 = 0; i < i1->nNumberOfAtoms; i++)
                         {
@@ -2830,7 +2830,7 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
     }
     else
     {
-        if (i1->lenConnTable > 0 && memcmp(i1->nConnTable, i2->nConnTable, i1->lenConnTable * sizeof(i1->nConnTable[0])))
+        if (i1->lenConnTable > 0 && memcmp(i1->nConnTable, i2->nConnTable, i1->lenConnTable * sizeof(i1->nConnTable[0])) != 0)
         {
             ret |= INCHIDIFF_CON_TBL;
             goto exit_function;
@@ -3005,7 +3005,7 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
 
     if ((i1->lenTautomer > 1 && i2->lenTautomer > 1) &&
         (i1->lenTautomer != i2->lenTautomer ||
-            memcmp(i1->nTautomer, i2->nTautomer, i1->lenTautomer * sizeof(i1->nTautomer[0]))))
+            memcmp(i1->nTautomer, i2->nTautomer, i1->lenTautomer * sizeof(i1->nTautomer[0])) != 0))
         ret |= INCHIDIFF_TG;
 
     if (i1->nNumberOfIsotopicAtoms != i2->nNumberOfIsotopicAtoms)
@@ -3014,7 +3014,7 @@ INCHI_MODE CompareReversedINChI3(INChI* i1 /* InChI from reversed struct */,
     }
     else
     {
-        if (i1->nNumberOfIsotopicAtoms > 0 && memcmp(i1->IsotopicAtom, i2->IsotopicAtom, i1->nNumberOfIsotopicAtoms * sizeof(i1->IsotopicAtom[0])))
+        if (i1->nNumberOfIsotopicAtoms > 0 && memcmp(i1->IsotopicAtom, i2->IsotopicAtom, i1->nNumberOfIsotopicAtoms * sizeof(i1->IsotopicAtom[0])) != 0)
         {
             ret |= INCHIDIFF_ISO_AT;
         }

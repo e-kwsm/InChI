@@ -230,7 +230,7 @@ char *inchi_fgetsLf_V3000(char *line, INCHI_IOSTREAM *inp_stream)
         return NULL;
     }
 
-    if (strncmp(p, "M  V30 ", 7))
+    if (strncmp(p, "M  V30 ", 7) != 0)
     {
         return NULL;
     }
@@ -470,7 +470,7 @@ int MolfileV3000ReadCTABBeginAndCountsLine(MOL_FMT_CTAB *ctab,
     {
         p = line = pin->pStr;
     }
-    if (!p || strcmp(p, "BEGIN CTAB"))
+    if (!p || strcmp(p, "BEGIN CTAB") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 CTab start marker");
     }
@@ -506,7 +506,7 @@ int MolfileV3000ReadCTABBeginAndCountsLine(MOL_FMT_CTAB *ctab,
 
     /* Parse counts line */
     len = MolfileV3000ReadField(field, MOL_FMT_STRING_DATA, &p); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    if (strcmp(field, "COUNTS"))
+    if (strcmp(field, "COUNTS") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Cannot read V3000 counts line");
     }
@@ -629,7 +629,7 @@ int MolfileV3000Read3DBlock(MOL_FMT_CTAB *ctab,
     }
     remove_one_lf(line);
 
-    if (!p || strcmp(p, "END OBJ3D"))
+    if (!p || strcmp(p, "END OBJ3D") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 3DBlock end marker");
     }
@@ -673,7 +673,7 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
     }
     remove_one_lf(line);
 
-    while (p && strcmp(p, "END COLLECTION"))
+    while (p && strcmp(p, "END COLLECTION") != 0)
     {
         int stereo_kind = MOL_FMT_V3000_STENON;
         /* stereo collection of interest */
@@ -685,7 +685,7 @@ int MolfileV3000ReadCollections(MOL_FMT_CTAB *ctab,
             failed = 1;
             break;
         }
-        if (strcmp(field, "MDLV30"))
+        if (strcmp(field, "MDLV30") != 0)
         {
             failed = 1;
             break;
@@ -886,7 +886,7 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
     {
         p = line = pin->pStr;
     }
-    if (!p || strcmp(p, "BEGIN ATOM"))
+    if (!p || strcmp(p, "BEGIN ATOM") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 Atom block start marker");
     }
@@ -1244,7 +1244,7 @@ int MolfileV3000ReadAtomsBlock(MOL_FMT_CTAB *ctab,
     {
         p = line = pin->pStr;
     }
-    if (!p || strcmp(p, "END ATOM"))
+    if (!p || strcmp(p, "END ATOM") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 Atom block end marker");
     }
@@ -1290,7 +1290,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
     {
         p = line = pin->pStr;
     }
-    if (!p || strcmp(p, "BEGIN BOND"))
+    if (!p || strcmp(p, "BEGIN BOND") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 Bond block start marker");
     }
@@ -1566,7 +1566,7 @@ int MolfileV3000ReadBondsBlock(MOL_FMT_CTAB *ctab,
     {
         p = line = pin->pStr;
     }
-    if (!p || strcmp(p, "END BOND"))
+    if (!p || strcmp(p, "END BOND") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 Bond block end marker");
     }
@@ -1713,7 +1713,7 @@ int MolfileV3000ReadTailOfCTAB(MOL_FMT_CTAB *ctab,
         }
     }
 
-    if (!p || strcmp(p, "END CTAB"))
+    if (!p || strcmp(p, "END CTAB") != 0)
     {
         TREAT_ERR_AND_FIN(err, 1, err_fin, "Error: No V3000 CTAB end marker");
     }
@@ -1745,7 +1745,7 @@ int MolfileV3000ReadHapticBond(MOL_FMT_CTAB *ctab,
     memset(field, 0, max_field_len); /* djb-rwth: memset_s C11/Annex K variant? */
 
     nread = read_upto_delim(line_ptr, field, max_field_len, "1234567890 \t\n\v\f\r"); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    if (strcmp(field, "("))
+    if (strcmp(field, "(") != 0)
     {
         return -1;
     }
@@ -1791,7 +1791,7 @@ int MolfileV3000ReadHapticBond(MOL_FMT_CTAB *ctab,
     nread = read_upto_delim(line_ptr, field, max_field_len, " \t\n\v\f\r");
     if (nread > 0)
     {
-        if (strcmp(field, "ATTACH=ALL"))
+        if (strcmp(field, "ATTACH=ALL") != 0)
         {
             nread = -1;
             goto ret;
@@ -1830,7 +1830,7 @@ int MolfileV3000ReadStereoCollection(MOL_FMT_CTAB *ctab,
     memset(field, 0, max_field_len); /* djb-rwth: memset_s C11/Annex K variant? */
 
     nread = read_upto_delim(line_ptr, field, max_field_len, "1234567890 \t\n\v\f\r"); /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
-    if (strcmp(field, "("))
+    if (strcmp(field, "(") != 0)
     {
         return -1;
     }
@@ -1903,7 +1903,7 @@ int get_V3000_input_line_to_strbuf(INCHI_IOS_STRING *buf,
         {
             return -1;
         }
-        if (strncmp(buf->pStr + old_used, "M  V30 ", prefix_len))
+        if (strncmp(buf->pStr + old_used, "M  V30 ", prefix_len) != 0)
         {
             return -1;
         }

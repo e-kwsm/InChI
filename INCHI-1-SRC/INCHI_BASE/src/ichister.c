@@ -1369,7 +1369,7 @@ int bInpAtomHasRequirdNeigh( inp_ATOM *at,
                  * get_endpoint_valence() check will not allow the neighbors to be carbons
                  * Therefore the following "if" is not needed; we may just return 0.
                  */
-                if (at[ni].num_H != at[nj].num_H && strcmp( at[ni].elname, "C" ))
+                if (at[ni].num_H != at[nj].num_H && strcmp( at[ni].elname, "C" ) != 0)
                 {
                     return 0; /*  found -X and -XH neighbors */
                 }

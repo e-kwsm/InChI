@@ -171,7 +171,7 @@ int INCHI_DECL GetINCHIKeyFromINCHI( const char* szINCHISource,
     {
         return INCHIKEY_INVALID_INCHI_PREFIX;
     }
-    if (memcmp( szINCHISource, INCHI_STRING_PREFIX, LEN_INCHI_STRING_PREFIX ))
+    if (memcmp( szINCHISource, INCHI_STRING_PREFIX, LEN_INCHI_STRING_PREFIX ) != 0)
     {
         return INCHIKEY_INVALID_INCHI_PREFIX;
     }

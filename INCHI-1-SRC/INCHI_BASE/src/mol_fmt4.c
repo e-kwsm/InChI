@@ -324,7 +324,7 @@ int SDFileSkipExtraData(INCHI_IOSTREAM *inp_file,
     {
         /*  bypass up to $$$$ */
         while ((p = inchi_fgetsLf(line, line_len, inp_file)) &&
-               memcmp(line, SD_FMT_END_OF_DATA, 4))
+               memcmp(line, SD_FMT_END_OF_DATA, 4) != 0)
         {
             ;
         }

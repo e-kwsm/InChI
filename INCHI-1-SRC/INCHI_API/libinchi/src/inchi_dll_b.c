@@ -2005,7 +2005,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                     *err = INCHI_INP_EOF_ERR;
                     goto bypass_end_of_INChI;
                 }
-                if (memcmp(szLine_i2ia, sStructRevXmlRevAt, sizeof( sStructRevXmlRevAt ) - 1 ))
+                if (memcmp(szLine_i2ia, sStructRevXmlRevAt, sizeof( sStructRevXmlRevAt ) - 1 ) != 0)
                 {
                     bHeaderRead = 0; /* invalid reversibility info; look for another header */
                     continue;
@@ -2103,7 +2103,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                     {
                         /* load next line if possible */
                         res2 = inchi_ios_gets( szNextLine_i2ia, sizeof(szNextLine_i2ia) - 1, inp_file, &bTooLongLine2 );
-                        if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevAtEnd, sizeof( sStructRevXmlRevAtEnd ) - 1 ))
+                        if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevAtEnd, sizeof( sStructRevXmlRevAtEnd ) - 1 ) != 0)
                         {
                             if (pos)
                             {
@@ -2253,7 +2253,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
                     num_atoms = 0; /* no data */
                     goto bypass_end_of_INChI;
                 }
-                if (memcmp( szLine_i2ia, sStructRevXmlRevBn, sizeof( sStructRevXmlRevBn ) - 1 ))
+                if (memcmp( szLine_i2ia, sStructRevXmlRevBn, sizeof( sStructRevXmlRevBn ) - 1 ) != 0)
                 {
                     bHeaderRead = 0; /* invalid reversibility info; look for another header */
                     continue;
@@ -2294,7 +2294,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
 
                         res2 = inchi_ios_gets( szNextLine_i2ia, sizeof(szNextLine_i2ia) - 1, inp_file, &bTooLongLine2 );
 
-                        if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevBnEnd, sizeof( sStructRevXmlRevBnEnd ) - 1 ))
+                        if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevBnEnd, sizeof( sStructRevXmlRevBnEnd ) - 1 ) != 0)
                         {
                             if (pos)
                             {
@@ -2530,7 +2530,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
 
                     if (res <= 0 ||
                             /* compare the header */
-                            memcmp( szLine_i2ia, sStructRevXmlRevXYZ, sizeof( sStructRevXmlRevXYZ ) - 1 ) ||
+                            memcmp( szLine_i2ia, sStructRevXmlRevXYZ, sizeof( sStructRevXmlRevXYZ ) - 1 ) != 0 ||
                             /* read (the head of) the coordinates (xml) line */
                             0 >= ( res = inchi_ios_gets( szLine_i2ia, sizeof(szLine_i2ia) - 1, inp_file, &bTooLongLine ) ))
                     {
@@ -2565,7 +2565,7 @@ int InchiToInchiAtom( INCHI_IOSTREAM *inp_file,
 
                             res2 = inchi_ios_gets( szNextLine_i2ia, sizeof(szNextLine_i2ia) - 1, inp_file, &bTooLongLine2 );
 
-                            if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevXYZEnd, sizeof( sStructRevXmlRevXYZEnd ) - 1 ))
+                            if (res2 > 0 && memcmp( szNextLine_i2ia, sStructRevXmlRevXYZEnd, sizeof( sStructRevXmlRevXYZEnd ) - 1 ) != 0)
                             {
                                 if (pos)
                                 {

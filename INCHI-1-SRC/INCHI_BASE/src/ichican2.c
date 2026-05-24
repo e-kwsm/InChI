@@ -6619,32 +6619,32 @@ int GetBaseCanonRanking( INCHI_CLOCK *ic,
 
     /* consistency check: compare canonical connection tables, H-atoms, isotopic H & taut groups */
     ret = 0;
-    ret |= ( Ct_NoH->lenCt != Ct_NoTautH->lenCt ) || memcmp( Ct_NoH->Ctbl, Ct_NoTautH->Ctbl, Ct_NoH->lenCt * sizeof( Ct_NoH->Ctbl[0] ) );
+    ret |= ( Ct_NoH->lenCt != Ct_NoTautH->lenCt ) || memcmp( Ct_NoH->Ctbl, Ct_NoTautH->Ctbl, Ct_NoH->lenCt * sizeof( Ct_NoH->Ctbl[0] ) ) != 0;
     if (bReqTaut)
     {
         if (Ct_FixH)
         {
-            ret |= ( Ct_NoTautH->lenCt != Ct_FixH->lenCt ) || memcmp( Ct_NoTautH->Ctbl, Ct_FixH->Ctbl, Ct_NoTautH->lenCt * sizeof( Ct_NoTautH->Ctbl[0] ) );
-            ret |= ( Ct_NoTautH->lenNumH != Ct_FixH->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_FixH->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) );
+            ret |= ( Ct_NoTautH->lenCt != Ct_FixH->lenCt ) || memcmp( Ct_NoTautH->Ctbl, Ct_FixH->Ctbl, Ct_NoTautH->lenCt * sizeof( Ct_NoTautH->Ctbl[0] ) ) != 0;
+            ret |= ( Ct_NoTautH->lenNumH != Ct_FixH->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_FixH->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) ) != 0;
         }
-        ret |= ( Ct_NoTautH->lenCt > Ct_Base->lenCt ) || memcmp( Ct_NoTautH->Ctbl, Ct_Base->Ctbl, Ct_NoTautH->lenCt * sizeof( Ct_NoTautH->Ctbl[0] ) );
-        ret |= ( Ct_NoTautH->lenNumH > Ct_Base->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_Base->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) );
+        ret |= ( Ct_NoTautH->lenCt > Ct_Base->lenCt ) || memcmp( Ct_NoTautH->Ctbl, Ct_Base->Ctbl, Ct_NoTautH->lenCt * sizeof( Ct_NoTautH->Ctbl[0] ) ) != 0;
+        ret |= ( Ct_NoTautH->lenNumH > Ct_Base->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_Base->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) ) != 0;
     }
 
     /* isotopic canonicalization */
     if (Ct_NoTautHIso)
     {
-        ret |= ( Ct_NoH->lenCt != Ct_NoTautHIso->lenCt ) || memcmp( Ct_NoH->Ctbl, Ct_NoTautHIso->Ctbl, Ct_NoH->lenCt * sizeof( Ct_NoH->Ctbl[0] ) );
-        ret |= ( Ct_NoTautH->lenNumH != Ct_NoTautHIso->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_NoTautHIso->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) );
+        ret |= ( Ct_NoH->lenCt != Ct_NoTautHIso->lenCt ) || memcmp( Ct_NoH->Ctbl, Ct_NoTautHIso->Ctbl, Ct_NoH->lenCt * sizeof( Ct_NoH->Ctbl[0] ) ) != 0;
+        ret |= ( Ct_NoTautH->lenNumH != Ct_NoTautHIso->lenNumH ) || memcmp( Ct_NoTautH->NumH, Ct_NoTautHIso->NumH, Ct_NoTautH->lenNumH * sizeof( Ct_Base->NumH[0] ) ) != 0;
     }
     else if (Ct_BaseIso)
     {
-        ret |= ( Ct_BaseIso->lenCt != Ct_Base->lenCt ) || memcmp( Ct_BaseIso->Ctbl, Ct_Base->Ctbl, Ct_BaseIso->lenCt * sizeof( Ct_BaseIso->Ctbl[0] ) );
-        ret |= ( Ct_BaseIso->lenNumH != Ct_Base->lenNumH ) || memcmp( Ct_BaseIso->NumH, Ct_Base->NumH, Ct_BaseIso->lenNumH * sizeof( Ct_BaseIso->NumH[0] ) );
+        ret |= ( Ct_BaseIso->lenCt != Ct_Base->lenCt ) || memcmp( Ct_BaseIso->Ctbl, Ct_Base->Ctbl, Ct_BaseIso->lenCt * sizeof( Ct_BaseIso->Ctbl[0] ) ) != 0;
+        ret |= ( Ct_BaseIso->lenNumH != Ct_Base->lenNumH ) || memcmp( Ct_BaseIso->NumH, Ct_Base->NumH, Ct_BaseIso->lenNumH * sizeof( Ct_BaseIso->NumH[0] ) ) != 0;
         if (Ct_FixHIso)
         {
-            ret |= ( Ct_FixHIso->lenCt > Ct_BaseIso->lenCt ) || memcmp( Ct_FixHIso->Ctbl, Ct_BaseIso->Ctbl, Ct_FixHIso->lenCt * sizeof( Ct_FixHIso->Ctbl[0] ) );
-            ret |= ( Ct_FixHIso->lenNumH > Ct_BaseIso->lenNumH ) || memcmp( Ct_FixHIso->NumH, Ct_BaseIso->NumH, Ct_FixHIso->lenNumH * sizeof( Ct_BaseIso->NumH[0] ) );
+            ret |= ( Ct_FixHIso->lenCt > Ct_BaseIso->lenCt ) || memcmp( Ct_FixHIso->Ctbl, Ct_BaseIso->Ctbl, Ct_FixHIso->lenCt * sizeof( Ct_FixHIso->Ctbl[0] ) ) != 0;
+            ret |= ( Ct_FixHIso->lenNumH > Ct_BaseIso->lenNumH ) || memcmp( Ct_FixHIso->NumH, Ct_BaseIso->NumH, Ct_FixHIso->lenNumH * sizeof( Ct_BaseIso->NumH[0] ) ) != 0;
         }
     }
 

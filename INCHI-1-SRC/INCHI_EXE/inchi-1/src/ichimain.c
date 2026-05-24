@@ -1590,7 +1590,7 @@ int RepeatedlyRenumberAtomsAndRecalcINCHI(struct tagINCHI_CLOCK* ic,
 
                 if (ikey0[0] && ikey[0])
                 {
-                    if (strcmp(ikey, ikey0))
+                    if (strcmp(ikey, ikey0) != 0)
                     {
                         int result, bINChIOutputOptions = ip->bINChIOutputOptions; /* djb-rwth: ignoring LLVM warning: variable used to store function return value */
                         ndiff++;

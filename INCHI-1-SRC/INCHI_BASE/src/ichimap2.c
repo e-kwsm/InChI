@@ -544,7 +544,7 @@ int  DifferentiateRanks2( CANON_GLOBALS *pCG,
         nNumCurrRanks = SetNewRanksFromNeighLists( pCG, num_atoms, NeighList, pnPrevRank, pnCurrRank, nAtomNumber,
                                                  1, CompNeighListRanksOrd );
     }
-    while ( /*nNumPrevRanks != nNumCurrRanks ||*/ memcmp( pnPrevRank, pnCurrRank, num_atoms * sizeof( pnCurrRank[0] ) ));
+    while ( /*nNumPrevRanks != nNumCurrRanks ||*/ memcmp( pnPrevRank, pnCurrRank, num_atoms * sizeof( pnCurrRank[0] ) ) != 0);
 
     return nNumCurrRanks;
 }
@@ -660,7 +660,7 @@ int  DifferentiateRanksBasic( CANON_GLOBALS *pCG, int num_atoms, NEIGH_LIST *Nei
         /*  the following call creates pnCurrRank out of pnPrevRank */
         nNumCurrRanks = SetNewRanksFromNeighLists( pCG, num_atoms, NeighList, pnPrevRank, pnCurrRank, nAtomNumber, bUseAltSort, CompNeighListRanks );
     }
-    while (nNumPrevRanks != nNumCurrRanks || memcmp( pnPrevRank, pnCurrRank, num_atoms * sizeof( pnCurrRank[0] ) ));
+    while (nNumPrevRanks != nNumCurrRanks || memcmp( pnPrevRank, pnCurrRank, num_atoms * sizeof( pnCurrRank[0] ) ) != 0);
     return nNumCurrRanks;
 }
 
