@@ -384,8 +384,8 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
          cl = v;                                        \
          if (callback) {                                \
             int lg = STB_SPRINTF_MIN - (int)(bf - buf); \
-            if (cl > lg)                                \
-               cl = lg;                                 \
+            if ((cl) > lg)                              \
+               (cl) = lg;                               \
          }
 
       // fast copy everything up to the next % (or end of string)
@@ -1484,7 +1484,7 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintf)(char *buf, char const *fmt, 
    {                                               \
       int cn;                                      \
       for (cn = 0; cn < 8; cn++)                   \
-         ((char *)&dest)[cn] = ((char *)&src)[cn]; \
+         ((char *)&(dest))[cn] = ((char *)&(src))[cn]; \
    }
 
 // get float info
@@ -1600,40 +1600,40 @@ static stbsp__uint64 const stbsp__powten[20] = {
    {                                                               \
       double ahi = 0, alo, bhi = 0, blo;                           \
       stbsp__int64 bt;                                             \
-      oh = xh * yh;                                                \
+      (oh) = (xh) * (yh);                                          \
       STBSP__COPYFP(bt, xh);                                       \
       bt &= ((~(stbsp__uint64)0) << 27);                           \
       STBSP__COPYFP(ahi, bt);                                      \
-      alo = xh - ahi;                                              \
+      alo = (xh) - ahi;                                            \
       STBSP__COPYFP(bt, yh);                                       \
       bt &= ((~(stbsp__uint64)0) << 27);                           \
       STBSP__COPYFP(bhi, bt);                                      \
-      blo = yh - bhi;                                              \
-      ol = ((ahi * bhi - oh) + ahi * blo + alo * bhi) + alo * blo; \
+      blo = (yh) - bhi;                                            \
+      (ol) = ((ahi * bhi - (oh)) + ahi * blo + alo * bhi) + alo * blo; \
    }
 
 #define stbsp__ddtoS64(ob, xh, xl)          \
    {                                        \
       double ahi = 0, alo, vh, t;           \
-      ob = (stbsp__int64)xh;                \
-      vh = (double)ob;                      \
-      ahi = (xh - vh);                      \
-      t = (ahi - xh);                       \
-      alo = (xh - (ahi - t)) - (vh + t);    \
-      ob += (stbsp__int64)(ahi + alo + xl); \
+      (ob) = (stbsp__int64)(xh);            \
+      vh = (double)(ob);                    \
+      ahi = ((xh) - vh);                    \
+      t = (ahi - (xh));                     \
+      alo = ((xh) - (ahi - t)) - (vh + t);  \
+      (ob) += (stbsp__int64)(ahi + alo + (xl)); \
    }
 
 #define stbsp__ddrenorm(oh, ol) \
    {                            \
       double s;                 \
-      s = oh + ol;              \
-      ol = ol - (s - oh);       \
-      oh = s;                   \
+      s = (oh) + (ol);          \
+      (ol) = (ol) - (s - (oh)); \
+      (oh) = s;                 \
    }
 
-#define stbsp__ddmultlo(oh, ol, xh, xl, yh, yl) ol = ol + (xh * yl + xl * yh);
+#define stbsp__ddmultlo(oh, ol, xh, xl, yh, yl) ol = (ol) + ((xh) * (yl) + (xl) * (yh));
 
-#define stbsp__ddmultlos(oh, ol, xh, yl) ol = ol + (xh * yl);
+#define stbsp__ddmultlos(oh, ol, xh, yl) ol = (ol) + ((xh) * (yl));
 
 static void stbsp__raise_to_power10(double *ohi, double *olo, double d, stbsp__int32 power) // power can be -323 to +350
 {

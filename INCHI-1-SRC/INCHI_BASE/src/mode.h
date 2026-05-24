@@ -1178,8 +1178,8 @@ do {\
 #define MYREALLOC2(PTRTYPE1, PTRTYPE2, PTR1, PTR2, LEN1, LEN2, ERR) \
     do { \
         if( (LEN1) <= (LEN2) ) {\
-            PTRTYPE1 * newPTR1 = (PTRTYPE1 *)inchi_calloc( (LEN2)+1, sizeof(PTRTYPE1) );\
-            PTRTYPE2 * newPTR2 = (PTRTYPE2 *)inchi_calloc( (LEN2)+1, sizeof(PTRTYPE2) );\
+            (PTRTYPE1) * newPTR1 = (PTRTYPE1 *)inchi_calloc( (LEN2)+1, sizeof(PTRTYPE1) );\
+            (PTRTYPE2) * newPTR2 = (PTRTYPE2 *)inchi_calloc( (LEN2)+1, sizeof(PTRTYPE2) );\
             if ( newPTR1 && newPTR2 ) { \
                 if ( (PTR1) && (LEN1) > 0 ) \
                     (memcpy) ( newPTR1, (PTR1), (LEN1) * sizeof(PTRTYPE1) ); \

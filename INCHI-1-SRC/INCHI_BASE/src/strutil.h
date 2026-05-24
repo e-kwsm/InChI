@@ -827,7 +827,7 @@ extern "C"
     extern const char gsSpace[];
     extern const char gsEqual[];
 
-#define SDF_LBL_VAL(L, V) ((L) && (L)[0]) ? gsSpace : gsEmpty, ((L) && (L)[0]) ? L : gsEmpty, ((L) && (L)[0]) ? (((V) && (V)[0]) ? gsEqual : gsSpace) : gsEmpty, ((V) && (V)[0]) ? V : ((L) && (L)[0]) ? gsMissing \
+#define SDF_LBL_VAL(L, V) ((L) && (L)[0]) ? gsSpace : gsEmpty, ((L) && (L)[0]) ? (L) : gsEmpty, ((L) && (L)[0]) ? (((V) && (V)[0]) ? gsEqual : gsSpace) : gsEmpty, ((V) && (V)[0]) ? (V) : ((L) && (L)[0]) ? gsMissing \
                                                                                                                                                                                                        : gsEmpty
 
     /* Handle integer matrix [mxn] */

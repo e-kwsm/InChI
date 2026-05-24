@@ -455,7 +455,7 @@ int GetCanonLengths( int num_at,
 /****************************************************************************/
 int DeAllocateCS( CANON_STAT *pCS )
 {
-#define LOCAL_FREE( X) do{if(X){inchi_free( X); X=NULL;}}while(0)
+#define LOCAL_FREE( X) do{if(X){inchi_free( X); (X)=NULL;}}while(0)
 
     /* connection table */
     LOCAL_FREE( pCS->LinearCT );

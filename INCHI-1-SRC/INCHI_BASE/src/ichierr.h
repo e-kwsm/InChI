@@ -12,8 +12,8 @@
 #define _IS_ERROR   2    /* Microsoft defined its own IS_ERROR() macro */
 #define _IS_FATAL   3
 #define _IS_UNKNOWN 4    /* unknown error: used in INChI DLL only */
-#define _IS_EOF    -1    /* end of file */
-#define _IS_SKIP   -2
+#define _IS_EOF    (-1)  /* end of file */
+#define _IS_SKIP   (-2)
 
 #define CT_ERR_FIRST         (-30000)
 #define CT_OVERFLOW          (CT_ERR_FIRST- 0)  /*(-30000) */
@@ -44,7 +44,7 @@
 #define RETURNED_ERROR(nVal) (CT_ERR_MIN<=(nVal) && (nVal)<=CT_ERR_MAX)
 
 
-#define BNS_ERR            -9999
+#define BNS_ERR            (-9999)
 #define BNS_WRONG_PARMS    (BNS_ERR +  0) /*(-9999)*/
 #define BNS_OUT_OF_RAM     (BNS_ERR +  1) /*(-9998)*/
 #define BNS_PROGRAM_ERR    (BNS_ERR +  2) /*(-9997)*/

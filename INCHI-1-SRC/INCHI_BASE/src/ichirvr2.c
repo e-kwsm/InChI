@@ -6936,7 +6936,7 @@ int RemoveRadFromMobileHEndpointFixH( BN_STRUCT *pBNS,
                                       int *pnTotalDelta,
                                       int forbidden_edge_mask )
 {
-#define IS_C(x) (NO_VERTEX != x && pVA[x].cNumValenceElectrons == 4 && pVA[x].cPeriodicRowNumber == 1)
+#define IS_C(x) (NO_VERTEX != (x) && pVA[x].cNumValenceElectrons == 4 && pVA[x].cPeriodicRowNumber == 1)
     int i, num_fixes, tot_num_fixes = 0;
 
     int ret2, ret;

@@ -32,20 +32,20 @@
 
 /*************** Macros for retrieving requested INChI and INChI_Aux *****************************/
 /* S->pINChI[TAUT_YES] has info: */
-#define HAS_T(S)  (S->pINChI[TAUT_YES] && S->pINChI[TAUT_YES]->nNumberOfAtoms)
+#define HAS_T(S)  ((S)->pINChI[TAUT_YES] && (S)->pINChI[TAUT_YES]->nNumberOfAtoms)
 /* S->pINChI[TAUT_NON] has info: */
-#define HAS_N(S)  (S->pINChI[TAUT_NON] && S->pINChI[TAUT_NON]->nNumberOfAtoms)
+#define HAS_N(S)  ((S)->pINChI[TAUT_NON] && (S)->pINChI[TAUT_NON]->nNumberOfAtoms)
 
 /* S->pINChI[TAUT_YES] has tautomeric info: */
-#define HAS_TT(S) (S->pINChI[TAUT_YES] && S->pINChI[TAUT_YES]->nNumberOfAtoms && S->pINChI[TAUT_YES]->lenTautomer>0)
+#define HAS_TT(S) ((S)->pINChI[TAUT_YES] && (S)->pINChI[TAUT_YES]->nNumberOfAtoms && (S)->pINChI[TAUT_YES]->lenTautomer>0)
 /* S->pINChI[TAUT_YES] has non-taitomeric info: */
-#define HAS_TN(S) (S->pINChI[TAUT_YES] && S->pINChI[TAUT_YES]->nNumberOfAtoms && !S->pINChI[TAUT_YES]->lenTautomer)
+#define HAS_TN(S) ((S)->pINChI[TAUT_YES] && (S)->pINChI[TAUT_YES]->nNumberOfAtoms && !(S)->pINChI[TAUT_YES]->lenTautomer)
 /* S->pINChI[TAUT_NON] has non-tautomeric info: */
-#define HAS_NN(S) (S->pINChI[TAUT_NON] && S->pINChI[TAUT_NON]->nNumberOfAtoms && !S->pINChI[TAUT_NON]->lenTautomer)
-#define GET_II(M,S) ((M==OUT_N1)?              (HAS_TN(S)? TAUT_YES : HAS_NN(S)? TAUT_NON : -1): \
-                     (M==OUT_T1 || M==OUT_TN)? (HAS_T(S) ? TAUT_YES : HAS_N(S) ? TAUT_NON : -1): \
-                     (M==OUT_NN)?              (HAS_NN(S)? TAUT_NON : HAS_TN(S)? TAUT_YES : -1): \
-                     (M==OUT_NT)?              ((HAS_TT(S) && HAS_NN(S))       ? TAUT_NON : -1) : -1)
+#define HAS_NN(S) ((S)->pINChI[TAUT_NON] && (S)->pINChI[TAUT_NON]->nNumberOfAtoms && !(S)->pINChI[TAUT_NON]->lenTautomer)
+#define GET_II(M,S) (((M)==OUT_N1)?                (HAS_TN(S)? TAUT_YES : HAS_NN(S)? TAUT_NON : -1): \
+                     ((M)==OUT_T1 || (M)==OUT_TN)? (HAS_T(S) ? TAUT_YES : HAS_N(S) ? TAUT_NON : -1): \
+                     ((M)==OUT_NN)?                (HAS_NN(S)? TAUT_NON : HAS_TN(S)? TAUT_YES : -1): \
+                     ((M)==OUT_NT)?                ((HAS_TT(S) && HAS_NN(S))       ? TAUT_NON : -1) : -1)
 
 /*********************************/
 /* Equivalence flags definitions */

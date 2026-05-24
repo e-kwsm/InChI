@@ -52,8 +52,8 @@ typedef S_SHORT ST_CAP_FLOW;
 #define PERIODIC_NUMBER_H 1
 
 #ifndef NUMH
-#define NUM_ISO_H(AT, N) (AT[N].num_iso_H[0] + AT[N].num_iso_H[1] + AT[N].num_iso_H[2])
-#define NUMH(AT, N) (AT[N].num_H + NUM_ISO_H(AT, N))
+#define NUM_ISO_H(AT, N) ((AT)[N].num_iso_H[0] + (AT)[N].num_iso_H[1] + (AT)[N].num_iso_H[2])
+#define NUMH(AT, N) ((AT)[N].num_H + NUM_ISO_H(AT, N))
 #endif
 
 #define FlagSC_0D 1 /**< bUsed0DParity */
@@ -62,7 +62,7 @@ typedef S_SHORT ST_CAP_FLOW;
 #define SB_PARITY_FLAG 0x38 /**< mask for disconnected metal parity if it is different */
 #define SB_PARITY_SHFT 3    /**< number of right shift bits to get disconnected metal parity */
 #define SB_PARITY_MASK 0x07
-#define SB_PARITY_1(X) (X & SB_PARITY_MASK)                       /**< refers to connected structure */
+#define SB_PARITY_1(X) ((X) & SB_PARITY_MASK)                     /**< refers to connected structure */
 #define SB_PARITY_2(X) (((X) >> SB_PARITY_SHFT) & SB_PARITY_MASK) /**< refers to connected structure */
 
 /**
@@ -168,7 +168,7 @@ typedef struct tagInputAtom
 /* v. 1.05 Polymer stuff                                            */
 
 /* Polymer representation type */
-#define NO_POLYMER -1
+#define NO_POLYMER (-1)
 #define POLYMER_REPRESENTATION_SOURCE_BASED 1
 #define POLYMER_REPRESENTATION_STRUCTURE_BASED 2
 #define POLYMER_REPRESENTATION_MIXED 3
