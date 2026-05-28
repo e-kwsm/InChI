@@ -6658,7 +6658,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
                     ligand_elem_array[ligand_type_count++] = neigh_elem;
                 }
 
-                if (at[i].bond_type[n] > 1 || is_el_a_metal(at[neigh_idx].el_number))
+                if ((at[i].bond_type[n] > 1 && at[i].bond_type[n] != 9) || is_el_a_metal(at[neigh_idx].el_number))
                 {
                     must_keep_neighbor = 1;
                 }
@@ -6699,7 +6699,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
             /* Check if the neighboring atom has more than 1 bond connected to the metal atom or
              * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
-            if (at[i].bond_type[n] > 1 || is_el_a_metal(at[neighbor_idx].el_number))
+            if ((at[i].bond_type[n] > 1 && at[i].bond_type[n] != 9) || is_el_a_metal(at[neighbor_idx].el_number))
             {
                 ip->bMolecularInorganicsReconnectedInChI = 1;
                 continue; /* Skip disconnection for this bond */
