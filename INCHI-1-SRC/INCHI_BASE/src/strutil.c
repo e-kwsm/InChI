@@ -6429,6 +6429,23 @@ void updateNeighborListMolecularInorganics(inp_ATOM *at, int atom_idx, int neigh
     }
 }
 
+/************************************************************************
+ * @nnuk
+ * @brief Determine whether a metal-ligand bond must always be preserved
+ *        during Molecular Inorganics preprocessing.
+ ***********************************************************************/
+int MolecularInorganicsKeepBond(inp_ATOM *at, int metal_idx, int neigh_idx, int bond_pos)
+{
+    int bond_type = at[metal_idx].bond_type[bond_pos];
+
+    if (is_el_a_metal(at[neigh_idx].el_number) || (bond_type > 1 && bond_type != COORDINATIVE_BOND))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 /*****************************************************************************
  * (@nnuk :: Nauman Ullah Khan)
  * @brief Function to preprocess molecular inorganics structures by disconnecting metal bonds and handling salts + ammonium salts.
@@ -6472,7 +6489,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     int i, j, n, k, t;
     int binaryValue;
     int disconnectDecision;
-    int neighbor_idx, neigh_pos;
+    int neigh_pos;
     int num_metals, current_component;
 
     /* memory allocation */
@@ -6658,7 +6675,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
                     ligand_elem_array[ligand_type_count++] = neigh_elem;
                 }
 
-                if ((at[i].bond_type[n] > 1 && at[i].bond_type[n] != 9) || is_el_a_metal(at[neigh_idx].el_number))
+                if (MolecularInorganicsKeepBond(at, i, neigh_idx, n))
                 {
                     must_keep_neighbor = 1;
                 }
@@ -6695,11 +6712,11 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         /* Proceed with electronegativity and disconnection logic */
         for (n = at[i].valence - 1; n >= 0; n--)
         {
-            neighbor_idx = at[i].neighbor[n];
+            int neighbor_idx = at[i].neighbor[n];
 
             /* Check if the neighboring atom has more than 1 bond connected to the metal atom or
              * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
-            if ((at[i].bond_type[n] > 1 && at[i].bond_type[n] != 9) || is_el_a_metal(at[neighbor_idx].el_number))
+            if (MolecularInorganicsKeepBond(at, i, neighbor_idx, n))
             {
                 ip->bMolecularInorganicsReconnectedInChI = 1;
                 continue; /* Skip disconnection for this bond */
