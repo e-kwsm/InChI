@@ -6389,6 +6389,15 @@ int shouldBondBeCut(int atom1, int atom2)
 {
     int index1, index2, binaryValue;
 
+    /* Bounds-check the 1-based periodic numbers before indexing the
+     * NUM_ELEMENTS x NUM_ELEMENTS table. An out-of-range value (e.g. a
+     * pseudo-atom with el_number 0, or a number beyond the table) would
+     * otherwise read out of bounds. Default to 0 = keep the bond. */
+    if (atom1 < 1 || atom1 > NUM_ELEMENTS || atom2 < 1 || atom2 > NUM_ELEMENTS)
+    {
+        return 0;
+    }
+
     /* Get the indices corresponding to the atomic numbers */
     index1 = atom1 - 1;
     index2 = atom2 - 1;
