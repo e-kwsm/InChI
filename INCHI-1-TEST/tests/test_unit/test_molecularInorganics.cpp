@@ -324,3 +324,136 @@ M  END)";
 
     FreeINCHI(poutput);
 }
+
+TEST(test_molecularInorganics, test_MI_Na_H2O_CoordBond)
+{
+    const char* molblock = R"(
+  ACCLDraw06092610472D
+
+  0  0  0     0  0            999 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 2 1 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 O 3.3082 -5.8926 0 0 VAL=1
+M  V30 2 Na 2.2853 -6.4832 0 0
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 1 2
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    char options[] = "-MolecularInorganics";
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_molecularInorganics, test_MI_Na_H2O_CoordBond_Charged)
+{
+    const char* molblock = R"(
+  ACCLDraw06092610502D
+
+  0  0  0     0  0            999 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 2 1 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 1.9415 -11.2332 0 0 CHG=1
+M  V30 2 O 2.9644 -10.6426 0 0 CHG=-1
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    char options[] = "-MolecularInorganics";
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_molecularInorganics, test_MI_Na_Methoxide_Charged)
+{
+    const char molblock[] = R"(
+  ACCLDraw06092600112D
+
+  0  0  0     0  0            999 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 3 2 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 3.2848 -9.6749 0 0 CHG=1
+M  V30 2 O 4.3077 -9.0843 0 0 CHG=-1
+M  V30 3 C 5.3309 -9.675 0 0
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 2 1 2 3
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    char options[] = "-MolecularInorganics";
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    const char expected_inchi[] = "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
+
+TEST(test_molecularInorganics, test_MI_Na_Methoxide_Valence1)
+{
+    const char molblock[] = R"(
+  ACCLDraw06092600112D
+
+  0  0  0     0  0            999 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 3 2 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 3.5661 -6.1124 0 0
+M  V30 2 O 4.589 -5.5218 0 0 VAL=1
+M  V30 3 C 5.6121 -6.1125 0 0
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 2 1 2 3
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    char options[] = "-MolecularInorganics";
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    const char expected_inchi[] = "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
+

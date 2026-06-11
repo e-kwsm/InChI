@@ -114,9 +114,14 @@ extern "C"
 
     /**
      * @nnuk
-     * 
+     *
      * @brief Determine whether a metal-ligand bond must always be preserved
-     *        during Molecular Inorganics preprocessing. Some description on
+     *        during Molecular Inorganics preprocessing. The metal ligand
+     *        bond must always be kept when the neighbour is another metal
+     *        atom or the bond is Coordinative bond or the bond type is
+     *        greater than 1.
+     *
+     *        Some description on
      *        how InChI sees the bond types:
      *        Bond type 1 = Single Bond
      *        Bond type 2 = Double Bond
@@ -138,7 +143,7 @@ extern "C"
                                     int metal_idx,
                                     int neigh_idx,
                                     int bond_pos);
-  
+
     /**
      * @brief Set the enhanced stereochemistry for t- and m-layers
      *
