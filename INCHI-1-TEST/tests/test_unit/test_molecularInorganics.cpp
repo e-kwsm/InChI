@@ -457,3 +457,29 @@ M  END
     FreeINCHI(poutput);
 }
 
+
+TEST(test_molecularInorganics, test_MI_Na_H2O_V2000_Charged)
+{
+    const char molblock[] = R"(
+  ACCLDraw06092611092D
+
+  2  1  0  0  0  0  0  0  0  0999 V2000
+   11.6670  -10.9290    0.0000 Na  0  3  0  0  0  0  0  0  0  0  0  0
+   12.6899  -10.3384    0.0000 O   0  5  0  0  0  2  0  0  0  0  0  0
+  2  1  1  0  0  0  0
+M  CHG  2   1   1   2  -1
+M  END
+)";
+
+    char options[] = "-MolecularInorganics";
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
+
+    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
