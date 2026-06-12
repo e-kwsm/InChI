@@ -6456,6 +6456,65 @@ int MolecularInorganicsKeepBond(inp_ATOM *at, int metal_idx, int neigh_idx, int 
 }
 
 /*****************************************************************************
+ * Convert coordinative (type 9) bonds into normal single bonds.
+ *
+ * A coordinative bond is the zero-order, charge-separated equivalent of a
+ * single bond: the two bonded atoms carry equal and opposite formal charges
+ * (e.g. M(+) ... L(-)). Realizing it as a single bond turns the donated lone
+ * pair into the shared bonding pair, so the +/- charges cancel. This routine
+ * performs that change in place: every COORDINATIVE_BOND becomes
+ * BOND_TYPE_SINGLE and, when the two atoms carry opposite-sign charges, each is
+ * moved one step toward neutral (one charge pair neutralized per bond).
+ *****************************************************************************/
+static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
+{
+    int i, k, k2, j;
+
+    for (i = 0; i < num_atoms; i++)
+    {
+        for (k = 0; k < at[i].valence; k++)
+        {
+            if (at[i].bond_type[k] != COORDINATIVE_BOND)
+            {
+                continue;
+            }
+
+            j = at[i].neighbor[k];
+            if (j < 0 || j >= num_atoms)
+            {
+                continue;
+            }
+
+            /* Realize the bond as single on both endpoints. Converting both
+             * sides here means the reverse half-bond is no longer type 9, so
+             * the same bond is not processed (or its charge cancelled) twice. */
+            at[i].bond_type[k] = BOND_TYPE_SINGLE;
+            for (k2 = 0; k2 < at[j].valence; k2++)
+            {
+                if (at[j].neighbor[k2] == i && at[j].bond_type[k2] == COORDINATIVE_BOND)
+                {
+                    at[j].bond_type[k2] = BOND_TYPE_SINGLE;
+                    break;
+                }
+            }
+
+            /* Cancel the paired +/- charges: the lone pair becomes the bonding
+             * pair, so each atom moves one unit toward neutral. */
+            if (at[i].charge > 0 && at[j].charge < 0)
+            {
+                at[i].charge--;
+                at[j].charge++;
+            }
+            else if (at[i].charge < 0 && at[j].charge > 0)
+            {
+                at[i].charge++;
+                at[j].charge--;
+            }
+        }
+    }
+}
+
+/*****************************************************************************
  * (@nnuk :: Nauman Ullah Khan)
  * @brief Function to preprocess molecular inorganics structures by disconnecting metal bonds and handling salts + ammonium salts.
  *
@@ -6525,6 +6584,11 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             DisconnectAmmoniumSalt(at, j, piO, pk, num_explicit_H);
         }
     }
+
+    /* Realize coordinative (type 9) bonds as single bonds and cancel the
+     * paired +/- formal charges, so the rest of the pipeline treats them
+     * exactly like the equivalent single-bonded structure. */
+    ConvertCoordinativeBondsToSingle(at, num_at);
 
     /* Function call to Mark ring systems */
     MarkRingSystemsInp(at, num_at, 0);
