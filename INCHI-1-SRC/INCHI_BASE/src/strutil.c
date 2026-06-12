@@ -6474,13 +6474,17 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
     {
         for (k = 0; k < at[i].valence; k++)
         {
-            if (at[i].bond_type[k] != COORDINATIVE_BOND)
+            j = at[i].neighbor[k];
+            if (j < 0 || j >= num_atoms)
             {
                 continue;
             }
 
-            j = at[i].neighbor[k];
-            if (j < 0 || j >= num_atoms)
+            if (at[i].bond_type[k] != COORDINATIVE_BOND &&
+                !(at[i].bond_type[k] == BOND_TYPE_SINGLE &&
+                  is_el_a_metal(at[i].el_number) != is_el_a_metal(at[j].el_number) &&
+                  ((at[i].charge > 0 && at[j].charge < 0) ||
+                   (at[i].charge < 0 && at[j].charge > 0))))
             {
                 continue;
             }
@@ -6488,10 +6492,12 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
             /* Realize the bond as single on both endpoints. Converting both
              * sides here means the reverse half-bond is no longer type 9, so
              * the same bond is not processed (or its charge cancelled) twice. */
+
             at[i].bond_type[k] = BOND_TYPE_SINGLE;
+
             for (k2 = 0; k2 < at[j].valence; k2++)
             {
-                if (at[j].neighbor[k2] == i && at[j].bond_type[k2] == COORDINATIVE_BOND)
+                 if (at[j].neighbor[k2] == i)
                 {
                     at[j].bond_type[k2] = BOND_TYPE_SINGLE;
                     break;
