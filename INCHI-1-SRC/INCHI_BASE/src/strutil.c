@@ -6480,6 +6480,9 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
                 continue;
             }
 
+            /* Accept coordinative bonds and equivalent charge-separated
+             * metal–ligand single bonds with opposite formal charges.
+            */
             if (at[i].bond_type[k] != COORDINATIVE_BOND &&
                 !(at[i].bond_type[k] == BOND_TYPE_SINGLE &&
                   is_el_a_metal(at[i].el_number) != is_el_a_metal(at[j].el_number) &&
@@ -6491,7 +6494,8 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
 
             /* Realize the bond as single on both endpoints. Converting both
              * sides here means the reverse half-bond is no longer type 9, so
-             * the same bond is not processed (or its charge cancelled) twice. */
+             * the same bond is not processed (or its charge cancelled) twice.
+            */
 
             at[i].bond_type[k] = BOND_TYPE_SINGLE;
 

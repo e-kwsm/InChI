@@ -6,6 +6,28 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/mode.h"
 }
 
+/*
+* (NaumanUllahKhan :: @nnuk)
+* helper function to run the molfiles below as unit tests.
+*/
+static void ExpectedMolecularInorganicsInChI(const char* molblock,
+                                           const char* expected_inchi,
+                                           int expected_retcode)
+{
+    char options[] = "-MolecularInorganics";
+
+    inchi_Output output;
+    inchi_Output* poutput = &output;
+    memset(poutput, 0, sizeof(*poutput));
+
+    int ret = MakeINCHIFromMolfileText(molblock, options, poutput);
+
+    EXPECT_EQ(ret, expected_retcode);
+    ASSERT_NE(poutput->szInChI, nullptr);
+    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+
+    FreeINCHI(poutput);
+}
 
 /* (NaumanUllahKhan :: @nnuk)
 *  below are some tests with MI (MolecularInorganics) tags specific molfiles that go through the MI code pipeline.
@@ -28,17 +50,7 @@ TEST(test_molecularInorganics, test_MI_1_VOF3)
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/F3OV/c1-5(2,3)4";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/F3OV/c1-5(2,3)4", 0);
 }
 
 TEST(test_molecularInorganics, test_MI_2_FeF4)
@@ -59,17 +71,7 @@ TEST(test_molecularInorganics, test_MI_2_FeF4)
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/F4Fe/c1-5(2,3)4";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/F4Fe/c1-5(2,3)4", 0);
 }
 
 TEST(test_molecularInorganics, test_MI_3_FeF3)
@@ -88,17 +90,7 @@ TEST(test_molecularInorganics, test_MI_3_FeF3)
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/3FH.Fe/h3*1H;/q;;;+3/p-3";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/3FH.Fe/h3*1H;/q;;;+3/p-3", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_4_FeCl3)
@@ -117,17 +109,7 @@ TEST(test_molecularInorganics, test_MI_4_FeCl3)
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/Cl3Fe/c1-4(2)3";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Cl3Fe/c1-4(2)3", 0);
 }
 
 TEST(test_molecularInorganics, test_MI_5_hydrido_dimethyl_iron)
@@ -146,17 +128,7 @@ TEST(test_molecularInorganics, test_MI_5_hydrido_dimethyl_iron)
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/C2H7Fe/c1-3(2)4/h1-2H3";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 0);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/C2H7Fe/c1-3(2)4/h1-2H3", 0);
 }
 
 TEST(test_molecularInorganics, test_MI_6_Pt_haptic)
@@ -187,17 +159,7 @@ M  V30 END CTAB
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/C2H4Cl3Pt/c3-6(4,5)1-2-6/h1-2H2/q-1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/C2H4Cl3Pt/c3-6(4,5)1-2-6/h1-2H2/q-1", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_GHI_218)
@@ -312,17 +274,7 @@ M  V30 END BOND
 M  V30 END CTAB
 M  END)";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/2C15H10O7.Ti/c2*16-6-1-2-8(9(18)3-6)15-14(21)13(20)12-10(19)4-7(17)5-11(12)22-15;/h2*1-5,16-19,21H;/q2*-1;+4/p-2";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/2C15H10O7.Ti/c2*16-6-1-2-8(9(18)3-6)15-14(21)13(20)12-10(19)4-7(17)5-11(12)22-15;/h2*1-5,16-19,21H;/q2*-1;+4/p-2", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_Na_H2O_CoordBond)
@@ -344,17 +296,7 @@ M  V30 END CTAB
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+     ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+1;/p-1", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_Na_H2O_CoordBond_Charged)
@@ -376,17 +318,7 @@ M  V30 END CTAB
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+1;/p-1", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_Na_Methoxide_Charged)
@@ -410,17 +342,7 @@ M  V30 END CTAB
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1", 1);
 }
 
 TEST(test_molecularInorganics, test_MI_Na_Methoxide_Valence1)
@@ -444,17 +366,7 @@ M  V30 END CTAB
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/CH3O.Na/c1-2;/h1H3;/q-1;+1", 1);
 }
 
 
@@ -471,15 +383,5 @@ M  CHG  2   1   1   2  -1
 M  END
 )";
 
-    char options[] = "-MolecularInorganics";
-    inchi_Output output;
-    inchi_Output* poutput = &output;
-    memset(poutput, 0, sizeof(*poutput));
-
-    const char expected_inchi[] = "InChI=1B/Na.H2O/h;1H2/q+1;/p-1";
-
-    EXPECT_EQ(MakeINCHIFromMolfileText(molblock, options, poutput), 1);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
-
-    FreeINCHI(poutput);
+     ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+1;/p-1", 1);
 }
