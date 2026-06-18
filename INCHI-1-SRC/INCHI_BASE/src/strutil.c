@@ -6465,6 +6465,16 @@ int MolecularInorganicsKeepBond(inp_ATOM *at, int metal_idx, int neigh_idx, int 
  * performs that change in place: every COORDINATIVE_BOND becomes
  * BOND_TYPE_SINGLE and, when the two atoms carry opposite-sign charges, each is
  * moved one step toward neutral (one charge pair neutralized per bond).
+ *
+ * Only type-9 bonds are touched. A plain single bond is left alone even when
+ * its endpoints carry opposite formal charges: there the charges are an
+ * intrinsic part of the single-bond Lewis structure, not the zero-order
+ * artifact of a dative bond, so cancelling them would corrupt a self-consistent
+ * depiction (and leave the atoms at unusual valences).
+ *
+ * Each undirected bond is processed exactly once, from its lower-indexed
+ * endpoint (the j > i guard), so a multiply-charged pair (e.g. M(2+)-L(2-))
+ * cannot have its charges cancelled once from each stored half-bond.
  *****************************************************************************/
 static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
 {
@@ -6480,28 +6490,27 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
                 continue;
             }
 
-            /* Accept coordinative bonds and equivalent charge-separated
-             * metal–ligand single bonds with opposite formal charges.
-            */
-            if (at[i].bond_type[k] != COORDINATIVE_BOND &&
-                !(at[i].bond_type[k] == BOND_TYPE_SINGLE &&
-                  is_el_a_metal(at[i].el_number) != is_el_a_metal(at[j].el_number) &&
-                  ((at[i].charge > 0 && at[j].charge < 0) ||
-                   (at[i].charge < 0 && at[j].charge > 0))))
+            /* Visit each undirected bond once, from the lower-indexed atom, so
+             * a multiply-charged pair cannot be neutralized once from each end. */
+            if (j <= i)
             {
                 continue;
             }
 
-            /* Realize the bond as single on both endpoints. Converting both
-             * sides here means the reverse half-bond is no longer type 9, so
-             * the same bond is not processed (or its charge cancelled) twice.
-            */
+            /* Only coordinative (type 9) bonds are converted; plain single
+             * bonds keep their intrinsic formal charges untouched. */
+            if (at[i].bond_type[k] != COORDINATIVE_BOND)
+            {
+                continue;
+            }
 
+            /* Realize the bond as single on both endpoints so the rest of the
+             * pipeline sees a plain single bond from either atom. */
             at[i].bond_type[k] = BOND_TYPE_SINGLE;
 
             for (k2 = 0; k2 < at[j].valence; k2++)
             {
-                 if (at[j].neighbor[k2] == i)
+                if (at[j].neighbor[k2] == i)
                 {
                     at[j].bond_type[k2] = BOND_TYPE_SINGLE;
                     break;
@@ -6595,9 +6604,48 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         }
     }
 
-    /* Realize coordinative (type 9) bonds as single bonds and cancel the
-     * paired +/- formal charges, so the rest of the pipeline treats them
-     * exactly like the equivalent single-bonded structure. */
+    /* Disconnect charge-separated metal-ligand bonds, preserving the drawn
+     * formal charges. A metal and ligand carrying opposite formal charges
+     * across a single (type 1) or coordinative (type 9) bond depict an ionic
+     * interaction (e.g. M(2+) ... L(2-)) and must split into the drawn ions
+     * regardless of the metal's nominal valence or the presence of other
+     * metals in the same component - the heuristics in the disconnection loop
+     * below would otherwise keep these bonds connected. DisconnectInpAtBond
+     * also decrements valence and chem_bonds_valence on both atoms (a type-9
+     * bond counts as single), so no charge is added or removed here: each ion
+     * keeps exactly the charge drawn in the input. Higher-order bonds (e.g. a
+     * drawn M=O double bond) are genuine covalent bonds and are left intact. */
+    for (i = 0; i < num_at; i++)
+    {
+        for (k = 0; k < at[i].valence; )
+        {
+            j = at[i].neighbor[k];
+
+            /* Process each undirected bond once, from its lower-indexed atom,
+             * and only charge-separated metal/non-metal single or coordinative
+             * bonds. */
+            if (j <= i || j >= num_at ||
+                (at[i].bond_type[k] != COORDINATIVE_BOND &&
+                 at[i].bond_type[k] != BOND_TYPE_SINGLE) ||
+                is_el_a_metal(at[i].el_number) == is_el_a_metal(at[j].el_number) ||
+                !((at[i].charge > 0 && at[j].charge < 0) ||
+                  (at[i].charge < 0 && at[j].charge > 0)))
+            {
+                k++;
+                continue;
+            }
+
+            DisconnectInpAtBond(at, nOldCompNumber, i, k);
+            num_disconnected++;
+            ip->bMolecularInorganicsReconnectedInChI = 1;
+            /* neighbor k was removed; the next neighbor shifted into its slot,
+             * so do not advance k here. */
+        }
+    }
+
+    /* Realize the remaining (uncharged) coordinative (type 9) bonds as single
+     * bonds, so the rest of the pipeline treats them like the equivalent
+     * single-bonded structure. */
     ConvertCoordinativeBondsToSingle(at, num_at);
 
     /* Function call to Mark ring systems */

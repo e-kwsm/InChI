@@ -385,3 +385,114 @@ M  END
 
      ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+1;/p-1", 1);
 }
+
+/* (@fbaensch) Charge accounting for multiply-charged coordinative (type 9)
+ * metal-ligand bonds: the charge cancellation happens only at the bond-
+ * replacement site (type 9 -> type 1); disconnection must not alter charges.
+ * Each coordinative bond therefore sheds one charge unit per endpoint, and
+ * the resulting ions disconnect with the remaining formal charges intact. */
+
+TEST(test_molecularInorganics, test_MI_NaOH_charged_disconnected)
+{
+    const char* molblock = R"(
+  ACCLDraw06152616342D
+
+  2  0  0  0  0  0  0  0  0  0999 V2000
+   16.3750   -5.1250    0.0000 Na  0  3  0  0  0  0  0  0  0  0  0  0
+   17.5313   -3.7500    0.0000 O   0  5  0  0  0  0  0  0  0  0  0  0
+M  CHG  2   1   1   2  -1
+M  END
+)";
+
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+1;/p-1", 1);
+}
+
+TEST(test_molecularInorganics, test_MI_NaOH_charged_coordinative)
+{
+    const char* molblock = R"(
+  -INDIGO-06172612032D
+
+  0  0  0  0  0  0  0  0  0  0  0 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 2 1 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 4.675 -6.475 0.0 0 CHG=2
+M  V30 2 O 6.25711 -4.84289 0.0 0 CHG=-2 VAL=2
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.H2O/h;1H2/q+2;-2", 1);
+}
+
+TEST(test_molecularInorganics, test_MI_NaO_charged_coordinative)
+{
+    const char* molblock = R"(
+  -INDIGO-06172612042D
+
+  0  0  0  0  0  0  0  0  0  0  0 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 2 1 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 4.675 -6.475 0.0 0 CHG=2
+M  V30 2 O 6.25711 -4.84289 0.0 0 CHG=-2
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Na.O/q+2;-2", 1);
+}
+
+TEST(test_molecularInorganics, test_MI_NaONa_charged_coordinative)
+{
+    const char* molblock = R"(
+  -INDIGO-06172612062D
+
+  0  0  0  0  0  0  0  0  0  0  0 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 3 2 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Na 4.675 -6.475 0.0 0 CHG=1
+M  V30 2 O 6.25711 -4.84289 0.0 0 CHG=-2
+M  V30 3 Na 7.48921 -6.225 0.0 0 CHG=1
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 2 9 2 3
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/2Na.O/q2*+1;-2", 1);
+}
+
+TEST(test_molecularInorganics, test_MI_MgO_charged_coordinative)
+{
+    const char* molblock = R"(
+  -INDIGO-06172612352D
+
+  0  0  0  0  0  0  0  0  0  0  0 V3000
+M  V30 BEGIN CTAB
+M  V30 COUNTS 2 1 0 0 0
+M  V30 BEGIN ATOM
+M  V30 1 Mg 6.48135 -5.51875 0.0 0 CHG=2
+M  V30 2 O 8.63135 -5.49375 0.0 0 CHG=-2
+M  V30 END ATOM
+M  V30 BEGIN BOND
+M  V30 1 9 2 1
+M  V30 END BOND
+M  V30 END CTAB
+M  END
+)";
+
+    ExpectedMolecularInorganicsInChI(molblock, "InChI=1B/Mg.O/q+2;-2", 1);
+}
