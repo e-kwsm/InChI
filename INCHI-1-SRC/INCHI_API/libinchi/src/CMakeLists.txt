@@ -138,6 +138,8 @@ target_sources(libinchi PRIVATE
 	${P_BASE}/strutil.h
 	${P_BASE}/util.c
 	${P_BASE}/util.h
+	${P_BASE}/eldata.c
+	${P_BASE}/eldata.h
 	${P_VC}/resource.h
 )
 
