@@ -4171,18 +4171,6 @@ int MolecularInorganicsIsMetalToDisconnect(inp_ATOM *at, int atom_idx)
 
 /*****************************************************************************
  * (@nnuk : Nauman Ullah Khan)
- * Elements Array for for molecular inorganics
- ******************************************************************************/
-
-
-/*************************************************************************
- * (@nnuk : NaumanUllahKhan)
- * Binary Array of all the Electronegativity values between Elements
- **************************************************************************/
-
-
-/*****************************************************************************
- * (@nnuk : Nauman Ullah Khan)
  * Function to retrieve binary values for MolecularInorganicsPreprocessing
  * Binary values are retrieved from the disconnection array "binaryArrayMolecularInorganics"
  * "1" means that the bond between atom and the neighbouring atom has to be
