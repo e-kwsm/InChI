@@ -110,6 +110,7 @@ target_sources(inchi-1 PRIVATE
 	${P_BASE}/sha2.h
 	${P_BASE}/stb_sprintf.h
 	${P_BASE}/strutil.c
+	${P_BASE}/molecular_inorganics_data.c
 	${P_BASE}/strutil.h
 	${P_BASE}/util.c
 	${P_BASE}/util.h
