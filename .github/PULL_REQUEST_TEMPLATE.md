@@ -8,8 +8,8 @@ to drive versioning and the CHANGELOG. Examples:
   feat!: change default behavior of metal implicit-H handling  (the `!` marks a breaking change)
 
 For more details see:
-  - https://github.com/googleapis/release-please
-  - https://www.conventionalcommits.org/en/v1.0.0/
+  https://github.com/googleapis/release-please
+  https://www.conventionalcommits.org/en/v1.0.0/
 
 Allowed types: feat, fix, perf, revert, build, chore, ci, docs, refactor,
                 style, test
