@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to report a bug. Please fill in as much as
-        you can — minimal reproductions are gold.
+        you can — [minimal reproductions](https://en.wikipedia.org/wiki/Minimal_reproducible_example) are gold.
 
         Note: many "experimental" flags (`KET`, `15T`, `PT_*`, `InChI2Struct`,
         `InChI2InChI`, polymer options, …) are documented as not fully
@@ -85,6 +85,7 @@ body:
         - inchi-1 (standalone CLI)
         - libinchi (classic inchi_* API)
         - libinchi (IXA API)
+        - WebDemo (web UI)
         - Not sure / both
     validations:
       required: true
@@ -96,7 +97,7 @@ body:
       description: Compiler and version used to build.
       placeholder: "gcc 13.2 / clang 18 / MSVC 19.40"
     validations:
-      required: true
+      required: false
 
   - type: input
     id: os
