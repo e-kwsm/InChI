@@ -43,7 +43,7 @@
 #include "molecular_inorganics_data.h"
 #include "bcf_s.h"
 
-const MolecularInorganicsElData MolecularInorganicsArray[] =
+const MolecularInorganicsElData MolecularInorganicsArray[NUM_CHEM_ELEMENTS] =
 {
     /*       avg  norm                             El    No  -------- Valence(s) of an ion or neutral atom -------------*/
     /*        mw  mass     exact mw        type    neg   H    -2          -1          0            +1         +2          */
