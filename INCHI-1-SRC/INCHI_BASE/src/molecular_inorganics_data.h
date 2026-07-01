@@ -46,7 +46,7 @@
 #define NUM_ELEMENTS 118 /* Adjust according to the number of elements in the array */
 
 extern const MolecularInorganicsElData MolecularInorganicsArray[];
-extern ElementsMolecularInorganics     elementListMolecularInorganics[NUM_ELEMENTS];
+extern const ElementsMolecularInorganics elementListMolecularInorganics[NUM_ELEMENTS];
 extern const int binaryArrayMolecularInorganics[][NUM_ELEMENTS];
 
 #endif /* _MOLECULAR_INORGANICS_DATA_H_ */
