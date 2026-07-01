@@ -115,7 +115,7 @@ int inchi_strbuf_addline( INCHI_IOS_STRING *buf, INCHI_IOSTREAM *inp_stream, int
 
 void print_sequence_of_nums_compressing_ranges( int n, int *num, INCHI_IOS_STRING *strbuf );
 
-int _inchi_trace( char *format, ... );
+int _inchi_trace( const char *format, ... );
 
 int Output_RecordInfo( INCHI_IOSTREAM *out_file,
                         int num_input_struct,
