@@ -4249,7 +4249,7 @@ int getElValenceforMolecularInorganics(int nPeriodicNum, int charge, int val_num
         return 0;
     }
 
-    return MolecularInorganicsArray[nPeriodicNum > 1 ? nPeriodicNum + 1 : 0].cValence[NEUTRAL_STATE + charge][val_num];
+    return (int) MolecularInorganicsArray[nPeriodicNum > 1 ? nPeriodicNum + 1 : 0].cValence[NEUTRAL_STATE + charge][val_num];
 }
 
 /****************************************************************************
