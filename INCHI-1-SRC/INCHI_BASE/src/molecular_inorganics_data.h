@@ -41,7 +41,7 @@
 #ifndef _MOLECULAR_INORGANICS_DATA_H_
 #define _MOLECULAR_INORGANICS_DATA_H_
 
-#include "strutil.h"   /* MolecularInorganicsElData, ElementsMolecularInorganics, MolInOrg* */
+#include "strutil.h"   /* MolecularInorganicsElData, ElementsMolecularInorganics, MolInOrg(n) */
 #include "extr_ct.h"   /* NUM_CHEM_ELEMENTS */
 
 #define NUM_ELEMENTS 118 /* Adjust according to the number of elements in the array */
