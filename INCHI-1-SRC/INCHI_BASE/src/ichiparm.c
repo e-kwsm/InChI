@@ -3127,6 +3127,18 @@ int DetectInputINChIFileType(FILE** inp_file,
 #endif
     }
 
+    /* Auto-detection peeks the first lines of the input, which consumes them
+       from the stream. That is only recoverable if the stream is seekable:
+       for a non-seekable input (pipe, FIFO, /dev/stdin, process substitution)
+       the consumed Molfile header cannot be restored and the subsequent parser
+       would start mid-record. Skip detection for such inputs and keep the
+       declared (MOLFILE/SDFILE) input type. */
+    (void) fmode; /* no longer reopened by path; kept for the declared signature */
+    if ( fseek(*inp_file, 0L, SEEK_SET) )
+    {
+        return 0;
+    }
+
     for ( i = 0; i < 4; i++ )
     {
         len = inchi_fgetsLfTab(szLine, sizeof(szLine) - 1, *inp_file);
@@ -3147,8 +3159,10 @@ int DetectInputINChIFileType(FILE** inp_file,
         ret = 1;
     }
 
-    fclose(*inp_file);
-    *inp_file = fopen(ip->path[0], fmode);
+    /* Rewind for the actual reader. Use fseek() rather than fclose()+fopen():
+       reopening by path fails for special files and only happens to work for
+       regular files. */
+    fseek(*inp_file, 0L, SEEK_SET);
 
     return ret;
 }
