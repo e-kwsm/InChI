@@ -1696,7 +1696,7 @@ int _inchi_trace(const char* format, ...)
     return 1;
 }
 #else
-int _inchi_trace(char* format, ...)
+int _inchi_trace(const char* format, ...)
 {
     return 1;
 }
