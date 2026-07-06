@@ -3088,6 +3088,30 @@ static int bMatchOnePrefix(int len, char* str,
 }
 
 /****************************************************************************/
+/**
+ * @brief Auto-detect whether a named input file holds plain InChI/AuxInfo text.
+ *
+ * Peeks the first few lines of the input and, if at least two of them start
+ * with a recognised @c InChI=/@c AuxInfo= version prefix, switches
+ * @p ip->nInputType to ::INPUT_INCHI_PLAIN. Otherwise the declared input type
+ * (typically a MOLfile/SDfile) is left unchanged.
+ *
+ * Peeking consumes those lines, so the stream must be rewound afterwards. That
+ * is only possible for a seekable stream: for a non-seekable input (pipe, FIFO,
+ * @c /dev/stdin, process substitution) the consumed header cannot be restored,
+ * which would make the subsequent parser start mid-record. Such inputs are
+ * therefore left untouched and their declared type is kept; pass an explicit
+ * input-type option (e.g. @c InpAux) to read plain InChI from a pipe.
+ *
+ * @param[in,out] inp_file  Address of the open input stream; rewound to the
+ *                          start on return for seekable streams.
+ * @param[in,out] ip        Parsed input parameters; @c nInputType may be
+ *                          promoted to ::INPUT_INCHI_PLAIN.
+ * @param[in]     fmode     Retained for the declared signature; no longer used
+ *                          now that rewinding is done with @c fseek().
+ * @return 1 if the input was recognised as (or already declared to be) plain
+ *         InChI/AuxInfo, 0 otherwise.
+ */
 int DetectInputINChIFileType(FILE** inp_file,
     INPUT_PARMS* ip,
     const char* fmode)
