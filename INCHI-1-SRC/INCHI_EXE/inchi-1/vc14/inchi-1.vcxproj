@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\INCHI_BASE\src\bcf_s.c" />
+    <ClCompile Include="..\..\..\INCHI_BASE\src\eldata.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\ichican2.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\ichicano.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\ichicans.c" />
@@ -58,6 +59,7 @@
     <ClCompile Include="..\..\..\INCHI_BASE\src\mol_fmt2.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\mol_fmt3.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\mol_fmt4.c" />
+    <ClCompile Include="..\..\..\INCHI_BASE\src\molecular_inorganics_data.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\permutation_util.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\readinch.c" />
     <ClCompile Include="..\..\..\INCHI_BASE\src\runichi.c" />
