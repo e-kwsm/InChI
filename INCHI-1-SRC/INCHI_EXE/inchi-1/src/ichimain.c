@@ -642,16 +642,30 @@ int ProcessSingleInputFile(int argc, char* argv[])
         return 0;
     }
 
-    /* Disallow endless execution when no input file is given as the first
-       argument (argv[1] is an option) AND stdin is an interactive terminal:
-       falling through would block forever waiting for input that never ends.
-       When stdin is a pipe or redirect (e.g. "cat file.mol | inchi-1 -STDIO")
-       there is real input with an EOF, so proceed and read it as before. */
-    if (argc >= 2 && (argv[1][0] == INCHI_OPTION_PREFX) && INCHI_ISATTY(INCHI_FILENO(stdin)))
+    /* Disallow endless execution when no input file is given AND stdin is an
+       interactive terminal: falling through would block forever waiting for
+       input that never ends. An input file is any non-option argument -
+       ReadCommandLineParms() assigns the first such token to the input path
+       regardless of where it sits among the options - so scan the whole list
+       rather than only argv[1]. When stdin is a pipe or redirect (e.g.
+       "cat file.mol | inchi-1 -STDIO") there is real input with an EOF, so
+       proceed and read it as before. */
     {
-        HelpCommandLineParms(plog);
-        inchi_ios_flush(plog);
-        return 0;
+        int have_input_file = 0;
+        for (int ac = 1; ac < argc; ac++)
+        {
+            if (argv[ac][0] != INCHI_OPTION_PREFX)
+            {
+                have_input_file = 1;
+                break;
+            }
+        }
+        if (!have_input_file && INCHI_ISATTY(INCHI_FILENO(stdin)))
+        {
+            HelpCommandLineParms(plog);
+            inchi_ios_flush(plog);
+            return 0;
+        }
     }
 
     /*  original input structure */

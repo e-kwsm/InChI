@@ -1,11 +1,20 @@
+import os
+import sys
+import time
+from pathlib import Path
+
 import pytest
 
-# Regression test for https://github.com/IUPAC-InChI/InChI/issues/236
+# Regression tests for https://github.com/IUPAC-InChI/InChI/issues/236
 #
 # In 1.07.5 the CLI printed the help text and exited whenever the first
 # argument started with the option prefix, so piping a structure on stdin
-# ("cat file.mol | inchi-1 -STDIO ...") never read the input. This checks
-# that stdin is read again and yields the expected InChI / InChIKey.
+# ("cat file.mol | inchi-1 -STDIO ...") never read the input, and even an
+# explicit input file was ignored when options preceded it. The help text is
+# now shown only when no input file is given *and* stdin is an interactive
+# terminal (otherwise the process would block forever). These tests cover the
+# stdin pipe, an input file placed after the options at a real terminal, and
+# the interactive no-input safeguard.
 
 EXPECTED_INCHI = (
     "InChI=1S/C41H78O17P2/c1-5-9-13-17-21-25-38(43)51-31-36(57-40(45)"
@@ -30,3 +39,78 @@ def test_reads_structure_from_stdin(molfile, run_inchi_exe_stdin):
 
     assert EXPECTED_INCHI in result.stdout
     assert EXPECTED_INCHIKEY in result.stdout
+
+
+def _run_under_pty(argv: list[str], timeout: float = 10.0) -> str:
+    """Run argv with stdin/stdout attached to a pseudo-terminal.
+
+    The interactive-no-input safeguard only triggers when stdin is a real tty,
+    which a plain subprocess pipe is not, so drive the executable through a pty
+    and return everything it wrote to the terminal.
+    """
+    import pty
+    import select
+
+    pid, fd = pty.fork()
+    if pid == 0:  # child: exec the executable with the pty as its std streams
+        os.execv(argv[0], argv)
+
+    out = bytearray()
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        readable, _, _ = select.select([fd], [], [], 0.3)
+        if readable:
+            try:
+                chunk = os.read(fd, 4096)
+            except OSError:  # pty closed on child exit
+                break
+            if not chunk:
+                break
+            out += chunk
+        else:
+            try:
+                if os.waitpid(pid, os.WNOHANG)[0]:
+                    break
+            except ChildProcessError:
+                break
+    try:
+        os.waitpid(pid, 0)
+    except (ChildProcessError, OSError):
+        pass
+    return out.decode(errors="replace")
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="pty is POSIX-only")
+def test_input_file_after_options_at_tty(molfile, tmp_path, request):
+    """An input file must be honoured even when options precede it at a tty.
+
+    Reproduces the case raised in review: "inchi-1 -Key -AuxNone -STDIO f.mol"
+    used to print the help text at an interactive terminal because the guard
+    only inspected argv[1].
+    """
+    exe_path: str = request.config.getoption("--exe-path")
+    if not Path(exe_path).exists():
+        raise FileNotFoundError(f"InChI executable not found at {exe_path}.")
+
+    mol_path = tmp_path.joinpath("input.mol")
+    mol_path.write_text(molfile)
+
+    output = _run_under_pty(
+        [exe_path, "-Key", "-AuxNone", "-STDIO", str(mol_path)]
+    )
+
+    assert "Usage:" not in output
+    assert EXPECTED_INCHIKEY in output
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="pty is POSIX-only")
+def test_help_when_no_input_file_at_tty(request):
+    """With only options and an interactive terminal, show help, do not hang."""
+    exe_path: str = request.config.getoption("--exe-path")
+    if not Path(exe_path).exists():
+        raise FileNotFoundError(f"InChI executable not found at {exe_path}.")
+
+    output = _run_under_pty([exe_path, "-Key", "-AuxNone", "-STDIO"])
+
+    assert "Usage:" in output
+    assert EXPECTED_INCHIKEY not in output
