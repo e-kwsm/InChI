@@ -153,6 +153,8 @@ $(P_BASE)/runichi3.c	\
 $(P_BASE)/runichi4.c	\
 $(P_BASE)/sha2.c	\
 $(P_BASE)/strutil.c	\
+$(P_BASE)/eldata.c	\
+$(P_BASE)/molecular_inorganics_data.c	\
 $(P_BASE)/util.c	\
 $(P_BASE)/permutation_util.c	\
 $(P_MAIN)/dispstru.c	\
@@ -205,6 +207,8 @@ runichi3.o	\
 runichi4.o	\
 sha2.o	\
 strutil.o	\
+eldata.o	\
+molecular_inorganics_data.o	\
 util.o	\
 dispstru.o	\
 permutation_util.o	\
