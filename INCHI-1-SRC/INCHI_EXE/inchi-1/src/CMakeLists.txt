@@ -57,6 +57,8 @@ target_sources(inchi-1 PRIVATE
 	${P_BASE}/ichimap4.c
 	${P_BASE}/ichinorm.c
 	${P_BASE}/ichinorm.h
+	${P_BASE}/ichiarom.c
+	${P_BASE}/ichiarom.h
 	${P_BASE}/ichiparm.c
 	${P_BASE}/ichiprt1.c
 	${P_BASE}/ichiprt2.c
