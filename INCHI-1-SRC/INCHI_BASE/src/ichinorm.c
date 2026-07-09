@@ -5672,10 +5672,6 @@ exit_r2c_num:
 }
 
 
-#ifdef FIX_UNDERIV_TO_SDF
-#endif  /* FIX_UNDERIV_TO_SDF */
-
-
 #ifdef UNDERIV_ADD_EXPLICIT_H
 
 
