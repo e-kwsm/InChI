@@ -127,7 +127,7 @@ $(P_BASE)/ichimap2.c	\
 $(P_BASE)/ichimap4.c	\
 $(P_BASE)/ichimak2.c	\
 $(P_BASE)/ichinorm.c	\
-$(P_BASE)/ichiarom.c	\
+$(P_BASE)/aromaticity.c	\
 $(P_BASE)/ichiparm.c	\
 $(P_BASE)/ichiprt1.c	\
 $(P_BASE)/ichiprt2.c	\
@@ -177,7 +177,7 @@ ichimap1.o	\
 ichimap2.o	\
 ichimap4.o	\
 ichinorm.o	\
-ichiarom.o	\
+aromaticity.o	\
 ichiprt1.o	\
 ichiprt2.o	\
 ichiprt3.o	\

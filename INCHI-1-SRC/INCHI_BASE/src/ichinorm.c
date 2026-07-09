@@ -47,7 +47,7 @@ Underivatization, ring-chain tautomerism, OriGAtData edits, etc.
 
 #include "mode.h"
 #include "ichinorm.h"
-#include "ichiarom.h"
+#include "aromaticity.h"
 #include "ichierr.h"
 
 #include "bcf_s.h"

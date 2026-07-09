@@ -4,12 +4,12 @@ extern "C"
 {
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/inpdef.h"   // inp_ATOM, CreateInpAtom, FreeInpAtom
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/util.h"     // EL_NUMBER_C, EL_NUMBER_N, EL_NUMBER_O
-#include "../../../INCHI-1-SRC/INCHI_BASE/src/ichiarom.h" // functions under test
+#include "../../../INCHI-1-SRC/INCHI_BASE/src/aromaticity.h" // functions under test
 }
 
 // ---- FixAromaticOxygenAndSulfur ---------------------------------------
 
-TEST(test_ichiarom, FixAromaticOxygenAndSulfur_charges_neutral_aromatic_O)
+TEST(test_aromaticity, FixAromaticOxygenAndSulfur_charges_neutral_aromatic_O)
 {
     inp_ATOM a{};
     a.elname[0] = 'O';
@@ -24,7 +24,7 @@ TEST(test_ichiarom, FixAromaticOxygenAndSulfur_charges_neutral_aromatic_O)
     EXPECT_EQ(a.charge, 1);
 }
 
-TEST(test_ichiarom, FixAromaticOxygenAndSulfur_ignores_charged_atom)
+TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_charged_atom)
 {
     inp_ATOM a{};
     a.elname[0] = 'S';
@@ -39,7 +39,7 @@ TEST(test_ichiarom, FixAromaticOxygenAndSulfur_ignores_charged_atom)
     EXPECT_EQ(a.charge, 1); // untouched
 }
 
-TEST(test_ichiarom, FixAromaticOxygenAndSulfur_ignores_non_O_S)
+TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_non_O_S)
 {
     inp_ATOM a{};
     a.elname[0] = 'N';
@@ -54,7 +54,7 @@ TEST(test_ichiarom, FixAromaticOxygenAndSulfur_ignores_non_O_S)
 
 // ---- is_C_unsat_not_arom ----------------------------------------------
 
-TEST(test_ichiarom, is_C_unsat_not_arom_true_for_C_with_double_bond)
+TEST(test_aromaticity, is_C_unsat_not_arom_true_for_C_with_double_bond)
 {
     // C(=C)  -- one double bond, no aromatic bonds
     inp_ATOM *at = CreateInpAtom(2);
@@ -72,7 +72,7 @@ TEST(test_ichiarom, is_C_unsat_not_arom_true_for_C_with_double_bond)
     FreeInpAtom(&at);
 }
 
-TEST(test_ichiarom, is_C_unsat_not_arom_false_for_aromatic_C)
+TEST(test_aromaticity, is_C_unsat_not_arom_false_for_aromatic_C)
 {
     // aromatic carbon: has a BOND_TYPE_ALTERN bond -> not counted as "not arom"
     inp_ATOM *at = CreateInpAtom(2);
@@ -90,7 +90,7 @@ TEST(test_ichiarom, is_C_unsat_not_arom_false_for_aromatic_C)
 
 // ---- is_Aryl ----------------------------------------------------------
 
-TEST(test_ichiarom, is_Aryl_true_for_aromatic_attachment_carbon)
+TEST(test_aromaticity, is_Aryl_true_for_aromatic_attachment_carbon)
 {
     // attachment C (idx 0), outside point idx 3; two BOND_ALTERN bonds to C/N
     inp_ATOM *at = CreateInpAtom(4);
@@ -111,7 +111,7 @@ TEST(test_ichiarom, is_Aryl_true_for_aromatic_attachment_carbon)
     FreeInpAtom(&at);
 }
 
-TEST(test_ichiarom, is_Aryl_false_for_wrong_valence)
+TEST(test_aromaticity, is_Aryl_false_for_wrong_valence)
 {
     inp_ATOM *at = CreateInpAtom(2);
     at[0].el_number = EL_NUMBER_C;
@@ -125,7 +125,7 @@ TEST(test_ichiarom, is_Aryl_false_for_wrong_valence)
 
 // ---- check_arom_chain -------------------------------------------------
 
-TEST(test_ichiarom, check_arom_chain_true_for_altern_CH_chain)
+TEST(test_aromaticity, check_arom_chain_true_for_altern_CH_chain)
 {
     // chain: 0(start) -1- 2(last). Atoms 0,1 are aromatic CH (valence 2,
     // chem_bonds_valence 3, num_H 1) joined by BOND_ALTERN.
@@ -153,7 +153,7 @@ TEST(test_ichiarom, check_arom_chain_true_for_altern_CH_chain)
     FreeInpAtom(&at);
 }
 
-TEST(test_ichiarom, check_arom_chain_false_when_bond_not_altern)
+TEST(test_aromaticity, check_arom_chain_false_when_bond_not_altern)
 {
     inp_ATOM *at = CreateInpAtom(3);
     for (int k = 0; k < 2; k++)
@@ -178,7 +178,7 @@ TEST(test_ichiarom, check_arom_chain_false_when_bond_not_altern)
 
 // ---- replace_arom_bonds -----------------------------------------------
 
-TEST(test_ichiarom, replace_arom_bonds_copies_resolved_type_from_reference)
+TEST(test_aromaticity, replace_arom_bonds_copies_resolved_type_from_reference)
 {
     // `at`: two atoms with a residual aromatic bond (type 4 > BOND_TRIPLE).
     inp_ATOM *at = CreateInpAtom(2);
@@ -203,7 +203,7 @@ TEST(test_ichiarom, replace_arom_bonds_copies_resolved_type_from_reference)
     FreeInpAtom(&at2);
 }
 
-TEST(test_ichiarom, replace_arom_bonds_counts_error_when_unmatched)
+TEST(test_aromaticity, replace_arom_bonds_counts_error_when_unmatched)
 {
     inp_ATOM *at = CreateInpAtom(2);
     at[0].orig_at_number = 10; at[0].valence = 1;

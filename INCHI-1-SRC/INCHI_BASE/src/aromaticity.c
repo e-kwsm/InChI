@@ -42,7 +42,7 @@
 #include <string.h>
 
 #include "mode.h"
-#include "ichiarom.h"
+#include "aromaticity.h"
 #include "ichinorm.h"  /* declares mark_alt_bonds_and_taut_groups + engine types */
 #include "util.h"      /* is_in_the_list */
 #include "ichierr.h"
