@@ -221,3 +221,42 @@ TEST(test_aromaticity, replace_arom_bonds_counts_error_when_unmatched)
     FreeInpAtom(&at);
     FreeInpAtom(&at2);
 }
+
+TEST(test_aromaticity, replace_arom_bonds_resolves_when_reference_indexing_differs)
+{
+    // replace_arom_bonds matches atoms between `at` and `at2` by
+    // orig_at_number, so at[i1] and at2[i1] are generally DIFFERENT atoms.
+    // The scan of at2[i1]'s neighbor list must therefore be bounded by
+    // at2[i1].valence, not at[i1].valence. This case makes the two diverge:
+    // in `at` each atom has one aromatic bond (valence 1), but the matching
+    // reference atoms in `at2` have valence 2 with the cross-bond neighbor at
+    // index 1 -- beyond at[i1].valence. With the wrong bound the neighbor is
+    // never found and both bonds are left unresolved.
+
+    inp_ATOM *at = CreateInpAtom(2);
+    at[0].orig_at_number = 10; at[0].valence = 1;
+    at[0].neighbor[0] = 1; at[0].bond_type[0] = BOND_TYPE_ALTERN; // > BOND_TRIPLE
+    at[1].orig_at_number = 20; at[1].valence = 1;
+    at[1].neighbor[0] = 0; at[1].bond_type[0] = BOND_TYPE_ALTERN;
+
+    // Reference with different indexing/valence. i1 for orig 10 is index 0,
+    // i1 for orig 20 is index 1; the cross-bond neighbor sits at position 1
+    // in each (>= at[i1].valence == 1), and the resolved order there is DOUBLE.
+    inp_ATOM *at2 = CreateInpAtom(3);
+    at2[0].orig_at_number = 10; at2[0].valence = 2;
+    at2[0].neighbor[0] = 2; at2[0].bond_type[0] = BOND_TYPE_SINGLE;
+    at2[0].neighbor[1] = 1; at2[0].bond_type[1] = BOND_TYPE_DOUBLE; // bond to orig 20
+    at2[1].orig_at_number = 20; at2[1].valence = 2;
+    at2[1].neighbor[0] = 2; at2[1].bond_type[0] = BOND_TYPE_SINGLE;
+    at2[1].neighbor[1] = 0; at2[1].bond_type[1] = BOND_TYPE_DOUBLE; // bond to orig 10
+    at2[2].orig_at_number = 30; at2[2].valence = 2;
+    at2[2].neighbor[0] = 0; at2[2].bond_type[0] = BOND_TYPE_SINGLE;
+    at2[2].neighbor[1] = 1; at2[2].bond_type[1] = BOND_TYPE_SINGLE;
+
+    EXPECT_EQ(replace_arom_bonds(at, 2, at2, 3), 0);  // both bonds resolved, no errors
+    EXPECT_EQ(at[0].bond_type[0], BOND_TYPE_DOUBLE);  // restored from reference
+    EXPECT_EQ(at[1].bond_type[0], BOND_TYPE_DOUBLE);
+
+    FreeInpAtom(&at);
+    FreeInpAtom(&at2);
+}

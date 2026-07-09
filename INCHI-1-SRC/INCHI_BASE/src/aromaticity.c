@@ -207,7 +207,7 @@ int replace_arom_bonds( inp_ATOM *at,
                 }
                 if (i1 < num_atoms2 && i2 < num_atoms2)
                 {
-                    AT_NUMB *p1 = is_in_the_list( at2[i1].neighbor, (AT_NUMB) i2, at[i1].valence );
+                    AT_NUMB *p1 = is_in_the_list( at2[i1].neighbor, (AT_NUMB) i2, at2[i1].valence );
                     AT_NUMB *pneigh = is_in_the_list( at[neigh].neighbor, (AT_NUMB) i, at[neigh].valence );
                     if (p1 && pneigh)
                     {
