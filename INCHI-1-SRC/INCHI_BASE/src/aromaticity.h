@@ -72,9 +72,9 @@ struct tagCANON_GLOBALS;
  * @brief Charge a neutral, divalent aromatic oxygen or sulfur so it can be kekulized.
  *
  * Matches a two-coordinate, uncharged, non-radical O or S whose two bond
- * types sum to 3 (a single plus an "aromatic"/type-4 bond, i.e. an -O-/-S-
- * inside an aromatic ring). Such an atom cannot take a localized double bond
- * while neutral; setting a formal +1 charge lets the kekulizer assign one.
+ * types sum to 3 (one single + one double bond -- the Kekule form of a
+ * divalent -O-/-S- in an aromatic ring). Setting a formal +1 charge marks
+ * such an atom so the surrounding ring can be kekulized.
  *
  * @param atom Atom to inspect; its @c charge is set to 1 in place on a match.
  * @return 1 if the atom matched and was modified; 0 otherwise (atom untouched).
