@@ -300,6 +300,20 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
      */
     if ( ip->bMolecularInorganics && nRet != _IS_FATAL && nRet != _IS_ERROR )
     {
+        /* Capture the native input as OrigStruct before MolecularInorganicsPreprocessing()
+         * disconnects bonds in orig_inp_data. This mirrors the standard path (where
+         * orig_inp_data stays pristine because preprocessing works on a copy) so the
+         * AuxInfo reversibility layers (/rA, /rB, /rC), including atom coordinates,
+         * describe the original drawn structure. */
+        pOrigStruct = &OrigStruct;
+        memset(pOrigStruct, 0, sizeof(*pOrigStruct));
+        OrigAtData_StoreNativeInput(pCG, &nRet, sd, ip, orig_inp_data, pOrigStruct);
+        if ( nRet == _IS_FATAL || nRet == _IS_ERROR )
+        {
+            /* Route to the shared cleanup so OrigStruct_Free() releases pOrigStruct */
+            goto after_structure_generation;
+        }
+
         /* Call the MolecularInorganicsPreprocessing function to handle specific inorganics-related tasks */
         ret1 = MolecularInorganicsPreprocessing(orig_inp_data, ip);
 
@@ -380,9 +394,10 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
          * CreateOneStructureINChI() calls, which previously caused redundant
          * allocations and AddressSanitizer-reported memory leaks.
          *
-         * Note: pOrigStruct intentionally remains NULL in Molecular Inorganics
-         * mode because OrigAtData_StoreNativeInput() is bypassed here; therefore
-         * AuxInfo reversibility layers (/rA, /rB, /rC) are not generated.
+         * pOrigStruct was populated above from the native input, so the shared
+         * cleanup path (SortAndPrintINChI + OrigStruct_Free) emits the AuxInfo
+         * reversibility layers (/rA, /rB, /rC), including atom coordinates, and
+         * releases it.
          */
         goto after_structure_generation;
     }
