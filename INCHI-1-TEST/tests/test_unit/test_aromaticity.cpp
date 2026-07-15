@@ -7,9 +7,9 @@ extern "C"
 #include "../../../INCHI-1-SRC/INCHI_BASE/src/aromaticity.h" // functions under test
 }
 
-// ---- FixAromaticOxygenAndSulfur ---------------------------------------
+// ---- fix_aromatic_oxygen_and_sulfur ---------------------------------------
 
-TEST(test_aromaticity, FixAromaticOxygenAndSulfur_charges_neutral_aromatic_O)
+TEST(test_aromaticity, fix_aromatic_oxygen_and_sulfur_charges_neutral_aromatic_O)
 {
     inp_ATOM a{};
     a.elname[0] = 'O';
@@ -20,11 +20,11 @@ TEST(test_aromaticity, FixAromaticOxygenAndSulfur_charges_neutral_aromatic_O)
     a.bond_type[0] = BOND_TYPE_SINGLE; // 1
     a.bond_type[1] = BOND_TYPE_DOUBLE; // 2  -> sum == 3
 
-    EXPECT_EQ(FixAromaticOxygenAndSulfur(&a), 1);
+    EXPECT_EQ(fix_aromatic_oxygen_and_sulfur(&a), 1);
     EXPECT_EQ(a.charge, 1);
 }
 
-TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_charged_atom)
+TEST(test_aromaticity, fix_aromatic_oxygen_and_sulfur_ignores_charged_atom)
 {
     inp_ATOM a{};
     a.elname[0] = 'S';
@@ -35,11 +35,11 @@ TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_charged_atom)
     a.bond_type[0] = BOND_TYPE_SINGLE;
     a.bond_type[1] = BOND_TYPE_DOUBLE;
 
-    EXPECT_EQ(FixAromaticOxygenAndSulfur(&a), 0);
+    EXPECT_EQ(fix_aromatic_oxygen_and_sulfur(&a), 0);
     EXPECT_EQ(a.charge, 1); // untouched
 }
 
-TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_non_O_S)
+TEST(test_aromaticity, fix_aromatic_oxygen_and_sulfur_ignores_non_O_S)
 {
     inp_ATOM a{};
     a.elname[0] = 'N';
@@ -48,7 +48,7 @@ TEST(test_aromaticity, FixAromaticOxygenAndSulfur_ignores_non_O_S)
     a.bond_type[0] = BOND_TYPE_SINGLE;
     a.bond_type[1] = BOND_TYPE_DOUBLE;
 
-    EXPECT_EQ(FixAromaticOxygenAndSulfur(&a), 0);
+    EXPECT_EQ(fix_aromatic_oxygen_and_sulfur(&a), 0);
     EXPECT_EQ(a.charge, 0);
 }
 

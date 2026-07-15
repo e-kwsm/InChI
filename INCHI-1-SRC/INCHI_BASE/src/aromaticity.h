@@ -79,7 +79,7 @@ struct tagCANON_GLOBALS;
  * @param atom Atom to inspect; its @c charge is set to 1 in place on a match.
  * @return 1 if the atom matched and was modified; 0 otherwise (atom untouched).
  */
-int FixAromaticOxygenAndSulfur( inp_ATOM *atom );
+int fix_aromatic_oxygen_and_sulfur( inp_ATOM *atom );
 
 /**
  * @brief Test whether an atom is an unsaturated but non-aromatic carbon.

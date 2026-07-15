@@ -51,7 +51,7 @@
 
 
 /****************************************************************************/
-int FixAromaticOxygenAndSulfur( inp_ATOM *atom )
+int fix_aromatic_oxygen_and_sulfur( inp_ATOM *atom )
 {
     if (!atom->elname[1] &&
          (atom->elname[0] == 'O' || atom->elname[0] == 'S') &&
