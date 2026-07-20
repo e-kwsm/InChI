@@ -4230,23 +4230,6 @@ void updateNeighborListMolecularInorganics(inp_ATOM *at, int atom_idx, int neigh
     }
 }
 
-/************************************************************************
- * @nnuk
- * @brief Determine whether a metal-ligand bond must always be preserved
- *        during Molecular Inorganics preprocessing.
- ***********************************************************************/
-int MolecularInorganicsKeepBond(inp_ATOM *at, int metal_idx, int neigh_idx, int bond_pos)
-{
-    int bond_type = at[metal_idx].bond_type[bond_pos];
-
-    if (is_el_a_metal(at[neigh_idx].el_number) || (bond_type > 1 && bond_type != COORDINATIVE_BOND))
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
 /*****************************************************************************
  * Convert coordinative (type 9) bonds into normal single bonds.
  *
@@ -4331,6 +4314,10 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
  *
  * Hydrogen is excluded because it is not treated as a metal by the
  * Molecular Inorganics preprocessing.
+ *
+ * @param el_number  number in the periodic table
+ *
+ * @return 1 or 0
  *****************************************************************************/
 static int MolecularInorganicsIsGroup1or2Metal(int el_number)
 {
@@ -4360,10 +4347,18 @@ static int MolecularInorganicsIsGroup1or2Metal(int el_number)
 
 /*****************************************************************************
  * @nnuk
- * Count the carbon, nitrogen, and oxygen atoms in the same perceived ring
- * system as the specified metal atom.
+ * @brief Count C, N, and O atoms in the metal's perceived ring system.
  *
- * Group 1 and Group 2 metals are excluded from chelate protection.
+ * Implements the chelate-ring criterion from the 2026-07-16 Molecular
+ * Inorganics decision tree. Group 1 and Group 2 metals are excluded and
+ * therefore return zero.
+ *
+ * @param at Input   atom array
+ * @param num_at     atom number
+ * @param metal_idx  index of the metal atom
+ *
+ * @return Number of C, N, and O atoms in the same ring system, or zero when
+ *         the metal is in Group 1 or Group 2 or is not part of a ring system.
  *****************************************************************************/
 static int MolecularInorganicsCountRingCNOAtoms(const inp_ATOM* at, int num_at, int metal_idx)
 {
@@ -4395,6 +4390,12 @@ static int MolecularInorganicsCountRingCNOAtoms(const inp_ATOM* at, int num_at, 
  * @nnuk
  * Determine whether an input bond has stereochemical direction information
  * stored on either endpoint of the bond.
+ *
+ * @param at          input atom array
+ * @param atom_idx    index of the atom
+ * @param bond_pos    bond position
+ *
+ * @return            if bond has stereo or not
  *****************************************************************************/
 static int MolecularInorganicsBondHasStereo(const inp_ATOM* at, int atom_idx, int bond_pos)
 {
@@ -4541,10 +4542,15 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             metal_idx = is_el_a_metal(at[i].el_number) ? i : j;
 
             /*
-             * Qualifying chelate rings for metals outside Groups 1
-             * and 2 are protected. Count only C, N, and O atoms in the same perceived ring
-             * system as the metal.
-             */
+             * Deliberately apply the chelate-ring protection in this preliminary
+             * charge-separated bond pass. Without this check, an explicitly charged
+             * chelate of a non-Group-1/2 metal could be disconnected before the main
+             * decision-tree pass evaluates whether its metal bonds must be retained.
+             *
+             * The ring criterion follows the 2026-07-16 Molecular Inorganics decision
+             * tree: the metal-containing ring system must contain at least three atoms
+             * selected from C, N, and O.
+            */
             ring_cno_count = MolecularInorganicsCountRingCNOAtoms(at, num_at, metal_idx);
 
             if (ring_cno_count >= 3)
@@ -4561,10 +4567,15 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 
     /* Realize the remaining (uncharged) coordinative (type 9) bonds as single
      * bonds, so the rest of the pipeline treats them like the equivalent
-     * single-bonded structure. */
+     * single-bonded structure.
+    */
     ConvertCoordinativeBondsToSingle(at, num_at);
 
-    /* Function call to Mark ring systems */
+    /*
+     * Re-perceive ring systems after the charge-separated bond disconnections,
+     * because those graph changes may alter the ring membership used by the
+     * main Molecular Inorganics decision-tree evaluation.
+    */
     MarkRingSystemsInp(at, num_at, 0);
 
     /* Compute the number of metals and whether every metal is terminal. */
@@ -4714,7 +4725,7 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
              * Retain a linkage to another metal unless:
              * 1) all metal atoms are terminal, or
              * 2) the current metal belongs to Group 1 or Group 2.
-             */
+            */
             if (bond_links_to_other_metal && !all_metal_atoms_terminal && !current_metal_is_group_1_or_2)
             {
                 keep_all_metal_bonds = 1;
@@ -4722,10 +4733,10 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             }
 
             /*
-             * Protect a qualifying chelate ring only for metals outside
-             * Groups 1 and 2.
-             */
-            if (!current_metal_is_group_1_or_2 && ring_cno_count >= 3)
+             * Protect a qualifying chelate ring. Group 1 and Group 2 metals return
+             * zero from MolecularInorganicsCountRingCNOAtoms().
+            */
+            if (ring_cno_count >= 3)
             {
                 keep_all_metal_bonds = 1;
                 break;
