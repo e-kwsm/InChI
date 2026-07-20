@@ -111,6 +111,41 @@ extern "C"
     int getElValenceforMolecularInorganics(int nPeriodicNum, int charge, int val_num);
     /* Function retrieves element type value for molecular inorganics functionality*/
     int getElTypeforMolecularInorganics(int nPeriodicNum);
+    /**
+    * @nnuk
+    * Determine whether an element is a Group 1 or Group 2 metal with the exclusion of Hydrogen.
+    *
+    * @param el_number  number in the periodic table
+    *
+    * @return 1 or 0
+    */
+    static int MolecularInorganicsIsGroup1or2Metal(int el_number);
+
+    /**
+    * @nnuk
+    * Count the carbon, nitrogen, and oxygen atoms in the same perceived ring
+    * system as the specified metal atom.
+    *
+    * @param at Input   atom array
+    * @param num_at     atom number
+    * @param metal_idx  index of the metal atom
+    *
+    * @return  count of C, N, and Oxygen in a ring
+    */
+    static int MolecularInorganicsCountRingCNOAtoms(const inp_ATOM* at, int num_at, int metal_idx);
+
+    /**
+    * @nnuk
+    * Determine whether an input bond has stereochemical direction information
+    * stored on either endpoint of the undirected bond.
+    *
+    * @param at          input atom array
+    * @param atom_idx    index of the atom
+    * @param bond_pos    bond position
+    *
+    * @return            if bond has stereo or not
+    */
+    static int MolecularInorganicsBondHasStereo(const inp_ATOM* at, int atom_idx, int bond_pos);
 
     /**
      * @nnuk
