@@ -669,7 +669,7 @@ typedef struct A_MOL_FMT_DATA
  * @param bNoWarnings Flag to show warnings
  * @return MOL_FMT_DATA* returns mol file data structure, includes e.g. header block, connection table, ...
  */
-static MOL_FMT_DATA* MolfileReadDataLines(INCHI_IOSTREAM* inp_file,
+MOL_FMT_DATA* MolfileReadDataLines(INCHI_IOSTREAM* inp_file,
     MOL_FMT_HEADER_BLOCK* OnlyHeaderBlock,
     MOL_FMT_CTAB* OnlyCTab,
     int bGetOrigCoord,
@@ -684,7 +684,7 @@ static MOL_FMT_DATA* MolfileReadDataLines(INCHI_IOSTREAM* inp_file,
  * @param pStrErr Error string
  * @return * int Error code, retuns 0 - no error, 1 - error: can't read header block name, 3 - error: can't read header block 2 line, 7 - error: cant' read header block comment line
  */
-static int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK* hdr, INCHI_IOSTREAM* inp_file, char* pStrErr);
+int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK* hdr, INCHI_IOSTREAM* inp_file, char* pStrErr);
 
 /**
  * @brief Reads counts line from input MOL file, includes information about the number of atoms, bonds, and atom lists, the chiral flag setting, and the Ctab version.
@@ -694,7 +694,7 @@ static int MolfileReadHeaderLines(MOL_FMT_HEADER_BLOCK* hdr, INCHI_IOSTREAM* inp
  * @param pStrErr Error string
  * @return int Error code, returns 0 - no error, 3 - error: can't read counts line, -1 - error: out of RAM
  */
-static int MolfileReadCountsLine(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file, char* pStrErr);
+int MolfileReadCountsLine(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file, char* pStrErr);
 
 /**
  * @brief Reads an atom block from input MOL file (V2000).
@@ -704,7 +704,7 @@ static int MolfileReadCountsLine(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file, c
  * @param pStrErr Error string
  * @return int Error code, returns 0 - no error, 4 - error: can't interpret atom block, 5 - error: can't interpret second half of atom block?
  */
-static int MolfileReadAtomsBlock(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file,
+int MolfileReadAtomsBlock(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file,
     int err, char* pStrErr);
 
 /**
@@ -716,7 +716,7 @@ static int MolfileReadAtomsBlock(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file,
  * @param pStrErr Error string
  * @return int Error code
  */
-static int MolfileReadBondsBlock(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file,
+int MolfileReadBondsBlock(MOL_FMT_CTAB* ctab, INCHI_IOSTREAM* inp_file,
     int err, char* pStrErr);
 
 /**

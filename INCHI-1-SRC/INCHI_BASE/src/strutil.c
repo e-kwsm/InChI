@@ -618,20 +618,6 @@ int fix_non_uniform_drawn_amidiniums(int num_atoms,
     return 0;
 }
 
-/****************************************************************************
-Not used --
-int FixAromaticOxygenAndSulfur( inp_ATOM *atom )
-{
-if ( !atom->elname[1] && (atom->elname[0]=='O' || atom->elname[0]=='S') &&
-atom->valence==2 && !atom->charge && !atom->radical &&
-atom->bond_type[0] + atom->bond_type[1] == 3 ) {
-atom->charge = 1;
-return 1; // fixed
-}
-return 0;
-}
-****************************************************************************/
-
 /****************************************************************************/
 int fix_odd_things(int num_atoms,
                    inp_ATOM *at,
