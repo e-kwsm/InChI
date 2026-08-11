@@ -1,5 +1,12 @@
 # Change log
 
+## Unreleased 2026-07-20
+
+### Changed
+
+- Molecular Inorganics preprocessing now follows the revised bond-disconnection decision tree, preserving stereo-indicated metal bonds, linked-metal structures, and qualifying metal-containing chelate ring systems while applying the Group 1/2 and terminal-metal exceptions.
+- The generated InChI for qualifying chelate complexes may intentionally change from a disconnected representation to a connected representation. In particular, the Ti bis-flavonoid regression case is now represented as connected `C30H18O14Ti` instead of disconnected `2C15H10O7.Ti` components.
+
 ## v1.07.5 2026-02-17
 
 ### Changed

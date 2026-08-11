@@ -4216,23 +4216,6 @@ void updateNeighborListMolecularInorganics(inp_ATOM *at, int atom_idx, int neigh
     }
 }
 
-/************************************************************************
- * @nnuk
- * @brief Determine whether a metal-ligand bond must always be preserved
- *        during Molecular Inorganics preprocessing.
- ***********************************************************************/
-int MolecularInorganicsKeepBond(inp_ATOM *at, int metal_idx, int neigh_idx, int bond_pos)
-{
-    int bond_type = at[metal_idx].bond_type[bond_pos];
-
-    if (is_el_a_metal(at[neigh_idx].el_number) || (bond_type > 1 && bond_type != COORDINATIVE_BOND))
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
 /*****************************************************************************
  * Convert coordinative (type 9) bonds into normal single bonds.
  *
@@ -4312,11 +4295,123 @@ static void ConvertCoordinativeBondsToSingle(inp_ATOM *at, int num_atoms)
 }
 
 /*****************************************************************************
+ * @nnuk
+ * Determine whether an element is a Group 1 or Group 2 metal.
+ *
+ * Hydrogen is excluded because it is not treated as a metal by the
+ * Molecular Inorganics preprocessing.
+ *
+ * @param el_number  number in the periodic table
+ *
+ * @return 1 or 0
+ *****************************************************************************/
+static int MolecularInorganicsIsGroup1or2Metal(int el_number)
+{
+    switch (el_number)
+    {
+        /* Group 1 */
+    case 3:   /* Li */
+    case 11:  /* Na */
+    case 19:  /* K  */
+    case 37:  /* Rb */
+    case 55:  /* Cs */
+    case 87:  /* Fr */
+
+        /* Group 2 */
+    case 4:   /* Be */
+    case 12:  /* Mg */
+    case 20:  /* Ca */
+    case 38:  /* Sr */
+    case 56:  /* Ba */
+    case 88:  /* Ra */
+        return 1;
+
+    default:
+        return 0;
+    }
+}
+
+/*****************************************************************************
+ * @nnuk
+ * @brief Count C, N, and O atoms in the metal's perceived ring system.
+ *
+ * Implements the chelate-ring criterion from the 2026-07-16 Molecular
+ * Inorganics decision tree. Group 1 and Group 2 metals are excluded and
+ * therefore return zero.
+ *
+ * @param at Input   atom array
+ * @param num_at     atom number
+ * @param metal_idx  index of the metal atom
+ *
+ * @return Number of C, N, and O atoms in the same ring system, or zero when
+ *         the metal is in Group 1 or Group 2 or is not part of a ring system.
+ *****************************************************************************/
+static int MolecularInorganicsCountRingCNOAtoms(const inp_ATOM* at, int num_at, int metal_idx)
+{
+    int atom_idx;
+    int ring_cno_count = 0;
+    AT_NUMB ring_id;
+
+    if (!MolecularInorganicsIsGroup1or2Metal(at[metal_idx].el_number) && at[metal_idx].nRingSystem)
+    {
+        ring_id = at[metal_idx].nRingSystem;
+
+        for (atom_idx = 0; atom_idx < num_at; atom_idx++)
+        {
+            if (at[atom_idx].nRingSystem == ring_id &&
+                (at[atom_idx].el_number == 6 ||  /* C */
+                    at[atom_idx].el_number == 7 ||  /* N */
+                    at[atom_idx].el_number == 8))   /* O */
+            {
+                ring_cno_count++;
+            }
+        }
+    }
+
+    return ring_cno_count;
+}
+
+
+/*****************************************************************************
+ * @nnuk
+ * Determine whether an input bond has stereochemical direction information
+ * stored on either endpoint of the bond.
+ *
+ * @param at          input atom array
+ * @param atom_idx    index of the atom
+ * @param bond_pos    bond position
+ *
+ * @return            if bond has stereo or not
+ *****************************************************************************/
+static int MolecularInorganicsBondHasStereo(const inp_ATOM* at, int atom_idx, int bond_pos)
+{
+    int neigh_pos;
+    int neighbor_idx;
+    int bond_has_stereo;
+
+    neighbor_idx = at[atom_idx].neighbor[bond_pos];
+    bond_has_stereo = (at[atom_idx].bond_stereo[bond_pos] != 0);
+
+    for (neigh_pos = 0; !bond_has_stereo && neigh_pos < at[neighbor_idx].valence; neigh_pos++)
+    {
+        if (at[neighbor_idx].neighbor[neigh_pos] == atom_idx)
+        {
+            bond_has_stereo = (at[neighbor_idx].bond_stereo[neigh_pos] != 0);
+            break;
+        }
+    }
+
+    return bond_has_stereo;
+}
+
+/*****************************************************************************
  * (@nnuk :: Nauman Ullah Khan)
- * @brief Function to preprocess molecular inorganics structures by disconnecting metal bonds and handling salts + ammonium salts.
+ * @brief Function to preprocess molecular inorganics structures by disconnecting metal bonds and
+ * handling salts + ammonium salts.
  *
  * This function processes a given molecular structure, identifies metal atoms,
- * and performs bond disconnections based on electronegativity differences. After metal disconnections,
+ * and performs bond disconnections based on electronegativity differences,
+ * coordination number and valence. After metal disconnections,
  * it also checks for ammonium salt patterns and disconnects them where applicable.
  *
  * @param orig_at_data Pointer to the original atom data structure.
@@ -4351,20 +4446,21 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
     int num_disconnected = 0;
 
     /* variables declared */
-    int i, j, n, k, t;
+    int i, j, n, k;
     int binaryValue;
     int disconnectDecision;
     int neigh_pos;
-    int num_metals, current_component;
+    int neighbor_idx;
+    int num_metals;
+    int all_metal_atoms_terminal;
+    int has_single_bond_to_metal;
+    int keep_all_metal_bonds;
 
     /* memory allocation */
     S_CHAR* dfs_visited = (S_CHAR*)inchi_calloc(num_at, sizeof(S_CHAR));
     int* dfs_stack = (int*)inchi_malloc(num_at * sizeof(int));
-    int* ligand_elem_array = (int*)inchi_malloc(num_at * sizeof(int));
-    int* structure_id = (int*)inchi_malloc(num_at * sizeof(int));
-    int* structure_metal_count = (int*)inchi_calloc(num_at, sizeof(int));
 
-    if (!dfs_visited || !dfs_stack || !ligand_elem_array || !structure_id || !structure_metal_count)
+    if (!dfs_visited || !dfs_stack)
     {
         ret_code = -1;
         goto cleanup;
@@ -4382,6 +4478,13 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
         }
     }
 
+    /*
+     * Detect ring systems before the charge-separated bond pass so that a
+     * qualifying metal-containing chelate ring is not disconnected before
+     * the chelate protection rule can be applied.
+     */
+    MarkRingSystemsInp(at, num_at, 0);
+
     /* Disconnect charge-separated metal-ligand bonds, preserving the drawn
      * formal charges. A metal and ligand carrying opposite formal charges
      * across a single (type 1) or coordinative (type 9) bond depict an ionic
@@ -4392,11 +4495,19 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
      * also decrements valence and chem_bonds_valence on both atoms (a type-9
      * bond counts as single), so no charge is added or removed here: each ion
      * keeps exactly the charge drawn in the input. Higher-order bonds (e.g. a
-     * drawn M=O double bond) are genuine covalent bonds and are left intact. */
+     * drawn M=O double bond) are genuine covalent bonds and are left intact.
+     *
+     *
+     * An exception is made for non-Group-1/2 metals that belong to a ring
+     * containing at least three carbon, nitrogen, or oxygen atoms. Such bonds
+     * form part of a qualifying chelate ring and must remain connected.*/
     for (i = 0; i < num_at; i++)
     {
         for (k = 0; k < at[i].valence; )
         {
+            int metal_idx;
+            int ring_cno_count = 0;
+
             j = at[i].neighbor[k];
 
             /* Process each undirected bond once, from its lower-indexed atom,
@@ -4404,10 +4515,31 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
              * bonds. */
             if (j <= i || j >= num_at ||
                 (at[i].bond_type[k] != COORDINATIVE_BOND &&
-                 at[i].bond_type[k] != BOND_TYPE_SINGLE) ||
-                is_el_a_metal(at[i].el_number) == is_el_a_metal(at[j].el_number) ||
+                    at[i].bond_type[k] != BOND_TYPE_SINGLE) ||
+                is_el_a_metal(at[i].el_number) ==
+                is_el_a_metal(at[j].el_number) ||
                 !((at[i].charge > 0 && at[j].charge < 0) ||
-                  (at[i].charge < 0 && at[j].charge > 0)))
+                    (at[i].charge < 0 && at[j].charge > 0)))
+            {
+                k++;
+                continue;
+            }
+
+            metal_idx = is_el_a_metal(at[i].el_number) ? i : j;
+
+            /*
+             * Deliberately apply the chelate-ring protection in this preliminary
+             * charge-separated bond pass. Without this check, an explicitly charged
+             * chelate of a non-Group-1/2 metal could be disconnected before the main
+             * decision-tree pass evaluates whether its metal bonds must be retained.
+             *
+             * The ring criterion follows the 2026-07-16 Molecular Inorganics decision
+             * tree: the metal-containing ring system must contain at least three atoms
+             * selected from C, N, and O.
+            */
+            ring_cno_count = MolecularInorganicsCountRingCNOAtoms(at, num_at, metal_idx);
+
+            if (ring_cno_count >= 3)
             {
                 k++;
                 continue;
@@ -4416,87 +4548,197 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             DisconnectInpAtBond(at, nOldCompNumber, i, k);
             num_disconnected++;
             ip->bMolecularInorganicsReconnectedInChI = 1;
-            /* neighbor k was removed; the next neighbor shifted into its slot,
-             * so do not advance k here. */
         }
     }
 
     /* Realize the remaining (uncharged) coordinative (type 9) bonds as single
      * bonds, so the rest of the pipeline treats them like the equivalent
-     * single-bonded structure. */
+     * single-bonded structure.
+    */
     ConvertCoordinativeBondsToSingle(at, num_at);
 
-    /* Function call to Mark ring systems */
+    /*
+     * Re-perceive ring systems after the charge-separated bond disconnections,
+     * because those graph changes may alter the ring membership used by the
+     * main Molecular Inorganics decision-tree evaluation.
+    */
     MarkRingSystemsInp(at, num_at, 0);
 
-    /* Compute metal list */
+    /* Compute the number of metals and whether every metal is terminal. */
     num_metals = 0;
+    all_metal_atoms_terminal = 1;
+
     for (i = 0; i < num_at; i++)
     {
         if (is_el_a_metal(at[i].el_number))
         {
             num_metals++;
+
+            if (at[i].valence != 1 || at[i].bond_type[0] != BOND_TYPE_SINGLE)
+            {
+                all_metal_atoms_terminal = 0;
+            }
         }
     }
 
-    /*
-     * Precompute structure components (DFS RUN ONCE) to satisfy this rule below,
-     * (if there is a path from this metal to ANY other metal,
-     * keep all bonds for this metal)
-    */
-    for (i = 0; i < num_at; i++)
+    if (!num_metals)
     {
-        structure_id[i] = -1;
+        goto cleanup;
     }
 
-    current_component = 0;
+    /* Check whether at least one single bond remains attached to a metal. */
+    has_single_bond_to_metal = 0;
 
-    for (i = 0; i < num_at; i++)
+    for (i = 0; i < num_at && !has_single_bond_to_metal; i++)
     {
-        if (structure_id[i] >= 0)
+        if (!is_el_a_metal(at[i].el_number))
         {
             continue;
         }
 
-        int dfs_stack_size = 0;
-        dfs_stack[dfs_stack_size++] = i;
-        structure_id[i] = current_component;
-
-        while (dfs_stack_size)
+        for (n = 0; n < at[i].valence; n++)
         {
-            int current_atom = dfs_stack[--dfs_stack_size];
-
-            if (is_el_a_metal(at[current_atom].el_number))
+            if (at[i].bond_type[n] == BOND_TYPE_SINGLE)
             {
-                structure_metal_count[current_component]++;
+                has_single_bond_to_metal = 1;
+                break;
+            }
+        }
+    }
+
+    if (!has_single_bond_to_metal)
+    {
+        goto cleanup;
+    }
+
+    /* Evaluate the complete decision tree before changing any remaining
+     * metal-ligand bond. If one bond must be retained, all remaining bonds to
+     * metal atoms are retained. */
+    keep_all_metal_bonds = 0;
+
+    for (i = 0; i < num_at && !keep_all_metal_bonds; i++)
+    {
+        int ring_cno_count = 0;
+        int current_metal_is_group_1_or_2;
+
+        if (!is_el_a_metal(at[i].el_number))
+        {
+            continue;
+        }
+
+        current_metal_is_group_1_or_2 = MolecularInorganicsIsGroup1or2Metal(at[i].el_number);
+
+        /*
+         * Count C, N, and O atoms in the same ring system as the metal.
+         * Group 1 and Group 2 metals are excluded from chelate protection.
+         */
+        ring_cno_count = MolecularInorganicsCountRingCNOAtoms(at, num_at, i);
+
+        disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i);
+
+        for (n = 0; n < at[i].valence; n++)
+        {
+            int bond_has_stereo = 0;
+            int bond_links_to_other_metal = 0;
+            int dfs_stack_size;
+
+            neighbor_idx = at[i].neighbor[n];
+
+            if (neighbor_idx < 0 || neighbor_idx >= num_at)
+            {
+                continue;
             }
 
-            for (neigh_pos = 0; neigh_pos < at[current_atom].valence; neigh_pos++)
+            bond_has_stereo = MolecularInorganicsBondHasStereo(at, i, n);
+
+            /* The actual bond must be a non-stereogenic single bond. */
+            if (at[i].bond_type[n] != BOND_TYPE_SINGLE || bond_has_stereo)
             {
-                int neighbor_atom = at[current_atom].neighbor[neigh_pos];
+                keep_all_metal_bonds = 1;
+                break;
+            }
 
-                if (neighbor_atom < 0 || neighbor_atom >= num_at)
+            if (disconnectDecision != 1)
+            {
+                keep_all_metal_bonds = 1;
+                break;
+            }
+
+            /* The bonded atom pair must satisfy the binary disconnection table. */
+            binaryValue = shouldBondBeCut(at[i].el_number, at[neighbor_idx].el_number);
+
+            if (binaryValue != 1)
+            {
+                keep_all_metal_bonds = 1;
+                break;
+            }
+
+            /* Determine whether the actual bond is part of a path from this
+             * metal atom to another metal atom. The current metal is excluded
+             * from the traversal so that only paths starting through this bond
+             * are considered. */
+            memset(dfs_visited, 0, num_at * sizeof(*dfs_visited));
+            dfs_stack_size = 0;
+            dfs_visited[i] = 1;
+            dfs_visited[neighbor_idx] = 1;
+            dfs_stack[dfs_stack_size++] = neighbor_idx;
+
+            while (dfs_stack_size && !bond_links_to_other_metal)
+            {
+                int current_atom = dfs_stack[--dfs_stack_size];
+
+                if (is_el_a_metal(at[current_atom].el_number))
                 {
-                    continue;
+                    bond_links_to_other_metal = 1;
+                    break;
                 }
 
-                if (structure_id[neighbor_atom] >= 0)
+                for (neigh_pos = 0; neigh_pos < at[current_atom].valence; neigh_pos++)
                 {
-                    continue;
-                }
+                    int neighbor_atom = at[current_atom].neighbor[neigh_pos];
 
-                structure_id[neighbor_atom] = current_component;
+                    if (neighbor_atom < 0 || neighbor_atom >= num_at || dfs_visited[neighbor_atom])
+                    {
+                        continue;
+                    }
 
-                if (dfs_stack_size < num_at)
-                {
+                    dfs_visited[neighbor_atom] = 1;
                     dfs_stack[dfs_stack_size++] = neighbor_atom;
                 }
             }
-        }
 
-        current_component++;
+            /*
+             * Retain a linkage to another metal unless:
+             * 1) all metal atoms are terminal, or
+             * 2) the current metal belongs to Group 1 or Group 2.
+            */
+            if (bond_links_to_other_metal && !all_metal_atoms_terminal && !current_metal_is_group_1_or_2)
+            {
+                keep_all_metal_bonds = 1;
+                break;
+            }
+
+            /*
+             * Protect a qualifying chelate ring. Group 1 and Group 2 metals return
+             * zero from MolecularInorganicsCountRingCNOAtoms().
+            */
+            if (ring_cno_count >= 3)
+            {
+                keep_all_metal_bonds = 1;
+                break;
+            }
+        }
     }
 
+    if (keep_all_metal_bonds)
+    {
+        ip->bMolecularInorganicsReconnectedInChI = 1;
+        goto cleanup;
+    }
+
+    /* All remaining metal bonds satisfy the complete decision tree and may be
+     * disconnected.
+    **/
     for (i = 0; i < num_at; i++)
     {
         if (!is_el_a_metal(at[i].el_number))
@@ -4504,139 +4746,12 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
             continue;
         }
 
-       /*@nnuk
-        *If there exists any path between this metal and any other metal OR
-        *the atom belongs to a ring system containing at least one metal, then keep all bonds for this metal.
-       */
-        int keep_all_ligand_for_this_metal = 0;
-
-        /* @nnuk
-         *if this metal is part of a ring system that contains at least one metal,
-         *keep all bonds for this metal
-        */
-        if (at[i].nRingSystem)
-        {
-            /* scan atoms that are in same ring system and check for a metal */
-            AT_NUMB ring_id = at[i].nRingSystem;
-
-            for (k = 0; k < num_at; k++)
-            {
-                if (k != i && at[k].nRingSystem == ring_id && is_el_a_metal(at[k].el_number))
-                {
-                    keep_all_ligand_for_this_metal = 1;
-                    break;
-                }
-            }
-        }
-
-        /*@nnuk
-         *if there is a path from this metal to ANY other metal,
-         *keep all bonds for this metal.
-        */
-        if (!keep_all_ligand_for_this_metal && num_metals > 1)
-        {
-            int processed_structure = structure_id[i];
-
-            if (structure_metal_count[processed_structure] > 1)
-            {
-                keep_all_ligand_for_this_metal = 1;
-            }
-        }
-
-        if (keep_all_ligand_for_this_metal)
-        {
-            ip->bMolecularInorganicsReconnectedInChI = 1;
-            continue;
-        }
-
-        /*@nnuk
-         *If central metal is bound to different ligand atom element types
-         *AND at least one of the bonds must be kept according to existing bond rules,
-         *then keep ALL bonds
-        */
-        {
-            int ligand_type_count = 0;
-            int must_keep_neighbor = 0;
-
-            for (n = 0; n < at[i].valence; n++)
-            {
-                int neigh_idx = at[i].neighbor[n];
-
-                if (neigh_idx < 0 || neigh_idx >= num_at)
-                {
-                    continue;
-                }
-
-                int neigh_elem = at[neigh_idx].el_number;
-                int found = 0;
-
-                for (t = 0; t < ligand_type_count; t++)
-                {
-                    if (ligand_elem_array[t] == neigh_elem)
-                    {
-                        found = 1;
-                        break;
-                    }
-                }
-
-                if (!found)
-                {
-                    ligand_elem_array[ligand_type_count++] = neigh_elem;
-                }
-
-                if (MolecularInorganicsKeepBond(at, i, neigh_idx, n))
-                {
-                    must_keep_neighbor = 1;
-                }
-                else
-                {
-                    binaryValue = shouldBondBeCut(at[i].el_number, neigh_elem);
-
-                    if (binaryValue != 1)
-                    {
-                        must_keep_neighbor = 1;
-                    }
-                }
-            }
-
-            if (ligand_type_count > 1 && must_keep_neighbor)
-            {
-                ip->bMolecularInorganicsReconnectedInChI = 1;
-                continue;
-            }
-        }
-
-        /* Call the MolecularInorganicsIsMetalToDisconnect function */
-        disconnectDecision = MolecularInorganicsIsMetalToDisconnect(at, i);
-
-        if (disconnectDecision != 1) /* If disconnectDecision = 1, then disconnection procedure will be followed if applicable */
-        {
-            /* (@nnuk) : No disconnection if the metal atom bounding capacity is greater than
-             * the limit set inside Molecular Inorganics elements array or if the metal atom is
-             * isolated. */
-            ip->bMolecularInorganicsReconnectedInChI = 1;
-            continue;
-        }
-
-        /* Proceed with electronegativity and disconnection logic */
         for (n = at[i].valence - 1; n >= 0; n--)
         {
-            int neighbor_idx = at[i].neighbor[n];
+            neighbor_idx = at[i].neighbor[n];
 
-            /* Check if the neighboring atom has more than 1 bond connected to the metal atom or
-             * if the neighbour is also a metal atom. In both cases no disconnection has to be done */
-            if (MolecularInorganicsKeepBond(at, i, neighbor_idx, n))
+            if (neighbor_idx < 0 || neighbor_idx >= num_at)
             {
-                ip->bMolecularInorganicsReconnectedInChI = 1;
-                continue; /* Skip disconnection for this bond */
-            }
-
-            binaryValue = shouldBondBeCut(at[i].el_number, at[neighbor_idx].el_number);
-
-            if (binaryValue != 1)
-            {
-                /* (@nnuk : Keep the bonds, no disconnection) */
-                ip->bMolecularInorganicsReconnectedInChI = 1;
                 continue;
             }
 
@@ -4656,9 +4771,6 @@ int MolecularInorganicsPreprocessing(ORIG_ATOM_DATA *orig_at_data, INPUT_PARMS *
 cleanup:
     if (dfs_visited) inchi_free(dfs_visited);
     if (dfs_stack) inchi_free(dfs_stack);
-    if (ligand_elem_array) inchi_free(ligand_elem_array);
-    if (structure_id) inchi_free(structure_id);
-    if (structure_metal_count) inchi_free(structure_metal_count);
 
     return (ret_code < 0) ? ret_code : num_disconnected;
 }

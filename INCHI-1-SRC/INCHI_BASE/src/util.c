@@ -694,12 +694,17 @@ int get_num_H( const char* elname,
     {
         num_H = inp_num_H;
     }
-    else if (atom_input_valence && ( atom_input_valence != 15 || chem_bonds_valence ))
+    else if (atom_input_valence && atom_input_valence != 15)
     {
         num_H = inchi_max( 0, atom_input_valence - chem_bonds_valence );
     }
-    else if ( atom_input_valence == 15 && !chem_bonds_valence )
+    else if ( atom_input_valence == 15 )
     {
+        /* Explicit zero valence (V3000 VAL=-1 / V2000 valence field 15): the */
+        /* atom must carry neither implicit H nor (chemically) any bonds. Honour */
+        /* the zero valence regardless of whether bonds were drawn, instead of */
+        /* treating 15 as a literal target valence and adding 15 - chem_bonds_valence */
+        /* hydrogens (github #105). */
         num_H = 0;
     }
     else if (MIN_ATOM_CHARGE <= charge &&
