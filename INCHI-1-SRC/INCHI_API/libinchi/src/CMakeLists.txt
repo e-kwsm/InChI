@@ -154,7 +154,7 @@ if(WIN32 AND MSVC)
 endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
-set_target_properties(libinchi PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+set_target_properties(libinchi PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} SOVERSION 1.07)
 
 target_link_libraries(libinchi PUBLIC libinchi_compiler_flags)
 
