@@ -39,8 +39,6 @@ jobs:
           ${{ fromJson(needs.define_matrix.outputs.matrix) }}
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    env:
-      RELEASE_DIR: inchi-${{ matrix.slug }}-${{ github.sha }}
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -48,6 +46,19 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: '3.12'
+
+      - name: Define release directory
+        id: release_dir
+        shell: bash
+        run: |
+          sha7="${{ github.sha }}"
+          sha7="${sha7:0:7}"
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            tag_part="-${{ github.ref_name }}"
+          else
+            tag_part=""
+          fi
+          echo "value=inchi-${{ matrix.slug }}${tag_part}-${sha7}" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         run: ${{ matrix.pre_build }}
@@ -88,16 +99,16 @@ jobs:
 
       - name: Collect artifacts
         run: |
-          mkdir -p ${{ env.RELEASE_DIR }}
-          cp ${{ matrix.exe_path }} ${{ env.RELEASE_DIR }}
-          cp ${{ matrix.lib_path }} ${{ env.RELEASE_DIR }}
-          cp ${{ matrix.main_path }} ${{ env.RELEASE_DIR }}
+          mkdir -p ${{ steps.release_dir.outputs.value }}
+          cp ${{ matrix.exe_path }} ${{ steps.release_dir.outputs.value }}
+          cp ${{ matrix.lib_path }} ${{ steps.release_dir.outputs.value }}
+          cp ${{ matrix.main_path }} ${{ steps.release_dir.outputs.value }}
 
       - id: upload-unsigned-artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ${{ env.RELEASE_DIR }}
-          path: ${{ env.RELEASE_DIR }}
+          name: ${{ steps.release_dir.outputs.value }}
+          path: ${{ steps.release_dir.outputs.value }}
 
       - name: Sign artifacts
         if: runner.os == 'Windows'
@@ -109,13 +120,13 @@ jobs:
           signing-policy-slug: release-signing
           github-artifact-id: ${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}
           wait-for-completion: true
-          output-artifact-directory: ${{ env.RELEASE_DIR }}-signed
+          output-artifact-directory: ${{ steps.release_dir.outputs.value }}-signed
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: runner.os == 'Windows'
         with:
-          name: ${{ env.RELEASE_DIR }}-signed
-          path: ${{ env.RELEASE_DIR }}-signed
+          name: ${{ steps.release_dir.outputs.value }}-signed
+          path: ${{ steps.release_dir.outputs.value }}-signed
 
   release:
     needs: build_and_test
