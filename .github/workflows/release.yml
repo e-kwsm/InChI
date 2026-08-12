@@ -50,15 +50,17 @@ jobs:
       - name: Define release directory
         id: release_dir
         shell: bash
+        env:
+          SLUG: ${{ matrix.slug }}
+          SHA: ${{ github.sha }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          sha7="${{ github.sha }}"
-          sha7="${sha7:0:7}"
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            tag_part="-${{ github.ref_name }}"
-          else
-            tag_part=""
+          tag_part=""
+          if [[ "$REF_TYPE" == "tag" ]]; then
+            tag_part="-${REF_NAME//[^A-Za-z0-9._-]/_}"
           fi
-          echo "value=inchi-${{ matrix.slug }}${tag_part}-${sha7}" >> "$GITHUB_OUTPUT"
+          echo "value=inchi-${SLUG}${tag_part}-${SHA:0:7}" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         run: ${{ matrix.pre_build }}
@@ -165,10 +167,11 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
         # See https://cli.github.com/manual/gh_release_create.
         run: |
-          gh release create ${{ github.ref_name }} \
+          gh release create "$TAG" \
           --verify-tag \
-          --title "${{ github.ref_name }}" \
+          --title "$TAG" \
           --notes "For details about this release have a look at the [CHANGELOG](INCHI-1-DOC/CHANGELOG.md)." \
           release_artifacts.zip cmake_configurations.zip
