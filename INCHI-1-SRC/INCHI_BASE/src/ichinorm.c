@@ -5805,7 +5805,7 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
     /*set_R2C_el_numbers( );*/
 
 #ifndef UNDERIV_ADD_EXPLICIT_H
-    num_atoms = remove_terminal_HDT( orig_inp_data->num_inp_atoms, at, 1 );
+    num_atoms = remove_terminal_HDT( orig_inp_data->num_inp_atoms, at, 1, NULL );
     /*^^^^^ always accomodate accomodate FIX_TERM_H_CHRG_BUG - IPl, July 2008*/
     num_removed_H = orig_inp_data->num_inp_atoms - num_atoms;
     orig_inp_data->num_inp_atoms = num_atoms;
@@ -5833,7 +5833,7 @@ int OAD_Edit_Underivatize( struct tagINCHI_CLOCK *ic,
         }
 
 #ifdef UNDERIV_ADD_EXPLICIT_H
-        num_atoms = remove_terminal_HDT(inp_cur_data[i_component].num_at, inp_cur_data[i_component].at, 1);
+        num_atoms = remove_terminal_HDT(inp_cur_data[i_component].num_at, inp_cur_data[i_component].at, 1, NULL);
         inp_cur_data[i_component].num_removed_H = inp_cur_data[i_component].num_at - num_atoms;
         inp_cur_data[i_component].num_at = num_atoms;
 #endif
@@ -7184,7 +7184,7 @@ int Ring2Chain( struct tagINCHI_CLOCK *ic,
 
     /*set_R2C_el_numbers( );*/
 
-    num_atoms = remove_terminal_HDT( orig_inp_data->num_inp_atoms, at, 1 );
+    num_atoms = remove_terminal_HDT( orig_inp_data->num_inp_atoms, at, 1, NULL );
     /*^^^^^ always accomodate accomodate FIX_TERM_H_CHRG_BUG - IPl, July 2008*/
     orig_inp_data->num_inp_atoms = num_atoms;
 

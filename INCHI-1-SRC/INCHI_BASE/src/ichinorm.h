@@ -110,7 +110,8 @@ int MakeIsotopicHGroup( inp_ATOM *at,
 
 int remove_terminal_HDT( int num_atoms,
                          inp_ATOM *at,
-                         int bFixTermHChrg );
+                         int bFixTermHChrg,
+                         const unsigned char* keep_explicit_HDT);
 int RemoveExcessiveImplicitH( int num_atoms,
                               int num_removed_H,
                               inp_ATOM *at );

@@ -1571,7 +1571,7 @@ int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA* orig_at_data,
     {
         /* Check if unit data makes sense */
         u = pd->units[i];
-        if ( u->nb != 0 && u->nb != 2 )
+        if ( u->nb != 0 && u->nb != 2)
         {
             TREAT_ERR(err, 9003, "Number of crossing bonds in polymer unit is not 0 or 2");
             goto exit_function;
@@ -1835,6 +1835,9 @@ int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA* orig_at_data,
             {
                 /* Check that there are no H end groups */
                 a1 = u->blist[2 * k]; a2 = u->blist[2 * k + 1];
+
+                /**
+                 *@nnuk : GHI # 252 Addressed
                 if ( !strcmp(orig_at_data->at[a1 - 1].elname, "H") ||
                     !strcmp(orig_at_data->at[a1 - 1].elname, "D") ||
                     !strcmp(orig_at_data->at[a1 - 1].elname, "T") )
@@ -1848,7 +1851,8 @@ int OAD_ValidatePolymerAndPseudoElementData(ORIG_ATOM_DATA* orig_at_data,
                 {
                     TREAT_ERR(err, 9031, "H as polymer end group is not supported");
                     goto exit_function;
-                }
+                }*/
+
                 /* Ensure that caps of polymer unit lie outside it */
                 a1_is_not_in_alist = a1_is_star_atom = 0;
                 a2_is_not_in_alist = a2_is_star_atom = 0;

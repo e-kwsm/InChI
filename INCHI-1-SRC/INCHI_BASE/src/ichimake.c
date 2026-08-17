@@ -3712,6 +3712,7 @@ int  Create_INChI(CANON_GLOBALS* pCG,
     inp_ATOM* inp_at,
     INP_ATOM_DATA* out_norm_data[2],
     int num_inp_at,
+    const unsigned char* keep_explicit_HDT,
     INCHI_MODE nUserMode,
     INCHI_MODE* pbTautFlags,
     INCHI_MODE* pbTautFlagsDone,
@@ -3893,7 +3894,7 @@ int  Create_INChI(CANON_GLOBALS* pCG,
     }
     else
     {
-        num_at_tg = num_atoms = remove_terminal_HDT(num_inp_at, out_at, bFixTermHChrg);
+        num_at_tg = num_atoms = remove_terminal_HDT(num_inp_at, out_at, bFixTermHChrg, keep_explicit_HDT);
         num_removed_H = num_inp_at - num_atoms;
         t_group_info->tni.nNumRemovedExplicitH = num_removed_H;
         add_DT_to_num_H(num_atoms, out_at);
