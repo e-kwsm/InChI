@@ -82,6 +82,8 @@ target_sources(libinchi PRIVATE
 	${P_BASE}/ichimap4.c
 	${P_BASE}/ichinorm.c
 	${P_BASE}/ichinorm.h
+	${P_BASE}/aromaticity.c
+	${P_BASE}/aromaticity.h
 	${P_BASE}/ichiparm.c
 	${P_BASE}/ichiprt1.c
 	${P_BASE}/ichiprt2.c
@@ -152,7 +154,7 @@ if(WIN32 AND MSVC)
 endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
-set_target_properties(libinchi PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+set_target_properties(libinchi PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX} SOVERSION 1.07)
 
 target_link_libraries(libinchi PUBLIC libinchi_compiler_flags)
 
