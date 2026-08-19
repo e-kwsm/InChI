@@ -350,9 +350,9 @@ exit_function:
  The mask is later consulted by remove_terminal_HDT() to preserve explicit
  H/D/T atoms that participate in polymer crossing bonds.
 
- @param INP_ATOM_DATA chemical structure information from INP_ATOM_DATA struct
- @param ORIG_ATOM_DATA chemical structure information from ORIG_ATOM_DATA struct
- @param INPUT_PARMS input parameters
+ @param inp_cur_data chemical structure information for the current component
+ @param orig_inp_data chemical structure information for the whole structure
+ @param ip input parameters
  @param component_number number of component in the chemical structure
 
  @return Return 0 on success or when no mask is required; return -1 on allocation
@@ -375,6 +375,24 @@ static int BuildPolymerCrossingBondEndpointMask(INP_ATOM_DATA *inp_cur_data,
         return 0;
     }
 
+    /* No mask is needed if this component contains no explicit H/D/T atoms. */
+    for (local_idx = 0; local_idx < inp_cur_data->num_at; local_idx++)
+    {
+        const char *elname = inp_cur_data->at[local_idx].elname;
+
+        if (elname[1] == '\0' && (elname[0] == 'H' || elname[0] == 'D' || elname[0] == 'T'))
+        {
+            break;
+        }
+    }
+
+    if (local_idx == inp_cur_data->num_at)
+    {
+        return 0;
+    }
+
+    local_idx = 0;
+
     inp_cur_data->keep_explicit_HDT = (unsigned char *)inchi_calloc((long long)inp_cur_data->num_at, sizeof(inp_cur_data->keep_explicit_HDT[0]));
 
     if (!inp_cur_data->keep_explicit_HDT)
@@ -386,6 +404,20 @@ static int BuildPolymerCrossingBondEndpointMask(INP_ATOM_DATA *inp_cur_data,
     {
         if (orig_inp_data->at[orig_idx].component != component_number)
         {
+            continue;
+        }
+
+        /*
+         * The mask is consulted only for explicit H/D/T atoms by
+         * remove_terminal_HDT(), so heavy-atom and pseudoatom endpoints
+         * do not need to be marked.
+        */
+        if (!(orig_inp_data->at[orig_idx].elname[1] == '\0' &&
+              (orig_inp_data->at[orig_idx].elname[0] == 'H' ||
+               orig_inp_data->at[orig_idx].elname[0] == 'D' ||
+               orig_inp_data->at[orig_idx].elname[0] == 'T')))
+        {
+            local_idx++;
             continue;
         }
 

@@ -9,7 +9,7 @@
 
 ### Fixed
 
-- GHI #252: Explicit H/D/T atoms used as polymer crossing-bond end groups are now preserved during terminal-H processing when the `Polymers` option is enabled. This allows valid SRU/CRU structures with explicit hydrogen leaving groups to be processed instead of being rejected as unsupported.
+- GHI #252: Explicit H/D/T atoms used as polymer crossing-bond end groups are now preserved during terminal-H processing when the `Polymers` option is enabled. This allows valid SRU/CRU structures with explicit hydrogen leaving groups to be processed instead of being rejected as unsupported. The retained H/D/T atom is represented explicitly as a numbered atom in the `/c` layer rather than being converted to an implicit hydrogen.
 
 ## v1.07.5 2026-02-17
 

@@ -1567,14 +1567,8 @@ int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                     unitk->blist[2 * m + 1] = ia2;
 
                     /**
-                     *@nnuk: GHI#252 Adressed
-                     *
-                    if (!strcmp(mfdata->ctab.atoms[ia1 - 1].symbol, "H") ||
-                        !strcmp(mfdata->ctab.atoms[ia2 - 1].symbol, "H"))
-                    {
-                        TREAT_ERR(err, 9002, "Hydrogen as polymer end group is not supported");
-                        goto exit_function;
-                    }*/
+                     *@nnuk: GHI#252 addressed and redundant logic removed
+                     */
                 }
             }
             else

@@ -23,8 +23,12 @@ static void ExpectedPolymersInChI(const char* molblock,
     int ret = MakeINCHIFromMolfileText(molblock, options, poutput);
 
     EXPECT_EQ(ret, expected_retcode);
-    ASSERT_NE(poutput->szInChI, nullptr);
-    EXPECT_STREQ(poutput->szInChI, expected_inchi);
+    EXPECT_NE(poutput->szInChI, nullptr);
+
+    if (poutput->szInChI)
+    {
+        EXPECT_STREQ(poutput->szInChI, expected_inchi);
+    }
 
     FreeINCHI(poutput);
 }
