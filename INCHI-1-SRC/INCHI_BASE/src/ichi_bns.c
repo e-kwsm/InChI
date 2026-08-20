@@ -5970,9 +5970,9 @@ exit_function:
         if (at[0].iso_atw_diff) 
         {
 #if ( FIX_CURE53_ISSUE_NULL_DEREFERENCE_MAKE_A_COPY_OF_T_GROUP_INFO==1 || defined(FIX_IMPOSSIBLE_H_ISOTOPE_BUG) )
-            if (at[0].iso_atw_diff <= NUM_H_ISOTOPES)
+            if (0 < at[0].iso_atw_diff &&
+                at[0].iso_atw_diff <= NUM_H_ISOTOPES)
             {
-                /* djb-rwth: possible false positive oss-fuzz issue #39064660 */
                 t_group_info->tni.nNumRemovedProtonsIsotopic[at[0].iso_atw_diff - 1] ++;
             }
 #else
