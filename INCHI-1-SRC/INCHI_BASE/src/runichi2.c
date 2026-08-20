@@ -342,10 +342,11 @@ exit_function:
 ****************************************************************************
  Build a component-local mask of polymer crossing-bond endpoints.
 
- The polymer blist uses whole-structure, 1-based atom numbering, whereas
- inp_cur_data contains only atoms from the selected connected component.
- ExtractConnectedComponent() preserves the original atom order within the
- component, allowing the corresponding local atom index to be reconstructed.
+ The polymer crossing-bond list (OAD_PolymerUnit.blist) uses whole-structure,
+ 1-based atom numbering, whereas inp_cur_data contains only atoms from the
+ selected connected component. ExtractConnectedComponent() preserves the original
+ atom order within the component, allowing the corresponding local atom index to
+ be reconstructed.
 
  The mask is later consulted by remove_terminal_HDT() to preserve explicit
  H/D/T atoms that participate in polymer crossing bonds.
