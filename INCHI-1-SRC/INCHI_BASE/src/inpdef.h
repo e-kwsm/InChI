@@ -568,6 +568,7 @@ typedef struct tagInfoAtomData
  *
  * @param at                   Array of input atoms
  * @param at_fixed_bonds       Array of input atoms with fixed bonds (tautomeric case, added or removed H)
+ * @param keep_explicit_HDT    Component-local polymer crossing-bond endpoint mask used to prevent explicit H/D/T removal
  * @param num_at               Number of atoms
  * @param num_removed_H        Number of removed hydrogens
  * @param num_bonds            Number of bonds
@@ -588,6 +589,7 @@ typedef struct tagInputAtomData
 {
     inp_ATOM *at;
     inp_ATOM *at_fixed_bonds; /* tautomeric case, added or removed H  */
+    unsigned char *keep_explicit_HDT;
     int num_at;
     int num_removed_H;
     int num_bonds;

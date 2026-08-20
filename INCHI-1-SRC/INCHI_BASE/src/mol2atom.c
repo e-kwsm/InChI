@@ -1183,6 +1183,14 @@ void FreeInpAtomData(INP_ATOM_DATA *inp_at_data)
     {
         FreeInpAtom(&inp_at_data->at);
         FreeInpAtom(&inp_at_data->at_fixed_bonds);
+
+        /*@nnuk*/
+        if (inp_at_data->keep_explicit_HDT)
+        {
+            inchi_free(inp_at_data->keep_explicit_HDT);
+            inp_at_data->keep_explicit_HDT = NULL;
+        }
+
         memset(inp_at_data, 0, sizeof(*inp_at_data)); /* djb-rwth: memset_s C11/Annex K variant? */
     }
 
@@ -1557,12 +1565,10 @@ int SetExtOrigAtDataByMolfileExtInput(MOL_FMT_DATA *mfdata,
                     ia2 = mfdata->ctab.bonds[ib - 1].atnum2;
                     unitk->blist[2 * m] = ia1;
                     unitk->blist[2 * m + 1] = ia2;
-                    if (!strcmp(mfdata->ctab.atoms[ia1 - 1].symbol, "H") ||
-                        !strcmp(mfdata->ctab.atoms[ia2 - 1].symbol, "H"))
-                    {
-                        TREAT_ERR(err, 9002, "Hydrogen as polymer end group is not supported");
-                        goto exit_function;
-                    }
+
+                    /**
+                     *@nnuk: GHI#252 addressed and redundant logic removed
+                     */
                 }
             }
             else

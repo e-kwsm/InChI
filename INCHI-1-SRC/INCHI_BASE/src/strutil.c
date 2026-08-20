@@ -3742,7 +3742,7 @@ static int is_only_HDT_neighbors(const inp_ATOM* at, int num_atoms, int metal_id
 /****************************************************************************
 Return value: new number of atoms > 0 or -1=out of RAM
 ****************************************************************************/
-int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg)
+int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg, const unsigned char* keep_explicit_HDT)
 {
     AT_NUMB *new_ord;
     inp_ATOM *new_at;
@@ -3792,7 +3792,11 @@ int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg)
      * Note: This must be consistent with MOL_FMT_to_atom()
      * treatment of isotopic Hn aliases.
      */
-    if (2 == num_H && 2 == num_atoms && !NUMH(at, 0) && !NUMH(at, 1))
+    if (2 == num_H && 2 == num_atoms &&
+        !NUMH(at, 0) && !NUMH(at, 1) &&
+        (!keep_explicit_HDT ||
+         (!keep_explicit_HDT[0] &&
+             !keep_explicit_HDT[1])))
     {
 
         if (at[0].iso_atw_diff >= at[1].iso_atw_diff)
@@ -3823,10 +3827,11 @@ int remove_terminal_HDT(int num_atoms, inp_ATOM *at, int bFixTermHChrg)
                                                                                    : kMax;
             n = (int)at[i].neighbor[0];
             if (k < kMax && at[i].valence == 1 && at[i].chem_bonds_valence == 1 &&
+                (!keep_explicit_HDT || !keep_explicit_HDT[i]) &&
                 /*  the order of comparison is important */
                 ((n > i) /* at[n] has not been encountered yet*/ ||
-                 (int)new_ord[n] < num_atoms - num_hydrogens) /* at[n] might have been encountered; it has not been moved */ &&
-                 (!is_el_a_metal(at[n].el_number) || is_only_HDT_neighbors(at, num_atoms, n))/*@nnuk*/ )
+                    (int)new_ord[n] < num_atoms - num_hydrogens) /* at[n] might have been encountered; it has not been moved */ &&
+                (!is_el_a_metal(at[n].el_number) || is_only_HDT_neighbors(at, num_atoms, n))/*@nnuk*/)
             {
                 /*  found an explicit terminal hydrogen */
                 num_hydrogens++;

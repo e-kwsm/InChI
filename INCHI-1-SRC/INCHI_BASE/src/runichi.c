@@ -327,18 +327,6 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             goto exit_function;
         }
 
-        /*// Debugging: Print atom structure after disconnections
-        for (int i = 0; i < orig_inp_data->num_inp_atoms; i++)
-        {
-            printf("Atom %d: Element %s, Valence: %d, Charge: %d, Num of Implicit H: %d, Neighbors: ",
-                i + 1, orig_inp_data->at[i].elname, orig_inp_data->at[i].valence, orig_inp_data->at[i].charge, orig_inp_data->at[i].num_H);
-            for (int j = 0; j < orig_inp_data->at[i].valence; j++)
-            {
-                printf("%d ", orig_inp_data->at[i].neighbor[j] + 1);
-            }
-            printf("\n");
-        }*/
-
         /* Preserve SDF output in Molecular Inorganics mode if requested */
         ret1 = OrigAtData_SaveMolfile(orig_inp_data, sd, ip, num_inp, out_file);
         if (ret1)
@@ -346,7 +334,6 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             goto exit_function;
         }
 
-        /*printf("Molecular inorganics preprocessing completed successfully.\n");*/
         nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
             pINChI, pINChI_Aux, INCHI_BAS,
             inp_file, log_file, out_file, prb_file,
@@ -361,7 +348,6 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
             (sd->bTautFlagsDone[INCHI_BAS] & TG_FLAG_DISCONNECT_COORD_DONE) &&
             (ip->bTautFlags & TG_FLAG_RECONNECT_COORD) )
         {
-            /*printf("Generating reconnected InChI due to retained bonds.\n");*/
 
             nRet1 = CreateOneStructureINChI(pCG, ic, sd, ip, szTitle,
                 pINChI, pINChI_Aux, INCHI_REC,
@@ -391,10 +377,9 @@ int ProcessOneStructure(INCHI_CLOCK* ic,
         /*
          * InChI is already generated via the Molecular Inorganics-specific path.
          * Skip the standard structure-generation path to prevent duplicate
-         * CreateOneStructureINChI() calls, which previously caused redundant
-         * allocations and AddressSanitizer-reported memory leaks.
+         * CreateOneStructureINChI() calls and redundant allocations.
          *
-         * pOrigStruct was populated above from the native input, so the shared
+         * pOrigStruct and OrigStruct were populated above from the native input, so the shared
          * cleanup path (SortAndPrintINChI + OrigStruct_Free) emits the AuxInfo
          * reversibility layers (/rA, /rB, /rC), including atom coordinates, and
          * releases it.
@@ -1978,6 +1963,7 @@ int CreateOneComponentINChI(CANON_GLOBALS* pCG,
         cur_INChI, cur_INChI_Aux,
         orig_inp_data/* not used */,
         inp_cur_data->at, inp_norm_data, inp_cur_data->num_at,
+        inp_cur_data->keep_explicit_HDT,
         ip->nMode,
         &bTautFlags, &bTautFlagsDone,
         pulTEnd, NULL, sd->pStrErrStruct);

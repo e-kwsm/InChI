@@ -254,6 +254,7 @@ extern "C"
      * @param inp_at Pointer to atom array
      * @param inp_norm_data Pointer to normalized atom data
      * @param num_inp_at Number of atoms
+     * @param keep_explicit_HDT keep HDT atoms in case of polymers with leaving group
      * @param nUserMode User mode
      * @param pbTautFlags Tautomer flags
      * @param pbTautFlagsDone Tautomer flags completed
@@ -271,6 +272,7 @@ extern "C"
                      inp_ATOM *inp_at,
                      INP_ATOM_DATA *inp_norm_data[2],
                      int num_inp_at,
+                     const unsigned char* keep_explicit_HDT,
                      INCHI_MODE nUserMode,
                      INCHI_MODE *pbTautFlags,
                      INCHI_MODE *pbTautFlagsDone,
