@@ -6311,7 +6311,7 @@ void add_bond_if_unseen(subgraf_pathfinder *spf,
             break;
         }
     }
-    if (!seen)
+    if (!seen && bonds)
     {
         bonds[*nbonds][0] = at1;
         bonds[*nbonds][1] = at2;
