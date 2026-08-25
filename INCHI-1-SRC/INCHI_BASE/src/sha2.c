@@ -293,7 +293,7 @@ int sha2_file(char *path, unsigned char output[32])
     unsigned char buf[1024];
 
     if ((f = fopen(path, "rb")) == NULL)
-        return (1);
+        return 1;
 
     sha2_starts(&ctx);
 
@@ -303,7 +303,7 @@ int sha2_file(char *path, unsigned char output[32])
     sha2_finish(&ctx, output);
 
     fclose(f);
-    return (0);
+    return 0;
 }
 
 /*
@@ -428,7 +428,7 @@ int sha2_self_test(void)
 #else
 int sha2_self_test(void)
 {
-    return (0);
+    return 0;
 }
 
 #endif

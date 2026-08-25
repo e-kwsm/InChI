@@ -450,7 +450,7 @@ total_restart:
                 nStackPtr[0] = 0;
                 nNumMappedRanks[0] = nNumMappedRanksInput;
                 bAddStack = 0;
-                bAllParitiesIdentical = ( ( at[at_to1].stereo_bond_parity[j2] & KNOWN_PARITIES_EQL ) ) &&
+                bAllParitiesIdentical = ( at[at_to1].stereo_bond_parity[j2] & KNOWN_PARITIES_EQL ) &&
                     PARITY_KNOWN( at[at_to1].stereo_bond_parity[j2] );
 
                 if (!bAllParitiesIdentical && !nNumCalc &&

@@ -741,8 +741,8 @@ int PreprocessOneStructure(struct tagINCHI_CLOCK* ic,
             {
                 /* Set parities for the disconnected structure */
                 int k, m, p;
-                inp_ATOM* at = (prep_inp_data)->at;
-                int       num_at = (prep_inp_data)->num_inp_atoms;
+                inp_ATOM* at = prep_inp_data->at;
+                int       num_at = prep_inp_data->num_inp_atoms;
                 for ( k = 0; k < num_at; k++ )
                 {
                     for ( m = 0; m < MAX_NUM_STEREO_BONDS && (p = at[k].sb_parity[m]); m++ )
@@ -796,8 +796,8 @@ int PreprocessOneStructure(struct tagINCHI_CLOCK* ic,
     {
         /* Remove "disconnected structure parities" from the structure */
         int k, m; /* djb-rwth: removing redundant variables */
-        inp_ATOM* at = (prep_inp_data)->at;
-        int       num_at = (prep_inp_data)->num_inp_atoms;
+        inp_ATOM* at = prep_inp_data->at;
+        int       num_at = prep_inp_data->num_inp_atoms;
         for ( k = 0; k < num_at; k++ )
         {
             for ( m = 0; m < MAX_NUM_STEREO_BONDS && at[k].sb_parity[m]; m++ ) /* djb-rwth: removing redundant code */
@@ -2967,7 +2967,7 @@ void OAD_CollectBackboneAtoms(ORIG_ATOM_DATA* at_data,
 
     *nbkatoms = 0;
     maxbkbonds = at_data->num_inp_bonds + 2;
-    *err = imat_new(maxbkbonds, 2, &(bkbonds));
+    *err = imat_new(maxbkbonds, 2, &bkbonds);
     /* djb-rwth: addressing coverity ID #499570 -- TREAT_ERR properly used in all cases */
     if (*err)
     {

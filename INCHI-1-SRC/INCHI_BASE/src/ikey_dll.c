@@ -366,7 +366,7 @@ int INCHI_DECL GetINCHIKeyFromINCHI( const char* szINCHISource,
     if (j != slen + 1)    /* check that something exists at right.*/
     {
         ncp = slen - j;
-        memcpy(sminor, str + j, (ncp) * sizeof(str[0]));
+        memcpy(sminor, str + j, ncp * sizeof(str[0]));
         sminor[ncp] = '\0';
     }
     else

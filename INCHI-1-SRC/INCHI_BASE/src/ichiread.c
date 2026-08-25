@@ -2957,8 +2957,8 @@ int InChILine2Data(INCHI_IOSTREAM* pInp,
                                             !(pInChI->StereoIsotopic && pInChI->StereoIsotopic->t_parity) &&
                                             s[iINChI][j][0] == 0 && s[iINChI][j][1] == 0 &&
                                             /* /sN, N=2 or 3 only in Mobile-H AND Mobile-H isotopic */
-                                            (s[iINChI][jAlt][0] & ((INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO))) &&
-                                            (s[iINChI][jAlt][1] & ((INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO))))
+                                            (s[iINChI][jAlt][0] & (INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO)) &&
+                                            (s[iINChI][jAlt][1] & (INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO)))
                                         {
                                             if (bIso)
                                             {
@@ -3005,7 +3005,7 @@ int InChILine2Data(INCHI_IOSTREAM* pInp,
                                                     !(pInChI->StereoIsotopic && pInChI->StereoIsotopic->t_parity) &&
                                                     s[iINChI][jAlt][0] == 0 && s[iINChI][j][0] == 0 && s[iINChI][j][1] == 0 &&
                                                     /* /sN, N=2 or 3 only in Mobile-H isotopic */
-                                                    (s[iINChI][jAlt][1] & ((INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO))))
+                                                    (s[iINChI][jAlt][1] & (INCHI_FLAG_REL_STEREO | INCHI_FLAG_RAC_STEREO)))
                                                 {
                                                     /* create two zero/NULL-initialized isotopic stereo if they do not exist */
                                                     if (!pInChI->StereoIsotopic && 0 > (ret2 = CopySegment(pInChI, pAltInChI, CPY_SP3_M, 1, -1))
@@ -9920,7 +9920,7 @@ int ParseSegmentFormula(const char* str,
                 {
                     /* allocate InChI */
                     pInChI = (INChI*)inchi_calloc(nNumComponents, sizeof(INChI));
-                    if (!(pInChI))
+                    if (!pInChI)
                     {
                         return RI_ERR_ALLOC; /* alloc failure */
                     }

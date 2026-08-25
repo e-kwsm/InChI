@@ -628,7 +628,7 @@ int ProcessSingleInputFile(int argc, char* argv[])
     memset(strbuf, 0, sizeof(*strbuf)); /* djb-rwth: memset_s C11/Annex K variant?; dereferencing strbuf */
 
     if (argc == 1 || (argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX) &&
-        ((!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help"))))) /* djb-rwth: addressing LLVM warning */
+        (!strcmp(argv[1] + 1, "?") || !inchi_stricmp(argv[1] + 1, "help")))) /* djb-rwth: addressing LLVM warning */
     {
         HelpCommandLineParms(plog);
         inchi_ios_flush(plog);
@@ -636,7 +636,7 @@ int ProcessSingleInputFile(int argc, char* argv[])
     }
 
     /* djb-rwth: printing out InChI version */
-    if (argc == 2 && ((argv[1][0] == INCHI_OPTION_PREFX)) && (!strcmp(argv[1] + 1, "v") || !strcmp(argv[1] + 1, "V")))
+    if (argc == 2 && (argv[1][0] == INCHI_OPTION_PREFX) && (!strcmp(argv[1] + 1, "v") || !strcmp(argv[1] + 1, "V")))
     {
         printf("%s\n", APP_DESCRIPTION);
         return 0;

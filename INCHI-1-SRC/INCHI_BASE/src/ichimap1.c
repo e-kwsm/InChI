@@ -356,7 +356,7 @@ AT_RANK nGetMcr( AT_RANK *nEqArray, AT_RANK n )
         n1 = n2;
     }
 
-    return ( mcr );
+    return mcr;
 }
 
 

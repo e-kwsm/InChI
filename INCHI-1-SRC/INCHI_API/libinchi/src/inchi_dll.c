@@ -2461,7 +2461,7 @@ EXPIMP_TEMPLATE INCHI_API
 int INCHI_DECL GetStructFromStdINCHI( inchi_InputINCHI *inpInChI,
                                       inchi_OutputStruct *outStruct )
 {
-    if (( inpInChI ) &&
+    if ( inpInChI &&
         ( inpInChI->szInChI ) &&
         ( strlen( inpInChI->szInChI ) >= LEN_INCHI_STRING_PREFIX + 3 ) &&
         ( inpInChI->szInChI[LEN_INCHI_STRING_PREFIX + 1] == 'S' ))

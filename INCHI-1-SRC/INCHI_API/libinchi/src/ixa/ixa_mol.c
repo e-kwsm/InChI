@@ -165,7 +165,7 @@ static IXA_BOOL MOL_UnpackAtom( IXA_STATUS_HANDLE hStatus,
                                 IXA_ATOMID        vAtom,
                                 int*              pAtomIndex )
 {
-    *pAtomIndex = (size_t) (vAtom) -1;
+    *pAtomIndex = (size_t)vAtom -1;
     if (( *pAtomIndex < 0 ) || ( *pAtomIndex >= pMolecule->atom_count ))
     {
         STATUS_PushMessage( hStatus, IXA_STATUS_ERROR, "Atom ID is invalid" );
@@ -182,7 +182,7 @@ static IXA_BOOL MOL_UnpackBond( IXA_STATUS_HANDLE hStatus,
                                 IXA_BONDID        vBond,
                                 int*              pBondIndex )
 {
-    *pBondIndex = (size_t) (vBond) -1;
+    *pBondIndex = (size_t)vBond -1;
     if (( *pBondIndex < 0 ) || ( *pBondIndex >= pMolecule->bond_count ))
     {
         STATUS_PushMessage( hStatus, IXA_STATUS_ERROR, "Bond ID is invalid" );
@@ -199,7 +199,7 @@ static IXA_BOOL MOL_UnpackStereo( IXA_STATUS_HANDLE hStatus,
                                   IXA_STEREOID      vStereo,
                                   int*              pStereoIndex )
 {
-    *pStereoIndex = (size_t) (vStereo) -1;
+    *pStereoIndex = (size_t)vStereo -1;
     if (( *pStereoIndex < 0 ) || ( *pStereoIndex >= pMolecule->stereo_count ))
     {
         STATUS_PushMessage( hStatus, IXA_STATUS_ERROR, "Stereo ID is invalid" );
@@ -216,7 +216,7 @@ static IXA_BOOL MOL_UnpackPolymerUnit( IXA_STATUS_HANDLE hStatus,
                                        IXA_POLYMERUNITID vPunit,
                                        int*              pPunitIndex )
 {
-    *pPunitIndex  = (size_t) (vPunit) -1;
+    *pPunitIndex  = (size_t)vPunit -1;
     if ( !pMolecule->polymer ||  pMolecule->sgroup_count <= 0)
     /*if (!pMolecule->polymer || pMolecule->polymer->n <= 0)*/
     {

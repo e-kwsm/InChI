@@ -651,7 +651,7 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
          stbsp__lead_sign(fl, lead);
 
          if (dp == -1023)
-            dp = (n64) ? -1022 : 0;
+            dp = n64 ? -1022 : 0;
          else
             n64 |= (((stbsp__uint64)1) << 52);
          n64 <<= (64 - 56);
@@ -724,7 +724,7 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
          n = pr;
          if (l > (stbsp__uint32)pr)
             l = pr;
-         while ((l > 1) && (pr) && (sn[l - 1] == '0')) {
+         while ((l > 1) && pr && (sn[l - 1] == '0')) {
             --pr;
             --l;
          }
@@ -1036,7 +1036,7 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
          for (;;) {
             *--s = h[n64 & ((1 << (l >> 8)) - 1)];
             n64 >>= (l >> 8);
-            if (!((n64) || ((stbsp__int32)((num + STBSP__NUMSZ) - s) < pr)))
+            if (!(n64 || ((stbsp__int32)((num + STBSP__NUMSZ) - s) < pr)))
                break;
             if (fl & STBSP__TRIPLET_COMMA) {
                ++l;
@@ -1047,7 +1047,7 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
             }
          };
          // get the tens and the comma pos
-         cs = (stbsp__uint32)((num + STBSP__NUMSZ) - s) + ((((l >> 4) & 15)) << 24);
+         cs = (stbsp__uint32)((num + STBSP__NUMSZ) - s) + (((l >> 4) & 15) << 24);
          // get the length that we copied
          l = (stbsp__uint32)((num + STBSP__NUMSZ) - s);
          // copy it
@@ -1826,7 +1826,7 @@ static stbsp__int32 stbsp__real_to_str(char const **start, stbsp__uint32 *len, c
          e += 2;
       }
       if (bits == 0) {
-         if ((e) && (out[0] == '0')) {
+         if (e && (out[0] == '0')) {
             ++out;
             --e;
          }

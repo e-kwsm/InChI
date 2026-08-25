@@ -1614,7 +1614,7 @@ char* lrtrim( char *p, int* nLen )
         if ( i )
         {
             len -= i; /* djb-rwth: variable has to be decreased before memmove */
-            (memmove)(p, p + i, ((long long)len + 1)); /* djb-rwth: now cast operator can be added */
+            memmove(p, p + i, ((long long)len + 1)); /* djb-rwth: now cast operator can be added */
         }
 
         for (; 0 < len && is_ascii( p[len - 1] ) && isspace( p[len - 1] ); len--)

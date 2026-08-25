@@ -674,7 +674,7 @@ int Get2DTetrahedralAmbiguity( CANON_GLOBALS *pCG,
                 if (num_Dn)
                 {
                     dAlpha = dBondDirection[nBondOrder[( first_Up + 1 ) % nNumNeigh]] -
-                        dBondDirection[nBondOrder[( first_Up ) % nNumNeigh]];
+                        dBondDirection[nBondOrder[first_Up % nNumNeigh]];
 
                     if (dAlpha < 0.0)
                     {
@@ -693,7 +693,7 @@ int Get2DTetrahedralAmbiguity( CANON_GLOBALS *pCG,
                     {
                         /*  angle between 2 Up bonds is between 120 and 180 degrees */
                         /*  direction of the (Alpha angle bisector) + 180 degrees    */
-                        dBisector = dBondDirection[nBondOrder[( first_Up ) % nNumNeigh]];
+                        dBisector = dBondDirection[nBondOrder[first_Up % nNumNeigh]];
                         dBisector += dBondDirection[nBondOrder[( first_Up + 1 ) % nNumNeigh]];
                         dBisector /= 2.0;
                         dBisector -= one_pi;

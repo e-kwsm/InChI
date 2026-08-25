@@ -649,7 +649,7 @@ extern "C"
         /* decision_F = bitmask: bits that should not be present */
         /* decision_T = bitmask: at least one of the bits should be present */
         /* decision = true if( !( BITS & decision_F ) && ( BITS & decision_F ) ) */
-        DIFV_OUTPUT_EMPTY_T = (DIFV_IS_EMPTY),                                     /* bits present for empty segment output */
+        DIFV_OUTPUT_EMPTY_T = DIFV_IS_EMPTY,                                       /* bits present for empty segment output */
         DIFV_OUTPUT_EMPTY_F = (DIFV_EQL2PRECED | DIFV_NEQ2PRECED | DIFV_FI_EQ_MI), /* bits NOT present */
 
         DIFV_OUTPUT_OMIT_F = (DIFV_NEQ2PRECED | DIFV_IS_EMPTY), /* bits NOT present for omitting */

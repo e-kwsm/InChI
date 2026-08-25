@@ -1961,7 +1961,7 @@ VII. Optimize isotopic stereo descriptors (optimized)
                         bFailed++;
                     }
                 }
-                pCS->nLenCanonOrdStereo = ( bFailed ) ? -num_atoms : num_atoms;
+                pCS->nLenCanonOrdStereo = bFailed ? -num_atoms : num_atoms;
             }
 
             /* save stereo tautomer groups numbering */
@@ -1974,7 +1974,7 @@ VII. Optimize isotopic stereo descriptors (optimized)
                     AT_NUMB *tGroupNumber = t_group_info1->tGroupNumber;
                     /*AT_NUMB *tiSymmRank        = tGroupNumber + TGSO_SYMM_IRANK*num_t_groups; */
                     memcpy(pCS->nCanonOrdStereoTaut, tGroupNumber, num_t_groups * sizeof(pCS->nCanonOrdStereoTaut[0]));
-                    pCS->nLenCanonOrdStereoTaut = ( bFailed ) ? -num_t_groups
+                    pCS->nLenCanonOrdStereoTaut = bFailed ? -num_t_groups
                         : num_t_groups;
                 }
                 else
@@ -2185,7 +2185,7 @@ VII. Optimize isotopic stereo descriptors (optimized)
                             bFailed++;
                         }
                     }
-                    pCS->nLenCanonOrdStereo = ( bFailed ) ? -num_atoms : num_atoms;
+                    pCS->nLenCanonOrdStereo = bFailed ? -num_atoms : num_atoms;
                 }
 
                 /* compare inverted and non-inverted stereo */
