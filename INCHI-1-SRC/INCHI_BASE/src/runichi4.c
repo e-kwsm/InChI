@@ -1225,7 +1225,7 @@ void SplitTime( unsigned long ulTotalTime,
     ulTotalTime /= 60;
     *minutes = (int) ( ulTotalTime % 60 );
     ulTotalTime /= 60;
-    *hours = (int) ( ulTotalTime );
+    *hours = (int)ulTotalTime;
 }
 #endif
 

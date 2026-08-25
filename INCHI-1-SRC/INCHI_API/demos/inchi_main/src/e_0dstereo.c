@@ -1402,7 +1402,7 @@ int e_Get2DTetrahedralAmbiguity( double at_coord[][3], int bAddExplicitNeighbor 
                     if (num_Dn)
                     {
                         dAlpha = dBondDirection[nBondOrder[( first_Up + 1 ) % nNumNeigh]] -
-                            dBondDirection[nBondOrder[( first_Up ) % nNumNeigh]];
+                            dBondDirection[nBondOrder[first_Up % nNumNeigh]];
                         if (dAlpha < 0.0)
                         {
                             dAlpha += two_pi;
@@ -1421,7 +1421,7 @@ int e_Get2DTetrahedralAmbiguity( double at_coord[][3], int bAddExplicitNeighbor 
                             {
                                 /*  angle between 2 Up bonds is between 120 and 180 degrees */
                                 /*  direction of the (Alpha angle bisector) + 180 degrees  */
-                                dBisector = ( dBondDirection[nBondOrder[( first_Up ) % nNumNeigh]] +
+                                dBisector = ( dBondDirection[nBondOrder[first_Up % nNumNeigh]] +
                                             dBondDirection[nBondOrder[( first_Up + 1 ) % nNumNeigh]] ) / 2.0 - one_pi;
                                 if (dBisector < 0.0)
                                 {
@@ -2409,8 +2409,8 @@ int e_FixSb0DParities( inchi_Atom *at, Stereo0D *pStereo, int chain_length, AT_N
             if (ATOM_PARITY_WELL_DEF( parity1 ))
             {
                 parity = 2 - ( parity1 + parity2 + ( dot_prod_z < 0 ) +
-                    ( ( bOnlyNM1 ) ? j_parity1 : i_parity1 ) +
-                    ( ( bOnlyNM2 ) ? j_parity2 : i_parity2 ) ) % 2;
+                    ( bOnlyNM1 ? j_parity1 : i_parity1 ) +
+                    ( bOnlyNM2 ? j_parity2 : i_parity2 ) ) % 2;
             }
             else
             {

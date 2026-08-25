@@ -1418,7 +1418,7 @@ int map_an_atom2( CANON_GLOBALS *pCG,
         *pnNewNumMappedRanks = nNumMappedRanks;
     }
 
-    return ( nNewRank1 ) ? nNewRank1[at_no1] : nRank1[at_no1]; /*  mapping rank value */
+    return nNewRank1 ? nNewRank1[at_no1] : nRank1[at_no1]; /*  mapping rank value */
 }
 
 

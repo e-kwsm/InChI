@@ -1349,7 +1349,7 @@ AT_RANK nGetMcr2( AT_RANK *nEqArray, AT_RANK n )
 
     INCHI_HEAPCHK
 
-    return ( mcr );
+    return mcr;
 }
 
 
