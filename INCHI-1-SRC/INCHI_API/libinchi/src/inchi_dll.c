@@ -828,7 +828,7 @@ int INCHI_DECL CheckINCHI( const char *szINCHI, const int strict )
     {
         return INCHI_INVALID_PREFIX;
     }
-    if (memcmp( szINCHI, INCHI_STRING_PREFIX, LEN_INCHI_STRING_PREFIX ))
+    if (memcmp( szINCHI, INCHI_STRING_PREFIX, LEN_INCHI_STRING_PREFIX ) != 0)
     {
         return INCHI_INVALID_PREFIX;
     }
@@ -971,7 +971,7 @@ int INCHI_DECL CheckINCHI( const char *szINCHI, const int strict )
                 out_str += 9;
             }
 
-            if (strcmp(in_str, out_str))
+            if (strcmp(in_str, out_str) != 0)
             {
                 ret = INCHI_FAIL_I2I;
             }
